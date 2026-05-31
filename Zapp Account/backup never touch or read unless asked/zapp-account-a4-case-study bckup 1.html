@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Study: Zapp Account Revamp</title>
+    
+    <!-- Importing Grotesque Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"IBM Plex Sans"', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                    },
+                    colors: {
+                        canvas: '#ededed',
+                        ink: '#000000',
+                        deep: '#131313',
+                        medium: '#949494',
+                        muted: '#6c6c6c',
+                        outline: '#474747',
+                        accent: '#2747e0'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        html {
+            font-size: 99%;
+            overflow-y: scroll; /* always show scrollbar to prevent layout shift on expand */
+            scrollbar-gutter: stable;
+            overflow-anchor: none;
+        }
+        body {
+            background-color: #f7f7f4;
+            background-image: radial-gradient(circle, rgba(71, 71, 71, 0.20) 1px, transparent 1px);
+            background-size: 18px 18px;
+            color: theme('colors.deep');
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.6;
+            font-size: 15px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+            color: theme('colors.ink');
+            letter-spacing: -0.02em;
+        }
+
+        /* Section subtext: softer than full ink */
+        .stack-section .section-header p.font-display,
+        .stack-section.static-section p.font-display {
+            color: #1f1f1f;
+            font-size: 1.125rem;
+            line-height: 1.5;
+            max-width: 78%;
+            transform-origin: left top;
+            transition:
+                color 0.35s ease,
+                font-weight 0.35s ease,
+                transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.35s ease;
+        }
+
+        .stack-section .section-header h2,
+        .stack-section.static-section h2 {
+            letter-spacing: 0.02em;
+            transition:
+                color 0.35s ease,
+                font-size 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                font-weight 0.35s ease,
+                letter-spacing 0.35s ease,
+                margin-bottom 0.35s ease;
+        }
+
+        .stack-section:not(.is-expanded):not(.static-section) .section-header h2 {
+            color: #131313;
+            font-size: 1.125rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.65rem;
+        }
+
+        .stack-section:not(.is-expanded):not(.static-section) .section-header p.font-display {
+            font-weight: 400;
+            max-width: 78%;
+            transform: scale(0.89);
+        }
+
+        .stack-section.static-section p.font-display {
+            max-width: none;
+        }
+
+        body.is-animating-motion .stack-section .section-header p.font-display {
+            max-width: 78%;
+        }
+
+        @media (min-width: 768px) {
+            .stack-section .section-header p.font-display,
+            .stack-section.static-section p.font-display {
+                font-size: 1.35rem;
+            }
+
+            .stack-section:not(.is-expanded):not(.static-section) .section-header p.font-display {
+                transform: scale(0.78);
+            }
+
+            .stack-section:not(.is-expanded):not(.static-section) .section-header h2 {
+                font-size: 1.35rem;
+            }
+        }
+
+        /* Inline keyword highlight — marker-style, ties to sticky note motif.
+           Use: <span class="kw">key phrase</span> */
+        .kw {
+            background-image: linear-gradient(to top,
+                rgba(255, 222, 90, 0.55) 0,
+                rgba(255, 222, 90, 0.55) 22%,
+                transparent 22%,
+                transparent 100%);
+            padding: 0 0.12em;
+            color: theme('colors.ink');
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* Sticky stack: cards flow in document order; only the sticky offset
+           is fixed per card. Cards naturally grow when expanded; cards below
+           are pushed down because the active card occupies more vertical space. */
+        .stack-container {
+            position: relative;
+        }
+
+        .stack-section {
+            position: relative;
+            margin-top: 4rem;
+        }
+
+        .stack-section::before,
+        .stack-section::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
+            background-size: 12px 2px;
+            background-repeat: repeat-x;
+            pointer-events: none;
+        }
+        .stack-section::before { top: 0; }
+        .stack-section::after { bottom: 0; }
+
+        .container-line-top,
+        .container-line-bottom {
+            position: relative;
+            height: 2px;
+            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
+            background-size: 12px 2px;
+            background-repeat: repeat-x;
+        }
+
+        .stack-section .section-header {
+            cursor: pointer;
+            position: relative;
+            padding-top: 1.85rem;
+            padding-bottom: 1.45rem;
+            z-index: 1;
+            transition: background-color 0.25s ease, opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .stack-section .section-header h2,
+        .stack-section.static-section h2 {
+            margin-bottom: 0.25rem;
+        }
+
+        .stack-section.is-expanded .section-header p.font-display {
+            font-weight: 600;
+        }
+
+        .stack-section .card-body > div {
+            padding-top: 1.25rem;
+        }
+
+        .stack-section:not(.is-expanded) .section-header:hover {
+            background-color: rgba(71, 71, 71, 0.035);
+        }
+
+        .stack-section .section-header::after {
+            content: '+';
+            position: absolute;
+            top: 2rem;
+            right: 2.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: theme('colors.ink');
+            font-weight: 400;
+        }
+
+        .stack-section.is-expanded .section-header::after {
+            content: '−';
+        }
+
+        .stack-section.static-section .section-header,
+        .stack-section.static-section > .py-5 {
+            cursor: default;
+        }
+        .stack-section.static-section .section-header::after,
+        .stack-section.static-section > .py-5::after {
+            display: none;
+        }
+
+        .card-body {
+            position: relative;
+            z-index: 1;
+            height: 0;
+            overflow: hidden;
+            will-change: height;
+        }
+
+        .stack-section.is-expanded .card-body {
+            overflow: visible;
+        }
+
+        body.is-animating-motion .stack-section .card-body {
+            overflow: hidden;
+        }
+
+        body.is-animating-motion .stack-section.has-floating-preview .card-body {
+            overflow: visible;
+        }
+
+        body.is-animating-motion .stack-section.has-floating-preview .card-body > .card-body-clip {
+            box-sizing: border-box;
+            overflow: visible;
+            will-change: clip-path;
+        }
+
+        .vertical-guide-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-image: linear-gradient(to bottom, rgba(71,71,71,0.20) 50%, transparent 50%);
+            background-size: 2px 12px;
+            background-repeat: repeat-y;
+        }
+
+        /* Dim everything except the expanded section's content and its own
+           border lines. Page-dim has its own softer timing curve/duration. */
+        main > section,
+        .stack-section > div,
+        .container-line-top,
+        .container-line-bottom {
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .stack-section::before,
+        .stack-section::after {
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            opacity: 1;
+        }
+
+        .scope-flowchart {
+            padding: 0.5rem 0 0.25rem;
+            overflow-x: auto;
+        }
+
+        .section-side-preview {
+            display: flow-root;
+        }
+
+        .legacy-wallet-preview {
+            float: right;
+            width: 17rem;
+            margin: 0 -8.5rem 1.5rem 2rem;
+            position: relative;
+            z-index: 2;
+            transform: translateX(-7.5rem);
+            opacity: 0;
+            /* Collapse direction: fade out during the first 35% (~228ms) */
+            transition:
+                transform 650ms cubic-bezier(0.6, 0, 0.2, 1),
+                opacity 228ms cubic-bezier(0.6, 0, 0.2, 1) 0ms;
+        }
+
+        .stack-section.is-expanded .legacy-wallet-preview {
+            transform: translateX(0);
+            opacity: 1;
+            /* Expand direction: fade in during the middle 40% (260ms-520ms of 650ms) */
+            transition:
+                transform 650ms cubic-bezier(0.6, 0, 0.2, 1),
+                opacity 260ms cubic-bezier(0.6, 0, 0.2, 1) 260ms;
+        }
+
+        .stack-section.has-floating-preview {
+            position: relative;
+        }
+
+        .legacy-wallet-floating-preview {
+            float: none;
+            position: fixed;
+            top: var(--floating-preview-top, -9999px);
+            left: var(--floating-preview-left, -9999px);
+            right: auto;
+            margin: 0;
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .stack-section.is-expanded .legacy-wallet-floating-preview {
+            pointer-events: auto;
+        }
+
+        .legacy-wallet-flow-spacer {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .legacy-wallet-caption {
+            display: inline-block;
+            margin-top: 0.85rem;
+            padding: 0.4rem 0.7rem;
+            background: #ffffff;
+            border: 1px solid rgba(71, 71, 71, 0.18);
+            color: #1f1f1f;
+        }
+
+        .hero-phone-wrap {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 1.5rem 1rem 0;
+            overflow: hidden;
+        }
+
+        .hero-phone-wrap .legacy-wallet-device {
+            width: 14rem;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .hero-phone-wrap .legacy-wallet-device {
+                width: 16rem;
+            }
+        }
+
+        .legacy-wallet-device {
+            background: #1a1a1a;
+            border-radius: 2.2rem;
+            padding: 0.55rem;
+            position: relative;
+        }
+
+        .legacy-wallet-device::before {
+            content: "";
+            position: absolute;
+            top: 0.85rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4.25rem;
+            height: 1.35rem;
+            background: #050505;
+            border-radius: 999px;
+            z-index: 1;
+        }
+
+        .legacy-wallet-screen {
+            background: #f7f7f4;
+            border-radius: 1.75rem;
+            aspect-ratio: 9 / 19;
+            padding: 2.4rem 0.85rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .legacy-wallet-screen > *:not(.placeholder-image-layer) {
+            position: relative;
+            z-index: 1;
+        }
+
+        .placeholder-image-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+            display: none;
+            z-index: 0;
+        }
+
+        .has-saved-image .placeholder-image-layer {
+            display: block;
+        }
+
+        .has-saved-image .legacy-wallet-screen > *:not(.placeholder-image-layer) {
+            opacity: 0;
+        }
+
+        .has-saved-image .placeholder-default {
+            opacity: 0;
+        }
+
+        .legacy-wallet-bar,
+        .legacy-wallet-tile {
+            border: 1px solid rgba(71, 71, 71, 0.14);
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        .legacy-wallet-bar {
+            height: 2.5rem;
+        }
+
+        .legacy-wallet-card {
+            background: #d7eee7;
+            border: 1px solid rgba(71, 71, 71, 0.16);
+            min-height: 5.5rem;
+            padding: 0.75rem;
+        }
+
+        .legacy-wallet-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.55rem;
+        }
+
+        .legacy-wallet-tile {
+            height: 3.2rem;
+        }
+
+        @media (max-width: 767px) {
+            .legacy-wallet-preview {
+                float: none;
+                max-width: 16rem;
+                width: auto;
+                margin: 1.25rem 0 0;
+            }
+
+            .legacy-wallet-floating-preview {
+                display: none;
+            }
+
+            .legacy-wallet-flow-spacer {
+                visibility: visible;
+                pointer-events: auto;
+            }
+        }
+
+        .scope-flow-shell {
+            border: 1px solid rgba(71, 71, 71, 0.16);
+            background: #f8f8f6;
+            padding: 1rem 1.15rem 0.85rem;
+        }
+
+        .scope-flow-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .scope-flow-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #131313;
+            letter-spacing: -0.02em;
+        }
+
+        .section-mini-heading {
+            font-weight: 600;
+        }
+
+        .numbered-point {
+            --numbered-point-indent: 2rem;
+        }
+
+        .numbered-point > h3 {
+            margin-bottom: 0.9rem;
+        }
+
+        .numbered-point > :not(h3):not(.sticky-note) {
+            margin-left: var(--numbered-point-indent);
+        }
+
+        @media (max-width: 767px) {
+            .numbered-point {
+                --numbered-point-indent: 1.35rem;
+            }
+        }
+
+        .value-prop-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 2.25rem;
+        }
+
+        .value-prop-card {
+            padding: 0;
+        }
+
+        .value-prop-label {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 0;
+            width: 9.5rem;
+            border: 1px solid rgba(71, 71, 71, 0.14);
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.45rem 0.65rem 0.45rem 0.45rem;
+        }
+
+        .value-prop-label h4 {
+            flex: 1;
+            text-align: center;
+        }
+
+        .value-prop-copy {
+            display: grid;
+            gap: 1.35rem;
+        }
+
+        .value-prop-icon {
+            width: 2rem;
+            height: 2rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+        }
+
+        .value-prop-icon svg {
+            width: 1.15rem;
+            height: 1.15rem;
+            stroke-width: 2;
+        }
+
+        .value-prop-icon.is-fast {
+            background: #fff4cf;
+            color: #8a5a00;
+        }
+
+        .value-prop-icon.is-secure {
+            background: #e9f1ff;
+            color: #2747e0;
+        }
+
+        .value-prop-icon.is-convenient {
+            background: #edf8f1;
+            color: #2f7a45;
+        }
+
+        .kyc-stepper {
+            margin-top: 1.75rem;
+        }
+
+        .kyc-stepper-label {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #5f5f5f;
+            margin-bottom: 0.85rem;
+            text-align: center;
+        }
+
+        .kyc-step-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 0.65rem;
+        }
+
+        .kyc-step-card {
+            position: relative;
+            min-height: 7.25rem;
+            border: 1px dashed rgba(71, 71, 71, 0.18);
+            background: #fff;
+            padding: 0.85rem;
+        }
+
+        .kyc-step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.8rem;
+            height: 1.8rem;
+            margin-bottom: 0.75rem;
+            background: #1f1f1f;
+            color: #fff;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 767px) {
+            .value-prop-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kyc-step-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .scope-flow-tabs {
+            display: inline-flex;
+            border: 1px solid rgba(71, 71, 71, 0.22);
+            margin-left: auto;
+        }
+
+        .scope-flow-tab {
+            padding: 0.55rem 0.95rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #6c6c6c;
+            background: transparent;
+            border: 0;
+            border-right: 1px solid rgba(71, 71, 71, 0.22);
+            cursor: pointer;
+        }
+
+        .scope-flow-tab:last-child {
+            border-right: 0;
+        }
+
+        .scope-flow-tab.is-active {
+            background: #131313;
+            color: #ffffff;
+        }
+
+        .scope-flow-panel[hidden] {
+            display: none;
+        }
+
+        .scope-flowchart svg {
+            display: block;
+            min-width: 640px;
+            margin-inline: auto;
+        }
+
+        .scope-edge {
+            fill: none;
+            stroke: #b3b3b3;
+            stroke-width: 1.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .scope-node-card {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: 1px solid rgba(71, 71, 71, 0.22);
+            background: #fcfbf9;
+            padding: 0.9rem 1rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .scope-node-card .mono {
+            margin-bottom: 0.65rem;
+        }
+
+        .scope-node-card h3 {
+            line-height: 1.22;
+            margin-bottom: 0.55rem;
+        }
+
+        .scope-node-card.is-title-only {
+            justify-content: center;
+        }
+
+        .scope-node-card.is-title-only h3 {
+            margin-bottom: 0;
+        }
+
+        .scope-node-card p {
+            color: #3f3f3f;
+            line-height: 1.45;
+            margin: 0;
+        }
+
+        .scope-node-card ul {
+            margin: 0.55rem 0 0;
+            padding-left: 0.95rem;
+            color: #3f3f3f;
+            line-height: 1.45;
+            font-size: 14px;
+        }
+
+        .scope-node-card.is-worked {
+            background: #edf8f1;
+            border-color: #9bcfad;
+        }
+
+        .scope-decision {
+            fill: #fcfbf9;
+            stroke: rgba(71, 71, 71, 0.28);
+            stroke-width: 1;
+        }
+
+        .scope-decision-label {
+            fill: #131313;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+
+        .scope-flow-fallback {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .scope-flow-fallback .scope-node-card,
+        .scope-node-card.is-measuring {
+            height: auto;
+        }
+
+        @media (min-width: 768px) {
+            .scope-flow-fallback {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        /* When active section is off-screen and page is unfading, use a slower reveal. */
+        body.is-offscreen-unfaded main > section,
+        body.is-offscreen-unfaded .stack-section > div,
+        body.is-offscreen-unfaded .container-line-top,
+        body.is-offscreen-unfaded .container-line-bottom,
+        body.is-offscreen-unfaded .stack-section::before,
+        body.is-offscreen-unfaded .stack-section::after {
+            transition-duration: 1.05s;
+        }
+        body.is-any-expanded main > section,
+        body.is-any-expanded .stack-section:not(.is-expanded) > div,
+        body.is-any-expanded .stack-section:not(.is-expanded)::before,
+        body.is-any-expanded .stack-section:not(.is-expanded)::after {
+            opacity: 0.18;
+            transition-duration: 1.15s;
+            transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover > div,
+        body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover::before,
+        body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover::after {
+            opacity: 1;
+            transition-duration: 0.22s;
+        }
+
+
+        .img-placeholder {
+            background-color: transparent;
+            border: 1px solid rgba(71, 71, 71, 0.18);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: theme('colors.muted');
+            font-family: 'Space Grotesk', sans-serif;
+            border-radius: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .img-placeholder > img {
+            position: relative;
+            z-index: 1;
+            object-position: top center;
+        }
+
+        .editable-placeholder {
+            position: relative;
+        }
+
+        .legacy-wallet-floating-preview.editable-placeholder {
+            position: fixed;
+            left: var(--floating-preview-left, -9999px);
+        }
+
+        body.is-placeholder-editing .editable-placeholder {
+            cursor: pointer;
+            outline: 1px dashed rgba(39, 71, 224, 0.45);
+            outline-offset: 4px;
+        }
+
+        body.is-placeholder-editing .editable-placeholder::after {
+            content: "Click to edit image";
+            position: absolute;
+            left: 0.75rem;
+            top: 0.75rem;
+            z-index: 20;
+            padding: 0.35rem 0.5rem;
+            background: #ffffff;
+            border: 1px solid rgba(71, 71, 71, 0.18);
+            color: #1f1f1f;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.64rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(-0.25rem);
+            transition: opacity 0.18s ease, transform 0.18s ease;
+            pointer-events: none;
+        }
+
+        body.is-placeholder-editing .editable-placeholder:hover::after,
+        body.is-placeholder-editing .editable-placeholder:focus-visible::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .placeholder-edit-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: rgba(19, 19, 19, 0.38);
+        }
+
+        .placeholder-edit-modal.is-open {
+            display: flex;
+        }
+
+        .placeholder-edit-dialog {
+            width: min(36rem, 100%);
+            background: #f7f7f4;
+            border: 1px solid rgba(71, 71, 71, 0.24);
+            padding: 1.25rem;
+        }
+
+        .placeholder-paste-zone {
+            min-height: 14rem;
+            border: 1px dashed rgba(71, 71, 71, 0.34);
+            background: rgba(255, 255, 255, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            overflow: hidden;
+        }
+
+        .placeholder-paste-zone img {
+            max-width: 100%;
+            max-height: 20rem;
+            object-fit: contain;
+        }
+
+        .placeholder-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.6rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .placeholder-modal-button {
+            border: 1px solid rgba(71, 71, 71, 0.24);
+            background: #ffffff;
+            padding: 0.55rem 0.85rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #1f1f1f;
+        }
+
+        .placeholder-modal-button.is-primary {
+            background: #1f1f1f;
+            color: #ffffff;
+        }
+
+        .placeholder-modal-button:disabled {
+            opacity: 0.42;
+            cursor: not-allowed;
+        }
+
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+        .metric-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: theme('colors.ink');
+            line-height: 1.2;
+        }
+        blockquote {
+            border-left: 4px solid theme('colors.outline');
+            padding-left: 1.5rem;
+            font-style: italic;
+            color: theme('colors.deep');
+            margin: 2rem 0;
+            font-size: 1.125rem;
+        }
+
+        .sticky-note {
+            position: absolute;
+            width: 220px;
+            background-color: #fff1a8;
+            padding: 1.25rem;
+            font-family: 'Caveat', cursive;
+            font-size: 1.4rem;
+            line-height: 1.2;
+            color: #1a1a1a;
+            border: 1px solid rgba(96, 72, 8, 0.16);
+            box-shadow: 2px 7px 16px rgba(0,0,0,0.075);
+            display: none;
+            pointer-events: none;
+            z-index: 50;
+
+            /* Base transform for non-animated sticky notes */
+            transform: rotate(var(--rot, 0deg));
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Pop-on-expand sticky notes (Hidden / Collapsed State) */
+        .sticky-note.pop-on-expand {
+            opacity: 0;
+            transform: scale(0.6) rotate(var(--rot, 0deg));
+        }
+
+        /* Prevent pop-on-expand notes from becoming partially visible during dimming */
+        body.is-any-expanded .stack-section:not(.is-expanded) > .sticky-note.pop-on-expand {
+            opacity: 0;
+        }
+        
+        /* Expanded State (Pop up animation) */
+        .stack-section.is-expanded .sticky-note.pop-on-expand {
+            opacity: 1;
+            transform: scale(1) rotate(var(--rot, 0deg));
+            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s, 
+                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+        }
+        
+        @media (min-width: 1400px) {
+            .sticky-note { display: block; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Vertical guide lines along content edges -->
+    <div id="left-vertical-guide" class="fixed inset-0 pointer-events-none z-[2] flex justify-center">
+        <div class="relative w-full max-w-5xl h-full">
+            <div class="vertical-guide-line" style="left: -2px;"></div>
+        </div>
+    </div>
+    <div id="vertical-guides" class="fixed inset-0 pointer-events-none z-0 flex justify-center">
+        <div class="relative w-full max-w-5xl h-full">
+            <div class="vertical-guide-line" style="right: -2px;"></div>
+        </div>
+    </div>
+
+    <main class="relative z-[1] max-w-5xl mx-auto pb-24 bg-[#f7f7f4]">
+        
+        <!-- Hero Section -->
+        <section class="pt-14">
+            <div class="container-line-top"></div>
+            <!-- Hero Bento: Screen showcase + Numbers overview -->
+            <div class="grid grid-cols-1 md:grid-cols-3">
+                <!-- Left: Screen showcase (2/3 width) -->
+                <div class="md:col-span-2 relative" style="background-image: linear-gradient(to bottom, rgba(71,71,71,0.20) 50%, transparent 50%); background-position: top right; background-size: 2px 12px; background-repeat: repeat-y;">
+                    <div class="h-72 md:h-96">
+                        <div class="hero-phone-wrap editable-placeholder" data-placeholder-id="hero-zapp-account" data-placeholder-name="Hero Zapp Account screen" aria-label="Preview placeholder for Zapp Account screen">
+                            <div class="legacy-wallet-device">
+                                <div class="legacy-wallet-screen">
+                                    <img class="placeholder-image-layer" alt="">
+                                    <div class="legacy-wallet-bar"></div>
+                                    <div class="legacy-wallet-card">
+                                        <div class="mono text-[9px] text-muted mb-2">Account</div>
+                                        <div class="font-display text-sm font-medium text-ink">Zapp Account</div>
+                                        <div class="text-[11px] text-muted mt-1">Full capabilities unlocked</div>
+                                    </div>
+                                    <div class="legacy-wallet-grid">
+                                        <div class="legacy-wallet-tile"></div>
+                                        <div class="legacy-wallet-tile"></div>
+                                        <div class="legacy-wallet-tile"></div>
+                                        <div class="legacy-wallet-tile"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Stats overview -->
+                <div class="grid grid-rows-2"
+                     style="background-image: linear-gradient(to right, rgba(71,71,71,0.20) 50%, transparent 50%); background-position: center; background-size: 12px 2px; background-repeat: repeat-x;">
+                    <div class="px-10 py-12 flex flex-col items-center justify-center text-center">
+                        <div class="text-5xl font-bold text-ink mb-2">+42.5%</div>
+                        <div class="mono text-[11px] text-muted">Load money amount per month</div>
+                    </div>
+                    <div class="px-10 py-12 flex flex-col items-center justify-center text-center">
+                        <div class="text-5xl font-bold text-ink mb-2">+30%</div>
+                        <div class="mono text-[11px] text-muted">User adoption</div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-line-bottom"></div>
+
+            <div class="px-10 pt-16 pb-10 text-center flex flex-col items-center">
+                <h1 class="text-[2.6rem] md:text-[3.2rem] font-bold leading-[1.05] mb-6 max-w-4xl">
+                    Building Zapp Account
+                </h1>
+                <p class="text-lg md:text-xl text-deep max-w-2xl mb-8">
+                    Rebrand and upgrade the existing digital wallet for PayzApp into a digital bank account that could do it all.
+                </p>
+
+                <div class="flex flex-wrap justify-center gap-4 text-[13px] mono text-muted">
+                    <span class="px-3 py-1 border border-outline/30">Role: Product Designer</span>
+                    <span class="px-3 py-1 border border-outline/30">Responsibility: Strategy, Team Lead, Design</span>
+                </div>
+            </div>
+            <div class="container-line-bottom"></div>
+        </section>
+
+        <div class="stack-container" id="stack-container">
+
+            <!-- Card 1: Context (always expanded, no toggle) -->
+            <article class="stack-section static-section">
+                <div class="py-8 pl-10 pr-20">
+                    <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">What is Zapp Account?</h2>
+                    <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">Zapp Account is a <span class="kw">digital prepaid payments account</span> offered through PayZapp, built to give users a more capable, controlled, and convenient way to pay, transact, and manage everyday money. It supports UPI, Tap and Pay, Peer to Peer, and Online Payments.</p>
+
+                    <div class="mt-8 flex flex-wrap items-center justify-center gap-5">
+                        <div class="flex items-center gap-3 px-4 py-3 border border-outline/30">
+                            <div class="w-9 h-9 bg-accent flex items-center justify-center text-white font-display font-bold text-lg">P</div>
+                            <div>
+                                <div class="mono text-[10px] text-muted">Parent app</div>
+                                <div class="font-display font-semibold text-base text-ink">PayzApp</div>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col items-center">
+                            <div class="mono text-[10px] text-muted mb-1.5">contains</div>
+                            <svg width="64" height="10" viewBox="0 0 64 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                <path d="M0 5 L56 5" stroke="rgba(71,71,71,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                                <path d="M56 1 L62 5 L56 9" stroke="rgba(71,71,71,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </div>
+
+                        <div class="flex items-center gap-3 px-4 py-3 border border-outline/30">
+                            <div class="w-9 h-9 bg-ink flex items-center justify-center text-white font-display font-bold text-lg">Z</div>
+                            <div>
+                                <div class="mono text-[10px] text-muted">Wallet</div>
+                                <div class="font-display font-semibold text-base text-ink">Zapp Account</div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-center text-[13px] text-muted">We were designing inside this product relationship.</p>
+                </div>
+            </article>
+
+            <!-- Card 2: Enablers -->
+            <article class="stack-section has-floating-preview">
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">What we had to do</h2>
+                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">Brand the PayZapp Wallet as Zapp Account, introduce Video KYC, and create entry points that could promote it across the app.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayzApp Wallet screen" aria-label="Preview placeholder for old PayzApp Wallet screen">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <img class="placeholder-image-layer" alt="">
+                                <div class="legacy-wallet-bar"></div>
+                                <div class="legacy-wallet-card">
+                                    <div class="mono text-[9px] text-muted mb-2">Virtual card</div>
+                                    <div class="font-display text-sm font-medium text-ink">PayzApp Wallet</div>
+                                    <div class="text-[11px] text-muted mt-1">Tap and pay + online</div>
+                                </div>
+                                <div class="legacy-wallet-grid">
+                                    <div class="legacy-wallet-tile"></div>
+                                    <div class="legacy-wallet-tile"></div>
+                                    <div class="legacy-wallet-tile"></div>
+                                    <div class="legacy-wallet-tile"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <span class="legacy-wallet-caption mono text-[10px]">Before / PayzApp Wallet</span>
+                        </div>
+                    </aside>
+                    <div class="card-body-clip">
+                        <div class="card-body-content px-10 pt-3 pb-16 text-deep">
+                        <div class="section-side-preview mb-8">
+                            <aside class="legacy-wallet-preview legacy-wallet-flow-spacer" data-placeholder-clone="before-payzapp-wallet" aria-hidden="true">
+                                <div class="legacy-wallet-device">
+                                    <div class="legacy-wallet-screen">
+                                        <img class="placeholder-image-layer" alt="">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card">
+                                            <div class="mono text-[9px] text-muted mb-2">Virtual card</div>
+                                            <div class="font-display text-sm font-medium text-ink">PayzApp Wallet</div>
+                                            <div class="text-[11px] text-muted mt-1">Tap and pay + online</div>
+                                        </div>
+                                        <div class="legacy-wallet-grid">
+                                            <div class="legacy-wallet-tile"></div>
+                                            <div class="legacy-wallet-tile"></div>
+                                            <div class="legacy-wallet-tile"></div>
+                                            <div class="legacy-wallet-tile"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <span class="legacy-wallet-caption mono text-[10px]">Before / PayzApp Wallet</span>
+                                </div>
+                            </aside>
+
+                            <div>
+                                <div class="mb-5 relative">
+                                    <div class="sticky-note pop-on-expand" style="top: 0.25rem; left: -19.5rem; --rot: -2deg;">
+                                        HDFC Bank was the client. Zeta worked on PayZapp for them.
+                                    </div>
+                                    <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink">Product Requirements Broadly Came From The Bank</h3>
+                                    <p class="text-[15px] md:text-base">Before Zapp Account, the product existed as PayzApp Wallet: a digital wallet inside PayzApp that supported recharges, bill payments, and a virtual card for tap-and-pay and online transactions. It had some adoption inside the app, but not the kind of traction that made it feel like a central financial product. The bank wanted to bring renewed focus to this wallet. Their marketing team suggested the name Zapp Account, so the wallet could sit better inside a larger product ecosystem and grow beyond a wallet-like mental model. At Zeta, our job was to take that direction and turn it into a product experience that could actually ship inside PayzApp.</p>
+                                </div>
+
+	                                <div class="mb-5 numbered-point">
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">01 / Introduce Video KYC To Unlock Full Capabilities</h3>
+	                                    <p class="text-[15px] md:text-base">The most immediate ask was Video KYC. Until then, non-bank customers did not have a clear path to the full capabilities of Zapp Account. Bank customers could complete 4D card verification and unlock the complete experience, but everyone else was limited. Video KYC changed that: it gave non-bank users a route to full access and made the product more open to the wider market.</p>
+	                                </div>
+
+	                                <div class="mb-5 numbered-point">
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">02 / The Rebrand Needed An In-App System</h3>
+	                                    <p class="text-[15px] md:text-base">We had to ensure that the rebrand worked as a system across PayZapp. Zapp Account was likely to evolve as a proposition based on market needs, user behaviour, data, and business goals, so the system we created had to be scalable from the start. The new components, practices, and guidelines we created needed to be documented properly and reusable across Zapp Account touchpoints. At the same time, Zapp Account still lived inside PayZapp, which already had its own design system, so what we produced had to either follow or derive from the existing patterns instead of drifting too far away from them.</p>
+	                                </div>
+
+	                                <div class="numbered-point">
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">03 / We Had To Set The Foundation</h3>
+	                                    <p class="text-[15px] md:text-base">The redesign also had to respect where Zapp Account lived. It needed to feel refreshed and more intentional, but not detached from PayzApp's existing design language. On the landing page, that meant improving how key features were placed and understood, especially things like auto load and account actions, while setting up a foundation for future versions. This was not the final form of Zapp Account; it was the first version that had to make the direction real.</p>
+	                                </div>
+                            </div>
+                        </div>
+
+                        <div class="scope-flow-shell">
+                            <div class="scope-flow-toolbar">
+                                <div class="scope-flow-title">Flow Comparison</div>
+                                <div class="scope-flow-tabs" role="tablist" aria-label="Zapp Account flow comparison">
+                                    <button class="scope-flow-tab" type="button" role="tab" aria-selected="false" aria-controls="zapp-flow-before" data-flow-tab="before">Before</button>
+                                    <button class="scope-flow-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="zapp-flow-after" data-flow-tab="after">After</button>
+                                </div>
+                            </div>
+                            <div id="zapp-flow-before" class="scope-flow-panel" role="tabpanel" data-flow-panel="before" hidden>
+                                <div class="scope-flowchart" data-scope-flow="before" aria-label="Before flowchart for Zapp Account access"></div>
+                            </div>
+                            <div id="zapp-flow-after" class="scope-flow-panel" role="tabpanel" data-flow-panel="after">
+                                <div class="scope-flowchart" data-scope-flow="after" aria-label="After flowchart for Zapp Account access"></div>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3: Objectives -->
+            <article class="stack-section">
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">What we wanted to achieve</h2>
+                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">Increase wallet loads, improve adoption, and elevate the overall experience.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <p class="mb-5 text-[15px] md:text-base">We were focusing on three core outcomes for Zapp Account: getting more users to enroll, increasing the amount they loaded into the wallet, and improving the experience enough for the product to feel easier to understand and use.</p>
+
+                        <div class="mb-5 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">01 / Improve Adoption</h3>
+                            <p class="text-[15px] md:text-base">Adoption meant getting more people to enroll for Zapp Account in the first place. This became especially important because a large share of PayZapp users were new-to-bank or non-bank customers. With Video KYC, those users could now become eligible for the full Zapp Account experience. The opportunity was no longer limited to the existing bank customer base; we had to make the value proposition clear enough for this wider audience to sign up: speed, convenience, and security in one payment account.</p>
+                        </div>
+
+                        <div class="mb-5 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">02 / Increase Wallet Loads</h3>
+                            <p class="text-[15px] md:text-base">Wallet loads were one of the clearest signals of whether people were accepting the product as a place to keep and use money. It was not just about a one-time load amount; we also wanted to influence how often users loaded money, whether they came back for recurring loads, and how much they were comfortable loading each time. As Zapp Account became useful across more payment contexts, the load behavior became a stronger indicator of whether people trusted it for everyday use.</p>
+                        </div>
+
+                        <div class="numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">03 / Elevate The Overall Experience</h3>
+                            <p class="text-[15px] md:text-base">The experience also needed to do a better job of selling and explaining the product inside PayZapp. The rebrand gave us room to refresh the visual language, make the landing page more load-centric, and improve how important features like auto load showed up. We also wanted clearer communication through nudges and progress states, so users could understand what Zapp Account offered, what they had already unlocked, and what they could do next. These were not just business targets; they came from our discussions with leadership about what Zapp Account needed to become.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 3: Strategy -->
+            <article class="stack-section">
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">How did we approach it?</h2>
+                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">Some competitor research, design with independent rollouts in mind, and study what already worked.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <p class="mb-5 text-[15px] md:text-base">We translated the goals from the previous section into a planning structure. The work had to improve adoption, load amount, load frequency, and the overall account experience, but the first step was deciding what each part of the experience needed to communicate.</p>
+
+                        <div class="mb-5 relative">
+                            <div class="sticky-note pop-on-expand" style="top: 0.25rem; right: -18rem; --rot: 2deg;">
+                                Video KYC was actually rolled out first.
+                            </div>
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink">Video KYC And Visual Refresh Had To Roll Out Independently</h3>
+	                            <p class="text-[15px] md:text-base">Video KYC and the visual refresh were being handled by two different engineering teams, so the approach needed to support either one going live first without blocking the other. The bigger reason was cohesion: if Video KYC launched before the Zapp Account rebrand, it still had to feel like a natural part of the existing PayZapp Wallet proposition. And if the visual refresh moved first, it had to make room for Video KYC without depending on that flow being live yet. That meant the design language, onboarding logic, and account communication could not depend on a single combined release.</p>
+                        </div>
+
+                        <div class="mb-7">
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink">Study What Already Worked</h3>
+                            <p class="mb-4 text-[15px] md:text-base">The data suggested that people who used PayZapp Wallet mostly used it for bills and recharges, because those were the easiest and most prominent ways to use it. Some users also used auto-load, but it was not very evident in the experience. That mattered because auto-load could drive more convenient usage and higher or more frequent load amounts, both of which were important goals for Zapp Account.</p>
+                            <p class="text-[15px] md:text-base">We also spoke to a handful of people who used the wallet to understand what they expected from a wallet-like payments product. The following points became the working conclusions from what we found.</p>
+                        </div>
+
+                        <div class="mb-10 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">01 / Choose The Right Value Prop For Entry Points</h3>
+                            <p class="mb-4 text-[15px] md:text-base">For adoption, the first question was how we could sell Zapp Account wherever users encountered it inside PayZapp. The entry points could not simply say "upgrade" or "complete KYC"; they had to make the account feel worth the effort. The pitch needed to be built around these three values.</p>
+
+                            <div class="value-prop-grid">
+                                <div class="value-prop-card">
+                                    <div class="value-prop-label">
+                                        <div class="value-prop-icon is-fast"><i data-lucide="zap"></i></div>
+                                        <h4 class="font-display text-base font-semibold text-ink">Fast</h4>
+                                    </div>
+                                </div>
+                                <div class="value-prop-card">
+                                    <div class="value-prop-label">
+                                        <div class="value-prop-icon is-secure"><i data-lucide="shield-check"></i></div>
+                                        <h4 class="font-display text-base font-semibold text-ink">Secure</h4>
+                                    </div>
+                                </div>
+                                <div class="value-prop-card">
+                                    <div class="value-prop-label">
+                                        <div class="value-prop-icon is-convenient"><i data-lucide="hand-coins"></i></div>
+                                        <h4 class="font-display text-base font-semibold text-ink">Convenient</h4>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="value-prop-copy">
+                                <div>
+                                    <h4 class="font-display text-[15px] font-semibold slash-heading mb-1 text-ink">Fast</h4>
+                                    <p class="text-[14px] md:text-[15px]">Speed could be communicated through quicker payment methods: tap and pay, scan-and-pay UPI, and the ability to move through supported payment modes with less friction.</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-display text-[15px] font-semibold slash-heading mb-1 text-ink">Secure</h4>
+                                    <p class="text-[14px] md:text-[15px]">Security could lean on the trust of PayZapp as an HDFC Bank app, with the compliance expectations and safeguards that came with that context.</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-display text-[15px] font-semibold slash-heading mb-1 text-ink">Convenient</h4>
+                                    <p class="text-[14px] md:text-[15px]">Convenience could come from bringing payment modes and controls into one place, so users could manage Zapp Account payment settings, enable or disable payment methods, and move across supported ways to pay with less effort.</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="mb-10 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">02 / Make Video KYC Clear And Trackable</h3>
+                            <p class="text-[15px] md:text-base">Video KYC could easily become a drop-off-heavy journey because it involved many steps. Users would need to share personal and PAN details, pay an applicable upgrade fee, prepare documents, ensure proper lighting, maintain a stable internet connection, complete the video verification, wait for the verification to go through, and then receive the upgraded Zapp Account. The approach had to make this complex process feel simple for people enrolling into it: explain what would be required, show progress clearly, and make the next step feel trackable instead of uncertain.</p>
+
+                            <div class="kyc-stepper">
+                                <div class="kyc-stepper-label">Proposed Video KYC steps</div>
+                                <div class="kyc-step-grid">
+                                    <div class="kyc-step-card">
+                                        <div class="kyc-step-number">01</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink">Verify PAN Details</h4>
+                                        <p class="text-[13px] leading-relaxed">Start with PAN verification and explain why it was needed.</p>
+                                    </div>
+                                    <div class="kyc-step-card">
+                                        <div class="kyc-step-number">02</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink">Employment Details</h4>
+                                        <p class="text-[13px] leading-relaxed">Collect the required employment information in the next step.</p>
+                                    </div>
+                                    <div class="kyc-step-card">
+                                        <div class="kyc-step-number">03</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink">Zapp Account Upgrade Fee</h4>
+                                        <p class="text-[13px] leading-relaxed">Show the applicable upgrade fee before the video step.</p>
+                                    </div>
+                                    <div class="kyc-step-card">
+                                        <div class="kyc-step-number">04</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink">Video KYC</h4>
+                                        <p class="text-[13px] leading-relaxed">Guide users into the live verification step with clear expectations.</p>
+                                    </div>
+                                    <div class="kyc-step-card">
+                                        <div class="kyc-step-number">05</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink">Unlock All Features</h4>
+                                        <p class="text-[13px] leading-relaxed">Confirm the upgrade and communicate full account capabilities.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-10 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">03 / Make The First Screen More Load-Centric</h3>
+                            <p class="text-[15px] md:text-base">The older PayZapp Wallet landing page did not really push loading money as the hero action. It focused more heavily on the virtual card, which made sense for the older wallet framing but not for the positioning Zapp Account was trying to take. A load-centric screen would need to make it obvious where to add money, and make auto-load easier to understand: when a user's account balance fell below a set amount, money could be added automatically so the payment could go through. We saw room to improve the information architecture of the first screen so loading money, repeat usage, and account capability could become clearer from the first visit.</p>
+                        </div>
+
+                        <div class="numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink">04 / Organize The Experience Around Contextual Levers</h3>
+                            <p class="mb-6 text-[15px] md:text-base">The homepage could become more than an entry point. It could act as an intuitive control surface for the account, while also quietly advertising the most useful reasons to come back and use it.</p>
+
+                            <div class="space-y-5">
+                                <div class="pl-4 border-l border-[#474747]/20">
+                                    <h4 class="font-display text-[15px] font-semibold mb-1 text-ink">Place Auto-Load Where It Made Sense</h4>
+                                    <p class="text-[14px] md:text-[15px] leading-relaxed">Auto-load directly supported recurring loads, so it needed to be visible, transparent, and placed close to the account balance and load actions.</p>
+                                </div>
+                                <div class="pl-4 border-l border-[#474747]/20">
+                                    <h4 class="font-display text-[15px] font-semibold mb-1 text-ink">Make Offers Clear And Visible</h4>
+                                    <p class="text-[14px] md:text-[15px] leading-relaxed">Offers and CashPoints could help users understand the value of Zapp Account, especially because one CashPoint equaled one rupee.</p>
+                                </div>
+                                <div class="pl-4 border-l border-[#474747]/20">
+                                    <h4 class="font-display text-[15px] font-semibold mb-1 text-ink">Expose Payment Settings</h4>
+                                    <p class="text-[14px] md:text-[15px] leading-relaxed">Payment cards, payment settings, and enable-or-disable controls needed to be easy to find instead of feeling buried inside the account.</p>
+                                </div>
+                                <div class="pl-4 border-l border-[#474747]/20">
+                                    <h4 class="font-display text-[15px] font-semibold mb-1 text-ink">Let The Homepage Explain Itself</h4>
+                                    <p class="text-[14px] md:text-[15px] leading-relaxed">The first screen could work as a self-explaining surface, showing what the account could do and guiding users toward the next useful action.</p>
+                                </div>
+                                <div class="pl-4 border-l border-[#474747]/20">
+                                    <h4 class="font-display text-[15px] font-semibold mb-1 text-ink">Use State-Based Rich Nudges</h4>
+                                    <p class="text-[14px] md:text-[15px] leading-relaxed">Rich nudges could provide contextual education across different account states, helping users understand what Zapp Account was, how it worked, what they had unlocked, and what action could move them forward.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 4: Execution -->
+            <article class="stack-section">
+                <div class="sticky-note" style="top: 1.5rem; left: -18rem; --rot: -3deg;">
+                    Prototyped the load interaction using Principle to really nail the motion feel.
+                </div>
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">How did we solve it?</h2>
+	                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">We made the first screen more load-centric, clarified the Video KYC journey, and created reusable patterns that could support the Zapp Account system inside PayZapp.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                            <div>
+                                <div class="img-placeholder editable-placeholder h-56 mb-6" data-placeholder-id="solution-first-fold" data-placeholder-name="Solution first fold image">
+                                    <img src="https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=1000" alt="UI Wireframe" class="w-full h-full object-contain" data-default-src="https://images.unsplash.com/photo-1614680376593-902f74cf0d41?auto=format&fit=crop&q=80&w=1000">
+                                </div>
+                                <div class="mono text-[11px] text-muted mb-2">01 / First fold</div>
+	                                <h3 class="text-lg font-bold mb-3 text-ink">Make Loading Money The Primary Action</h3>
+	                                <p class="text-[15px] md:text-base">We reorganized the landing page so the balance, load money action, auto-load, and key account actions were easier to notice from the first fold. The screen had to make the account feel useful immediately, not just decorative.</p>
+                            </div>
+                            <div>
+                                <div class="img-placeholder editable-placeholder h-56 mb-6" data-placeholder-id="solution-kyc-clarity" data-placeholder-name="Solution KYC clarity image">
+                                    <img src="https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=1000" alt="UI Motion" class="w-full h-full object-contain" data-default-src="https://images.unsplash.com/photo-1555421689-491a97ff2040?auto=format&fit=crop&q=80&w=1000">
+                                </div>
+                                <div class="mono text-[11px] text-muted mb-2">02 / KYC clarity</div>
+                                <h3 class="text-lg font-bold mb-3 text-ink">Making KYC Transparent</h3>
+	                                <p class="text-[15px] md:text-base">We made the upgrade journey more explicit by showing what users needed to do, where they were in the process, and what capabilities they would unlock after completing Video KYC.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 5: Impact -->
+            <article class="stack-section">
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">What were the results?</h2>
+                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display"><span class="kw">+42.5% in load amounts</span>, <span class="kw">+30% in adoption</span>, and a steady lift in feature exploration.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="px-10 pt-3 pb-16 text-deep">
+	                        <p class="mb-8 text-[15px] md:text-base">The revised experience helped make Zapp Account easier to understand, easier to enter, and easier to use as a place to load and spend money inside PayZapp.</p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-12">
+                            <div class="border-l-2 border-accent pl-6">
+                                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">+30%</div>
+                                <div class="text-[11px] mono text-muted">Increase in User Adoption</div>
+                            </div>
+                            <div class="border-l-2 border-accent pl-6">
+                                <div class="text-3xl md:text-4xl font-bold text-accent mb-2">+42.5%</div>
+                                <div class="text-[11px] mono text-muted">Increase in Load Amount</div>
+                            </div>
+                        </div>
+
+                        <blockquote class="text-[15px] md:text-base italic text-medium border-l-4 border-outline/20 pl-6 py-2">
+                            "The redesign not only modernized our visual language but fundamentally shifted how users interacted with our core financial levers."
+                        </blockquote>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Card 6: What's Next -->
+            <article class="stack-section">
+                <div class="section-header py-8 pl-10 pr-20">
+                    <div class="flex justify-between items-start gap-4">
+                        <div>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans">What's Next?</h2>
+                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display">Turning the Zapp Account into a full money dashboard inside the PayZapp ecosystem.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <p class="mb-4 text-[15px] md:text-base">Phase 1 was foundational. It successfully migrated the user base to the new mental model of the Zapp Account.</p>
+                        <p class="mb-16 text-[15px] md:text-base">Version 2 (currently in progress) builds on this by evolving the Zapp Account into a full dashboard view. This will integrate the account even deeper into the broader PayZapp ecosystem, creating a seamless, interconnected financial hub for the user.</p>
+
+                        <div class="font-display font-medium text-[15px] flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-accent inline-block"></span>
+                            Thank you for reading.
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <div class="placeholder-edit-modal" data-placeholder-modal aria-hidden="true">
+        <div class="placeholder-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="placeholder-modal-title">
+            <div class="flex items-start justify-between gap-4 mb-4">
+                <div>
+                    <div class="mono text-[10px] text-muted mb-2">Edit placeholder</div>
+                    <h2 id="placeholder-modal-title" class="font-display text-xl font-semibold text-ink">Paste image</h2>
+                </div>
+                <button class="placeholder-modal-button" type="button" data-placeholder-cancel>Close</button>
+            </div>
+            <div class="placeholder-paste-zone" tabindex="0" data-placeholder-paste-zone>
+                <div data-placeholder-empty>
+                    <div class="font-display text-base font-semibold mb-2 text-ink">Paste an image here</div>
+                    <p class="text-[14px] text-muted">Copy an image, click this area, and press Ctrl/Cmd + V.</p>
+                </div>
+                <img data-placeholder-preview alt="Pasted placeholder preview" hidden>
+            </div>
+            <p class="mt-3 text-[13px] text-muted" data-placeholder-status>Images are saved locally from edit mode only.</p>
+            <div class="placeholder-modal-actions">
+                <button class="placeholder-modal-button" type="button" data-placeholder-clear>Clear image</button>
+                <button class="placeholder-modal-button" type="button" data-placeholder-cancel>Cancel</button>
+                <button class="placeholder-modal-button is-primary" type="button" data-placeholder-save disabled>Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@dagrejs/dagre/dist/dagre.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        const ANIM_DURATION = 650;
+
+        // cubic-bezier(0.6, 0, 0.2, 1) to match the rest of the page motion.
+        function cubicBezier(p1x, p1y, p2x, p2y) {
+            const x = (s) =>
+                3 * (1 - s) * (1 - s) * s * p1x + 3 * (1 - s) * s * s * p2x + s * s * s;
+            const y = (s) =>
+                3 * (1 - s) * (1 - s) * s * p1y + 3 * (1 - s) * s * s * p2y + s * s * s;
+            return function (t) {
+                let s = t;
+                for (let i = 0; i < 8; i++) {
+                    const dx =
+                        3 * (1 - s) * (1 - s) * p1x +
+                        6 * (1 - s) * s * (p2x - p1x) +
+                        3 * s * s * (1 - p2x);
+                    if (Math.abs(dx) < 1e-6) break;
+                    s = s - (x(s) - t) / dx;
+                }
+                return y(s);
+            };
+        }
+        const EASE = cubicBezier(0.6, 0, 0.2, 1);
+        const OFFSCREEN_UNFADE_RATIO = 0.20; // threshold for reversible fade/unfade behavior
+        const TALL_SECTION_FOCUS_RATIO = 0.55; // viewport coverage required to keep other sections faded
+        const EXPANDED_SECTION_TOP_OFFSET_RATIO = 0.20;
+
+        const allSections = Array.from(document.querySelectorAll(".stack-section"));
+        let motionRaf = null;
+        let activeMotion = null;
+        let scrollCheckRaf = null;
+        let cancelSmoothScroll = () => {};
+        let nativeWheelUntil = 0;
+
+        function syncFloatingPreviews() {
+            document.querySelectorAll(".stack-section.has-floating-preview").forEach((section) => {
+                const preview = section.querySelector(".legacy-wallet-floating-preview");
+                const spacer = section.querySelector(".legacy-wallet-flow-spacer");
+                if (!preview || !spacer) return;
+
+                const spacerRect = spacer.getBoundingClientRect();
+                preview.style.setProperty("--floating-preview-top", `${spacerRect.top}px`);
+                preview.style.setProperty("--floating-preview-left", `${spacerRect.left}px`);
+            });
+        }
+
+        function getCardBodyClip(body) {
+            return body?.querySelector(":scope > .card-body-clip") || null;
+        }
+
+        function setCardBodyTweenHeight(tween, height) {
+            const clippedHeight = Math.max(0, height);
+            tween.body.style.height = clippedHeight + "px";
+
+            const clip = getCardBodyClip(tween.body);
+            if (clip) {
+                clip.style.height = "";
+                const clipHeight = clip.getBoundingClientRect().height;
+                const bottomInset = Math.max(0, clipHeight - clippedHeight);
+                clip.style.clipPath = `inset(0 0 ${bottomInset}px 0)`;
+            }
+        }
+
+        function finishCardBodyTween(tween) {
+            tween.body.style.height = tween.to > 0 ? "auto" : "0px";
+
+            const clip = getCardBodyClip(tween.body);
+            if (clip) {
+                clip.style.height = "";
+                clip.style.clipPath = "";
+            }
+        }
+
+        syncFloatingPreviews();
+        window.addEventListener("resize", syncFloatingPreviews);
+        window.addEventListener("scroll", syncFloatingPreviews, { passive: true });
+        window.addEventListener("load", syncFloatingPreviews);
+        if (document.fonts?.ready) {
+            document.fonts.ready.then(syncFloatingPreviews);
+        }
+
+        const scopeFlows = {
+            before: {
+                nodes: [
+                    {
+                        id: "wallet",
+                        kicker: "01 / Earlier",
+                        title: "Onboarding From PayZapp",
+                        body: "Users entered the wallet journey from PayZapp, but the path still depended on whether they were already bank customers.",
+                        width: 280
+                    },
+                    {
+                        id: "customerType",
+                        shape: "decision",
+                        title: "Customer Type",
+                        width: 150,
+                        height: 150
+                    },
+                    {
+                        id: "bank",
+                        kicker: "02A / Existing Path",
+                        title: "Bank Customer",
+                        width: 220
+                    },
+                    {
+                        id: "nonbank",
+                        kicker: "02B / Limited Path",
+                        title: "Non-Bank Customer",
+                        width: 230
+                    },
+                    {
+                        id: "cardVerification",
+                        kicker: "03A / Verification",
+                        title: "4D Card Verification",
+                        body: "Bank customers could complete the card-based check.",
+                        width: 220
+                    },
+                    {
+                        id: "limitedCapabilities",
+                        kicker: "03B / Limited",
+                        title: "Zapp Account Limited Capabilities",
+                        body: "The non-bank path did not unlock the complete account experience.",
+                        bullets: ["No Scan to Pay", "No Peer to Peer"],
+                        width: 260
+                    },
+                    {
+                        id: "fullCapabilities",
+                        kicker: "04 / Full Access",
+                        title: "Zapp Account Full Capabilities",
+	                        body: "Bank customers could unlock the complete account experience.",
+                        width: 270
+                    }
+                ],
+                edges: [
+                    ["wallet", "customerType"],
+                    ["customerType", "bank"],
+                    ["customerType", "nonbank"],
+                    ["bank", "cardVerification"],
+                    ["cardVerification", "fullCapabilities"],
+                    ["nonbank", "limitedCapabilities"]
+                ]
+            },
+            after: {
+                nodes: [
+                    {
+                        id: "entrypoints",
+                        kicker: "01 / Entry Points",
+                        title: "Entry Points Across The App",
+                        body: "Create banners, hooks, and other surfaces that brought users into the Zapp Account journey.",
+                        variant: "worked",
+                        width: 260
+                    },
+                    {
+                        id: "revampedOnboarding",
+                        kicker: "01 / Revamped Flow",
+                        title: "Revamped Onboarding",
+                        body: "Updated to match the new brand, simplify the journey, and make each step clearer for users.",
+                        variant: "worked",
+                        width: 270
+                    },
+                    {
+                        id: "customerType",
+                        shape: "decision",
+                        title: "Customer Type",
+                        width: 150,
+                        height: 150
+                    },
+                    {
+                        id: "bank",
+                        kicker: "03A / Existing Path",
+                        title: "Bank Customer",
+                        width: 220
+                    },
+                    {
+                        id: "nonbank",
+                        kicker: "03B / New Path",
+                        title: "Non-Bank Customer",
+                        width: 230
+                    },
+                    {
+                        id: "cardVerification",
+                        kicker: "04A / Verification",
+                        title: "4D Card Verification",
+                        body: "Bank customers could continue through the card-based check.",
+                        width: 220
+                    },
+                    {
+                        id: "videoKyc",
+                        kicker: "04B / KYC Unlock",
+                        title: "Video KYC",
+                        body: "Non-bank users could complete Video KYC to unlock the same full capabilities.",
+                        variant: "worked",
+                        width: 230
+                    },
+                    {
+                        id: "fullCapabilities",
+                        kicker: "05 / Outcome",
+                        title: "Zapp Account Full Capabilities",
+                        body: "Both bank and non-bank customers now had a clear path to the complete account experience.",
+                        width: 280,
+                        offsetY: 34
+                    }
+                ],
+                edges: [
+                    ["entrypoints", "revampedOnboarding"],
+                    ["revampedOnboarding", "customerType"],
+                    ["customerType", "bank"],
+                    ["customerType", "nonbank"],
+                    ["bank", "cardVerification"],
+                    ["nonbank", "videoKyc"],
+                    ["cardVerification", "fullCapabilities"],
+                    ["videoKyc", "fullCapabilities"]
+                ]
+            }
+        };
+
+        function createSvgEl(tag, attrs = {}) {
+            const el = document.createElementNS("http://www.w3.org/2000/svg", tag);
+            Object.entries(attrs).forEach(([key, value]) => el.setAttribute(key, value));
+            return el;
+        }
+
+        function getScopeNodeClass(node, extraClass = "") {
+            const isTitleOnly = !node.body && !node.bullets && node.shape !== "decision";
+            return `scope-node-card ${node.variant ? `is-${node.variant}` : ""} ${isTitleOnly ? "is-title-only" : ""} ${extraClass}`.trim();
+        }
+
+        function getScopeNodeHtml(node, extraClass = "") {
+            if (node.shape === "decision") {
+                return `
+                    <div xmlns="http://www.w3.org/1999/xhtml" class="${getScopeNodeClass(node, extraClass)}">
+                        <h3 class="text-lg font-bold text-ink">${node.title}</h3>
+                    </div>
+                `;
+            }
+
+            return `
+                <div xmlns="http://www.w3.org/1999/xhtml" class="${getScopeNodeClass(node, extraClass)}">
+                    <h3 class="text-lg font-bold text-ink">${node.title}</h3>
+                    ${node.body ? `<p class="text-[14px]">${node.body}</p>` : ""}
+                    ${node.bullets ? `<ul>${node.bullets.map((item) => `<li>${item}</li>`).join("")}</ul>` : ""}
+                </div>
+            `;
+        }
+
+        function measureScopeNodes(container, nodes) {
+            const measurer = document.createElement("div");
+            measurer.style.position = "absolute";
+            measurer.style.left = "-9999px";
+            measurer.style.top = "0";
+            measurer.style.visibility = "hidden";
+            measurer.style.pointerEvents = "none";
+            document.body.appendChild(measurer);
+
+            const measuredNodes = nodes.map((node) => {
+                if (node.shape === "decision") {
+                    return {
+                        ...node,
+                        height: node.height || node.width
+                    };
+                }
+
+                const wrapper = document.createElement("div");
+                wrapper.style.width = `${node.width}px`;
+                wrapper.innerHTML = getScopeNodeHtml(node, "is-measuring");
+                measurer.appendChild(wrapper);
+
+                const card = wrapper.firstElementChild;
+                const measuredHeight = card ? Math.ceil(card.getBoundingClientRect().height) : 0;
+                wrapper.remove();
+
+                return {
+                    ...node,
+                    height: Math.ceil(measuredHeight)
+                };
+            });
+
+            measurer.remove();
+            return measuredNodes;
+        }
+
+        function alignScopeRowsToTop(graph) {
+            const rows = [];
+            graph.nodes().forEach((id) => {
+                const node = graph.node(id);
+                const existingRow = rows.find((row) => Math.abs(row.centerY - node.y) < 24);
+
+                if (existingRow) {
+                    existingRow.ids.push(id);
+                    existingRow.centerY = (existingRow.centerY * (existingRow.ids.length - 1) + node.y) / existingRow.ids.length;
+                } else {
+                    rows.push({ centerY: node.y, ids: [id] });
+                }
+            });
+
+            rows.forEach((row) => {
+                const topY = Math.min(...row.ids.map((id) => {
+                    const node = graph.node(id);
+                    return node.y - node.height / 2;
+                }));
+
+                row.ids.forEach((id) => {
+                    const node = graph.node(id);
+                    node.y = topY + node.height / 2;
+                });
+            });
+        }
+
+        function roundedOrthogonalPath(points, radius = 18) {
+            if (!points.length) return "";
+
+            const route = [];
+            points.forEach((point, index) => {
+                if (index === 0) {
+                    route.push(point);
+                    return;
+                }
+
+                const prev = route[route.length - 1];
+                if (prev.x !== point.x && prev.y !== point.y) {
+                    route.push({ x: prev.x, y: point.y });
+                }
+                route.push(point);
+            });
+
+            let path = `M ${route[0].x} ${route[0].y}`;
+            for (let i = 1; i < route.length; i++) {
+                const prev = route[i - 1];
+                const current = route[i];
+                const next = route[i + 1];
+
+                if (!next) {
+                    path += ` L ${current.x} ${current.y}`;
+                    continue;
+                }
+
+                const incomingX = Math.sign(current.x - prev.x);
+                const incomingY = Math.sign(current.y - prev.y);
+                const outgoingX = Math.sign(next.x - current.x);
+                const outgoingY = Math.sign(next.y - current.y);
+
+                if ((incomingX || incomingY) && (outgoingX || outgoingY) && incomingX !== outgoingX && incomingY !== outgoingY) {
+                    const incomingLength = Math.abs(current.x - prev.x) + Math.abs(current.y - prev.y);
+                    const outgoingLength = Math.abs(next.x - current.x) + Math.abs(next.y - current.y);
+                    const effectiveRadius = Math.max(0, Math.min(radius, incomingLength / 2, outgoingLength / 2));
+                    const before = {
+                        x: current.x - incomingX * effectiveRadius,
+                        y: current.y - incomingY * effectiveRadius
+                    };
+                    const after = {
+                        x: current.x + outgoingX * effectiveRadius,
+                        y: current.y + outgoingY * effectiveRadius
+                    };
+                    path += ` L ${before.x} ${before.y} Q ${current.x} ${current.y} ${after.x} ${after.y}`;
+                } else {
+                    path += ` L ${current.x} ${current.y}`;
+                }
+            }
+
+            return path;
+        }
+
+        function centeredPortOffset(index, total, gap = 24) {
+            return (index - (total - 1) / 2) * gap;
+        }
+
+        function getScopeEdgeRoute(graph, edge) {
+            const PORT_GAP = 8;
+            const source = graph.node(edge.v);
+            const target = graph.node(edge.w);
+            const outgoing = (graph.outEdges(edge.v) || [])
+                .slice()
+                .sort((a, b) => graph.node(a.w).x - graph.node(b.w).x);
+            const incoming = (graph.inEdges(edge.w) || [])
+                .slice()
+                .sort((a, b) => graph.node(a.v).x - graph.node(b.v).x);
+            const outIndex = outgoing.findIndex((item) => item.v === edge.v && item.w === edge.w);
+            const inIndex = incoming.findIndex((item) => item.v === edge.v && item.w === edge.w);
+            const topOf = (node) => node.y - node.height / 2;
+            const bottomOf = (node) => node.y + node.height / 2;
+
+            if (outgoing.length > 1) {
+                const targetTops = outgoing.map((item) => topOf(graph.node(item.w)));
+                const branchY = Math.min(...targetTops) - 36;
+                const start = {
+                    x: source.x + centeredPortOffset(outIndex, outgoing.length, 18),
+                    y: bottomOf(source) + PORT_GAP
+                };
+                const end = {
+                    x: target.x,
+                    y: topOf(target) - PORT_GAP
+                };
+
+                return [
+                    start,
+                    { x: start.x, y: branchY },
+                    { x: end.x, y: branchY },
+                    end
+                ];
+            }
+
+            if (incoming.length > 1) {
+                const sourceBottoms = incoming.map((item) => bottomOf(graph.node(item.v)));
+                const mergeY = Math.max(...sourceBottoms) + 36;
+                const start = {
+                    x: source.x,
+                    y: bottomOf(source) + PORT_GAP
+                };
+                const end = {
+                    x: target.x + centeredPortOffset(inIndex, incoming.length, 18),
+                    y: topOf(target) - PORT_GAP
+                };
+
+                return [
+                    start,
+                    { x: start.x, y: mergeY },
+                    { x: end.x, y: mergeY },
+                    end
+                ];
+            }
+
+            const start = {
+                x: source.x + centeredPortOffset(outIndex, outgoing.length),
+                y: bottomOf(source) + PORT_GAP
+            };
+            const end = {
+                x: target.x + centeredPortOffset(inIndex, incoming.length),
+                y: topOf(target) - PORT_GAP
+            };
+            const midY = start.y + (end.y - start.y) / 2;
+
+            return [
+                start,
+                { x: start.x, y: midY },
+                { x: end.x, y: midY },
+                end
+            ];
+        }
+
+        function renderScopeFallback(container, nodes) {
+            container.innerHTML = `
+                <div class="scope-flow-fallback">
+                    ${nodes.map((node) => getScopeNodeHtml(node)).join("")}
+                </div>
+            `;
+        }
+
+        function renderScopeFlowchart(container, flow) {
+            if (!container) return;
+            if (!window.dagre) {
+                renderScopeFallback(container, flow.nodes);
+                return;
+            }
+
+            const FLOW_SCALE = 0.92;
+            const markerId = `scope-arrow-${container.dataset.scopeFlow || "default"}`;
+            const measuredNodes = measureScopeNodes(container, flow.nodes);
+            const graph = new dagre.graphlib.Graph();
+            graph.setGraph({
+                rankdir: "TB",
+                ranksep: 54,
+                nodesep: 36,
+                edgesep: 16,
+                marginx: 18,
+                marginy: 18
+            });
+            graph.setDefaultEdgeLabel(() => ({}));
+
+            measuredNodes.forEach((node) => graph.setNode(node.id, node));
+            flow.edges.forEach(([from, to]) => graph.setEdge(from, to));
+            dagre.layout(graph);
+            alignScopeRowsToTop(graph);
+            measuredNodes.forEach((node) => {
+                if (!node.offsetY) return;
+                const layoutNode = graph.node(node.id);
+                if (layoutNode) layoutNode.y += node.offsetY;
+            });
+
+            const graphInfo = graph.graph();
+            const bounds = graph.nodes().reduce((acc, id) => {
+                const node = graph.node(id);
+                return {
+                    width: Math.max(acc.width, node.x + node.width / 2 + graphInfo.marginx),
+                    height: Math.max(acc.height, node.y + node.height / 2 + graphInfo.marginy)
+                };
+            }, { width: graphInfo.width, height: graphInfo.height });
+            const svg = createSvgEl("svg", {
+                viewBox: `0 0 ${bounds.width} ${bounds.height}`,
+                width: Math.ceil(bounds.width * FLOW_SCALE),
+                height: Math.ceil(bounds.height * FLOW_SCALE),
+                role: "img",
+                "aria-label": "Zapp Account scope flow"
+            });
+
+            const defs = createSvgEl("defs");
+            const marker = createSvgEl("marker", {
+                id: markerId,
+                viewBox: "0 0 10 10",
+                refX: "8",
+                refY: "5",
+                markerWidth: "6",
+                markerHeight: "6",
+                orient: "auto-start-reverse"
+            });
+            marker.appendChild(createSvgEl("path", {
+                d: "M 0 0 L 10 5 L 0 10 z",
+                fill: "#b3b3b3"
+            }));
+            defs.appendChild(marker);
+            svg.appendChild(defs);
+
+            const edgeLayer = createSvgEl("g");
+            const nodeLayer = createSvgEl("g");
+            svg.appendChild(edgeLayer);
+            svg.appendChild(nodeLayer);
+
+            graph.edges().forEach((edge) => {
+                const path = createSvgEl("path", {
+                    class: "scope-edge",
+                    d: roundedOrthogonalPath(getScopeEdgeRoute(graph, edge)),
+                    "marker-end": `url(#${markerId})`
+                });
+                edgeLayer.appendChild(path);
+            });
+
+            measuredNodes.forEach((node) => {
+                const layoutNode = graph.node(node.id);
+                if (node.shape === "decision") {
+                    const group = createSvgEl("g");
+                    const halfW = node.width / 2;
+                    const halfH = node.height / 2;
+                    const points = [
+                        `${layoutNode.x},${layoutNode.y - halfH}`,
+                        `${layoutNode.x + halfW},${layoutNode.y}`,
+                        `${layoutNode.x},${layoutNode.y + halfH}`,
+                        `${layoutNode.x - halfW},${layoutNode.y}`
+                    ].join(" ");
+
+                    group.appendChild(createSvgEl("polygon", {
+                        class: "scope-decision",
+                        points
+                    }));
+                    const label = createSvgEl("text", {
+                        class: "scope-decision-label",
+                        x: layoutNode.x,
+                        y: layoutNode.y
+                    });
+                    label.textContent = node.title;
+                    group.appendChild(label);
+                    nodeLayer.appendChild(group);
+                    return;
+                }
+
+                const foreignObject = createSvgEl("foreignObject", {
+                    x: layoutNode.x - node.width / 2,
+                    y: layoutNode.y - node.height / 2,
+                    width: node.width,
+                    height: node.height
+                });
+                foreignObject.innerHTML = getScopeNodeHtml(node);
+                nodeLayer.appendChild(foreignObject);
+            });
+
+            container.replaceChildren(svg);
+        }
+
+        function renderAllScopeFlowcharts() {
+            document.querySelectorAll("[data-scope-flow]").forEach((container) => {
+                const flow = scopeFlows[container.dataset.scopeFlow];
+                if (flow) renderScopeFlowchart(container, flow);
+            });
+        }
+
+        function setupScopeFlowTabs() {
+            const tabs = Array.from(document.querySelectorAll("[data-flow-tab]"));
+            const panels = Array.from(document.querySelectorAll("[data-flow-panel]"));
+
+            tabs.forEach((tab) => {
+                tab.addEventListener("click", () => {
+                    const selectedFlow = tab.dataset.flowTab;
+                    tabs.forEach((item) => {
+                        const isActive = item === tab;
+                        item.classList.toggle("is-active", isActive);
+                        item.setAttribute("aria-selected", String(isActive));
+                    });
+                    panels.forEach((panel) => {
+                        panel.hidden = panel.dataset.flowPanel !== selectedFlow;
+                    });
+
+                    const expandedBody = tab.closest(".card-body");
+                    if (expandedBody && expandedBody.style.height !== "0px") {
+                        expandedBody.style.height = "auto";
+                    }
+                });
+            });
+        }
+
+        renderAllScopeFlowcharts();
+        setupScopeFlowTabs();
+        if (window.lucide) {
+            lucide.createIcons();
+        }
+
+        // Web fonts (Space Grotesk / IBM Plex Sans) load asynchronously, so initial
+        // measurements can use fallback metrics and leave extra space inside cards.
+        // Re-render once fonts are ready so each SVG box snaps to its real content height.
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                requestAnimationFrame(() => renderAllScopeFlowcharts());
+            });
+        }
+        window.addEventListener("load", () => {
+            requestAnimationFrame(() => renderAllScopeFlowcharts());
+        });
+
+        (function setupPlaceholderEditMode() {
+            const params = new URLSearchParams(window.location.search);
+            const isEditMode = params.get("edit") === "true";
+            const placeholders = Array.from(document.querySelectorAll("[data-placeholder-id]"));
+            const modal = document.querySelector("[data-placeholder-modal]");
+            const modalTitle = document.querySelector("#placeholder-modal-title");
+            const pasteZone = document.querySelector("[data-placeholder-paste-zone]");
+            const emptyState = document.querySelector("[data-placeholder-empty]");
+            const preview = document.querySelector("[data-placeholder-preview]");
+            const status = document.querySelector("[data-placeholder-status]");
+            const saveButton = document.querySelector("[data-placeholder-save]");
+            const clearButton = document.querySelector("[data-placeholder-clear]");
+            const cancelButtons = Array.from(document.querySelectorAll("[data-placeholder-cancel]"));
+            const supportsFileSystemAccess = "showDirectoryPicker" in window;
+            const DB_NAME = "zapp-placeholder-edit-mode";
+            const STORE_NAME = "placeholder-store";
+            let dbPromise = null;
+            let directoryHandle = null;
+            let activePlaceholder = null;
+            let pendingFile = null;
+            let pendingPreviewUrl = null;
+
+            if (!placeholders.length || !modal) return;
+
+            function openDb() {
+                if (dbPromise) return dbPromise;
+                dbPromise = new Promise((resolve, reject) => {
+                    const request = indexedDB.open(DB_NAME, 1);
+                    request.onupgradeneeded = () => {
+                        request.result.createObjectStore(STORE_NAME);
+                    };
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+                return dbPromise;
+            }
+
+            async function dbGet(key) {
+                const db = await openDb();
+                return new Promise((resolve, reject) => {
+                    const request = db.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).get(key);
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+            }
+
+            async function dbSet(key, value) {
+                const db = await openDb();
+                return new Promise((resolve, reject) => {
+                    const request = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).put(value, key);
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            }
+
+            async function dbDelete(key) {
+                const db = await openDb();
+                return new Promise((resolve, reject) => {
+                    const request = db.transaction(STORE_NAME, "readwrite").objectStore(STORE_NAME).delete(key);
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            }
+
+            function recordKey(id) {
+                return `placeholder:${id}`;
+            }
+
+            function blobKey(id) {
+                return `placeholder-blob:${id}`;
+            }
+
+            function sanitizeFilePart(value) {
+                return value.replace(/[^a-z0-9-]/gi, "-").replace(/-+/g, "-").toLowerCase();
+            }
+
+            function extensionForFile(file) {
+                if (file.type === "image/jpeg") return "jpg";
+                if (file.type === "image/webp") return "webp";
+                if (file.type === "image/gif") return "gif";
+                return "png";
+            }
+
+            function setStatus(message) {
+                if (status) status.textContent = message;
+            }
+
+            function showPreview(file) {
+                if (pendingPreviewUrl) URL.revokeObjectURL(pendingPreviewUrl);
+                pendingPreviewUrl = URL.createObjectURL(file);
+                preview.src = pendingPreviewUrl;
+                preview.hidden = false;
+                emptyState.hidden = true;
+                saveButton.disabled = false;
+            }
+
+            function resetModalPreview() {
+                pendingFile = null;
+                if (pendingPreviewUrl) URL.revokeObjectURL(pendingPreviewUrl);
+                pendingPreviewUrl = null;
+                preview.removeAttribute("src");
+                preview.hidden = true;
+                emptyState.hidden = false;
+                saveButton.disabled = true;
+            }
+
+            function applyPlaceholderImage(placeholder, imageUrl) {
+                const standardImage = placeholder.matches(".img-placeholder") ? placeholder.querySelector("img") : null;
+                const phoneImage = placeholder.querySelector(".placeholder-image-layer");
+
+                if (standardImage) {
+                    if (imageUrl) {
+                        standardImage.src = imageUrl;
+                        placeholder.classList.add("has-saved-image");
+                    } else {
+                        const defaultSrc = standardImage.dataset.defaultSrc;
+                        if (defaultSrc) standardImage.src = defaultSrc;
+                        placeholder.classList.remove("has-saved-image");
+                    }
+                    return;
+                }
+
+                if (phoneImage) {
+                    if (imageUrl) {
+                        phoneImage.src = imageUrl;
+                        placeholder.classList.add("has-saved-image");
+                    } else {
+                        phoneImage.removeAttribute("src");
+                        placeholder.classList.remove("has-saved-image");
+                    }
+                }
+            }
+
+            function renderPlaceholder(placeholder, imageUrl) {
+                if (!placeholder) return;
+                applyPlaceholderImage(placeholder, imageUrl);
+
+                const placeholderId = placeholder.dataset.placeholderId;
+                if (!placeholderId) return;
+
+                document.querySelectorAll(`[data-placeholder-clone="${placeholderId}"]`).forEach((clone) => {
+                    applyPlaceholderImage(clone, imageUrl);
+                });
+            }
+
+            async function getDirectoryHandleForSave() {
+                if (!supportsFileSystemAccess) return null;
+                if (!directoryHandle) {
+                    directoryHandle = await dbGet("directoryHandle");
+                }
+
+                if (directoryHandle) {
+                    const permission = await directoryHandle.queryPermission({ mode: "readwrite" });
+                    if (permission === "granted") return directoryHandle;
+                    const requested = await directoryHandle.requestPermission({ mode: "readwrite" });
+                    if (requested === "granted") return directoryHandle;
+                }
+
+                directoryHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+                await dbSet("directoryHandle", directoryHandle);
+                return directoryHandle;
+            }
+
+            async function saveImageToFileSystem(placeholderId, file) {
+                const handle = await getDirectoryHandleForSave();
+                if (!handle) return null;
+                const previousRecord = await dbGet(recordKey(placeholderId));
+                const fileName = `zapp-placeholder-${sanitizeFilePart(placeholderId)}.${extensionForFile(file)}`;
+                const fileHandle = await handle.getFileHandle(fileName, { create: true });
+                const writable = await fileHandle.createWritable();
+                await writable.write(file);
+                await writable.close();
+                if (previousRecord?.storage === "file-system" && previousRecord.fileName !== fileName) {
+                    await removeStoredFile(previousRecord);
+                }
+                await dbSet(recordKey(placeholderId), {
+                    storage: "file-system",
+                    fileName
+                });
+                await dbDelete(blobKey(placeholderId));
+                return URL.createObjectURL(file);
+            }
+
+            async function saveImageToIndexedDb(placeholderId, file) {
+                const previousRecord = await dbGet(recordKey(placeholderId));
+                await removeStoredFile(previousRecord);
+                await dbSet(blobKey(placeholderId), file);
+                await dbSet(recordKey(placeholderId), {
+                    storage: "indexed-db",
+                    type: file.type
+                });
+                return URL.createObjectURL(file);
+            }
+
+            async function removeStoredFile(record) {
+                if (!record || record.storage !== "file-system" || !supportsFileSystemAccess) return;
+                try {
+                    if (!directoryHandle) directoryHandle = await dbGet("directoryHandle");
+                    if (!directoryHandle) return;
+                    const permission = await directoryHandle.queryPermission({ mode: "readwrite" });
+                    if (permission !== "granted") return;
+                    await directoryHandle.removeEntry(record.fileName);
+                } catch (error) {
+                    // If the local file is already missing, clearing the placeholder should still work.
+                }
+            }
+
+            async function saveActivePlaceholder() {
+                if (!activePlaceholder || !pendingFile) return;
+                const placeholderId = activePlaceholder.dataset.placeholderId;
+                setStatus("Saving image locally...");
+                try {
+                    let imageUrl = null;
+                    if (supportsFileSystemAccess) {
+                        imageUrl = await saveImageToFileSystem(placeholderId, pendingFile);
+                    } else {
+                        imageUrl = await saveImageToIndexedDb(placeholderId, pendingFile);
+                    }
+                    renderPlaceholder(activePlaceholder, imageUrl);
+                    setStatus(supportsFileSystemAccess ? "Saved to the selected local folder." : "Saved in this browser.");
+                    closeModal();
+                } catch (error) {
+                    if (error && error.name === "AbortError") {
+                        setStatus("Save cancelled. Choose a folder to persist this image.");
+                        return;
+                    }
+                    try {
+                        const fallbackUrl = await saveImageToIndexedDb(placeholderId, pendingFile);
+                        renderPlaceholder(activePlaceholder, fallbackUrl);
+                        setStatus("File-system save failed, so the image was saved in this browser.");
+                        closeModal();
+                    } catch (fallbackError) {
+                        setStatus("Could not save the image. Try pasting it again.");
+                    }
+                }
+            }
+
+            async function clearActivePlaceholder() {
+                if (!activePlaceholder) return;
+                const placeholderId = activePlaceholder.dataset.placeholderId;
+                const record = await dbGet(recordKey(placeholderId));
+                await removeStoredFile(record);
+                await dbDelete(recordKey(placeholderId));
+                await dbDelete(blobKey(placeholderId));
+                renderPlaceholder(activePlaceholder, null);
+                resetModalPreview();
+                setStatus("Image cleared for this placeholder.");
+                closeModal();
+            }
+
+            async function restorePlaceholder(placeholder) {
+                const placeholderId = placeholder.dataset.placeholderId;
+                const record = await dbGet(recordKey(placeholderId));
+                if (!record) return;
+
+                try {
+                    if (record.storage === "file-system") {
+                        if (!supportsFileSystemAccess) return;
+                        if (!directoryHandle) directoryHandle = await dbGet("directoryHandle");
+                        if (!directoryHandle) return;
+                        const permission = await directoryHandle.queryPermission({ mode: "read" });
+                        if (permission !== "granted") return;
+                        const fileHandle = await directoryHandle.getFileHandle(record.fileName);
+                        const file = await fileHandle.getFile();
+                        renderPlaceholder(placeholder, URL.createObjectURL(file));
+                        return;
+                    }
+
+                    const blob = await dbGet(blobKey(placeholderId));
+                    if (blob) renderPlaceholder(placeholder, URL.createObjectURL(blob));
+                } catch (error) {
+                    // Missing files or revoked folder permissions should not break the page.
+                }
+            }
+
+            function openModal(placeholder) {
+                activePlaceholder = placeholder;
+                resetModalPreview();
+                modalTitle.textContent = placeholder.dataset.placeholderName || "Paste image";
+                setStatus(supportsFileSystemAccess
+                    ? "Paste an image, then save it to a local folder."
+                    : "File-system saving is not available here; images will be saved in this browser.");
+                modal.classList.add("is-open");
+                modal.setAttribute("aria-hidden", "false");
+                requestAnimationFrame(() => pasteZone.focus());
+            }
+
+            function closeModal() {
+                modal.classList.remove("is-open");
+                modal.setAttribute("aria-hidden", "true");
+                activePlaceholder = null;
+                resetModalPreview();
+            }
+
+            function getImageFileFromPaste(event) {
+                const items = Array.from(event.clipboardData?.items || []);
+                const imageItem = items.find((item) => item.type.startsWith("image/"));
+                return imageItem ? imageItem.getAsFile() : null;
+            }
+
+            modal.addEventListener("paste", (event) => {
+                const file = getImageFileFromPaste(event);
+                if (!file) {
+                    setStatus("No image found in the clipboard.");
+                    return;
+                }
+                event.preventDefault();
+                pendingFile = file;
+                showPreview(file);
+                setStatus("Image ready. Click Save to persist it.");
+            });
+
+            saveButton.addEventListener("click", saveActivePlaceholder);
+            clearButton.addEventListener("click", clearActivePlaceholder);
+            cancelButtons.forEach((button) => button.addEventListener("click", closeModal));
+            modal.addEventListener("click", (event) => {
+                if (event.target === modal) closeModal();
+            });
+            window.addEventListener("keydown", (event) => {
+                if (event.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+            });
+
+            placeholders.forEach((placeholder) => {
+                placeholder.setAttribute("tabindex", isEditMode ? "0" : "-1");
+                restorePlaceholder(placeholder);
+                if (!isEditMode) return;
+
+                placeholder.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    openModal(placeholder);
+                });
+                placeholder.addEventListener("keydown", (event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
+                    openModal(placeholder);
+                });
+            });
+
+            if (isEditMode) {
+                document.body.classList.add("is-placeholder-editing");
+            }
+        })();
+
+        function syncBodyDim() {
+            const expanded = document.querySelector(".stack-section.is-expanded");
+            if (!expanded) {
+                document.body.classList.remove("is-any-expanded");
+                document.body.classList.remove("is-offscreen-unfaded");
+                return;
+            }
+
+            const rect = expanded.getBoundingClientRect();
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+            const isTallerThanViewport = rect.height > vh;
+            let shouldUnfadeOthers;
+
+            // Reversible rule:
+            // - normal sections use the existing visible-ratio threshold
+            // - tall sections use viewport coverage instead of section coverage,
+            //   so a small peek at the top/bottom does not keep the page faded
+            if (isTallerThanViewport) {
+                const visibleHeight = Math.max(0, Math.min(rect.bottom, vh) - Math.max(rect.top, 0));
+                const viewportCoverage = visibleHeight / vh;
+                shouldUnfadeOthers = viewportCoverage < TALL_SECTION_FOCUS_RATIO;
+            } else {
+                const visibleRatio = getVisibleRatio(expanded);
+                const offscreenRatio = 1 - visibleRatio;
+                shouldUnfadeOthers = offscreenRatio >= OFFSCREEN_UNFADE_RATIO;
+            }
+            document.body.classList.toggle("is-offscreen-unfaded", shouldUnfadeOthers);
+            document.body.classList.toggle("is-any-expanded", !shouldUnfadeOthers);
+        }
+
+        function stopMotionAtCurrentFrame() {
+            if (!activeMotion) return;
+            cancelAnimationFrame(motionRaf);
+            motionRaf = null;
+
+            const elapsed = performance.now() - activeMotion.startTime;
+            const t = Math.max(0, Math.min(1, elapsed / activeMotion.duration));
+            const eased = EASE(t);
+
+            activeMotion.heightTweens.forEach((tw) => {
+                const h = tw.from + (tw.to - tw.from) * eased;
+                setCardBodyTweenHeight(tw, h);
+            });
+
+            const y = activeMotion.scrollFrom + (activeMotion.scrollTo - activeMotion.scrollFrom) * eased;
+            window.scrollTo(0, y);
+            syncFloatingPreviews();
+            activeMotion = null;
+            document.body.classList.remove("is-animating-motion");
+        }
+
+        function getScrollTargetY(sectionToExpand, heightTweens = []) {
+            if (!sectionToExpand) return window.scrollY;
+
+            const vh = window.innerHeight;
+            const sectionTop = sectionToExpand.getBoundingClientRect().top + window.scrollY;
+            const finalTopShift = heightTweens.reduce((shift, tween) => {
+                if (!tween.section || tween.section === sectionToExpand) return shift;
+                const isBeforeTarget = Boolean(tween.section.compareDocumentPosition(sectionToExpand) & Node.DOCUMENT_POSITION_FOLLOWING);
+                return isBeforeTarget ? shift + (tween.to - tween.from) : shift;
+            }, 0);
+
+            return Math.max(0, sectionTop + finalTopShift - vh * EXPANDED_SECTION_TOP_OFFSET_RATIO);
+        }
+
+        function runMotion(heightTweens, scrollTo) {
+            const startTime = performance.now();
+            const scrollFrom = window.scrollY;
+            document.body.classList.add("is-animating-motion");
+
+            activeMotion = {
+                startTime,
+                duration: ANIM_DURATION,
+                heightTweens,
+                scrollFrom,
+                scrollTo
+            };
+
+            function frame(now) {
+                if (!activeMotion) return;
+
+                const elapsed = now - activeMotion.startTime;
+                const t = Math.max(0, Math.min(1, elapsed / activeMotion.duration));
+                const eased = EASE(t);
+
+                activeMotion.heightTweens.forEach((tw) => {
+                    const h = tw.from + (tw.to - tw.from) * eased;
+                    setCardBodyTweenHeight(tw, h);
+                });
+                syncFloatingPreviews();
+
+                const y = activeMotion.scrollFrom + (activeMotion.scrollTo - activeMotion.scrollFrom) * eased;
+                window.scrollTo(0, y);
+                syncFloatingPreviews();
+
+                if (t < 1) {
+                    motionRaf = requestAnimationFrame(frame);
+                    return;
+                }
+
+                activeMotion.heightTweens.forEach((tw) => {
+                    finishCardBodyTween(tw);
+                });
+                motionRaf = null;
+                activeMotion = null;
+                document.body.classList.remove("is-animating-motion");
+                nativeWheelUntil = performance.now() + 450;
+                cancelSmoothScroll();
+            }
+
+            motionRaf = requestAnimationFrame(frame);
+        }
+
+        function animateAccordion(sectionToExpand) {
+            nativeWheelUntil = performance.now() + ANIM_DURATION + 450;
+            cancelSmoothScroll();
+            stopMotionAtCurrentFrame();
+
+            const heightTweens = [];
+
+            allSections.forEach((section) => {
+                const body = section.querySelector(".card-body");
+                if (!body) return;
+
+                const shouldExpand = section === sectionToExpand;
+                const isExpanded = section.classList.contains("is-expanded");
+                if (shouldExpand === isExpanded) return;
+
+                const from = body.getBoundingClientRect().height;
+                // Measure target height while overflow is still hidden so scrollHeight
+                // reliably reports the natural content height (overflow:visible can
+                // make scrollHeight collapse to 0 when the element's height is 0).
+                const clip = getCardBodyClip(body);
+                const previousInlineHeight = body.style.height;
+                const previousClipHeight = clip?.style.height || "";
+                const previousClipPath = clip?.style.clipPath || "";
+                if (clip) {
+                    clip.style.height = "";
+                    clip.style.clipPath = "";
+                }
+                body.style.height = "auto";
+                const naturalHeight = body.scrollHeight;
+                body.style.height = previousInlineHeight;
+                if (clip) {
+                    clip.style.height = previousClipHeight;
+                    clip.style.clipPath = previousClipPath;
+                }
+                section.classList.toggle("is-expanded", shouldExpand);
+                const to = shouldExpand ? naturalHeight : 0;
+
+                if (Math.abs(from - to) < 1) {
+                    body.style.height = shouldExpand ? "auto" : "0px";
+                    if (clip) {
+                        clip.style.height = "";
+                        clip.style.clipPath = "";
+                    }
+                    return;
+                }
+
+                const tween = { section, body, from, to };
+                setCardBodyTweenHeight(tween, from);
+                heightTweens.push(tween);
+            });
+
+            syncFloatingPreviews();
+            syncBodyDim();
+            if (!heightTweens.length) return;
+
+            const scrollTo = getScrollTargetY(sectionToExpand, heightTweens);
+            runMotion(heightTweens, scrollTo);
+        }
+
+        function getVisibleRatio(el) {
+            const rect = el.getBoundingClientRect();
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+            const visible = Math.max(0, Math.min(rect.bottom, vh) - Math.max(rect.top, 0));
+            const full = Math.max(1, rect.height);
+            return visible / full;
+        }
+
+        function maybeRefreshDimState() {
+            syncBodyDim();
+        }
+
+        function scheduleAutoCollapseCheck() {
+            if (scrollCheckRaf) return;
+            scrollCheckRaf = requestAnimationFrame(() => {
+                scrollCheckRaf = null;
+                maybeRefreshDimState();
+            });
+        }
+
+        document.querySelectorAll(".stack-section .section-header").forEach((header) => {
+            header.addEventListener("click", () => {
+                const section = header.closest(".stack-section");
+                if (!section) return;
+                const wasExpanded = section.classList.contains("is-expanded");
+                animateAccordion(wasExpanded ? null : section);
+            });
+        });
+
+        window.addEventListener("scroll", scheduleAutoCollapseCheck, { passive: true });
+        window.addEventListener("resize", () => {
+            renderAllScopeFlowcharts();
+            scheduleAutoCollapseCheck();
+        });
+
+        /* Smooth wheel scroll — only intercepts legacy line/page wheel ticks.
+           Pixel-based wheel input (trackpads, Magic Mouse, modern smooth wheels)
+           keeps native inertial scrolling so it never feels sticky. */
+        (function () {
+            const SMOOTHING = 0.10;      // 0..1, higher = snappier; lower = more glide
+            const LINE_HEIGHT = 40;
+            let targetY = window.scrollY;
+            let smoothRaf = null;
+            let isSmoothing = false;
+
+            function step() {
+                const currentY = window.scrollY;
+                const diff = targetY - currentY;
+                if (Math.abs(diff) < 0.4) {
+                    window.scrollTo(0, targetY);
+                    smoothRaf = null;
+                    isSmoothing = false;
+                    return;
+                }
+                window.scrollTo(0, currentY + diff * SMOOTHING);
+                smoothRaf = requestAnimationFrame(step);
+            }
+
+            window.addEventListener("wheel", (e) => {
+                if (activeMotion) {
+                    e.preventDefault();
+                    return;
+                }
+
+                // Skip if user is zooming, scrolling horizontally, or using a smooth device
+                if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+                if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+                if (e.deltaMode === WheelEvent.DOM_DELTA_PIXEL) return;
+
+                // Let native scrolling handle the accordion's controlled-scroll cooldown.
+                if (performance.now() < nativeWheelUntil) return;
+
+                e.preventDefault();
+
+                if (!isSmoothing) targetY = window.scrollY;
+                isSmoothing = true;
+
+                const deltaMultiplier = e.deltaMode === WheelEvent.DOM_DELTA_PAGE
+                    ? window.innerHeight
+                    : LINE_HEIGHT;
+                targetY += e.deltaY * deltaMultiplier;
+                const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+                if (targetY < 0) targetY = 0;
+                if (targetY > maxY) targetY = maxY;
+
+                if (!smoothRaf) smoothRaf = requestAnimationFrame(step);
+            }, { passive: false });
+
+            // Cancel smoothing on user interruption events
+            cancelSmoothScroll = () => {
+                if (smoothRaf) cancelAnimationFrame(smoothRaf);
+                smoothRaf = null;
+                isSmoothing = false;
+                targetY = window.scrollY;
+            };
+            window.addEventListener("keydown", (e) => {
+                if (!["ArrowUp","ArrowDown","PageUp","PageDown","Home","End"," "].includes(e.key)) return;
+                if (activeMotion) {
+                    e.preventDefault();
+                    return;
+                }
+                cancelSmoothScroll();
+            });
+            window.addEventListener("touchstart", cancelSmoothScroll, { passive: true });
+            window.addEventListener("touchmove", (e) => {
+                if (activeMotion) e.preventDefault();
+            }, { passive: false });
+        })();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zapp Account — Home (Embed)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #fff; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+    /* Fixed status bar — stays pinned while .page shifts for ?section= views. */
+    .status-chrome {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        width: 360px;
+        transform: translateX(-50%) scale(var(--fit, 1));
+        transform-origin: top center;
+        z-index: 30;
+        pointer-events: none;
+    }
+
+    .status-chrome .statusbar {
+        position: absolute;
+        left: 0;
+        top: 4px;
+        width: 360px;
+        height: 44px;
+        background: #fff;
+    }
+
+    .status-fade {
+        position: absolute;
+        left: 0;
+        top: 48px;
+        width: 360px;
+        height: 20px;
+        background: linear-gradient(to bottom, #fff 0%, rgba(255, 255, 255, 0) 100%);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .status-chrome.is-scrolled .status-fade {
+        opacity: 1;
+    }
+
+    /* 360-wide faithful home screen, scaled to fill the iframe width, anchored top.
+       --shift instantly offsets the page vertically (no animation) so a journey box
+       can show a specific section of the same screen via the ?section= URL param. */
+    .page {
+        position: absolute; top: 0; left: 0; width: 360px; height: 1062px; background: #fff;
+        transform-origin: top left; transform: scale(var(--fit, 1)) translateY(var(--shift, 0px));
+    }
+    .page img { display: block; }
+
+    .top-wash {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        top: -164px; width: 346.56px; height: 470px; border-radius: 40px;
+        background: linear-gradient(180deg, rgba(234,246,255,0) 53%, rgba(234,246,255,0.7) 77%);
+    }
+
+    .statusbar .time {
+        position: absolute;
+        left: 18px;
+        top: 14px;
+        width: 54px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 18px;
+        letter-spacing: -0.16px;
+        color: #000;
+    }
+
+    .statusbar .sysicons {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 67px;
+        height: 11.5px;
+    }
+
+    .back { position: absolute; left: 27px; top: 65px; width: 18px; height: 18px; }
+    .logo { position: absolute; left: 116.3px; top: 65px; width: 122.1px; height: 24.1px; }
+    .earn-pill {
+        position: absolute; right: 24px; top: 62px; height: 29px;
+        display: inline-flex; align-items: center; gap: 6px; padding: 0 10px 0 6px;
+        background: #ffeecd; border: 1.5px solid #eed3bf; border-radius: 20px;
+    }
+    .earn-pill .lbl { font-weight: 700; font-size: 16px; line-height: 1.2; color: #6a3619; white-space: nowrap; }
+    .earn-coin {
+        width: 16px; height: 16px; flex: none;
+        display: flex; align-items: center; justify-content: center;
+        transform: translateY(-1px);
+    }
+    .earn-coin img { width: 16px; height: 16px; }
+
+    .balance { position: absolute; left: 0; right: 0; top: 133px; display: flex; flex-direction: column; align-items: center; }
+    .balance .amount {
+        display: inline-flex;
+        align-items: baseline;
+        font-weight: 800;
+        color: #161b21;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+    }
+    .balance .amount-rupees,
+    .balance .amount-paise {
+        display: inline-flex;
+        align-items: baseline;
+    }
+    .balance .amount-rupees { font-size: 28px; }
+    .balance .amount-paise { font-size: 20px; color: rgba(34,79,114,0.35); }
+    .balance .sym { display: inline-block; }
+    .balance .digit-slot {
+        display: inline-block;
+        overflow: hidden;
+        height: 1em;
+        width: 1ch;
+        vertical-align: baseline;
+    }
+    .balance .digit-reel {
+        display: flex;
+        flex-direction: column;
+        will-change: transform;
+    }
+    .balance .digit-reel.is-settled { will-change: auto; }
+    .balance .digit-cell {
+        display: block;
+        height: 1em;
+        line-height: 1;
+        text-align: center;
+    }
+    .add-money {
+        margin-top: 18px; width: 147px; height: 40px; background: #224f72; border-radius: 24px;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        color: #fff; font-weight: 700; font-size: 14px; line-height: 20px; transform: translateY(-2.5px);
+    }
+    .add-money img { width: 12px; height: 12px; }
+    .auto-load { margin-top: 10px; display: flex; align-items: center; gap: 6px; padding: 3px 11px; }
+    .auto-load img { width: 16px; height: 14.16px; }
+    .auto-load span { font-weight: 700; font-size: 12px; color: #224f72; }
+
+    .hero-wave-layer {
+        position: absolute; left: 50%; top: 156px; width: 346.56px; height: 90px;
+        transform: translateX(-50%);
+        pointer-events: none; overflow: hidden; opacity: 0.65;
+    }
+    .hero-wave { position: absolute; top: 0; width: 190px; height: 80px; }
+    .hero-wave.left { left: -24px; transform: scale(-1.2, 1.2); transform-origin: center center; }
+    .hero-wave.right { right: -24px; transform: scale(1.2, -1.2); transform-origin: center center; }
+
+    .actions { position: absolute; left: 0; right: 0; top: 276px; display: flex; justify-content: center; align-items: flex-start; gap: 24px; }
+    .atile { position: relative; width: 73px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .aicon {
+        flex: none; width: 60px; height: 60px; border-radius: 21px; background: #ffffff;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .aicon .tile {
+        width: 48px; height: 48px; border-radius: 17px;
+        box-sizing: content-box;
+        background: #e4f3ff; border: 2px solid #c4e6ff;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .aicon .glyph { width: 25.2px; height: 25.2px; }
+    .aicon.scan .glyph { width: 23.18px; height: 23.18px; }
+    .aicon.transfer .glyph { width: 30.87px; height: 26.46px; position: relative; left: -2px; }
+    .badge {
+        position: absolute; top: -7px; padding: 0 4px; height: 16px;
+        background: #d9f7ee; border: 1px solid #aee5d5; border-radius: 5px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 600; font-size: 9px; line-height: 16px; color: #406d60; text-transform: uppercase; white-space: nowrap;
+    }
+    .badge.left { left: 12px; }
+    .badge.center { left: 50%; transform: translateX(-50%); }
+    .alabel { font-weight: 600; font-size: 12px; line-height: 16px; color: #434343; text-align: center; }
+
+    .account-id { position: absolute; left: 0; right: 0; top: 573px; display: flex; align-items: center; justify-content: center; }
+    .account-id .line { width: 41px; height: 1.5px; }
+    .account-id .line.l { background: linear-gradient(90deg, rgba(196,230,255,0) 0%, #c4e6ff 100%); }
+    .account-id .line.r { background: linear-gradient(90deg, #c4e6ff 0%, rgba(196,230,255,0) 100%); }
+    .account-id .pill { display: flex; align-items: center; gap: 6px; padding: 6px 16px; white-space: nowrap; }
+    .account-id .pill .k { font-weight: 600; font-size: 12px; letter-spacing: 0.48px; color: rgba(34,79,114,0.5); white-space: nowrap; }
+    .account-id .pill .v { font-weight: 700; font-size: 12px; letter-spacing: 0.48px; color: #224f72; white-space: nowrap; }
+    .account-id .pill img { width: 5px; height: 8px; }
+
+    .quick { position: absolute; left: 22.15px; top: 463.83px; width: 316px; height: 86px; padding: 0 4px; display: flex; align-items: flex-start; justify-content: space-between; }
+    .qitem { width: 54px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .qicon { width: 56px; height: 48px; background: #e4f3ff; border-radius: 16px; position: relative; overflow: hidden; }
+    .qicon img { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 21.6px; height: 21.6px; }
+    .qlabel { font-weight: 500; font-size: 12px; line-height: 16px; color: #224f72; text-align: center; }
+
+    .rewards { position: absolute; left: 22px; top: 624.34px; width: 316px; display: flex; flex-direction: column; gap: 16px; }
+    .rewards-head { display: flex; align-items: center; justify-content: space-between; height: 14px; }
+    .rewards-head .ttl { font-weight: 700; font-size: 12px; letter-spacing: 2.16px; color: #748897; text-transform: uppercase; }
+    .rate-pill { background: #e4f3ff; border-radius: 15px; height: 24px; display: flex; align-items: center; gap: 2px; padding: 0 10px; }
+    .rate-pill img { width: 10px; height: 10px; transform: translate(-2px, 0.25px); }
+    .rate-pill span { font-weight: 700; font-size: 12px; line-height: 16px; letter-spacing: 0.12px; color: #224f72; transform: translate(-2px, 0.25px); }
+
+    .celebrate { background: #fff4dc; height: 54px; border-radius: 16px; display: flex; align-items: center; gap: 13px; padding: 10px 16px 10px 14px; }
+    .celebrate > img.ic { width: 22.56px; height: 22.56px; flex: none; transform: translateX(2px); }
+    .celebrate p { font-size: 12px; color: #875c34; line-height: 1.4; flex: 1; }
+    .celebrate p b { font-weight: 700; }
+    .celebrate p .reg { font-weight: 500; }
+    .celebrate .chev { width: 8px; height: 8px; flex: none; transform: translateX(-3px); }
+
+    .reward-cards { display: flex; flex-wrap: wrap; gap: 16px; }
+    .rcard { position: relative; width: 150px; height: 129px; }
+    .rcard .bg { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); }
+    .rcard .inner { position: absolute; left: 21px; top: 19px; width: 110px; display: flex; flex-direction: column; gap: 8px; }
+    .rcard .row { display: flex; align-items: center; gap: 4px; }
+    .rcard .row .amt { font-weight: 700; font-size: 14px; line-height: 1.2; }
+    .rcard.purple .row .amt { color: #533a86; }
+    .rcard.blue .row .amt { color: #305262; }
+    .rcard .row img { width: 16px; height: 16px; }
+    .rcard .div { height: 1px; width: 110px; background: rgba(34,79,114,0.12); }
+    .rcard.purple .div { background: rgba(83,58,134,0.18); }
+    .rcard .sub { font-weight: 500; font-size: 12px; line-height: 1.3; }
+    .rcard.purple .sub { color: rgba(83,58,134,0.69); }
+    .rcard.blue .sub { color: rgba(48,82,98,0.69); }
+    .rcard.blue .cashtitle { font-weight: 700; font-size: 14px; line-height: 1.2; color: #305262; }
+    .rcard.blue .cashtitle .pct { font-weight: 800; }
+
+    .view-all { display: flex; align-items: center; justify-content: center; }
+    .view-all .line { width: 50px; height: 1px; }
+    .view-all .line.l { background: linear-gradient(90deg, rgba(34,79,114,0) 0%, rgba(34,79,114,0.4) 100%); }
+    .view-all .line.r { background: linear-gradient(90deg, rgba(34,79,114,0.4) 0%, rgba(34,79,114,0) 100%); }
+    .view-all .pill { background: #e4f3ff; border-radius: 16px; padding: 8px 16px; display: flex; align-items: center; gap: 6px; }
+    .view-all .pill span { font-weight: 700; font-size: 12px; color: #224f72; }
+    .view-all .pill img { width: 5.37px; height: 8.64px; }
+
+    .pinless {
+        position: absolute; left: 24px; top: var(--pinless-top, 392px); width: 310px; height: 54px;
+        background: #d9f7ee; border-radius: 16px; display: flex; align-items: center; gap: 8px; padding: 10px;
+        z-index: 20;
+    }
+    .pinless img.spark { width: 24px; height: 24px; flex: none; }
+    .pinless p { font-weight: 700; font-size: 12px; line-height: 1.4; color: #27755e; transition: opacity 220ms ease; }
+    .pinless p .light { font-weight: 500; }
+    .pinless .pointer {
+        position: absolute; left: var(--arrow-left, 50px); width: 19px; height: 16.5px;
+        transition: left 600ms cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    .pinless .pointer.up { top: -11px; bottom: auto; transform: rotate(0deg); }
+    .pinless .pointer.down { top: auto; bottom: -11px; transform: rotate(180deg); }
+    @media (prefers-reduced-motion: reduce) {
+        .pinless .pointer { transition: none; }
+        .pinless p { transition: none; }
+        .balance .digit-reel { transition: none !important; transform: none !important; }
+    }
+</style>
+</head>
+<body>
+    <div class="status-chrome" aria-hidden="true">
+        <div class="statusbar">
+            <div class="time">9:41</div>
+            <img class="sysicons" src="assets/statusbar-right.svg" alt="" />
+        </div>
+        <div class="status-fade"></div>
+    </div>
+
+    <div class="page">
+        <div class="top-wash"></div>
+
+        <img class="back" src="assets/ic-back.svg" alt="Back" />
+        <img class="logo" src="assets/header-logo.svg" alt="Zapp Account" />
+        <div class="earn-pill">
+            <span class="earn-coin">
+                <img src="assets/reward-minimal.svg" alt="" />
+            </span>
+            <span class="lbl">7</span>
+        </div>
+
+        <div class="hero-wave-layer" aria-hidden="true">
+            <div class="hero-wave left" data-wave-lottie></div>
+            <div class="hero-wave right" data-wave-lottie></div>
+        </div>
+        <div class="balance">
+            <div class="amount is-revealing" data-balance-amount>
+                <span class="amount-rupees" data-balance-rupees><span class="sym">₹</span></span><span class="amount-paise" data-balance-paise><span class="sym">.</span></span>
+            </div>
+            <div class="add-money"><img src="assets/ic-plus.svg" alt="" />Add Money</div>
+            <div class="auto-load"><img src="assets/ic-autoload.svg" alt="" /><span>Setup Auto-Load</span></div>
+        </div>
+
+        <div class="actions">
+            <div class="atile">
+                <div class="aicon scan"><div class="tile"><img class="glyph" src="assets/ic-scan-glyph.svg" alt="" /></div></div>
+                <div class="alabel">Scan and Pay</div>
+            </div>
+            <div class="atile">
+                <div class="aicon send"><div class="tile"><img class="glyph" src="assets/ic-send-glyph.svg" alt="" /></div></div>
+                <div class="alabel">Send Money<br>to Anyone</div>
+            </div>
+            <div class="atile">
+                <div class="aicon transfer"><div class="tile"><img class="glyph" src="assets/ic-transfer-glyph.svg" alt="" /></div></div>
+                <div class="alabel">Transfer to Account</div>
+            </div>
+        </div>
+
+        <div class="account-id">
+            <div class="line l"></div>
+            <div class="pill">
+                <span class="k">Your Zapp Account ID</span>
+                <span class="v">9343876654@pzw</span>
+                <img src="assets/ic-chevron-right-sm.svg" alt="" />
+            </div>
+            <div class="line r"></div>
+        </div>
+
+        <div class="quick">
+            <div class="qitem">
+                <div class="qicon"><img src="assets/ic-payment-history.svg" alt="" /></div>
+                <div class="qlabel">Payment<br>History</div>
+            </div>
+            <div class="qitem">
+                <div class="qicon"><img src="assets/ic-tappay.svg" alt="" /></div>
+                <div class="qlabel">Tap and<br>Pay</div>
+            </div>
+            <div class="qitem">
+                <div class="qicon"><img src="assets/ic-view-card.svg" alt="" /></div>
+                <div class="qlabel">View Card</div>
+            </div>
+            <div class="qitem">
+                <div class="qicon"><img src="assets/ic-manage-account.svg" alt="" /></div>
+                <div class="qlabel">Manage<br>Account</div>
+            </div>
+        </div>
+
+        <div class="rewards">
+            <div class="rewards-head">
+                <span class="ttl">Rewards</span>
+                <div class="rate-pill"><img src="assets/reward-minimal.svg" alt="" /><span>1 = ₹1</span></div>
+            </div>
+
+            <div class="celebrate">
+                <img class="ic" src="assets/ic-celebrate.svg" alt="" />
+                <p><span class="reg">You have earned cashpoints on </span><b>90% of your transactions</b></p>
+                <img class="chev" src="assets/ic-chev8.svg" alt="" />
+            </div>
+
+            <div class="reward-cards">
+                <div class="rcard purple">
+                    <img class="bg" src="assets/reward-card-purple.svg" alt="" />
+                    <div class="inner">
+                        <div class="row"><span class="amt">Earn 51</span><img src="assets/coin-16.svg" alt="" /></div>
+                        <div class="div"></div>
+                        <div class="sub">On making 5 transactions using Zapp Account</div>
+                    </div>
+                </div>
+                <div class="rcard purple">
+                    <img class="bg" src="assets/reward-card-purple.svg" alt="" />
+                    <div class="inner">
+                        <div class="row"><span class="amt">Earn 23</span><img src="assets/coin-16.svg" alt="" /></div>
+                        <div class="div"></div>
+                        <div class="sub">On broadband bill payment</div>
+                    </div>
+                </div>
+                <div class="rcard blue">
+                    <img class="bg" src="assets/reward-card-blue.svg" alt="" />
+                    <div class="inner">
+                        <div class="cashtitle"><span class="pct">5% </span>Cashback on Flights</div>
+                        <div class="div"></div>
+                        <div class="sub">On booking from PayZapp Shop</div>
+                    </div>
+                </div>
+                <div class="rcard blue">
+                    <img class="bg" src="assets/reward-card-blue.svg" alt="" />
+                    <div class="inner">
+                        <div class="cashtitle"><span class="pct">5% </span>Cashback on Flights</div>
+                        <div class="div"></div>
+                        <div class="sub">On booking from PayZapp Shop</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view-all">
+                <div class="line l"></div>
+                <div class="pill"><span>View All Rewards</span><img src="assets/ic-chevron-right.svg" alt="" /></div>
+                <div class="line r"></div>
+            </div>
+        </div>
+
+        <div class="pinless">
+            <img class="pointer up" id="pointer" src="assets/banner-pointer.svg" alt="" />
+            <img class="spark" src="assets/ic-sparkle.svg" alt="" />
+            <p id="bubble-text">Scan &amp; Pay one-liner goes here</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script>
+        (function () {
+            const DWELL_MS = 3800;
+            const params = new URLSearchParams(location.search);
+            const fitScale = Number.parseFloat(params.get("fit") || "1") || 1;
+
+            function fit() {
+                document.documentElement.style.setProperty("--fit", (window.innerWidth / 360) * fitScale);
+            }
+            fit();
+            window.addEventListener("resize", fit);
+
+            function initWaves() {
+                if (!window.lottie) return;
+                document.querySelectorAll("[data-wave-lottie]").forEach((container) => {
+                    window.lottie.loadAnimation({
+                        container,
+                        renderer: "svg",
+                        loop: true,
+                        autoplay: true,
+                        path: "assets/waveSlowed.json",
+                        rendererSettings: {
+                            preserveAspectRatio: "xMidYMid meet"
+                        }
+                    });
+                });
+            }
+
+            initWaves();
+
+            const SECTION_MAP = {
+                balance: ".balance",
+                actions: ".actions",
+                pinless: ".pinless",
+                account: ".account-id",
+                quick: ".quick",
+                rewards: ".rewards"
+            };
+            const PAGE_H = 1062;
+            const sectionName = params.get("section");
+            let balanceRevealRestoreTimer = null;
+
+            function applySection() {
+                const page = document.querySelector(".page");
+                const statusChrome = document.querySelector(".status-chrome");
+                if (!page) return;
+                const selector = sectionName && SECTION_MAP[sectionName];
+                if (!selector) {
+                    page.style.setProperty("--shift", "0px");
+                    if (statusChrome) statusChrome.classList.remove("is-scrolled");
+                    return;
+                }
+                const el = document.querySelector(selector);
+                if (!el) {
+                    page.style.setProperty("--shift", "0px");
+                    if (statusChrome) statusChrome.classList.remove("is-scrolled");
+                    return;
+                }
+                const fit = (window.innerWidth / 360) * fitScale;
+                const visibleH = window.innerHeight / fit;
+                let shift = el.offsetTop + el.offsetHeight / 2 - visibleH / 2;
+                shift = Math.max(0, Math.min(shift, PAGE_H - visibleH));
+                page.style.setProperty("--shift", (-shift) + "px");
+                if (statusChrome) statusChrome.classList.toggle("is-scrolled", shift > 0);
+            }
+
+            function showBalanceAtTop() {
+                const page = document.querySelector(".page");
+                const statusChrome = document.querySelector(".status-chrome");
+                page?.style.setProperty("--shift", "0px");
+                statusChrome?.classList.remove("is-scrolled");
+            }
+
+            function playBalanceReveal() {
+                const amountEl = document.querySelector("[data-balance-amount]");
+                const rupeesEl = document.querySelector("[data-balance-rupees]");
+                const paiseEl = document.querySelector("[data-balance-paise]");
+                if (!amountEl || !rupeesEl || !paiseEl) return 0;
+
+                const finalRupee = "243";
+                const finalPaise = "06";
+                const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+                function setStaticBalance() {
+                    rupeesEl.innerHTML = '<span class="sym">₹</span>' + finalRupee;
+                    paiseEl.innerHTML = '<span class="sym">.</span>' + finalPaise;
+                    amountEl.classList.remove("is-revealing");
+                }
+
+                if (balanceRevealRestoreTimer) {
+                    window.clearTimeout(balanceRevealRestoreTimer);
+                    balanceRevealRestoreTimer = null;
+                }
+
+                if (reduced) {
+                    setStaticBalance();
+                    return 0;
+                }
+
+                rupeesEl.innerHTML = '<span class="sym">₹</span>';
+                paiseEl.innerHTML = '<span class="sym">.</span>';
+                amountEl.classList.add("is-revealing");
+
+                function buildSequence(finalDigit, index) {
+                    const target = Number(finalDigit);
+                    const cycles = 2 + index;
+                    const seq = [];
+                    for (let c = 0; c < cycles; c += 1) {
+                        for (let d = 0; d < 10; d += 1) seq.push(String(d));
+                    }
+                    for (let d = 0; d <= target; d += 1) seq.push(String(d));
+                    return seq;
+                }
+
+                function addDigitSlot(parent, finalDigit, index) {
+                    const sequence = buildSequence(finalDigit, index);
+                    const slot = document.createElement("span");
+                    slot.className = "digit-slot";
+                    const reel = document.createElement("span");
+                    reel.className = "digit-reel";
+                    sequence.forEach((digit) => {
+                        const cell = document.createElement("span");
+                        cell.className = "digit-cell";
+                        cell.textContent = digit;
+                        reel.appendChild(cell);
+                    });
+                    slot.appendChild(reel);
+                    parent.appendChild(slot);
+
+                    const finalIndex = sequence.length - 1;
+                    const delay = index * 120;
+                    const duration = 780 + index * 90;
+                    reel.style.transition = "transform " + duration + "ms cubic-bezier(0.16, 1, 0.28, 1) " + delay + "ms";
+
+                    window.requestAnimationFrame(() => {
+                        window.requestAnimationFrame(() => {
+                            reel.style.transform = "translateY(-" + finalIndex + "em)";
+                        });
+                    });
+
+                    window.setTimeout(() => {
+                        reel.classList.add("is-settled");
+                    }, delay + duration + 40);
+
+                    return delay + duration;
+                }
+
+                let finishAt = 0;
+                for (let i = 0; i < finalRupee.length; i += 1) {
+                    finishAt = Math.max(finishAt, addDigitSlot(rupeesEl, finalRupee[i], i));
+                }
+                for (let i = 0; i < finalPaise.length; i += 1) {
+                    finishAt = Math.max(
+                        finishAt,
+                        addDigitSlot(paiseEl, finalPaise[i], finalRupee.length + i)
+                    );
+                }
+
+                window.setTimeout(() => {
+                    amountEl.classList.remove("is-revealing");
+                }, finishAt + 60);
+
+                return finishAt;
+            }
+
+            function triggerBalanceRevealFromParent() {
+                showBalanceAtTop();
+                const finishAt = playBalanceReveal();
+                if (sectionName) {
+                    const restoreDelay = finishAt > 0 ? finishAt + 180 : 0;
+                    balanceRevealRestoreTimer = window.setTimeout(() => {
+                        applySection();
+                        balanceRevealRestoreTimer = null;
+                    }, restoreDelay);
+                }
+            }
+
+            function setStaticBalance() {
+                const amountEl = document.querySelector("[data-balance-amount]");
+                const rupeesEl = document.querySelector("[data-balance-rupees]");
+                const paiseEl = document.querySelector("[data-balance-paise]");
+                if (!amountEl || !rupeesEl || !paiseEl) return;
+                rupeesEl.innerHTML = '<span class="sym">₹</span>243';
+                paiseEl.innerHTML = '<span class="sym">.</span>06';
+                amountEl.classList.remove("is-revealing");
+            }
+
+            setStaticBalance();
+            applySection();
+            window.addEventListener("resize", applySection);
+
+            window.addEventListener("message", (event) => {
+                if (event.data?.type !== "zapp-home:balance-reveal") return;
+                triggerBalanceRevealFromParent();
+            });
+
+            // ?section=<name> instantly positions the same screen to a given block
+            // (no scroll animation) so different journey boxes can reuse this one file.
+            const STEPS = [
+                { dir: "up",   arrowLeft: 50,  text: "Scan & Pay one-liner goes here" },
+                { dir: "up",   arrowLeft: 147, text: "Send Money one-liner goes here" },
+                { dir: "up",   arrowLeft: 244, text: "Transfer to Account one-liner goes here" },
+                { dir: "down", arrowLeft: 16,  text: "Payment History one-liner goes here" },
+                { dir: "down", arrowLeft: 103, text: "Tap & Pay one-liner goes here" },
+                { dir: "down", arrowLeft: 190, text: "View Card one-liner goes here" },
+                { dir: "down", arrowLeft: 278, text: "Manage Account one-liner goes here" }
+            ];
+
+            const pointer = document.getElementById("pointer");
+            const textEl = document.getElementById("bubble-text");
+            let i = 0;
+            let currentDir = STEPS[0].dir;
+
+            function place(step, snap) {
+                if (snap) { pointer.style.transition = "none"; }
+                pointer.style.setProperty("--arrow-left", step.arrowLeft + "px");
+                pointer.classList.toggle("up", step.dir === "up");
+                pointer.classList.toggle("down", step.dir === "down");
+                if (snap) { void pointer.offsetWidth; pointer.style.transition = ""; }
+            }
+
+            function apply(step) {
+                place(step, step.dir !== currentDir);
+                currentDir = step.dir;
+                textEl.style.opacity = "0";
+                window.setTimeout(() => {
+                    textEl.textContent = step.text;
+                    textEl.style.opacity = "1";
+                }, 200);
+            }
+
+            place(STEPS[0], true);
+            textEl.textContent = STEPS[0].text;
+
+            // Cycle the pinless bubble only on the quick-actions journey box.
+            if (sectionName === "quick") {
+                setInterval(() => {
+                    i = (i + 1) % STEPS.length;
+                    apply(STEPS[i]);
+                }, DWELL_MS);
+            }
+        })();
+    </script>
+</body>
+</html>

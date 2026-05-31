@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Intro Animation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #fff;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    :root {
+        --wash-color: #cce7ff;
+        /* Lottie composition is 360 x 800. Crop values are UNITLESS fractions (0..1);
+           percentages are only applied at the final point of use. No aspect-ratio is
+           used (it proved unreliable with calc) - sizes come from %/padding instead. */
+        --cf: 0.92;                 /* center crop width as a fraction of lottie width */
+        --display-fraction: 0.78;   /* on-screen crop width as a fraction of viewport width */
+        --crop-lift-frac: 0.03;     /* shift crop up as a fraction of stage width */
+
+        --square-h: calc(var(--cf) * 360 / 800);
+        --base-top-inset: calc((1 - var(--square-h)) / 2);
+
+        /* Reveal more below: reduce the bottom inset only; top + sides stay put. */
+        --bottom-extend: 0.09;
+        --bottom-inset: max(0, calc(var(--base-top-inset) - var(--bottom-extend)));
+
+        /* Pull the top crop edge down (shorter window); bottom edge stays fixed. */
+        --top-trim: 0.05;
+        --top-inset: calc(var(--base-top-inset) + var(--top-trim));
+
+        --visible-h: calc(1 - var(--top-inset) - var(--bottom-inset));
+        --left-inset: calc((1 - var(--cf)) / 2);
+
+        /* Crop height + top offset as fractions of stage width (padding-bottom basis). */
+        --crop-h-frac-w: calc(var(--display-fraction) * var(--visible-h) * 800 / (var(--cf) * 360));
+        --crop-margin-frac-w: calc(var(--display-fraction) * var(--top-trim) * 800 / (var(--cf) * 360) * 0.5 - var(--crop-lift-frac));
+        /* Gradient ends at the crop's top edge (flex-centered + top-trim margin). */
+        --wash-end: max(0%, calc(
+            50% - var(--crop-h-frac-w) * 50 * 100vw / 100vh + var(--crop-margin-frac-w) * 100vw / 100vh
+        ));
+    }
+
+    .stage {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .stage-wash {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background: linear-gradient(
+            to bottom,
+            var(--wash-color) 0%,
+            #fff var(--wash-end),
+            #fff 100%
+        );
+    }
+
+    /* Crop window: top-anchored, clips via overflow. Width is a fraction of the
+       viewport; height is set with the padding-ratio trick (relative to the stage
+       width, hence the extra --display-fraction factor). */
+    .crop-display {
+        position: relative;
+        z-index: 1;
+        width: calc(var(--display-fraction) * 100%);
+        height: 0;
+        padding-bottom: calc(var(--display-fraction) * (var(--visible-h) * 800) / (var(--cf) * 360) * 100%);
+        /* Keep the bottom edge anchored while the window shrinks from the top. */
+        margin-top: calc(var(--display-fraction) * var(--top-trim) * 800 / (var(--cf) * 360) * 50% - var(--crop-lift-frac) * 100%);
+        overflow: hidden;
+        flex-shrink: 0;
+    }
+
+    /* Full lottie, scaled + offset so the crop region fills the window. Width and
+       height are percentages of the crop window, so the lottie keeps its 360:800
+       ratio without needing the aspect-ratio property. */
+    .lottie-crop-inner {
+        position: absolute;
+        left: calc(var(--left-inset) / var(--cf) * -100%);
+        top: calc(var(--top-inset) / var(--visible-h) * -100%);
+        width: calc(100% / var(--cf));
+        height: calc(100% / var(--visible-h));
+    }
+
+    #intro-lottie {
+        width: 100%;
+        height: 100%;
+    }
+
+    /* Top chrome uses the same 360px coordinate space as the VKYC embed. */
+    .top-chrome {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        width: 360px;
+        height: 104px;
+        transform: translateX(-50%) scale(var(--fit, 1));
+        transform-origin: top center;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .statusbar {
+        position: absolute;
+        left: 0;
+        top: 4px;
+        width: 360px;
+        height: 44px;
+    }
+
+    .statusbar .time {
+        position: absolute;
+        left: 18px;
+        top: 14px;
+        width: 54px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 18px;
+        letter-spacing: -0.16px;
+        color: #000;
+    }
+
+    .statusbar .sysicons {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 67px;
+        height: 11.5px;
+    }
+
+    .progress-track {
+        position: absolute;
+        left: 24px;
+        top: 52px;
+        width: 312px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(184, 218, 245, 0.55);
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        width: 0%;
+        height: 100%;
+        border-radius: inherit;
+        background: #252e39;
+    }
+
+    .back {
+        position: absolute;
+        left: 29px;
+        top: 74px;
+        width: 18px;
+        height: 18px;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
+    .nav-skip {
+        position: absolute;
+        right: 28px;
+        top: 73px;
+        padding: 0;
+        border: 0;
+        background: none;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 18px;
+        color: #252e39;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+</style>
+</head>
+<body>
+    <div class="stage" aria-label="Intro animation">
+        <div class="stage-wash" aria-hidden="true"></div>
+        <div class="top-chrome" aria-label="Navigation">
+            <div class="statusbar" aria-hidden="true">
+                <div class="time">9:41</div>
+                <img class="sysicons" src="assets/statusbar-right.svg" alt="" />
+            </div>
+            <div class="progress-track" aria-hidden="true">
+                <div class="progress-fill" id="intro-progress"></div>
+            </div>
+            <img class="back" src="assets/ic-back.svg" alt="Back" />
+            <button type="button" class="nav-skip">Skip</button>
+        </div>
+        <div class="crop-display">
+            <div class="lottie-crop-inner">
+                <div id="intro-lottie"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <script>
+        (function () {
+            const LOTTIE_PATH = "assets/zapp welcome.json";
+
+            function fitChrome() {
+                const width = document.documentElement.clientWidth || window.innerWidth;
+                if (!width) return;
+                document.documentElement.style.setProperty("--fit", String(width / 360));
+            }
+
+            function syncWashEnd() {
+                const stage = document.querySelector(".stage");
+                const crop = document.querySelector(".crop-display");
+                if (!stage || !crop || !stage.clientHeight) return;
+                const top = crop.getBoundingClientRect().top - stage.getBoundingClientRect().top;
+                const endPct = Math.max(0, (top / stage.clientHeight) * 100);
+                document.documentElement.style.setProperty("--wash-end", endPct + "%");
+            }
+
+            fitChrome();
+            syncWashEnd();
+            window.addEventListener("resize", fitChrome);
+            window.addEventListener("resize", syncWashEnd);
+            if (window.ResizeObserver) {
+                const ro = new ResizeObserver(syncWashEnd);
+                const stage = document.querySelector(".stage");
+                const crop = document.querySelector(".crop-display");
+                if (stage) ro.observe(stage);
+                if (crop) ro.observe(crop);
+            }
+
+            if (!window.lottie) return;
+
+            const progressFill = document.getElementById("intro-progress");
+            const anim = window.lottie.loadAnimation({
+                container: document.getElementById("intro-lottie"),
+                renderer: "svg",
+                loop: true,
+                autoplay: true,
+                path: LOTTIE_PATH,
+                rendererSettings: {
+                    preserveAspectRatio: "xMidYMid meet"
+                }
+            });
+
+            anim.addEventListener("enterFrame", function () {
+                if (!progressFill || !anim.totalFrames) return;
+                const pct = Math.min(100, Math.max(0, (anim.currentFrame / anim.totalFrames) * 100));
+                progressFill.style.width = pct + "%";
+            });
+
+            requestAnimationFrame(function () {
+                fitChrome();
+                syncWashEnd();
+            });
+        })();
+    </script>
+</body>
+</html>

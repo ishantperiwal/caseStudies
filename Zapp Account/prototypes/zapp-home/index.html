@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zapp Account — Home (Preview)</title>
+<style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: radial-gradient(120% 120% at 50% 0%, #eef2f6 0%, #dde4ec 60%, #cfd8e2 100%);
+        padding: 24px;
+    }
+
+    .device {
+        position: relative;
+        width: 376px;
+        height: 796px;
+        border-radius: 44px;
+        background: #0d1418;
+        padding: 8px;
+        box-shadow: 0 2px 4px rgba(15, 30, 45, 0.18), 0 30px 70px -20px rgba(24, 52, 78, 0.55);
+    }
+
+    .screen {
+        position: relative;
+        width: 360px;
+        height: 780px;
+        border-radius: 38px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+        background: transparent;
+    }
+</style>
+</head>
+<body>
+    <div class="device" aria-label="Zapp Home prototype preview">
+        <div class="screen">
+            <iframe src="embed.html" title="Zapp Home embed preview" loading="eager" scrolling="no"></iframe>
+        </div>
+    </div>
+</body>
+</html>

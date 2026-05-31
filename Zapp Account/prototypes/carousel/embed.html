@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zapp Account — Onboarding Carousel (Embed)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet" />
+<style>
+    /* Responsive design unit: 360 design px == full screen width, so every size scales
+       with the screen width. Vertical layout flexes (chrome top, CTA bottom, illustration
+       fills the middle) so it fills any screen height with no distortion or clipping. */
+    :root {
+        --u: calc(100vw / 360);
+        --safe: calc(8 * var(--u)); /* top/bottom breathing room from the phone edge */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { width: 100%; height: 100%; overflow: hidden; background: transparent; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+    /* Full-bleed colour panels behind everything, sliding in sync (cover any sub-pixel edge). */
+    .bgtrack {
+        position: fixed;
+        inset: 0;
+        height: 100%;
+        width: 400vw;
+        display: flex;
+        transform: translateX(0);
+        transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+        z-index: 0;
+    }
+    .bgpanel { width: 100vw; height: 100%; flex: none; }
+    @media (prefers-reduced-motion: reduce) { .bgtrack, .track { transition: none; } }
+
+    /* Content area, inset by the safe margin, holding the sliding track + persistent chrome. */
+    .canvas { position: fixed; left: 0; right: 0; top: var(--safe); bottom: var(--safe); z-index: 1; }
+
+    .track {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        width: 400vw;
+        transform: translateX(0);
+        transition: transform 600ms cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    .slide { position: relative; width: 100vw; height: 100%; flex: none; }
+
+    .slide-heading {
+        position: absolute;
+        left: calc(23 * var(--u));
+        top: calc(165 * var(--u));
+        width: calc(291 * var(--u));
+        font-weight: 500;
+        font-size: calc(22 * var(--u));
+        line-height: 1.35;
+        letter-spacing: calc(-0.2 * var(--u));
+        color: #334855;
+    }
+    .slide-heading b { font-weight: 700; }
+
+    /* Illustration flexes between a fixed top and the CTA zone, so it absorbs height diff. */
+    .hero {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(271 * var(--u));
+        bottom: calc(96 * var(--u));
+        overflow: hidden;
+        pointer-events: none;
+    }
+    .hero img { position: absolute; max-width: none; display: block; }
+
+    .cta {
+        position: absolute;
+        left: 50%;
+        bottom: calc(16 * var(--u));
+        transform: translateX(-50%);
+        display: flex;
+        flex-direction: column;
+        gap: calc(7 * var(--u));
+        align-items: center;
+    }
+    .cta .btn {
+        width: calc(312 * var(--u));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: calc(16 * var(--u)) calc(94 * var(--u));
+        border: calc(2.2 * var(--u)) solid;
+        border-radius: calc(14 * var(--u));
+        color: #fff;
+        font-weight: 700;
+        font-size: calc(14 * var(--u));
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+    .cta .note { position: relative; width: calc(184 * var(--u)); height: calc(17 * var(--u)); }
+    .cta .note img { position: absolute; left: calc(23 * var(--u)); top: calc(2 * var(--u)); width: calc(13 * var(--u)); height: calc(13 * var(--u)); }
+    .cta .note span {
+        position: absolute;
+        left: calc(41 * var(--u));
+        top: 0;
+        font-weight: 600;
+        font-size: calc(12 * var(--u));
+        line-height: 1.4;
+        white-space: nowrap;
+    }
+
+    /* Fixed status bar — shared coords with VKYC / intro-animation. */
+    .status-chrome {
+        position: fixed;
+        top: 0;
+        left: 50%;
+        width: 360px;
+        transform: translateX(-50%) scale(var(--fit, 1));
+        transform-origin: top center;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    .status-chrome .statusbar {
+        position: absolute;
+        left: 0;
+        top: 4px;
+        width: 360px;
+        height: 44px;
+    }
+
+    .statusbar .time {
+        position: absolute;
+        left: 18px;
+        top: 14px;
+        width: 54px;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        font-size: 15px;
+        line-height: 18px;
+        letter-spacing: -0.16px;
+        color: #000;
+    }
+
+    .statusbar .sysicons {
+        position: absolute;
+        right: 22px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 67px;
+        height: 11.5px;
+    }
+
+    /* Persistent chrome (close, pagination, logo). */
+    .chrome { position: absolute; inset: 0; z-index: 2; pointer-events: none; }
+
+    .close { position: absolute; left: calc(320 * var(--u)); top: calc(49 * var(--u)); width: calc(16 * var(--u)); height: calc(16 * var(--u)); }
+
+    .logo { position: absolute; left: calc(23 * var(--u)); top: calc(108 * var(--u)); }
+    .logo .wordmark { display: block; width: calc(135.17 * var(--u)); height: calc(25.73 * var(--u)); }
+    .logo .tagline { display: block; width: calc(129.87 * var(--u)); height: calc(11.54 * var(--u)); margin-top: calc(5.28 * var(--u)); }
+
+    .pagination {
+        position: absolute;
+        left: calc(28.89 * var(--u));
+        top: calc(51 * var(--u));
+        display: flex;
+        gap: calc(6.436 * var(--u));
+        align-items: center;
+    }
+    .ind {
+        position: relative;
+        width: calc(8.803 * var(--u));
+        height: calc(8.803 * var(--u));
+        border-radius: calc(20 * var(--u));
+        background: rgba(66, 66, 66, 0.55);
+        overflow: hidden;
+        flex: none;
+        transition: width 420ms cubic-bezier(0.65, 0, 0.35, 1),
+                    height 420ms cubic-bezier(0.65, 0, 0.35, 1),
+                    background-color 420ms ease;
+    }
+    .ind.is-active { width: calc(26 * var(--u)); height: calc(9 * var(--u)); background: rgba(66, 66, 66, 0.5); }
+    .ind .fill { position: absolute; inset: 0; width: 0; border-radius: calc(20 * var(--u)); background: #424242; }
+</style>
+</head>
+<body>
+    <div class="status-chrome" aria-hidden="true">
+        <div class="statusbar">
+            <div class="time">9:41</div>
+            <img class="sysicons" src="assets/statusbar-right.svg" alt="" />
+        </div>
+    </div>
+
+    <div class="bgtrack" id="bgtrack"><!-- colour panels injected by JS --></div>
+    <div class="canvas">
+        <div class="track" id="track"><!-- slides injected by JS --></div>
+        <div class="chrome">
+            <img class="close" src="assets/close.svg" alt="Close" />
+            <div class="pagination" id="pagination"></div>
+            <div class="logo">
+                <img class="wordmark" src="assets/zapp-wordmark.svg" alt="Zapp Account" />
+                <img class="tagline" src="assets/zapp-tagline.svg" alt="For All Your Payments" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const DWELL_MS = 2800;
+
+            function fit() {
+                document.documentElement.style.setProperty("--fit", window.innerWidth / 360);
+            }
+            fit();
+            window.addEventListener("resize", fit);
+
+            const SLIDES = [
+                {
+                    bg: "#c3d0dc",
+                    heading: 'Pay instantly with <b>swipe, scan or tap</b>',
+                    img: "assets/hero-upi.webp",
+                    imgStyle: "top:0;left:-14.91%;width:125.69%;height:103.92%;",
+                    btn: "#3e7295", border: "#5795bf", note: "#3c5b6f"
+                },
+                {
+                    bg: "#e5c693",
+                    heading: '<b>Scan a QR or send money to anyone</b> - up to \u20B92 lakh via UPI',
+                    img: "assets/scan-qr.webp",
+                    imgStyle: "top:0;left:-21.94%;width:121.95%;height:100%;",
+                    btn: "#82652c", border: "#a07e3d", note: "#71551e"
+                },
+                {
+                    bg: "#dfc6f2",
+                    heading: 'Transfer money to any <b>bank account for free</b>',
+                    img: "assets/bank-account.webp",
+                    imgStyle: "top:-10.06%;left:-35.38%;width:138.96%;height:104.07%;",
+                    btn: "#57498b", border: "#816fc2", note: "#3f3271"
+                },
+                {
+                    bg: "#b2cdc2",
+                    heading: 'Keep your bank statement <b>clean from small payments</b>',
+                    img: "assets/clutter-free.webp",
+                    imgStyle: "inset:0;width:100%;height:100%;object-fit:cover;",
+                    btn: "#2c6348", border: "#629d81", note: "#345a48"
+                }
+            ];
+
+            const track = document.getElementById("track");
+            const bgtrack = document.getElementById("bgtrack");
+            const pagination = document.getElementById("pagination");
+            const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+            SLIDES.forEach((s) => {
+                const panel = document.createElement("div");
+                panel.className = "bgpanel";
+                panel.style.background = s.bg;
+                bgtrack.appendChild(panel);
+            });
+
+            SLIDES.forEach((s) => {
+                const slide = document.createElement("div");
+                slide.className = "slide";
+                slide.innerHTML =
+                    '<p class="slide-heading">' + s.heading + '</p>' +
+                    '<div class="hero"><img src="' + s.img + '" alt="" style="' + s.imgStyle + '" /></div>' +
+                    '<div class="cta">' +
+                        '<div class="btn" style="background:' + s.btn + ';border-color:' + s.border + ';">Get Zapp Account</div>' +
+                        '<div class="note"><img src="assets/lightning.svg" alt="" />' +
+                        '<span style="color:' + s.note + ';">Takes a few minutes</span></div>' +
+                    '</div>';
+                track.appendChild(slide);
+            });
+
+            const inds = SLIDES.map(() => {
+                const ind = document.createElement("span");
+                ind.className = "ind";
+                ind.innerHTML = '<span class="fill"></span>';
+                pagination.appendChild(ind);
+                return ind;
+            });
+
+            let index = 0;
+
+            function render() {
+                track.style.transform = "translateX(" + (-index * 100) + "vw)";
+                bgtrack.style.transform = "translateX(" + (-index * 100) + "vw)";
+                inds.forEach((ind, i) => {
+                    const fill = ind.querySelector(".fill");
+                    if (i === index) {
+                        ind.classList.add("is-active");
+                        fill.style.transition = "none";
+                        fill.style.width = "0%";
+                        void fill.offsetWidth;
+                        if (reduceMotion) {
+                            fill.style.width = "100%";
+                        } else {
+                            fill.style.transition = "width " + DWELL_MS + "ms linear";
+                            fill.style.width = "100%";
+                        }
+                    } else {
+                        ind.classList.remove("is-active");
+                        fill.style.transition = "none";
+                        fill.style.width = "0%";
+                    }
+                });
+            }
+
+            function advance() { index = (index + 1) % SLIDES.length; render(); }
+
+            render();
+            setInterval(advance, DWELL_MS);
+        })();
+    </script>
+</body>
+</html>
