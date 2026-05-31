@@ -5779,6 +5779,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             let autoAdvanceCancelled = false;
             let transitionAutoTimer = null;
 
+            // Strip src from all prototype iframes except the currently active state,
+            // so they don't all load the moment the section scrolls into view.
+            states.forEach((state) => {
+                if (state.classList.contains("is-active")) return;
+                const embed = state.querySelector("iframe.execution-phone-embed[data-embed-src]");
+                if (embed) embed.removeAttribute("src");
+            });
+
             function updateTimelineProgress(activeStateId) {
                 // Transition steps are not in journeySteps; handle them explicitly so the
                 // node lights up while the section before it reads as complete.
@@ -9400,6 +9408,11 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 // Reset placeholder tabindex (set to "0" in edit mode, should be "-1" at rest)
                 Array.from(clone.querySelectorAll("[data-placeholder-id]")).forEach((el) => {
                     el.setAttribute("tabindex", "-1");
+                });
+
+                // Strip src from prototype iframes so they lazy-load on next open
+                Array.from(clone.querySelectorAll("iframe.execution-phone-embed[data-embed-src]")).forEach((el) => {
+                    el.removeAttribute("src");
                 });
 
                 return "<!DOCTYPE html>\n" + clone.outerHTML;
