@@ -1943,6 +1943,21 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transform-origin: top center;
         }
 
+        /* Responsive scaling for laptop screens (MacBook Pro, standard notebooks) */
+        @media (min-width: 768px) and (max-width: 1750px) {
+            .execution-phone-spacer {
+                width: 16.5rem;
+                margin-right: -3.5rem; /* Proportional overhang margin */
+            }
+            .execution-phone-floating {
+                width: 16.5rem;
+            }
+            .execution-journey-phone {
+                width: 16.5rem;
+                transform: scale(1.04); /* Reduced scale zoom */
+            }
+        }
+
         .execution-journey-phone .legacy-wallet-device {
             width: 100%;
         }
