@@ -1378,7 +1378,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .execution-phone-state.has-live-embed .legacy-wallet-screen > .execution-phone-embed {
             display: block;
-            opacity: 1;
+            opacity: 1 !important;
             position: absolute;
             z-index: 2;
         }
@@ -1387,7 +1387,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: #1a1a1a;
         }
 
-        .has-saved-image .legacy-wallet-screen > *:not(.placeholder-image-layer):not(.execution-phone-overlay) {
+        .has-saved-image .legacy-wallet-screen > *:not(.placeholder-image-layer):not(.execution-phone-overlay):not(.execution-phone-embed) {
             opacity: 0;
         }
 
@@ -3641,8 +3641,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <div class="flex items-center gap-3 px-4 py-3 border border-outline/30">
                             <div class="w-9 h-9 bg-accent flex items-center justify-center text-white font-display font-bold text-lg">P</div>
                             <div>
-                                <div class="mono text-[10px] text-muted">Parent app</div>
                                 <div class="font-display font-semibold text-base text-ink">PayzApp</div>
+                                <div class="mono text-[10px] text-muted">Parent app</div>
                             </div>
                         </div>
 
@@ -3657,8 +3657,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <div class="flex items-center gap-3 px-4 py-3 border border-outline/30">
                             <div class="w-9 h-9 bg-ink flex items-center justify-center text-white font-display font-bold text-lg">Z</div>
                             <div>
-                                <div class="mono text-[10px] text-muted">Wallet</div>
                                 <div class="font-display font-semibold text-base text-ink">Zapp Account</div>
+                                <div class="mono text-[10px] text-muted">Wallet</div>
                             </div>
                         </div>
                     </div>
