@@ -301,6 +301,18 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -486,13 +498,17 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 3rem;
             --results-prototype-top: -1.25rem;
             --results-prototype-right: -3.92rem;
-            --results-prototype-width: 14.76rem;
-            --results-prototype-height: 30.85rem;
+            --results-prototype-width: 16.24rem;
+            --results-prototype-height: 33.94rem;
             --results-prototype-rotate: 4.8deg;
             --results-prototype-skew-x: -3.6deg;
         }
         .impact-results-content {
             position: relative;
+        }
+        @keyframes results-float {
+            0%, 100% { transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x)) translateY(-6px); }
+            50%       { transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x)) translateY(6px); }
         }
         .results-prototype-skew {
             position: absolute;
@@ -503,6 +519,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-radius: 2.2rem;
             transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x));
             transform-origin: center center;
+            animation: results-float 4.5s ease-in-out infinite;
             z-index: 3;
             pointer-events: none;
             overflow: hidden;
@@ -819,7 +836,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             }
         }
 
-        .results-ranking { position: relative; margin-bottom: 0.5rem; }
+        .results-ranking { position: relative; }
         .results-leaderboard {
             list-style: none;
             margin: 0.8rem 0 0;
@@ -1635,6 +1652,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.16);
             background: #f8f8f6;
             padding: 1rem 1.15rem 0.85rem;
+            border-radius: 10px;
         }
 
         .scope-flow-toolbar {
@@ -3096,6 +3114,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .scope-flow-tabs {
             display: inline-flex;
             border: 1px solid rgba(71, 71, 71, 0.22);
+            border-radius: 7px;
+            overflow: hidden;
         }
 
         .scope-flow-tab {
@@ -3144,6 +3164,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.22);
             background: #fcfbf9;
             padding: 0.9rem 1rem;
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -3301,8 +3322,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             left: var(--floating-preview-left, -9999px);
         }
 
+        @keyframes growth-visual-float {
+            0%, 100% { transform: translateY(-21px); }
+            50%       { transform: translateY(-9px); }
+        }
         .editable-placeholder[data-placeholder-id="impact-results-visual"].legacy-wallet-floating-preview {
-            transform: translateY(-30px);
+            transform: translateY(-15px);
+            animation: growth-visual-float 4.5s ease-in-out infinite;
         }
 
         body.is-placeholder-editing .editable-placeholder {
@@ -3894,7 +3920,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -1819.875px; --floating-preview-left: 1053.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -236.875px; --floating-preview-left: 1493.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -3947,7 +3973,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                     <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What It Was Before and What the Bank Wanted</h3>
                                     <p class="text-[15px] md:text-base mb-3" data-text-key="enablers-origin-body" spellcheck="false">Before Zapp Account, the product existed as <b>PayZapp Wallet</b>. <br>In its most complete form, it could support a wider set of payment actions. But most users only operated with MinKYC: the minimum verification needed to use PayZapp itself which offered limited options.</p>
                                     <div class="capability-comparison my-6" data-kyc-view="full">
-                                        <div class="inline-flex border border-emerald-800/25 mb-5 text-[12px] font-display font-semibold" role="tablist" aria-label="KYC capability comparison">
+                                        <div class="inline-flex border border-emerald-800/25 mb-5 text-[12px] font-display font-semibold rounded-[7px] overflow-hidden" role="tablist" aria-label="KYC capability comparison">
                                             <button class="px-3 py-1.5" type="button" role="tab" data-kyc-tab="full" aria-selected="true">Full KYC wallet</button>
                                             <button class="px-3 py-1.5 border-l border-emerald-800/25" type="button" role="tab" data-kyc-tab="minkyc" aria-selected="false">MinKYC wallet</button>
                                         </div>
@@ -4439,8 +4465,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-fast-heading" spellcheck="false">Speed</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-fast-point-1" spellcheck="false">Quicker payment methods like Tap and Pay, scan-and-pay UPI, and Swipe to Pay</li>
-                                        <li data-text-key="strategy-fast-point-2" spellcheck="false">Swipe to Pay, a pinless way to authorize upi payments without the need of a PIN with a swipe</li>
+                                        <li data-text-key="strategy-fast-point-1" spellcheck="false">Quicker payment methods like Tap and Pay, scan-and-pay UPI, and Swipe to Pay.</li>
+                                        <li data-text-key="strategy-fast-point-2" spellcheck="false">Swipe to Pay, a pinless way to authorize upi payments without the need of a PIN with a swipe.</li>
                                     </ul>
                                 </div>
                                 <div class="value-prop-card">
@@ -4449,8 +4475,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-secure-heading" spellcheck="false">Security</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-secure-point-1" spellcheck="false">Trust &amp; Security from PayZapp's context as an HDFC Bank app</li>
-                                        <li data-text-key="strategy-secure-point-2" spellcheck="false">Compliance expectations, safeguards, and trust markers around the account</li>
+                                        <li data-text-key="strategy-secure-point-1" spellcheck="false">Trust &amp; Security from PayZapp's context as an HDFC Bank app.</li>
+                                        <li data-text-key="strategy-secure-point-2" spellcheck="false">Compliance expectations, safeguards, and trust markers around the account.</li>
                                     </ul>
                                 </div>
                                 <div class="value-prop-card">
@@ -4459,9 +4485,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-convenient-heading" spellcheck="false">Convenience</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-convenient-point-1" spellcheck="false">Versatile ways to pay (e.g., UPI, virtual card transactions, etc.)</li>
-                                        <li data-text-key="strategy-convenient-point-2" spellcheck="false">Granular controls like&nbsp; payment limits, deactivation/activation of the account.</li>
-                                        <li data-text-key="strategy-convenient-point-3" spellcheck="false">A rich passbook that makes spends easier to review, keeping their main bank statement clean of small, frequent transaction entries</li>
+                                        <li data-text-key="strategy-convenient-point-1" spellcheck="false">Versatile ways to pay &amp;&nbsp;Granular controls like payment limits, deactivation/activation of the account.</li>
+                                        <li data-text-key="strategy-convenient-point-3" spellcheck="false">Spends tracked separately, keeping your main bank statement uncluttered.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -4613,7 +4638,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 3957.7578125px; --floating-preview-left: 1133.046875px;">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 1113.8828125px; --floating-preview-left: 1588.875px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -4653,9 +4678,18 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <!-- Filler runway: extra read-through length before the timeline engages so the
                                          section opens with some free scroll instead of immediately taking control.
                                          Safe to trim/remove later. -->
-                                    <p class="mb-4 text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-1" spellcheck="false">Placeholder context paragraph. Before stepping into the screens, it helps to set the scene: who this user is, what they already do inside PayZapp every week, and why unlocking the full account quietly matters to the way they pay, save, and move money.</p>
-                                    <p class="mb-4 text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">Placeholder context paragraph. The aim here is not to rush toward the solution, but to give the surrounding constraints room to breathe — the product relationship we were designing inside, the expectations users carried over, and the small frictions that shaped every later decision.</p>
-                                    <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-3" spellcheck="false">Placeholder context paragraph. With that grounding in place, the screen-by-screen walkthrough below picks up the thread and follows the journey from the very first entry point onward.</p>
+                                    <p class="mb-6 text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-1" spellcheck="false">Before we dive into the actual flows, here is what helped me close the designs faster.</p>
+
+                                    <div class="mb-5 relative">
+                                        <div class="sticky-note pop-on-expand" style="top: 0.5rem; right: -19.5rem; --rot: 1.5deg;">These plugins were one of the ways I found to use AI meaningfully in my workflow. Walked the team through it at a dedicated AI event we ran across design functions at Zeta.</div>
+                                        <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-plugins-heading" spellcheck="false">Built Two Plugins That Helped Me Move Faster</h3>
+                                        <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project — <a href="#" class="font-medium text-ink" style="text-decoration: underline; text-decoration-color: rgba(39,71,224,0.35); text-underline-offset: 3px; text-decoration-thickness: 1.5px;">Fair Colors</a> and <a href="#" class="font-medium text-ink" style="text-decoration: underline; text-decoration-color: rgba(39,71,224,0.35); text-underline-offset: 3px; text-decoration-thickness: 1.5px;">Figma Recall</a> — both of which have their own case studies. Fair Colors let me tokenize the palette so color changes propagated everywhere without manually updating individual values. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.</p>
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-color-heading" spellcheck="false">The Color Direction</h3>
+                                        <p class="text-[15px] md:text-base" data-text-key="execution-color-body" spellcheck="false">We experimented with a few color directions, but the blueish primary theme with green accents was the clearest fit - partly because it sat naturally within PayZapp's existing color scheme and design system, without needing to fight against it. Green came in specifically for badges, nudges, and anywhere the UI needed to surface a value or highlight an action. The broader direction was pastel: soft, easy on the eye, nothing too loud. We weren't trying to stand out through contrast or bold color; we wanted the interface to feel calm and trustworthy, in a way that still felt at home inside PayZapp. Spacing and corner radii weren't something we had to experiment with much - those were inherited from PayZapp's existing design system.</p>
+                                    </div>
                                 </div>
 
                                 <!-- Entry divider: when this line crosses the viewport center on
@@ -4788,7 +4822,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 3711.796875px; --floating-preview-left: 1078.390625px;">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 5442.96875px; --floating-preview-left: 1518.390625px;">
                         <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                     </aside>
 
@@ -4837,7 +4871,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <div class="relative z-10 flex flex-col gap-3 mt-4">
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="2.1" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~2.1×</div>
-                                            <div class="bento-cap">Linear spends growth</div>
+                                            <div class="bento-cap">Growth in Monthly Spends</div>
                                         </div>
                                         
                                         <!-- Subtle Divider -->
@@ -4846,7 +4880,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <!-- Loads Cumulative Growth -->
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="1.5" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~1.5×</div>
-                                            <div class="bento-cap">Linear loads growth</div>
+                                            <div class="bento-cap">Growth in Monthly Loads</div>
                                         </div>
                                     </div>
                                 </div>
@@ -4915,13 +4949,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                  </div>
                             </div>
 
-                            <div class="results-card results-ranking">
-                                <div class="sticky-note pop-on-expand" style="top: 1.25rem; left: -18rem; --rot: -2deg;">We weren't even in the race — and six months later, we're in the top 5.</div>
-                                <div class="results-ranking-container">
-                                    <div class="results-leaderboard-wrapper">
+                            <div class="flex gap-3 items-stretch" style="overflow: visible;">
+                                <div class="results-card results-ranking flex-1" style="position: relative;">
+                                    <div class="sticky-note pop-on-expand" style="top: 1.25rem; left: -18rem; --rot: -2deg;">We weren't even in the race — and six months later, we're in the top 5.</div>
+                                    <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[10px] uppercase font-mono tracking-wider font-bold select-none" style="background: #ffffff; color: #6b7280; border-radius: 4px; border: 1px solid rgba(0,0,0,0.12);">as of July 2025</div>
+                                    <div class="results-leaderboard-wrapper" style="padding: 6px;">
                                         <div class="results-card-head">
-                                             <span class="results-card-label">Breaking into the top digital wallet accounts</span>
-                                         </div>
+                                            <span class="results-card-label">Top Digital Wallets by Monthly Spends</span>
+                                        </div>
                                         <ol class="results-leaderboard">
                                             <li class="results-rank-row"><span class="results-rank">#1</span><span class="results-rank-name">FamPay</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="100" data-barred="true" style="width: 100%;"></div></div><span class="results-rank-val">₹800 Cr</span></li>
                                             <li class="results-rank-row"><span class="results-rank">#2</span><span class="results-rank-name">PhonePe</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="100" data-barred="true" style="width: 100%;"></div></div><span class="results-rank-val">₹800 Cr</span></li>
@@ -4930,21 +4965,17 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                             <li class="results-rank-row is-self"><span class="results-rank">#5</span><span class="results-rank-name">Zapp Account</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="19" data-barred="true" style="width: 19%;"></div></div><span class="results-rank-val">₹150 Cr</span></li>
                                         </ol>
                                     </div>
-                                    <div class="results-today-callout">
-                                        <!-- Top-edge timestamp badge overlapping the border -->
-                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #fafafa; color: #1f8a5f; border-radius: 4px;">as of February 2026</div>
-                                        
-                                        <div class="mb-3">
-                                            <div class="results-today-v">~₹500 Cr</div>
-                                            <div class="results-today-s">in Monthly Spends — up from ₹150 Cr (April 2025)</div>
-                                        </div>
-                                        
-                                        <div class="w-[20%] my-2" style="height: 1px; background: rgba(31, 138, 95, 0.16);"></div>
-                                        
-                                        <div>
-                                            <div class="results-today-v">~₹600 Cr</div>
-                                            <div class="results-today-s">in Monthly Loads</div>
-                                        </div>
+                                </div>
+                                <div class="results-today-callout" style="padding-top: 0.9rem; padding-bottom: 0.65rem;">
+                                    <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #ffffff; color: #1f8a5f; border-radius: 4px;">as of February 2026</div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                                        <div class="results-today-v">~₹500 Cr</div>
+                                        <div class="results-today-s">in Monthly Spends</div>
+                                    </div>
+                                    <div class="w-[20%]" style="height: 1px; background: rgba(31, 138, 95, 0.16); margin: 0.5rem 0 0.75rem;"></div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                                        <div class="results-today-v">~₹600 Cr</div>
+                                        <div class="results-today-s">in Monthly Loads</div>
                                     </div>
                                 </div>
                             </div>
@@ -15683,6 +15714,234 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
