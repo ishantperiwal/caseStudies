@@ -295,6 +295,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1861,12 +1863,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .is-transition-step .execution-journey-section-copy h3 {
             color: rgba(31, 31, 31, 0.82);
+            padding-top: 0.12rem;
         }
 
         .execution-journey-section-copy {
             position: relative;
             max-width: 38rem;
             margin-bottom: 1.35rem;
+            padding-top: 0.125rem;
         }
 
         .execution-journey-section-copy::before {
@@ -3376,8 +3380,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .stack-section.is-expanded .sticky-note.pop-on-expand {
             opacity: 1;
             transform: scale(1) rotate(var(--rot, 0deg));
-            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s, 
-                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+            transition: opacity 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s, 
+                        transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s;
         }
         
         @media (min-width: 1400px) {
@@ -3821,7 +3825,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -3850.203125px; --floating-preview-left: 1493.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -3763.203125px; --floating-preview-left: 1493.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -4347,7 +4351,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
 
 
-                        <div class="mb-10 numbered-point">
+                        <!-- Parent Group: The Strategy blueprint -->
+                        <div class="mt-12 pt-8 border-t border-dashed border-outline/20">
+                            <h3 class="font-display text-lg font-semibold text-ink mb-3" data-text-key="strategy-blueprint-heading" spellcheck="false">The Design Strategy: Translating Insights into Core Levers</h3>
+                            <p class="text-[15px] md:text-base text-deep mb-8" data-text-key="strategy-blueprint-body" spellcheck="false">Based on our research into competitor patterns, user profiles, and existing spending behaviors, we identified four core design opportunities to reposition the wallet. These strategic pillars—accompanied by a redefined access flowchart—formed the blueprint for our design revamp.</p>
+                            
+                            <!-- Indented Nested Container -->
+                            <div>
+                                <div class="mb-10 numbered-point">
                             <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-valueprop-heading" spellcheck="false">01 / Communicate Core Value Props for Zapp Account</h3>
                             <p class="mb-5 text-[15px] md:text-base" data-text-key="strategy-valueprop-intro" spellcheck="false">We wanted our communication strategy to revolve around three core values, leveraging Zapp Account's capabilities to reinforce them across entry points and onboarding surfaces:</p>
 
@@ -4551,7 +4562,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                             </div>
                         </div></div>
                     </div>
-                </div>
+                </div></div></div>
             </article>
 
             <!-- Card 4: Execution -->
@@ -4564,7 +4575,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </div>
                 </div>
-                <div class="card-body" data-execution-journey="" style="" data-active-state="extra-four">
+                <div class="card-body" data-execution-journey="" style="" data-active-state="extra-two">
                     <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 340px; --floating-preview-left: 1588.875px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
@@ -4588,9 +4599,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="outro-recap" data-placeholder-id="execution-outro-recap" data-placeholder-name="Outro recap screen" aria-label="Preview placeholder for outro recap" tabindex="-1" data-highlight-active="true" data-highlight-x="89.3" data-highlight-y="79.7" data-highlight-label-x="129.6" data-highlight-label-y="63.3" data-highlight-text="This starts VKYC handled via IDFy" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-outro-recap.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder recap screen</div><div class="text-[11px] text-muted mt-1">Final journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-outro-extra" data-transition-state="true" data-placeholder-id="execution-transition-outro-extra" data-placeholder-name="Transition from outro to next placeholder" aria-label="Preview placeholder for transition into the next placeholder" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="64" data-highlight-label-x="74" data-highlight-label-y="48" data-highlight-text="Continue" data-highlight-rw="32" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-outro-extra.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Recap complete</div><div class="text-[11px] text-muted mt-1">Moving to next step</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-recap" data-placeholder-id="execution-extra-recap" data-placeholder-name="Extra placeholder screen" aria-label="Preview placeholder for extra section" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/intro-animation/embed.html" title="Intro animation prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-recap.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Another placeholder screen</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
-                                        <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-two" data-placeholder-id="execution-extra-two" data-placeholder-name="Extra placeholder screen 2" aria-label="Preview placeholder for extra section box 2" tabindex="-1" data-highlight-active="true" data-highlight-x="74.2" data-highlight-y="28.7" data-highlight-label-x="134.5" data-highlight-label-y="24.4" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=actions" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-two.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen two</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-live-embed is-active" data-journey-screen-state="extra-two" data-placeholder-id="execution-extra-two" data-placeholder-name="Extra placeholder screen 2" aria-label="Preview placeholder for extra section box 2" tabindex="-1" data-highlight-active="true" data-highlight-x="74.2" data-highlight-y="28.7" data-highlight-label-x="134.5" data-highlight-label-y="24.4" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=actions" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-two.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen two</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-three" data-placeholder-id="execution-extra-three" data-placeholder-name="Extra placeholder screen 3" aria-label="Preview placeholder for extra section box 3" tabindex="-1" data-highlight-active="true" data-highlight-x="92.0" data-highlight-y="42.1" data-highlight-label-x="136.7" data-highlight-label-y="41.6" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=quick" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-three.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen three</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
-                                        <div class="execution-phone-state editable-placeholder has-live-embed is-active is-highlight-clipped" data-journey-screen-state="extra-four" data-placeholder-id="execution-extra-four" data-placeholder-name="Extra placeholder screen 4" aria-label="Preview placeholder for extra section box 4" tabindex="-1" data-highlight-active="true" data-highlight-x="89.6" data-highlight-y="56.7" data-highlight-label-x="126.2" data-highlight-label-y="45.7" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=rewards" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-four.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen four</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-live-embed is-highlight-clipped" data-journey-screen-state="extra-four" data-placeholder-id="execution-extra-four" data-placeholder-name="Extra placeholder screen 4" aria-label="Preview placeholder for extra section box 4" tabindex="-1" data-highlight-active="true" data-highlight-x="89.6" data-highlight-y="56.7" data-highlight-label-x="126.2" data-highlight-label-y="45.7" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=rewards" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-four.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen four</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="extra-five" data-placeholder-id="execution-extra-five" data-placeholder-name="Extra placeholder screen 5" aria-label="Preview placeholder for extra section box 5" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-five.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen five</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="extra-six" data-placeholder-id="execution-extra-six" data-placeholder-name="Extra placeholder screen 6" aria-label="Preview placeholder for extra section box 6" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-six.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen six</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                         </div>
@@ -4634,7 +4645,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-entry-kyc" data-transition-step="" data-journey-state="transition-entry-kyc" data-startup-tap-x="62.2" data-startup-tap-y="62.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-transition-kicker" aria-hidden="true">Transition</div>
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-entry-kyc-heading" spellcheck="false">To Onboarding</h3>
                                     </div>
                                 </section>
@@ -4658,7 +4668,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-kyc-unlock" data-transition-step="" data-journey-state="transition-kyc-unlock" data-startup-tap-x="9.7" data-startup-tap-y="8.2" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-transition-kicker" aria-hidden="true">Transition</div>
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-kyc-unlock-heading" spellcheck="false">Skipping Video KYC</h3>
                                     </div>
                                 </section>
@@ -4681,7 +4690,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-unlock-outro" data-transition-step="" data-journey-state="transition-unlock-outro" data-startup-tap-x="39.6" data-startup-tap-y="21.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-transition-kicker" aria-hidden="true">Transition</div>
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-unlock-outro-heading" spellcheck="false">To The Recap</h3>
                                     </div>
                                 </section>
@@ -4704,7 +4712,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-outro-extra" data-transition-step="" data-journey-state="transition-outro-extra" data-startup-tap-x="75.0" data-startup-tap-y="81.1" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-transition-kicker" aria-hidden="true">Transition</div>
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-outro-extra-heading" spellcheck="false">To The Next Step</h3>
                                     </div>
                                 </section>
@@ -4717,9 +4724,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                     <div class="execution-journey-options">
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-recap" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-recap-kicker" spellcheck="false">Extra step 01</div><div class="execution-option-title" data-text-key="execution-extra-recap-title" spellcheck="false">Welcome Animation</div><p class="execution-option-body" data-text-key="execution-extra-recap-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-two" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-two-kicker" spellcheck="false">Extra step 02</div><div class="execution-option-title" data-text-key="execution-extra-two-title" spellcheck="false">The Home Page</div><p class="execution-option-body" data-text-key="execution-extra-two-body" spellcheck="false">While load money was our most prominent action on the home page we placed auto-load near it, where the intent to keep the account funded was already clear and Auto-Load felt more discoverable in context.</p></button>
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-three" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-three-kicker" spellcheck="false">Extra step 03</div><div class="execution-option-title" data-text-key="execution-extra-three-title" spellcheck="false">Contextual Nudges that reinforce value and educate</div><p class="execution-option-body" data-text-key="execution-extra-three-body" spellcheck="false">The core anchors acted as their own explainers along with action buttons with the help of the education nudges that would change contextually to drive discovery and education and dynamically based on the user's lifecyle with Zapp Account.</p></button>
-                                        <button class="execution-journey-option is-active" type="button" data-journey-option="" data-journey-state="extra-four" aria-pressed="true"><div class="execution-option-kicker" data-text-key="execution-extra-four-kicker" spellcheck="false">Extra step 04</div><div class="execution-option-title" data-text-key="execution-extra-four-title" spellcheck="false">Value first offers</div><p class="execution-option-body" data-text-key="execution-extra-four-body" spellcheck="false">One of the simpler and main aspect of this section was the value first communication of the offers wthout their association with the task to be done. This was done to keep the notion cashpoint clear for user to understand as the badge on the top right 1CP = ₹1 already establishes what it stood for.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-two" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-two-kicker" spellcheck="false">Extra step 02</div><div class="execution-option-title" data-text-key="execution-extra-two-title" spellcheck="false">A Load-Centric Homepage</div><p class="execution-option-body" data-text-key="execution-extra-two-body" spellcheck="false">We shifted the homepage layout to prioritize loading funds as the primary action. To capitalize on this intent, we positioned the Auto-Load trigger adjacent to the balance, ensuring it felt discoverable at the exact moment users think about funding their account.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-three" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-three-kicker" spellcheck="false">Extra step 03</div><div class="execution-option-title" data-text-key="execution-extra-three-title" spellcheck="false">Let the homepage explain itself</div><p class="execution-option-body" data-text-key="execution-extra-three-body" spellcheck="false">We introduced contextual nudges that allow the core anchors and action buttons to act as their own explainers—changing dynamically based on the user's lifecycle with Zapp Account to drive discovery and native education.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-four" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-four-kicker" spellcheck="false">Extra step 04</div><div class="execution-option-title" data-text-key="execution-extra-four-title" spellcheck="false">Value first offers</div><p class="execution-option-body" data-text-key="execution-extra-four-body" spellcheck="false">One of the simpler and main aspect of this section was the value first communication of the offers wthout their association with the task to be done. This was done to keep the notion cashpoint clear for user to understand as the badge on the top right 1CP = ₹1 already establishes what it stood for.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-five" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-five-kicker" spellcheck="false">Extra step 05</div><div class="execution-option-title" data-text-key="execution-extra-five-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-five-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-six" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-six-kicker" spellcheck="false">Extra step 06</div><div class="execution-option-title" data-text-key="execution-extra-six-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-six-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
                                     </div>
@@ -4744,7 +4751,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 1468.328125px; --floating-preview-left: 1518.390625px;">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 1602.296875px; --floating-preview-left: 1518.390625px;">
                         <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                     </aside>
 
@@ -7306,6 +7313,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 if (option.hasAttribute("data-transition-option")) return;
                 option.addEventListener("click", () => {
                     setActiveState(option.dataset.journeyState, { manual: true });
+                    scrollCardToCenter(option);
                 });
             });
 
@@ -15638,6 +15646,44 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
