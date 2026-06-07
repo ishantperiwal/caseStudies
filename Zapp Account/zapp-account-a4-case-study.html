@@ -299,6 +299,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -307,7 +309,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Importing Grotesque Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Caveat:wght@500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Caveat:wght@500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;display=swap" rel="stylesheet">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&amp;display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -346,15 +349,42 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background-color: #fafafa;
             background-image: radial-gradient(circle, rgba(71, 71, 71, 0.12) 1px, transparent 1px);
             background-size: 18px 18px;
-            color: theme('colors.deep');
+            color: var(--color-deep);
             -webkit-font-smoothing: antialiased;
             line-height: 1.65rem;
             font-size: 15px;
             overflow-x: hidden;
         }
 
+        /* ── Font experiment variables ─────────────────────────────────────
+           To revert: change the two values below back to the originals.
+           Original display: var(--font-display)
+           Original body:    'IBM Plex Sans', sans-serif
+        ─────────────────────────────────────────────────────────────── */
+        :root {
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-body:    'IBM Plex Sans', sans-serif;
+            --color-deep:   #434957;
+
+            /* Spacing tokens
+               --gap-point:     space between numbered points / section blocks
+               --gap-paragraph: space between paragraphs within a block       */
+            --gap-point:     2rem;
+            --gap-paragraph: 1rem;
+        }
+
+        .numbered-point {
+            margin-bottom: var(--gap-point) !important;
+        }
+
+        .card-body-content p,
+        .card-body-content > div > p {
+            margin-bottom: var(--gap-paragraph);
+        }
+
+
         h1, h2, h3, h4, .font-display {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             color: theme('colors.ink');
             letter-spacing: -0.02em;
         }
@@ -397,6 +427,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .stack-section:not(.is-expanded) .section-header p.font-display,
         .stack-section.static-section p.font-display {
             font-weight: 400;
+            color: var(--color-deep);
             transform: scale(0.89);
         }
 
@@ -446,6 +477,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            font-weight: 600;
         }
 
         /* ── Results dashboard (Impact section) ── */
@@ -497,7 +529,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 11px;
             letter-spacing: 0.03em;
-            color: #525866;
+            font-weight: 600;
+            color: var(--color-deep);
         }
         .results-timeframe-dot {
             width: 7px;
@@ -524,7 +557,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .results-card-label {
             display: flex;
             align-items: center;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.95rem;
             font-weight: 600;
             color: #1f2937;
@@ -599,10 +632,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 10px;
             letter-spacing: 0.05em;
             text-transform: uppercase;
+            font-weight: 600;
             color: #6c6c6c;
         }
         .bento-num {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-weight: 700;
             line-height: 1;
             font-variant-numeric: tabular-nums;
@@ -613,7 +647,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
             font-size: 12px;
             letter-spacing: 0.02em;
-            color: #525866;
+            font-weight: 600;
+            color: var(--color-deep);
         }
         .b-autoload .bento-cap {
             max-width: 220px;
@@ -756,7 +791,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 0.35rem;
         }
         .results-today-v {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 2.1rem;
             font-weight: 700;
             line-height: 1.1;
@@ -801,7 +836,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid transparent;
         }
         .results-rank {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-weight: 700;
             font-size: 0.85rem;
             color: #6c6c6c;
@@ -909,6 +944,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             padding-top: 1.25rem;
         }
 
+        .stack-section .card-body > .card-body-clip {
+            padding-top: 0;
+        }
+
+        .card-body-content {
+            padding-top: 0 !important;
+            padding-bottom: 2rem !important;
+        }
+
         .stack-section:not(.is-expanded) .section-header:hover {
             background-color: rgba(71, 71, 71, 0.035);
         }
@@ -918,7 +962,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             position: absolute;
             top: 2rem;
             right: 2.5rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1.5rem;
             line-height: 1;
             color: theme('colors.ink');
@@ -1026,7 +1070,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1.2rem;
             line-height: 1;
             font-weight: 700;
@@ -1217,7 +1261,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .competitive-carousel {
             position: relative;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
         }
 
         .competitive-carousel-stage {
@@ -1286,7 +1330,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.16);
             background: #fcfbf9;
             color: #1b2433;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.82rem;
             font-weight: 700;
             line-height: 1.2;
@@ -1303,7 +1347,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.18);
             background: rgba(250, 250, 250, 0.88);
             color: #1f2937;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1.25rem;
             line-height: 1;
             display: inline-flex;
@@ -1609,7 +1653,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .scope-flow-title {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-weight: 700;
             font-size: 1rem;
             color: #1f2937;
@@ -1622,7 +1666,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         /* More breathing room above prose subsection headings across the case study. */
         .section-mini-heading.slash-heading {
-            padding-top: 1.5rem;
+            padding-top: var(--gap-paragraph);
         }
 
         /* Slightly larger mini-headings for clearer reading hierarchy.
@@ -1632,7 +1676,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 1.15rem;
             line-height: 1.35;
             padding-top: 0.45rem;
-            padding-bottom: 0.35rem;
+            padding-bottom: 0;
         }
 
         .strategy-blueprint-section h3.section-mini-heading,
@@ -1692,7 +1736,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .strategy-track-title {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1.02rem;
             line-height: 1.2;
             font-weight: 700;
@@ -1741,7 +1785,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .card-body-content > div:has(> .section-mini-heading),
         .card-body > .px-10 > div:has(> .section-mini-heading) {
-            margin-bottom: 2.35rem;
+            margin-bottom: var(--gap-paragraph);
         }
 
         .card-body-content > div:has(> .section-mini-heading):last-child,
@@ -1994,7 +2038,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .execution-option-title {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1rem;
             line-height: 1.2;
             font-weight: 700;
@@ -2021,7 +2065,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         body.is-text-editing .execution-transition-heading {
             display: block;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.95rem;
             line-height: 1.35;
             font-weight: 600;
@@ -2030,7 +2074,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         body.is-text-editing .execution-transition-subtext {
             display: block;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.86rem;
             line-height: 1.5;
             color: rgba(71, 71, 71, 0.72);
@@ -2215,7 +2259,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: rgba(255, 255, 255, 0.72);
             padding: 0.38rem 0.58rem;
             border-radius: 999px;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.72rem;
             font-weight: 700;
             line-height: 1;
@@ -2294,7 +2338,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: #edf8f1;
             padding: 0.28rem 0.45rem;
             color: #064e3b;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.72rem;
             font-weight: 700;
             line-height: 1.2;
@@ -2539,7 +2583,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             align-items: center;
             justify-content: center;
             gap: 0.55rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.98rem;
             font-weight: 600;
             color: #1b2433;
@@ -2550,7 +2594,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             align-items: center;
             border: 1px solid transparent;
             background: transparent;
-            color: #525866;
+            color: var(--color-deep);
             padding: 0.32rem 0.55rem;
         }
 
@@ -2565,6 +2609,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: #edf8f1;
             color: #064e3b;
             padding: 0.32rem 0.55rem;
+            border-radius: 6px;
         }
 
         .adoption-equation-symbol {
@@ -2573,8 +2618,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             justify-content: center;
             width: 1.45rem;
             height: 1.45rem;
-            border: 1px solid rgba(71, 71, 71, 0.16);
-            background: #fcfbf9;
+            border: none;
+            background: transparent;
             color: #1b2433;
             font-weight: 700;
         }
@@ -2601,7 +2646,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .strategy-finding::before,
         .strategy-finding::after {
             position: absolute;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 3rem;
             font-weight: 700;
             line-height: 1;
@@ -2652,10 +2697,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             float: right;
             display: grid;
             width: 21.5rem;
-            margin: 2.2rem -7.8rem 1.5rem 3.8rem;
+            margin: 2rem 0rem 1.5rem 3rem;
             isolation: isolate;
             perspective: 900px;
             cursor: pointer;
+            --stack-offset: 0.9rem;
         }
 
         .persona-id-copy {
@@ -2664,7 +2710,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .persona-id-copy h4 {
             margin-bottom: 0.5rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1.15rem;
             line-height: 1.35;
             font-weight: 600;
@@ -2672,7 +2718,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-copy p {
-            color: theme('colors.deep');
+            color: var(--color-deep);
         }
 
         .persona-id-card {
@@ -2735,7 +2781,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 3;
             opacity: 1;
             pointer-events: none;
-            transform: translate3d(-0.68rem, 0.48rem, 0) rotate(-1.4deg) scale(0.985);
+            transform: translate3d(calc(-1 * var(--stack-offset)), 0, 0) scale(0.97);
+            transform-origin: center center;
             box-shadow: none;
             border-color: rgba(var(--persona-accent-rgb), 0.56);
         }
@@ -2744,7 +2791,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 2;
             opacity: 1;
             pointer-events: none;
-            transform: translate3d(-1.28rem, 0.9rem, 0) rotate(-2.4deg) scale(0.97);
+            transform: translate3d(calc(-2 * var(--stack-offset)), 0, 0) scale(0.94);
+            transform-origin: center center;
             box-shadow: none;
             border-color: rgba(var(--persona-accent-rgb), 0.56);
         }
@@ -2753,7 +2801,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 1;
             opacity: 0;
             pointer-events: none;
-            transform: translate3d(-1.7rem, 1.26rem, 0) rotate(-2.4deg) scale(0.955);
+            transform: translate3d(calc(-3 * var(--stack-offset)), 0, 0) scale(0.91);
+            transform-origin: center center;
             box-shadow: none;
         }
 
@@ -2819,7 +2868,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-label {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 1rem;
             line-height: 1.2;
             letter-spacing: -0.02em;
@@ -2828,7 +2877,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-subtext {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             margin-top: 0.18rem;
             font-size: 0.78rem;
             line-height: 1.28;
@@ -2859,7 +2908,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-attribute-value {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.98rem;
             line-height: 1.26;
             font-weight: 600;
@@ -2979,7 +3028,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .kyc-stepper-label {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.72rem;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -3018,7 +3067,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: rgba(39, 71, 224, 0.08);
             border: 1px solid rgba(39, 71, 224, 0.2);
             color: rgba(39, 71, 224, 0.7);
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.7rem;
             font-weight: 700;
             display: flex;
@@ -3051,7 +3100,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .scope-flow-tab {
             padding: 0.55rem 0.95rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.78rem;
             font-weight: 700;
             color: #6c6c6c;
@@ -3144,7 +3193,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .scope-decision-label {
             fill: #131313;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 14px;
             font-weight: 700;
             letter-spacing: -0.02em;
@@ -3202,7 +3251,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             align-items: center;
             justify-content: center;
             color: theme('colors.muted');
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             border-radius: 0;
             overflow: hidden;
             position: relative;
@@ -3325,7 +3374,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.24);
             background: #ffffff;
             padding: 0.55rem 0.85rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.85rem;
             font-weight: 600;
             color: #1b2433;
@@ -3350,7 +3399,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             box-shadow: 0 4px 12px rgba(0,0,0,0.03);
         }
         .metric-value {
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 2.5rem;
             font-weight: 700;
             color: theme('colors.ink');
@@ -3360,7 +3409,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-left: 4px solid theme('colors.outline');
             padding-left: 1.5rem;
             font-style: italic;
-            color: theme('colors.deep');
+            color: var(--color-deep);
             margin: 2rem 0;
             font-size: 1.125rem;
         }
@@ -3433,7 +3482,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(255,255,255,0.16);
             border-radius: 999px;
             padding: 0.34rem 0.62rem;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.72rem;
             font-weight: 700;
             line-height: 1;
@@ -3466,7 +3515,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: #fff;
             padding: 0.6rem 0.75rem 0.6rem 1.1rem;
             border-radius: 999px;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.82rem;
             box-shadow: 0 4px 24px rgba(0,0,0,0.28);
         }
@@ -3619,7 +3668,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: #fff;
             padding: 0.25rem;
             border-radius: 6px;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.68rem;
             font-weight: 600;
             box-shadow: 0 4px 14px rgba(0,0,0,0.25);
@@ -3652,7 +3701,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: #fff;
             padding: 0.5rem 0.7rem;
             border-radius: 8px;
-            font-family: 'Space Grotesk', sans-serif;
+            font-family: var(--font-display);
             font-size: 0.72rem;
             display: none;
             flex-direction: column;
@@ -3833,7 +3882,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             <!-- Card 2: Enablers -->
             <article class="stack-section has-floating-preview">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header pt-8 pb-3 pl-10 pr-20">
                     <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2.5deg;">
                         The requirement came to us from the HDFC Bank
                     </div>
@@ -3845,7 +3894,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -3388.203125px; --floating-preview-left: 1493.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -1819.875px; --floating-preview-left: 1053.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -3868,7 +3917,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         </div>
                     </aside>
                     <div class="card-body-clip" style="">
-                        <div class="card-body-content px-10 pt-3 pb-16 text-deep">
+                        <div class="card-body-content px-10 pt-0 pb-3 text-deep">
                         <div class="section-side-preview mb-8">
                             <aside class="legacy-wallet-preview legacy-wallet-flow-spacer has-saved-image" data-placeholder-clone="before-payzapp-wallet" aria-hidden="true">
                                 <div class="legacy-wallet-device">
@@ -3895,7 +3944,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                             <div>
                                 <div class="mb-5 relative">
-                                    <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What it was before and What the bank wanted</h3>
+                                    <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What It Was Before and What the Bank Wanted</h3>
                                     <p class="text-[15px] md:text-base mb-3" data-text-key="enablers-origin-body" spellcheck="false">Before Zapp Account, the product existed as <b>PayZapp Wallet</b>. <br>In its most complete form, it could support a wider set of payment actions. But most users only operated with MinKYC: the minimum verification needed to use PayZapp itself which offered limited options.</p>
                                     <div class="capability-comparison my-6" data-kyc-view="full">
                                         <div class="inline-flex border border-emerald-800/25 mb-5 text-[12px] font-display font-semibold" role="tablist" aria-label="KYC capability comparison">
@@ -3936,15 +3985,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                     <p class="text-[15px] md:text-base" data-text-key="enablers-origin-positioning-body" spellcheck="false">This meant a large chunk of users were not using the complete form of PayZapp Wallet, even when they technically could. Many others could not access the full capabilities because they were non-bank customers. The bank wanted to reposition PayZapp Wallet as something closer to a digital payments account one could use for their discretionary spends. The name Zapp Account&nbsp;<span style="font-size: 15.84px;">was proposed</span>&nbsp;to support that shift and give the product a stronger role inside the PayZapp ecosystem.</p>
                                 </div>
 
-	                                <div class="mb-5 numbered-point">
-	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-kyc-heading" spellcheck="false">01 / Introduce Video KYC To Unlock Full Capabilities</h3>
+	                                <div class="mb-5 numbered-point mt-8">
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-kyc-heading" spellcheck="false">01 / Introduce Video KYC to Unlock Full Capabilities</h3>
 	                                    <p class="text-[15px] md:text-base" data-text-key="enablers-kyc-body" spellcheck="false">The most immediate ask was Video KYC. Until then, non-bank customers did not have a way to the full capabilities of Zapp Account. Bank customers could complete 4 Digit card verification and unlock the complete experience, but everyone else was limited. Video KYC would change that y giving non-bank users a route to full access and made the product more open to the wider market.</p>
 	                                </div>
 
 	                                <div class="mb-5 numbered-point">
 	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-rebrand-heading" spellcheck="false">02 / Rebrand PayZapp Wallet to Zapp Account</h3>
 	                                    <p class="text-[15px] md:text-base" data-text-key="enablers-rebrand-body" spellcheck="false">This initiative covered the comprehensive rebranding of PayZapp Wallet to <b data-path-to-node="2,0" data-index-in-node="73">Zapp Account</b> within the app. The scope included updating all icons, nomenclature, and user nudges previously used for PayZapp Wallet education and promotion.</p>
-	                                    <div class="rebrand-phone-grid mt-5">
+	                                    <div class="rebrand-phone-grid mt-10">
 	                                        <div class="rebrand-phone-placeholder editable-placeholder has-saved-image" data-placeholder-id="enablers-rebrand-1" data-placeholder-name="Rebrand phone image 1" aria-label="Preview placeholder for rebrand phone image 1" tabindex="-1" data-hover-pan-zoom="" data-highlight-x="79.3" data-highlight-y="76.1" data-highlight-label-x="134.2" data-highlight-label-y="58.6" data-highlight-text="Wallet Anchor on Home Page" data-highlight-active="true" data-highlight-rw="20" data-highlight-rh="20" data-highlight-curve="16" data-highlight-arrow-gap="11">
 	                                            <div class="rebrand-phone-viewport">
 	                                            <div class="legacy-wallet-device">
@@ -4011,7 +4060,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" style="">
-                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <div class="px-10 pt-3 text-deep" style="padding-bottom: 2.2rem;">
                         <p class="mb-5 text-[15px] md:text-base" data-text-key="objectives-intro" spellcheck="false">We were focusing on three core outcomes for Zapp Account:</p>
 
                         <div class="mb-5 numbered-point">
@@ -4031,12 +4080,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-5 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-loads-heading" spellcheck="false">02 / Increase Wallet Loads Via Auto Load</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-loads-heading" spellcheck="false">02 / Increase Wallet Loads via Auto Load</h3>
                             <p class="text-[15px] md:text-base" data-text-key="objectives-loads-body" spellcheck="false">Auto Load was one of the clearest ways to make Zapp Account more convenient and habit-forming. If users enabled it, they did not have to think about topping up the wallet each time they wanted to pay. It also became a strong signal that they intended to keep using Zapp Account and take fuller advantage of it as an everyday payments account.</p>
                         </div>
 
                         <div class="numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-experience-heading" spellcheck="false">03 / Elevate The Overall User Experience</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-experience-heading" spellcheck="false">03 / Elevate the Overall User Experience</h3>
                             <p class="text-[15px] md:text-base" data-text-key="objectives-experience-body" spellcheck="false">The experience also needed to do a better job of selling and explaining the product inside PayZapp. The rebrand gave us room to refresh the visual language, make the landing page more load-centric, and improve how important features like auto load showed up. We also wanted clearer communication through nudges and progress states, so users could understand what Zapp Account offered, what they had already unlocked, and what they could do next. These were not just business targets; they came from our discussions with leadership about what Zapp Account needed to become.</p>
                         </div>
                     </div>
@@ -4055,8 +4104,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 </div>
                 <div class="card-body" style="">
                         <div class="px-10 pt-3 pb-16 text-deep">
-                        <div class="mb-7">
-                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-zapp-account-meaning-heading" spellcheck="false">What was Zapp Account to us?</h3>
+                        <div>
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-zapp-account-meaning-heading" spellcheck="false">What Was Zapp Account to Us?</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-zapp-account-meaning-body" spellcheck="false">We believed Zapp Account was an ideal product for someone managing everyday fixed and discretionary spends, especially users with predictable monthly income and routine spending patterns. A capable secondary payments account for day-to-day money movement, making those spends easier to track because they were happening away from the primary bank account. Bank also looked at it as a low-barrier acquisition tool, bringing more users into a deeper financial relationship through a product they could use every day. With that role in mind, we looked at other payment apps to understand how they framed similar wallet-like accounts.</p>
                         </div>
 
@@ -4067,7 +4116,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                             <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-competitive-heading" spellcheck="false">The Competitors</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-competitive-body" spellcheck="false">We looked at the most prominent payment apps, that offered a digital wallet or were a digital wallet, to understand what they were prioritizing in this space: how they introduced wallet-like accounts, how onboarding was structured, how Mini KYC and full KYC states were handled, and which actions they made easiest to discover from the first few screens.</p>
                         </div>
-                        <div class="competitive-carousel" data-competitive-carousel="">
+                        <div class="competitive-carousel mt-12" data-competitive-carousel="">
                             <div class="competitive-carousel-stage" aria-label="Competitive research phone screenshot carousel">
                                 <div class="competitive-carousel-slide is-active" data-carousel-slide="" aria-hidden="false">
                                     <div class="rebrand-phone-placeholder editable-placeholder has-saved-image" data-placeholder-id="competitive-research-2" data-placeholder-name="Competitive research screen 2" aria-label="Preview placeholder for competitive research screen 2" tabindex="-1">
@@ -4198,7 +4247,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="persona-id-shell mb-7 relative">
-                            <div class="sticky-note pop-on-expand" style="top: 3.5rem; left: -19.5rem; --rot: 2.5deg;">Conducted ~30 user interviews over phone &amp; Google Meet</div>
                             <div class="persona-card-stack" data-persona-stack="" aria-label="User profile examples">
                                 <div class="persona-id-card" data-persona-card="" data-stack-position="0" aria-hidden="false">
                                     <div class="persona-id-card-header">
@@ -4343,17 +4391,18 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 </div>
                             </div>
                             <div class="persona-id-copy">
-                                <h4 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-persona-copy-heading" spellcheck="false">Who we were solving for</h4>
+                                <h4 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-persona-copy-heading" spellcheck="false">Who We Were Solving For</h4>
                                 <p class="text-[15px] md:text-base" data-text-key="strategy-persona-copy-body" spellcheck="false">From existing data and market research shared by the bank, we knew that a large share of the <span class="kw">PayZapp user base was between 25-40 years old and came from Tier 2 and Tier 3 cities</span>. Within that group, salaried users had the strongest use case for Zapp Account, and this was a direction the bank believed in as well. Since PayZapp Wallet adoption was still limited, the immediate adoption goal was to <span class="kw">lean toward a user profile that closely represented existing PayZapp users</span> who had not meaningfully adopted the wallet so far.&nbsp;</p>
                             </div>
                         </div>
 
-                        <div class="mb-7">
+                        <div class="mb-7 relative">
                             <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-studywhat-heading" spellcheck="false">Understanding Existing Usage Patterns</h3>
                             <p class="mb-4 text-[15px] md:text-base" data-text-key="strategy-studywhat-body1" spellcheck="false">From the existing PayZapp Wallet usage data, we could see that most activity was concentrated around bills and recharges, largely because those were the easiest and most visible ways to use the wallet. <span class="kw">Auto-load feature adoption was especially lower</span>. That mattered because auto-load could drive more convenient usage and higher or more frequent load amounts, both of which were important goals for Zapp Account.</p>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-studywhat-body2" spellcheck="false"><span style="white-space-collapse: preserve;">A few observations from the PayZapp wallet users we interviewed:</span></p>
 
-                            <div class="mt-6 mb-7 py-4 space-y-3">
+                            <div class="mt-6 mb-7 py-4 space-y-3 relative">
+                                <div class="sticky-note pop-on-expand" style="top: 2.5rem; left: -19.5rem; --rot: 2.5deg;">Conducted ~30 user interviews over phone &amp; Google Meet</div>
                                 <div class="strategy-findings-grid">
                                     <div class="strategy-finding">
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding2" spellcheck="false">For most users, the wallet was primarily <b>a cashpoint conversion tool </b>- cashpoints earned on offers were added as wallet balance and spent on recharges and bill payments.</p>
@@ -4374,7 +4423,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                         <!-- Parent Group: The Strategy blueprint -->
                         <div class="mt-12 strategy-blueprint-section">
-                            <h3 class="font-display text-lg font-semibold text-ink mb-3" data-text-key="strategy-blueprint-heading" spellcheck="false">The Design Strategy: Translating Insights into Core Levers</h3>
+                            <h3 class="font-display text-lg font-semibold text-ink mb-3" data-text-key="strategy-blueprint-heading" spellcheck="false">Using Insights to Derive Opportunities</h3>
                             <p class="text-[15px] md:text-base text-deep mb-8" data-text-key="strategy-blueprint-body" spellcheck="false">Based on our research into competitor patterns, user profiles, and existing spending behaviors, we identified four core design opportunities to reposition the wallet. These strategic pillars—accompanied by a redefined access flowchart—formed the blueprint for our design revamp.</p>
                             
                             <!-- Indented Nested Container -->
@@ -4420,7 +4469,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-10 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-kyc-heading" spellcheck="false">02 / Make Video KYC Clear And Trackable</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-kyc-heading" spellcheck="false">02 / Make Video KYC Clear and Trackable</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-kyc-body" spellcheck="false">Video KYC could easily become a drop-off-heavy journey because it involved many steps. Users would need to share personal and PAN details, pay an applicable upgrade fee, prepare documents, ensure proper lighting, maintain a stable internet connection, complete the video verification, wait for the verification to go through, and then receive the upgraded Zapp Account. We decided to approach it as a clear timeline: break the journey into simple, one-step-at-a-time milestones, show what was done and what came next, and let users resume from the last completed step wherever the flow allowed it. Leaving the journey was not something we wanted to highlight, but it still needed to feel like a clear option rather than lost progress.</p>
 
                             <div class="kyc-stepper">
@@ -4446,12 +4495,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-10 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-loadcentric-heading" spellcheck="false">03 / Make The Home Page More Load Money-Centric</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-loadcentric-heading" spellcheck="false">03 / Make the Home Page More Load Money-Centric</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-loadcentric-body" spellcheck="false">The older PayZapp Wallet landing page did not really push loading money as the hero action. It focused more heavily on the virtual card as many wallet capabilities could still be used contextually inside PayZapp payment flows, where users could simply choose PayZapp Wallet as the payment source. But that approach did not work as well for the positioning Zapp Account was trying to take. Since adoption was tied to monthly load amounts, and frequency of loads, making loading more prominent became a natural product decision. The first screen had to make balance the hero account state and Load Money the hero action. Users should be able to spot how much money they had, understand whether it was enough for upcoming payments, and notice cues like low balance before they ran into a payment failure. Most competitors also leaned towards a similar approach.</p>
                         </div>
 
                         <div class="numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-levers-heading" spellcheck="false">04 / Organize The Experience Around Contextual Levers</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-levers-heading" spellcheck="false">04 / Organize the Experience Around Contextual Levers</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-levers-intro" spellcheck="false">Education came up as a consistent gap. Users didn't fully understand what Zapp Account offered, what they had already unlocked, or what action could move them forward. The challenge was addressing this <span class="kw">without too many dedicated education surfaces</span> — banners, tooltips, or separate screens that most users would skip past anyway.</p>
                         </div>
                         <div class="mt-10" data-scope-flow-placement=""><div class="scope-flow-shell">
@@ -4465,7 +4514,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 </div>
                             </div>
                             <div id="zapp-flow-before" class="scope-flow-panel" role="tabpanel" data-flow-panel="before" hidden="">
-                                <div class="scope-flowchart" data-scope-flow="before" aria-label="Before flowchart for Zapp Account access"><svg viewBox="0 0 577 936" width="531" height="862" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-before" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 286 169 L 286 188 L 286 188 L 286 207" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 295 373 L 295 378 Q 295 383 300 383 L 410 383 Q 424 383 424 397 L 424 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 277 373 L 277 378 Q 277 383 272 383 L 162 383 Q 148 383 148 397 L 148 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 480 L 424 499 L 424 499 L 424 518" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 656 L 424 721 L 424 721 L 424 786" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 148 480 L 148 499 L 148 499 L 148 518" marker-end="url(#scope-arrow-before)"></path></g><g><foreignObject x="146" y="18" width="280" height="143">
+                                <div class="scope-flowchart" data-scope-flow="before" aria-label="Before flowchart for Zapp Account access"><svg viewBox="0 0 577 846" width="531" height="779" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-before" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 286 169 L 286 188 L 286 188 L 286 207" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 295 373 L 295 378 Q 295 383 300 383 L 410 383 Q 424 383 424 397 L 424 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 277 373 L 277 378 Q 277 383 272 383 L 162 383 Q 148 383 148 397 L 148 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 480 L 424 499 L 424 499 L 424 518" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 656 L 424 676 L 424 676 L 424 696" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 148 480 L 148 499 L 148 499 L 148 518" marker-end="url(#scope-arrow-before)"></path></g><g><foreignObject x="146" y="18" width="280" height="143">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Onboarding From PayZapp</h3>
                     <p class="text-[14px]">Users entered the wallet journey from PayZapp, but the path still depended on whether they were already bank customers.</p>
@@ -4489,12 +4538,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     <p class="text-[14px]">Bank customers could complete the card-based check.</p>
                     
                 </div>
-            </foreignObject><foreignObject x="18" y="526" width="260" height="122">
+            </foreignObject><foreignObject x="18" y="526" width="260" height="124">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Zapp Account Limited Capabilities</h3>
                     <p class="text-[14px]">The non-bank path stayed limited to everyday wallet use.</p>
+                    
                 </div>
-            </foreignObject><foreignObject x="289" y="794" width="270" height="124">
+            </foreignObject><foreignObject x="289" y="704" width="270" height="124">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Zapp Account Full Capabilities</h3>
                     <p class="text-[14px]">Bank customers could unlock the complete account experience.</p>
@@ -4563,7 +4613,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 2468.78125px; --floating-preview-left: 1588.875px;">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 3957.7578125px; --floating-preview-left: 1133.046875px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -4661,8 +4711,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section" data-journey-section="unlock">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing The Unlock Journey</div>
-                                        <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilites</h3>
+                                        <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing the Unlock Journey</div>
+                                        <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilities</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-unlock-section-body" spellcheck="false">After KYC, the product had to make the change feel concrete: the user now had access to the full capabilities of Zapp Account, and the experience needed to guide them back into useful actions.</p>
                                     </div>
                                     <div class="execution-journey-options">
@@ -4738,7 +4788,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 2304.40625px; --floating-preview-left: 1518.390625px;">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 3711.796875px; --floating-preview-left: 1078.390625px;">
                         <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                     </aside>
 
@@ -15633,6 +15683,44 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
