@@ -101,11 +101,11 @@
         white-space: nowrap;
     }
     .cta .note { position: relative; width: calc(184 * var(--u)); height: calc(17 * var(--u)); }
-    .cta .note img { position: absolute; left: calc(23 * var(--u)); top: calc(2 * var(--u)); width: calc(13 * var(--u)); height: calc(13 * var(--u)); }
+    .cta .note svg { position: absolute; left: calc(23 * var(--u)); top: calc(2 * var(--u)); width: calc(13 * var(--u)); height: calc(13 * var(--u)); }
     .cta .note span {
         position: absolute;
         left: calc(41 * var(--u));
-        top: 0;
+        top: calc(2.5 * var(--u));
         font-weight: 600;
         font-size: calc(12 * var(--u));
         line-height: 1.4;
@@ -278,8 +278,9 @@
                     '<div class="hero"><img src="' + s.img + '" alt="" style="' + s.imgStyle + '" /></div>' +
                     '<div class="cta">' +
                         '<div class="btn" style="background:' + s.btn + ';border-color:' + s.border + ';">Get Zapp Account</div>' +
-                        '<div class="note"><img src="assets/lightning.svg" alt="" />' +
-                        '<span style="color:' + s.note + ';">Takes a few minutes</span></div>' +
+                        '<div class="note" style="color:' + s.note + ';">' +
+                        '<svg viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M10.8599 6.37109L5.17244 12.4648C5.11216 12.5292 5.03261 12.5721 4.94577 12.5873C4.85893 12.6024 4.76953 12.5889 4.69104 12.5488C4.61256 12.5086 4.54926 12.4441 4.51069 12.3648C4.47212 12.2855 4.46038 12.1959 4.47724 12.1094L5.22169 8.38558L2.29517 7.28668C2.23232 7.26317 2.17627 7.22445 2.13203 7.174C2.08779 7.12354 2.05674 7.06291 2.04165 6.99752C2.02656 6.93214 2.02791 6.86403 2.04556 6.79929C2.06322 6.73455 2.09663 6.67519 2.14283 6.62652L7.83033 0.53277C7.8906 0.468448 7.97015 0.425475 8.05699 0.410335C8.14383 0.395195 8.23324 0.408709 8.31172 0.448839C8.3902 0.488969 8.4535 0.553537 8.49207 0.632799C8.53064 0.712062 8.54238 0.801718 8.52552 0.888238L7.77904 4.61609L10.7056 5.71347C10.7679 5.73714 10.8235 5.77581 10.8674 5.82607C10.9113 5.87632 10.9422 5.93662 10.9572 6.00162C10.9723 6.06663 10.9711 6.13434 10.9538 6.19878C10.9365 6.26322 10.9035 6.3224 10.8579 6.37109H10.8599Z" fill="currentColor"/></svg>' +
+                        '<span>Takes a few minutes</span></div>' +
                     '</div>';
                 track.appendChild(slide);
             });

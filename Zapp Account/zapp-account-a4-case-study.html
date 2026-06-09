@@ -389,8 +389,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: var(--gap-point) !important;
         }
 
-        .card-body-content p,
-        .card-body-content > div > p {
+        .card-body-content p:not(.execution-option-body),
+        .card-body-content > div > p:not(.execution-option-body) {
             margin-bottom: var(--gap-paragraph);
         }
 
@@ -2003,7 +2003,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.14);
             border-radius: 0.625rem;
             background: rgba(255, 255, 255, 0.52);
-            padding: 0.9rem 1rem;
+            padding: 1.1rem 1.2rem;
             color: inherit;
             text-align: left;
             transition:
@@ -4449,7 +4449,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                         <!-- Parent Group: The Strategy blueprint -->
                         <div class="mt-12 strategy-blueprint-section">
-                            <h3 class="font-display text-lg font-semibold text-ink mb-3" data-text-key="strategy-blueprint-heading" spellcheck="false">Using Insights to Derive Opportunities</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" style="font-size: 1rem;" data-text-key="strategy-blueprint-heading" spellcheck="false">Using Insights to Derive Opportunities</h3>
                             <p class="text-[15px] md:text-base text-deep mb-8" data-text-key="strategy-blueprint-body" spellcheck="false">Based on our research into competitor patterns, user profiles, and existing spending behaviors, we identified four core design opportunities to reposition the wallet. These strategic pillars—accompanied by a redefined access flowchart—formed the blueprint for our design revamp.</p>
                             
                             <!-- Indented Nested Container -->
@@ -6612,7 +6612,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             let journeyEntered = false;
             let journeyEntryArmed = false;
             const JOURNEY_ENTRY_BAND_TOP = 0.48;
-            const JOURNEY_ENTRY_BAND_BOTTOM = 0.72;
+            const JOURNEY_ENTRY_BAND_BOTTOM = 1.0;
 
             function journeyControlEngaged(direction = 0) {
                 const last = visibleOptions[visibleOptions.length - 1];
@@ -6662,10 +6662,62 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 scrollFirstBoxIntoView();
             }
 
+            // ── Debug: visualize the entry band with ?band=active ──────────────
+            // Shows the arming band (translucent strip) plus a live marker at the
+            // entry-divider center. Marker turns green while inside the band.
+            const ENTRY_BAND_DEBUG = new URLSearchParams(location.search).get("band") === "active";
+            let entryBandEls = null;
+            function buildEntryBandDebug() {
+                const wrap = document.createElement("div");
+                wrap.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;pointer-events:none;display:none;";
+                const band = document.createElement("div");
+                band.style.cssText = "position:absolute;left:0;right:0;background:rgba(39,71,224,0.10);border-top:1px dashed rgba(39,71,224,0.55);border-bottom:1px dashed rgba(39,71,224,0.55);";
+                const bandLabel = document.createElement("div");
+                bandLabel.textContent = "ENTRY BAND";
+                bandLabel.style.cssText = "position:absolute;right:8px;top:2px;font:700 10px/1 ui-monospace,monospace;letter-spacing:0.08em;color:rgba(39,71,224,0.8);";
+                band.appendChild(bandLabel);
+                const marker = document.createElement("div");
+                marker.style.cssText = "position:absolute;left:0;right:0;height:0;border-top:2px solid #d11;";
+                const markerLabel = document.createElement("div");
+                markerLabel.style.cssText = "position:absolute;left:8px;top:2px;font:700 10px/1 ui-monospace,monospace;letter-spacing:0.05em;color:#d11;";
+                marker.appendChild(markerLabel);
+                wrap.appendChild(band);
+                wrap.appendChild(marker);
+                document.body.appendChild(wrap);
+                return { wrap, band, marker, markerLabel };
+            }
+            function updateEntryBandDebug() {
+                if (!ENTRY_BAND_DEBUG) return;
+                if (!entryBandEls) entryBandEls = buildEntryBandDebug();
+                const { wrap, band, marker, markerLabel } = entryBandEls;
+                wrap.style.display = "block";
+                const vh = window.innerHeight;
+                const top = vh * JOURNEY_ENTRY_BAND_TOP;
+                const bottom = vh * JOURNEY_ENTRY_BAND_BOTTOM;
+                band.style.top = top + "px";
+                band.style.height = (bottom - top) + "px";
+                const dc = getEntryDividerCenter();
+                if (dc == null) { marker.style.display = "none"; return; }
+                marker.style.display = "block";
+                marker.style.top = dc + "px";
+                const inBand = dc >= top && dc <= bottom;
+                const color = journeyEntered ? "#888" : (inBand ? "#1a8a3f" : "#d11");
+                marker.style.borderTopColor = color;
+                markerLabel.style.color = color;
+                markerLabel.textContent = `divider ${Math.round(dc)}px  ${journeyEntered ? "ENTERED" : (journeyEntryArmed ? "ARMED" : inBand ? "IN-BAND" : "free")}`;
+            }
+            if (ENTRY_BAND_DEBUG) {
+                (function bandDebugLoop() {
+                    updateEntryBandDebug();
+                    requestAnimationFrame(bandDebugLoop);
+                })();
+            }
+
             // Scroll-frame detection only arms/disarms. It never commits. The scroll that
             // lands the divider in the band is allowed to finish naturally; the next downward
             // wheel input consumes the event and glides the first box into view.
             function maybeAutoEnterFromTop() {
+                updateEntryBandDebug();
                 if (!steppingEnabled || !section?.classList.contains("is-expanded")) return;
 
                 if (journeyEntered) {
