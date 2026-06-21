@@ -311,6 +311,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3977,7 +3979,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: 868.546875px; --floating-preview-left: 1430.481201171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: 1268.546875px; --floating-preview-left: 1430.481201171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -4698,7 +4700,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 2347.3125px; --floating-preview-left: 1525.515625px;">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 2905.015625px; --floating-preview-left: 1525.515625px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -4889,7 +4891,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 1797.890625px; --floating-preview-left: 1455.03125px;">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 2197.890625px; --floating-preview-left: 1455.03125px;">
                         <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                     </aside>
 
@@ -16053,6 +16055,44 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
