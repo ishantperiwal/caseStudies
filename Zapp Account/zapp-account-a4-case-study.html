@@ -344,7 +344,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         base: ['1rem', { lineHeight: '1.65rem' }]
                     },
                     colors: {
-                        canvas: '#FAF8F5',
+                        canvas: 'hsl(206, 30%, 97%)', /* was: hsl(36, 33%, 97%) / #FAF8F5 */
                         ink: '#2C2621',
                         deep: '#5C5146',
                         medium: '#A89B8F',
@@ -352,7 +352,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         outline: '#433A31',
                         accent: 'hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / <alpha-value>)',
                         warm: {
-                            50: '#FAF8F5',
+                            50: 'hsl(206, 30%, 97%)', /* was: hsl(36, 33%, 97%) / #FAF8F5 */
                             100: '#F4EFEA',
                             200: '#EBE5DC',
                             300: '#D5C9BA',
@@ -387,8 +387,35 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             scrollbar-gutter: stable;
             overflow-anchor: none;
         }
+        /* Dot matrix — full viewport, fades under content via central overlay */
+        html::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) 1.5px, transparent 1.5px);
+            background-size: 22px 22px;
+        }
+        /* Central fog: bg-colour ellipse that softens dots under the text span */
+        html::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse 46% 120% at center,
+                rgba(239, 243, 248, 0.96) 0%,
+                rgba(239, 243, 248, 0.92) 45%,
+                rgba(239, 243, 248, 0.30) 72%,
+                transparent 100%
+            );
+        }
+
         body {
-            background-color: #FAF8F5;
+            position: relative;
+            z-index: 2;
+            background-color: hsl(206, 30%, 97%); /* was: hsl(36, 33%, 97%) / #FAF8F5 (warm off-white) */
             color: var(--color-deep);
             -webkit-font-smoothing: antialiased;
             line-height: 1.65rem;
@@ -506,8 +533,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
            Use: <span class="kw">key phrase</span> */
         .kw {
             background-image: linear-gradient(to top,
-                rgba(124, 214, 156, 0.3) 0,
-                rgba(124, 214, 156, 0.3) 22%,
+                rgba(45, 212, 191, 0.3) 0,
+                rgba(45, 212, 191, 0.3) 22%,
                 transparent 22%,
                 transparent 100%);
             padding: 0 0.12em;
@@ -564,8 +591,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 1.25rem;
             padding: 0.35rem 0.75rem;
             border-radius: 999px;
-            background: rgba(31, 138, 95, 0.08);
-            border: 1px solid rgba(31, 138, 95, 0.22);
+            background: rgba(38, 104, 111, 0.08);
+            border: 1px solid rgba(38, 104, 111, 0.22);
             font-family: var(--font-mono);
             font-size: 11px;
             letter-spacing: 0.03em;
@@ -575,8 +602,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: #1f8a5f;
-            box-shadow: 0 0 0 3px rgba(31, 138, 95, 0.18);
+            background: #26686f;
+            box-shadow: 0 0 0 3px rgba(38, 104, 111, 0.18);
             flex: none;
         }
         .results-timeframe b { font-weight: 700; color: #2C2621; }
@@ -604,9 +631,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .results-t5-highlight {
             display: inline-flex;
             align-items: center;
-            background: rgba(31, 138, 95, 0.08);
-            color: #1f8a5f;
-            border: 1px solid rgba(31, 138, 95, 0.18);
+            background: rgba(38, 104, 111, 0.08);
+            color: #26686f;
+            border: 1px solid rgba(38, 104, 111, 0.18);
             padding: 0.15rem 0.45rem;
             border-radius: 4px;
             font-family: var(--font-mono);
@@ -628,8 +655,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             grid-auto-rows: minmax(7rem, auto);
-            gap: 1.1rem;
-            margin-bottom: 1.25rem;
+            gap: 1.6rem;
+            margin-bottom: 1.6rem;
         }
         .b-cum, .b-autoload { grid-column: span 2; }
         @media (min-width: 760px) {
@@ -650,12 +677,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
         @media (min-width: 1024px) {
             .results-dashboard > .results-bento {
-                margin-left: 0;
-                margin-right: 0;
+                margin-left: -2rem;
+                margin-right: -2rem;
             }
             .results-dashboard > .results-ranking {
-                margin-left: 0;
-                margin-right: 0;
+                margin-left: -2rem;
+                margin-right: -2rem;
             }
         }
         .bento-cell {
@@ -708,15 +735,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             position: relative;
             overflow: hidden;
             justify-content: space-between;
-            background: #f0faf5;
-            border: 1px solid rgba(31, 138, 95, 0.22);
+            background: #f2f8f9;
+            border: 1px solid rgba(38, 104, 111, 0.22);
         }
-        .b-cum .bento-kicker { color: #1f8a5f; }
-        .b-cum .bento-num { color: #1f8a5f; font-size: 2.3rem; line-height: 1.1; }
-        .b-cum .bento-cap { color: #134e32; }
+        .b-cum .bento-kicker { color: #26686f; }
+        .b-cum .bento-num { color: #26686f; font-size: 2.3rem; line-height: 1.1; }
+        .b-cum .bento-cap { color: #2a5560; }
         /* Wide spend/load cells */
         .b-spend .bento-num,
-        .b-load .bento-num { font-size: 2.3rem; color: #1f8a5f; }
+        .b-load .bento-num { font-size: 2.3rem; color: #26686f; }
         /* Split cell for Auto-Load */
         .bento-autoload-inner {
             display: grid;
@@ -752,7 +779,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-radius: 0.22rem;
             background: rgba(71, 71, 71, 0.16);
         }
-        .results-pictograph .pip.is-on { background: #1f8a5f; }
+        .results-pictograph .pip.is-on { background: #26686f; }
 
         /* Large Hero Avatar Stack Infographic */
         .results-avatar-stack {
@@ -784,10 +811,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .avatar-item:nth-child(4) { z-index: 2; }
         .avatar-item:nth-child(5) { z-index: 1; }
         .avatar-item.is-active {
-            background: #c2e8d0;
-            color: #1f8a5f;
-            border-color: #1f8a5f;
-            box-shadow: 0 0 14px rgba(31, 138, 95, 0.22);
+            background: #e4f1f4;
+            color: #26686f;
+            border-color: #26686f;
+            box-shadow: 0 0 14px rgba(38, 104, 111, 0.22);
             z-index: 10;
         }
         .results-avatar-icon {
@@ -817,8 +844,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         /* Green callout card for Zapp's status today */
         .results-today-callout {
             position: relative;
-            background: #f0faf5;
-            border: 1px solid rgba(31, 138, 95, 0.22);
+            background: #f2f8f9;
+            border: 1px solid rgba(38, 104, 111, 0.22);
             border-radius: 0.75rem;
             padding: 1.35rem 1.25rem 1.25rem;
             display: flex;
@@ -831,7 +858,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 9.5px;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            color: #1f8a5f;
+            color: #26686f;
             font-weight: 600;
             margin-bottom: 0.35rem;
         }
@@ -846,7 +873,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .results-today-s { 
             font-size: 12.5px; 
             line-height: 1.45;
-            color: #134e32; 
+            color: #2a5560; 
         }
 
         @media (min-width: 768px) {
@@ -855,7 +882,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             .results-ranking-container {
                 display: grid;
                 grid-template-columns: 1.7fr 1.7fr 1fr 1fr;
-                gap: 1.1rem;
+                gap: 1.6rem;
                 align-items: stretch;
             }
             .results-leaderboard-wrapper {
@@ -916,8 +943,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: #6c6c6c;
         }
         .results-rank-row.is-self {
-            background: rgba(31, 138, 95, 0.08);
-            border: 1px solid rgba(31, 138, 95, 0.18);
+            background: rgba(38, 104, 111, 0.08);
+            border: 1px solid rgba(38, 104, 111, 0.18);
             border-radius: 6px;
             padding-top: 0.4rem;
             padding-bottom: 0.4rem;
@@ -929,10 +956,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .results-rank-row.is-self .results-rank,
         .results-rank-row.is-self .results-rank-name,
         .results-rank-row.is-self .results-rank-val {
-            color: #1f8a5f;
+            color: #26686f;
             font-weight: 700;
         }
-        .results-rank-row.is-self .results-rank-fill { background: #1f8a5f; }
+        .results-rank-row.is-self .results-rank-fill { background: #26686f; }
 
         /* Sticky stack: cards flow in document order; only the sticky offset
            is fixed per card. Cards naturally grow when expanded; cards below
@@ -1122,6 +1149,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             box-sizing: border-box;
             overflow: visible;
             will-change: clip-path;
+        }
+
+        /* Hide floating preview immediately when the section starts collapsing */
+        body.is-animating-motion .stack-section:not(.is-expanded) .legacy-wallet-floating-preview {
+            visibility: hidden !important;
+            opacity: 0 !important;
         }
 
         .vertical-guide-line {
@@ -1529,7 +1562,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .legacy-wallet-screen {
-            background: #FAF8F5;
+            background: hsl(206, 30%, 97%);
             border-radius: 1.75rem;
             aspect-ratio: 9 / 19;
             padding: 2.4rem 0.85rem 1rem;
@@ -1895,7 +1928,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: calc(100% + var(--execution-stage-gap) + var(--execution-phone-column));
             max-width: none;
             height: 2px;
-            background: #FAF8F5;
+            background: hsl(206, 30%, 97%);
             border-radius: 1px;
             margin: 2rem 0;
         }
@@ -1908,9 +1941,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             gap: 1rem;
             margin: 2.5rem 0 2rem;
             padding: 1.1rem 1.35rem;
-            border: 1px solid hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.28);
+            border: 1px dashed rgba(88, 120, 155, 0.28);
             border-radius: 0.85rem;
-            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.06);
+            background: #ffffff;
         }
 
         .journey-nav-hint-keys {
@@ -1930,12 +1963,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 1.75rem;
             height: 1.75rem;
             border-radius: 0.4rem;
-            border: 1px solid hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.4);
+            border: 1px solid rgba(88, 120, 155, 0.35);
             background: #FFFFFF;
-            --key-shadow: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.22);
-            --key-pressed-bg: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.1);
+            --key-shadow: rgba(88, 120, 155, 0.20);
+            --key-pressed-bg: rgba(88, 120, 155, 0.08);
             box-shadow: 0 1.5px 0 var(--key-shadow);
-            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            color: hsl(206, 35%, 42%);
             font-size: 0.9rem;
             line-height: 1;
         }
@@ -1973,13 +2006,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 0.9375rem;
             font-weight: 600;
             letter-spacing: 0.01em;
-            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(max(var(--accent-l, 55) - 18, 20) * 1%));
+            color: #2C2621;
         }
 
         .journey-nav-hint-sub {
             font-size: 0.9rem;
             line-height: 1.45;
-            color: #7A6F64;
+            color: hsl(206, 20%, 52%);
         }
 
         .execution-journey-entry-divider + .execution-journey-section {
@@ -2088,7 +2121,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: var(--timeline-dot-size);
             height: var(--timeline-dot-size);
             border-radius: 50%;
-            border: var(--timeline-dot-border) solid #FAF8F5;
+            border: var(--timeline-dot-border) solid hsl(206, 30%, 97%);
             background: #d7d7d2;
             box-sizing: content-box;
             z-index: 1;
@@ -2369,7 +2402,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 0.7rem;
             height: 0.7rem;
             background: #064e3b;
-            border: 3px solid #FAF8F5;
+            border: 3px solid hsl(206, 30%, 97%);
             box-shadow: 0 0.25rem 0.7rem rgba(6, 78, 59, 0.24);
             transform: translate(-50%, -50%);
         }
@@ -3503,7 +3536,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .placeholder-edit-dialog {
             width: min(36rem, 100%);
-            background: #FAF8F5;
+            background: hsl(206, 30%, 97%);
             border: 1px solid rgba(71, 71, 71, 0.24);
             padding: 1.25rem;
         }
@@ -3669,7 +3702,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 0.72rem;
             height: 0.72rem;
             border-radius: 999px;
-            background: rgba(124, 214, 156, 0.9);
+            background: rgba(45, 212, 191, 0.9);
             box-shadow: inset 0 -3px 0 rgba(0,0,0,0.12);
         }
         .text-marker-button:disabled {
@@ -3743,7 +3776,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 transparent 100%,
                 rgba(250, 250, 250, 0.45) 210%,
                 rgba(250, 250, 250, 0.88) 380%,
-                #FAF8F5 500%);
+                hsl(206, 30%, 97%) 500%);
             z-index: 10;
             transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -3950,7 +3983,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </div>
     </div>
 
-    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[#FAF8F5]">
+    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[hsl(206, 30%, 97%)]">
         
         <!-- Hero Section -->
         <section class="pt-[5.9rem] relative">
@@ -4982,49 +5015,49 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <svg class="absolute inset-x-0 bottom-0 w-full h-full pointer-events-none select-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                         <defs>
                                             <linearGradient id="fill-gradient" x1="1" y1="0" x2="0" y2="1">
-                                                <stop offset="0%" stop-color="#1f8a5f" stop-opacity="0.22"></stop>
-                                                <stop offset="45%" stop-color="#1f8a5f" stop-opacity="0.04"></stop>
-                                                <stop offset="80%" stop-color="#1f8a5f" stop-opacity="0.00"></stop>
+                                                <stop offset="0%" stop-color="#26686f" stop-opacity="0.22"></stop>
+                                                <stop offset="45%" stop-color="#26686f" stop-opacity="0.04"></stop>
+                                                <stop offset="80%" stop-color="#26686f" stop-opacity="0.00"></stop>
                                             </linearGradient>
                                             <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
-                                                <stop offset="0%" stop-color="#1f8a5f" stop-opacity="0.00"></stop>
-                                                <stop offset="45%" stop-color="#1f8a5f" stop-opacity="0.03"></stop>
-                                                <stop offset="65%" stop-color="#1f8a5f" stop-opacity="0.25"></stop>
-                                                <stop offset="100%" stop-color="#1f8a5f" stop-opacity="0.65"></stop>
+                                                <stop offset="0%" stop-color="#26686f" stop-opacity="0.00"></stop>
+                                                <stop offset="45%" stop-color="#26686f" stop-opacity="0.03"></stop>
+                                                <stop offset="65%" stop-color="#26686f" stop-opacity="0.25"></stop>
+                                                <stop offset="100%" stop-color="#26686f" stop-opacity="0.65"></stop>
                                             </linearGradient>
                                         </defs>
-                                        <!-- Fill Area -->
-                                        <path d="M -5 105 L -5 93 L 15 88 L 40 80 L 65 55 L 90 25 L 105 15 L 105 105 Z" fill="url(#fill-gradient)"></path>
+                                        <!-- Fill Area (hidden) -->
+                                        <path d="M -5 105 L -5 93 L 15 88 L 40 80 L 65 55 L 90 25 L 105 15 L 105 105 Z" fill="url(#fill-gradient)" style="display:none;"></path>
                                         <!-- Linear Graph Line -->
                                         <path d="M -5 93 L 15 88 L 40 80 L 65 55 L 90 25 L 105 15" fill="none" stroke="url(#line-gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
                                     </svg>
                                     
-                                    <!-- Perfectly Circular HTML Graph Dots (aligned with SVG coordinates, masking the background line) -->
-                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f0faf5] pointer-events-none z-10 w-[8px] h-[8px]" style="left: 15%; top: 88%; border-width: 2.5px; border-color: rgba(31, 138, 95, 0.05);"></div>
-                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f0faf5] pointer-events-none z-10 w-[8px] h-[8px]" style="left: 40%; top: 80%; border-width: 2.5px; border-color: rgba(31, 138, 95, 0.20);"></div>
-                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f0faf5] pointer-events-none z-10 w-[8px] h-[8px]" style="left: 65%; top: 55%; border-width: 2.5px; border-color: rgba(31, 138, 95, 0.50);"></div>
-                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f0faf5] pointer-events-none z-10 w-[8px] h-[8px]" style="left: 90%; top: 25%; border-width: 2.5px; border-color: rgba(31, 138, 95, 0.70);"></div>
+                                    <!-- Perfectly Circular HTML Graph Dots (hidden) -->
+                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 15%; top: 88%; border-width: 2.5px; border-color: rgba(38, 104, 111, 0.05); "></div>
+                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 40%; top: 80%; border-width: 2.5px; border-color: rgba(38, 104, 111, 0.20); "></div>
+                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 65%; top: 55%; border-width: 2.5px; border-color: rgba(38, 104, 111, 0.50); "></div>
+                                    <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 90%; top: 25%; border-width: 2.5px; border-color: rgba(38, 104, 111, 0.70); "></div>
 
                                     <!-- Hero image: top-right, clipped by cell overflow-hidden -->
-                                    <div class="absolute top-0 right-0 pointer-events-none select-none" style="width: 58%; z-index: 5;">
+                                    <div class="absolute pointer-events-none select-none" style="width: 52%; top: 1rem; right: 1.5rem; z-index: 5;">
                                         <img src="case study assets/zapp-placeholder-impact-results-visual.png" alt="" style="width: 100%; height: auto; display: block;">
                                     </div>
                                     <div class="relative z-10 flex flex-col items-start">
-                                        <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(31, 138, 95, 0.08); border-color: rgba(31, 138, 95, 0.18); color: #1f8a5f; font-family: var(--font-mono);">April 2025 – September 2025</div>
+                                        <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(38, 104, 111, 0.08); border-color: rgba(38, 104, 111, 0.18); color: #26686f; font-family: var(--font-mono);">April 2025 – September 2025</div>
                                     </div>
                                     <div class="relative z-10 flex flex-col gap-3 mt-4">
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="2.1" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~2.1×</div>
-                                            <div class="bento-cap">Linear spends growth</div>
+                                            <div class="bento-cap">Growth in monthly spends</div>
                                         </div>
                                         
                                         <!-- Subtle Divider -->
-                                        <div class="w-[20%]" style="height: 1.4px; background: linear-gradient(to right, rgba(31, 138, 95, 0.25), rgba(31, 138, 95, 0.00));"></div>
+                                        <div class="w-[20%]" style="height: 1.4px; background: linear-gradient(to right, rgba(38, 104, 111, 0.25), rgba(38, 104, 111, 0.00));"></div>
                                         
                                         <!-- Loads Cumulative Growth -->
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="1.5" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~1.5×</div>
-                                            <div class="bento-cap">Linear loads growth</div>
+                                            <div class="bento-cap">Growth in monthly loads</div>
                                         </div>
                                     </div>
                                 </div>
@@ -5087,7 +5120,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                          </div>
                                          <!-- Subtext explanation -->
                                          <div class="bento-cap mt-2">
-                                             <strong class="font-bold text-[#1f8a5f]" style="font-size: 13px;">1 in 5</strong> <span style="color: #60728c;">(20%)</span> of wallet loaders use Auto-Load
+                                             <strong class="font-bold text-[#26686f]" style="font-size: 13px;">1 in 5</strong> <span style="color: #60728c;">(20%)</span> of wallet loaders use Auto-Load
                                          </div>
                                      </div>
                                  </div>
@@ -5096,7 +5129,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                             <div class="results-card results-ranking">
                                 <div class="results-ranking-container">
                                     <div class="results-leaderboard-wrapper">
-                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #FAF8F5; color: #60728c; border-radius: 4px;">as of July 2025</div>
+                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: hsl(206, 30%, 97%); color: #60728c; border-radius: 4px;">as of July 2025</div>
                                         <div class="results-card-head">
                                              <span class="results-card-label">Top Digital Wallets by Monthly Spends</span>
                                          </div>
@@ -5110,14 +5143,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                     <div class="results-today-callout">
                                         <!-- Top-edge timestamp badge overlapping the border -->
-                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #FAF8F5; color: #1f8a5f; border-radius: 4px;">as of February 2026</div>
+                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: hsl(206, 30%, 97%); color: #26686f; border-radius: 4px;">as of February 2026</div>
                                         
                                         <div class="flex-1 flex flex-col justify-center">
                                             <div class="results-today-v">~₹500 Cr</div>
                                             <div class="results-today-s">in Monthly Spends</div>
                                         </div>
 
-                                        <div class="w-[35%]" style="height: 1px; background: rgba(31, 138, 95, 0.18); flex-shrink: 0;"></div>
+                                        <div class="w-[35%]" style="height: 1px; background: rgba(38, 104, 111, 0.18); flex-shrink: 0;"></div>
                                         
                                         <div class="flex-1 flex flex-col justify-center">
                                             <div class="results-today-v">~₹600 Cr</div>
