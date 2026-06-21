@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><style>body {transition: opacity ease-in 0.2s; } 
-body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
-</style><style>body {transition: opacity ease-in 0.2s; } 
+<html lang="en" style="--accent-h: 206; --block-gap: 3.65rem; --heading-body-gap: 1.2rem; --section-heading-gap-collapsed: 0.8rem; --section-heading-gap-expanded: 0.85rem; --accent-s: 54; --accent-l: 29; --section-gap: 2.5rem; --section-separator-color: rgba(71, 71, 71, 0.12);"><head><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
@@ -321,8 +319,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Importing Grotesque Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Caveat:wght@500&amp;family=Space+Grotesk:wght@400;500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=Syne:wght@400;500;600;700;800&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&amp;display=swap" rel="stylesheet">
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter:wght@400;500;600;700&amp;family=Caveat:wght@500&amp;display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -330,20 +327,42 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"IBM Plex Sans"', 'sans-serif'],
-                        display: ['Space Grotesk', 'sans-serif'],
+                        sans: ['"Instrument Sans"', 'sans-serif'],
+                        display: ['Fraunces', 'serif'],
                     },
                     fontSize: {
                         base: ['1rem', { lineHeight: '1.65rem' }]
                     },
                     colors: {
-                        canvas: '#ededed',
-                        ink: '#1f2937',
-                        deep: '#525866',
-                        medium: '#949494',
-                        muted: '#7f8694',
-                        outline: '#474747',
-                        accent: '#2747e0'
+                        canvas: '#FAF8F5',
+                        ink: '#2C2621',
+                        deep: '#5C5146',
+                        medium: '#A89B8F',
+                        muted: '#7A6F64',
+                        outline: '#433A31',
+                        accent: 'hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / <alpha-value>)',
+                        warm: {
+                            50: '#FAF8F5',
+                            100: '#F4EFEA',
+                            200: '#EBE5DC',
+                            300: '#D5C9BA',
+                            400: '#A89B8F',
+                            500: '#7A6F64',
+                            600: '#5C5146',
+                            700: '#433A31',
+                            800: '#2C2621',
+                            900: '#1C1815',
+                            950: '#13110F',
+                        },
+                        brand: {
+                            50:  'hsl(var(--accent-h, 14) calc((var(--accent-s, 56) + 16) * 1%) calc((var(--accent-l, 55) + 42) * 1%) / <alpha-value>)',
+                            100: 'hsl(var(--accent-h, 14) calc((var(--accent-s, 56) + 20) * 1%) calc((var(--accent-l, 55) + 38) * 1%) / <alpha-value>)',
+                            200: 'hsl(var(--accent-h, 14) calc((var(--accent-s, 56) + 15) * 1%) calc((var(--accent-l, 55) + 31) * 1%) / <alpha-value>)',
+                            500: 'hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / <alpha-value>)',
+                            600: 'hsl(var(--accent-h, 14) calc((var(--accent-s, 56) - 1) * 1%) calc((var(--accent-l, 55) - 8) * 1%) / <alpha-value>)',
+                            700: 'hsl(var(--accent-h, 14) calc((var(--accent-s, 56) + 4) * 1%) calc((var(--accent-l, 55) - 19) * 1%) / <alpha-value>)',
+                            accent: 'hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / <alpha-value>)',
+                        }
                     }
                 }
             }
@@ -358,47 +377,42 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             overflow-anchor: none;
         }
         body {
-            background-color: #fafafa;
-            background-image: radial-gradient(circle, rgba(71, 71, 71, 0.12) 1px, transparent 1px);
-            background-size: 18px 18px;
+            background-color: #FAF8F5;
             color: var(--color-deep);
             -webkit-font-smoothing: antialiased;
             line-height: 1.65rem;
             font-size: 15px;
+            letter-spacing: 0.012em;
             overflow-x: hidden;
         }
 
-        /* ── Font experiment variables ─────────────────────────────────────
-           To revert: change the two values below back to the originals.
-           Original display: var(--font-display)
-           Original body:    'IBM Plex Sans', sans-serif
-        ─────────────────────────────────────────────────────────────── */
         :root {
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-body:    'IBM Plex Sans', sans-serif;
-            --color-deep:   #434957;
+            --font-display: 'Fraunces', serif;
+            --font-body:    'Instrument Sans', sans-serif;
+            --font-sticky:  'Caveat', cursive;
+            --font-mono:   'DM Mono', var(--font-mono);
+            --color-deep:   #4A4038;
 
-            /* Spacing tokens
-               --gap-point:     space between numbered points / section blocks
-               --gap-paragraph: space between paragraphs within a block       */
+            /* Accent HSL — drives all accent/brand colors (see Tailwind config). 14 56% 55% = terracotta default. */
+            --accent-h: 14;
+            --accent-s: 56;
+            --accent-l: 55;
+
+            /* Spacing tokens */
             --gap-point:     2rem;
             --gap-paragraph: 1rem;
+            --heading-body-gap: 0.95rem;
+            --section-heading-gap-collapsed: 0.9rem;
+            --section-heading-gap-expanded: 0.35rem;
+            --block-gap: 3rem;
+            --hover-duration: 0.3s;
         }
-
-        .numbered-point {
-            margin-bottom: var(--gap-point) !important;
-        }
-
-        .card-body-content p:not(.execution-option-body),
-        .card-body-content > div > p:not(.execution-option-body) {
-            margin-bottom: var(--gap-paragraph);
-        }
-
 
         h1, h2, h3, h4, .font-display {
             font-family: var(--font-display);
             color: theme('colors.ink');
-            letter-spacing: -0.02em;
+            letter-spacing: 0;
+            line-height: 1.15;
         }
 
         /* Section subtext: softer than full ink */
@@ -408,7 +422,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 1.125rem;
             line-height: 1.5;
             max-width: 78%;
-            transform-origin: left top;
+            transform-origin: left center;
             transition:
                 color 0.35s ease,
                 font-weight 0.35s ease,
@@ -429,18 +443,22 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .stack-section:not(.is-expanded) .section-header h2,
         .stack-section.static-section .section-header h2 {
-            color: #1f2937;
+            color: #2C2621;
+            font-family: var(--font-display);
             font-size: 1.125rem;
             font-weight: 600;
             letter-spacing: -0.02em;
-            margin-bottom: 0.65rem;
+            margin-bottom: var(--section-heading-gap-collapsed);
         }
 
         .stack-section:not(.is-expanded) .section-header p.font-display,
         .stack-section.static-section p.font-display {
             font-weight: 400;
+            font-family: var(--font-body);
             color: var(--color-deep);
             transform: scale(0.89);
+            letter-spacing: 0.018em;
+            line-height: 1.65;
         }
 
         .stack-section.static-section p.font-display {
@@ -486,10 +504,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .mono {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            font-weight: 600;
         }
 
         /* ── Results dashboard (Impact section) ── */
@@ -498,17 +515,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 3rem;
             --results-prototype-top: -1.25rem;
             --results-prototype-right: -3.92rem;
-            --results-prototype-width: 16.24rem;
-            --results-prototype-height: 33.94rem;
+            --results-prototype-width: 14.76rem;
+            --results-prototype-height: 30.85rem;
             --results-prototype-rotate: 4.8deg;
             --results-prototype-skew-x: -3.6deg;
         }
         .impact-results-content {
             position: relative;
-        }
-        @keyframes results-float {
-            0%, 100% { transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x)) translateY(-6px); }
-            50%       { transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x)) translateY(6px); }
         }
         .results-prototype-skew {
             position: absolute;
@@ -519,7 +532,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-radius: 2.2rem;
             transform: rotate(var(--results-prototype-rotate)) skewX(var(--results-prototype-skew-x));
             transform-origin: center center;
-            animation: results-float 4.5s ease-in-out infinite;
             z-index: 3;
             pointer-events: none;
             overflow: hidden;
@@ -543,11 +555,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-radius: 999px;
             background: rgba(31, 138, 95, 0.08);
             border: 1px solid rgba(31, 138, 95, 0.22);
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 11px;
             letter-spacing: 0.03em;
-            font-weight: 600;
-            color: var(--color-deep);
+            color: #5C5146;
         }
         .results-timeframe-dot {
             width: 7px;
@@ -557,7 +568,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             box-shadow: 0 0 0 3px rgba(31, 138, 95, 0.18);
             flex: none;
         }
-        .results-timeframe b { font-weight: 700; color: #1f2937; }
+        .results-timeframe b { font-weight: 700; color: #2C2621; }
         .results-card {
             border: 1px solid rgba(71, 71, 71, 0.14);
             border-radius: 0.75rem;
@@ -577,7 +588,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: var(--font-display);
             font-size: 0.95rem;
             font-weight: 600;
-            color: #1f2937;
+            color: #2C2621;
         }
         .results-t5-highlight {
             display: inline-flex;
@@ -587,7 +598,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(31, 138, 95, 0.18);
             padding: 0.15rem 0.45rem;
             border-radius: 4px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9.5px;
             font-weight: 700;
             text-transform: uppercase;
@@ -645,11 +656,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             min-height: 0;
         }
         .bento-kicker {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: 0.05em;
             text-transform: uppercase;
-            font-weight: 600;
             color: #6c6c6c;
         }
         .bento-num {
@@ -657,15 +667,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-weight: 700;
             line-height: 1;
             font-variant-numeric: tabular-nums;
-            color: #1f2937;
+            color: #2C2621;
             font-size: 1.75rem;
         }
         .bento-cap {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 12px;
             letter-spacing: 0.02em;
-            font-weight: 600;
-            color: var(--color-deep);
+            color: #5C5146;
         }
         .b-autoload .bento-cap {
             max-width: 220px;
@@ -673,7 +682,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .results-mom-badge {
             display: block;
             margin-bottom: 0.5rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9.5px;
             font-weight: 700;
             letter-spacing: 0.15em;
@@ -799,7 +808,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
         
         .results-today-k {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9.5px;
             letter-spacing: 0.05em;
             text-transform: uppercase;
@@ -836,7 +845,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             }
         }
 
-        .results-ranking { position: relative; }
+        .results-ranking { position: relative; margin-bottom: 0.5rem; }
         .results-leaderboard {
             list-style: none;
             margin: 0.8rem 0 0;
@@ -861,7 +870,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
         .results-rank-name {
             font-size: 13px;
-            color: #1f2937;
+            color: #2C2621;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -880,7 +889,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transition: width 1.1s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
         .results-rank-val {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.78rem;
             color: #6c6c6c;
         }
@@ -912,7 +921,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .stack-section {
             position: relative;
-            margin-top: 4rem;
+            margin-top: var(--section-gap, 4rem);
         }
 
         .stack-section::before,
@@ -922,56 +931,73 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             left: 0;
             right: 0;
             height: 2px;
-            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
-            background-size: 12px 2px;
-            background-repeat: repeat-x;
             pointer-events: none;
         }
         .stack-section::before { top: 0; }
         .stack-section::after { bottom: 0; }
 
+        /* Section separators (toggleable via the edit-mode design panel).
+           Reuses the existing top pseudo-element so it fades with the dim logic.
+           Offset to the middle of the inter-section gap so it sits equidistant
+           from the hovered header's top and bottom edges. The color is driven by
+           --section-separator-color so the toggle can switch it to transparent;
+           default (unset) keeps separators on. */
+        .stack-container > .stack-section:not(:first-child)::before {
+            top: calc(var(--section-gap, 4rem) / -2);
+            height: 1px;
+            background-color: var(--section-separator-color, rgba(71, 71, 71, 0.12));
+        }
+
         .container-line-top,
         .container-line-bottom {
             position: relative;
             height: 2px;
-            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
-            background-size: 12px 2px;
-            background-repeat: repeat-x;
         }
 
         .stack-section .section-header {
             cursor: pointer;
             position: relative;
             padding-top: 1.85rem;
-            padding-bottom: 1.45rem;
+            padding-bottom: 1.85rem;
             z-index: 1;
-            transition: background-color 0.25s ease, opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .stack-section .section-header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 0.5rem;
+            background: transparent;
+            pointer-events: none;
+            z-index: 0;
+            transition: transform var(--hover-duration) ease, background-color 0.25s ease, border-radius var(--hover-duration) ease;
+        }
+
+        .stack-section .section-header > :not(.sticky-note) {
+            position: relative;
+            z-index: 1;
         }
 
         .stack-section .section-header h2,
         .stack-section.static-section h2 {
-            margin-bottom: 0.25rem;
+            margin-bottom: var(--section-heading-gap-expanded);
+        }
+
+        .stack-section.is-expanded .section-header h2 {
+            color: var(--color-deep);
+            font-family: var(--font-body);
         }
 
         .stack-section.is-expanded .section-header p.font-display {
             font-weight: 600;
+            font-family: var(--font-display);
         }
 
-        .stack-section .card-body > div {
-            padding-top: 1.25rem;
-        }
-
-        .stack-section .card-body > .card-body-clip {
-            padding-top: 0;
-        }
-
-        .card-body-content {
-            padding-top: 0 !important;
-            padding-bottom: 2rem !important;
-        }
-
-        .stack-section:not(.is-expanded) .section-header:hover {
-            background-color: rgba(71, 71, 71, 0.035);
+        .stack-section:not(.is-expanded):not(.static-section) .section-header:hover::before {
+            background-color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.05);
+            border-radius: 0.75rem;
+            transform: scale(1.02);
         }
 
         .stack-section .section-header::after {
@@ -1030,9 +1056,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             top: 0;
             bottom: 0;
             width: 2px;
-            background-image: linear-gradient(to bottom, rgba(71,71,71,0.20) 50%, transparent 50%);
-            background-size: 2px 12px;
-            background-repeat: repeat-y;
         }
 
         /* Dim everything except the expanded section's content and its own
@@ -1069,10 +1092,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .capability-comparison [data-capability-item] {
             transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), filter 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .capability-comparison [data-capability-item] > span:last-child {
-            color: #166534;
-            font-weight: 500;
-        }
         .capability-comparison [data-min-kyc="unavailable"] > span:first-child {
             position: relative;
             transition: background-color 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
@@ -1098,10 +1117,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .capability-comparison[data-kyc-view="minkyc"] [data-min-kyc="unavailable"] [data-text-key] {
             opacity: 0.36;
             filter: grayscale(1);
-        }
-        .capability-comparison[data-kyc-view="minkyc"] [data-min-kyc="unavailable"] > span:last-child {
-            color: inherit;
-            font-weight: inherit;
         }
         .capability-comparison[data-kyc-view="minkyc"] [data-min-kyc="unavailable"] > span:first-child {
             background: #fee2e2;
@@ -1163,27 +1178,24 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             pointer-events: none;
         }
 
+        /* Breathing room: keep body text from crowding the floating preview on the
+           left, top, and bottom. Margin on the in-flow spacer reserves the space;
+           the visible (JS-pinned) phone stays aligned. Desktop only — mobile lays
+           the preview out in-flow with its own spacing. */
+        @media (min-width: 768px) {
+            .legacy-wallet-flow-spacer:not(.img-placeholder) {
+                margin: 1.5rem -8.5rem 2.75rem 3.5rem;
+            }
+        }
+
         .legacy-wallet-caption {
             display: inline-block;
             margin-top: 0.85rem;
             padding: 0.4rem 0.7rem;
-            background: #ffffff;
+            background: transparent;
             border: 1px solid rgba(71, 71, 71, 0.18);
+            border-radius: 0.35rem;
             color: #1b2433;
-        }
-
-        /* ─── Hero entrance animations ─── */
-        .hero-grid-animating {
-            /* inset(top right bottom left): clip at grid bottom edge,
-               extend 600px right so the image bleed is never clipped. */
-            clip-path: inset(0 -600px 0 0);
-        }
-        @keyframes heroImageSlideUp {
-            from { transform: translate(-100px, 600px); }
-            to   { transform: translate(0, 0);          }
-        }
-        .hero-image-slide-up {
-            animation: heroImageSlideUp 0.76s cubic-bezier(0.1, 0.1, 0.1, 1) both;
         }
 
         /* Mobile: simple in-flow image that fits the stacked hero cell. */
@@ -1199,59 +1211,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width:     var(--hero-logo-width)  !important;
             height:    var(--hero-logo-height) !important;
             transform: translate(var(--hero-logo-offset-x), var(--hero-logo-offset-y));
-        }
-
-        .hero-phone-wrap {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .hero-phone-wrap .placeholder-image-layer {
-            position: relative;
-            inset: auto;
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-            object-fit: cover;
-            object-position: center;
-            display: block !important;
-            z-index: 1;
-        }
-
-        /* Desktop: pin the FULL image to the top-right corner of the hero
-           compartment. Height is capped to the compartment height (never taller),
-           the whole image stays visible (no crop), and its extra width spills
-           left over the empty area below the text without affecting the text
-           column. body { overflow-x: hidden } clips any off-page spill. */
-        @media (min-width: 768px) {
-            /* Double-class selector (.hero-phone-wrap.editable-placeholder) so this
-               beats the later `.editable-placeholder { position: relative }` rule and
-               the Tailwind w-full/h-full utilities; otherwise the image stays in flow
-               and stretches the row. */
-            .hero-phone-wrap.editable-placeholder {
-                position: absolute;
-                top: 0;
-                right: -3.1rem;
-                width: auto;
-                height: 100%;
-                display: block;
-                overflow: visible;
-                z-index: 2;
-            }
-
-            .hero-phone-wrap.editable-placeholder .placeholder-image-layer {
-                width: auto;
-                height: 100%;
-                max-width: none;
-                object-fit: contain;
-                object-position: top right;
-                z-index: 0;
-            }
         }
 
         .rebrand-phone-placeholder {
@@ -1278,7 +1237,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .competitive-carousel {
             position: relative;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
+            margin-left: -3.5rem;
+            margin-right: -3.5rem;
+            padding-left: 3.5rem;
+            padding-right: 3.5rem;
         }
 
         .competitive-carousel-stage {
@@ -1363,7 +1326,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             height: 2.25rem;
             border: 1px solid rgba(71, 71, 71, 0.18);
             background: rgba(250, 250, 250, 0.88);
-            color: #1f2937;
+            color: #2C2621;
             font-family: var(--font-display);
             font-size: 1.25rem;
             line-height: 1;
@@ -1388,7 +1351,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .competitive-carousel-note {
             text-align: center;
             margin-top: 0.65rem;
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: var(--font-mono);
             font-size: 0.68rem;
             letter-spacing: 0.06em;
             text-transform: uppercase;
@@ -1396,6 +1359,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 767px) {
+            .competitive-carousel {
+                margin-left: -3rem;
+                margin-right: -3rem;
+                padding-left: 3rem;
+                padding-right: 3rem;
+            }
+
             .competitive-carousel-stage {
                 height: 33rem;
             }
@@ -1486,7 +1456,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .legacy-wallet-screen {
-            background: #fafafa;
+            background: #FAF8F5;
             border-radius: 1.75rem;
             aspect-ratio: 9 / 19;
             padding: 2.4rem 0.85rem 1rem;
@@ -1650,9 +1620,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .scope-flow-shell {
             border: 1px solid rgba(71, 71, 71, 0.16);
-            background: #f8f8f6;
+            background: transparent;
             padding: 1rem 1.15rem 0.85rem;
-            border-radius: 10px;
+            border-radius: 0.75rem;
         }
 
         .scope-flow-toolbar {
@@ -1674,7 +1644,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: var(--font-display);
             font-weight: 700;
             font-size: 1rem;
-            color: #1f2937;
+            color: #2C2621;
             letter-spacing: -0.02em;
         }
 
@@ -1683,23 +1653,23 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         /* More breathing room above prose subsection headings across the case study. */
-        .section-mini-heading.slash-heading {
-            padding-top: var(--gap-paragraph);
-        }
-
         /* Slightly larger mini-headings for clearer reading hierarchy.
            Element selectors beat Tailwind's .text-base utility. */
         h3.section-mini-heading,
         h4.section-mini-heading {
             font-size: 1.15rem;
             line-height: 1.35;
-            padding-top: 0.45rem;
             padding-bottom: 0;
+            margin-top: var(--block-gap);
+            margin-bottom: var(--heading-body-gap);
         }
 
-        .strategy-blueprint-section h3.section-mini-heading,
-        .strategy-blueprint-section h4.section-mini-heading {
-            font-size: 0.95rem;
+        .num-label {
+            font-size: 0.8em;
+            color: #868e96;
+            letter-spacing: 0.02em;
+            margin-right: 0.15rem;
+            vertical-align: middle;
         }
 
         .strategy-divider {
@@ -1722,7 +1692,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .strategy-divider span {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.78rem;
             font-weight: 700;
             letter-spacing: 0.14em;
@@ -1745,7 +1715,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .strategy-track-kicker {
             margin-bottom: 0.45rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.64rem;
             font-weight: 700;
             letter-spacing: 0.1em;
@@ -1803,7 +1773,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .card-body-content > div:has(> .section-mini-heading),
         .card-body > .px-10 > div:has(> .section-mini-heading) {
-            margin-bottom: var(--gap-paragraph);
+            margin-bottom: 2.35rem;
         }
 
         .card-body-content > div:has(> .section-mini-heading):last-child,
@@ -1813,10 +1783,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .numbered-point {
             --numbered-point-indent: 2rem;
+            margin-bottom: var(--block-gap) !important;
         }
 
         .numbered-point > h3 {
-            margin-bottom: 0.9rem;
+            margin-bottom: var(--heading-body-gap);
         }
 
         .numbered-point > :not(h3):not(.sticky-note) {
@@ -1825,7 +1796,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .execution-journey-stage {
             --execution-phone-column: 14.5rem;
-            --execution-stage-gap: clamp(1.5rem, 3vw, 2.5rem);
+            --execution-stage-gap: clamp(2.5rem, 4vw, 4rem);
             display: grid;
             grid-template-columns: minmax(0, 1fr) var(--execution-phone-column);
             align-items: start;
@@ -1851,9 +1822,91 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: calc(100% + var(--execution-stage-gap) + var(--execution-phone-column));
             max-width: none;
             height: 2px;
-            background: #fafafa;
+            background: #FAF8F5;
             border-radius: 1px;
             margin: 2rem 0;
+        }
+
+        /* Nudge shown just before the flow takes over: tells the user they can
+           step through the journey with the keyboard (scroll works too). */
+        .journey-nav-hint {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 2.5rem 0 2rem;
+            padding: 1.1rem 1.35rem;
+            border: 1px solid hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.28);
+            border-radius: 0.85rem;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.06);
+        }
+
+        .journey-nav-hint-keys {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            flex: none;
+            padding: 0 0.65rem;
+            margin-left: auto;
+        }
+
+
+        .journey-nav-key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            border-radius: 0.4rem;
+            border: 1px solid hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.4);
+            background: #FFFFFF;
+            --key-shadow: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.22);
+            --key-pressed-bg: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.1);
+            box-shadow: 0 1.5px 0 var(--key-shadow);
+            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            font-size: 0.9rem;
+            line-height: 1;
+        }
+
+        /* Sequence: DOWN press → UP press → long hold → loop (4s cycle) */
+        @keyframes journey-key-down {
+            0%,  12%  { transform: scale(1) translateY(0);        box-shadow: 0 1.5px 0 var(--key-shadow); background: #fff; }
+            16%        { transform: scale(0.87) translateY(1.5px); box-shadow: none;                         background: var(--key-pressed-bg); }
+            23%, 100% { transform: scale(1) translateY(0);        box-shadow: 0 1.5px 0 var(--key-shadow); background: #fff; }
+        }
+
+        @keyframes journey-key-up {
+            0%,  33%  { transform: scale(1) translateY(0);        box-shadow: 0 1.5px 0 var(--key-shadow); background: #fff; }
+            38%        { transform: scale(0.87) translateY(1.5px); box-shadow: none;                         background: var(--key-pressed-bg); }
+            45%, 100% { transform: scale(1) translateY(0);        box-shadow: 0 1.5px 0 var(--key-shadow); background: #fff; }
+        }
+
+        .journey-nav-key--down { animation: journey-key-down 4s linear infinite; }
+        .journey-nav-key--up   { animation: journey-key-up   4s linear infinite; }
+
+        .journey-nav-hint.is-interacted .journey-nav-key {
+            animation: none;
+            transform: scale(1) translateY(0);
+            box-shadow: 0 1.5px 0 var(--key-shadow);
+            background: #fff;
+        }
+
+        .journey-nav-hint-text {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .journey-nav-hint-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(max(var(--accent-l, 55) - 18, 20) * 1%));
+        }
+
+        .journey-nav-hint-sub {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: #7A6F64;
         }
 
         .execution-journey-entry-divider + .execution-journey-section {
@@ -1891,7 +1944,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             top: calc(1.25rem + var(--timeline-dot-top) + var(--timeline-dot-border) + var(--timeline-dot-size) / 2);
             bottom: calc(-1 * var(--timeline-gap) - 1.25rem - var(--timeline-dot-top) - var(--timeline-dot-border) - var(--timeline-dot-size) / 2);
             width: 2px;
-            background: rgba(71, 71, 71, 0.22);
+            background: rgba(71, 71, 71, 0.18);
             z-index: 0;
             pointer-events: none;
         }
@@ -1903,7 +1956,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             top: calc(1.25rem + var(--timeline-dot-top) + var(--timeline-dot-border) + var(--timeline-dot-size) / 2);
             bottom: calc(-1 * var(--timeline-gap) - 1.25rem - var(--timeline-dot-top) - var(--timeline-dot-border) - var(--timeline-dot-size) / 2);
             width: 2px;
-            background: #064e3b;
+            background: rgba(71, 71, 71, 0.45);
             transform: scaleY(0);
             transform-origin: top center;
             transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -1929,7 +1982,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .execution-transition-kicker {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.64rem;
             font-weight: 700;
             letter-spacing: 0.12em;
@@ -1946,8 +1999,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .execution-journey-section-copy {
             position: relative;
             max-width: 38rem;
-            margin-bottom: 1.35rem;
+            margin-bottom: 2rem;
             padding-top: 0.125rem;
+        }
+
+        .execution-journey-section-copy h3 {
+            margin-bottom: var(--heading-body-gap);
         }
 
         .execution-journey-section-copy::before {
@@ -1958,7 +2015,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: var(--timeline-dot-size);
             height: var(--timeline-dot-size);
             border-radius: 50%;
-            border: var(--timeline-dot-border) solid #fafafa;
+            border: var(--timeline-dot-border) solid #FAF8F5;
             background: #d7d7d2;
             box-sizing: content-box;
             z-index: 1;
@@ -1973,7 +2030,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .execution-journey-section.is-timeline-active .execution-journey-section-copy::before,
         .execution-journey-section.is-timeline-complete .execution-journey-section-copy::before {
-            background: #064e3b;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
         }
 
         .execution-journey-section.is-timeline-active .execution-journey-section-copy::before {
@@ -1994,7 +2051,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .execution-journey-options {
             display: grid;
             max-width: 40rem;
-            gap: 0.85rem;
+            gap: 1.25rem;
         }
 
         .execution-journey-option {
@@ -2003,7 +2060,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.14);
             border-radius: 0.625rem;
             background: rgba(255, 255, 255, 0.52);
-            padding: 1.1rem 1.2rem;
+            position: relative;
+            padding: 1.15rem 1.25rem;
             color: inherit;
             text-align: left;
             transition:
@@ -2020,9 +2078,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .execution-journey-option.is-active {
-            border-color: #4f9e78;
-            background: #4f9e78;
-            box-shadow: 0 8px 18px -8px rgba(79, 158, 120, 0.45);
+            border-color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            box-shadow: none;
             transform: translateX(0.45rem);
         }
 
@@ -2033,6 +2091,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .execution-journey-option.is-active .execution-option-body {
             color: rgba(255, 255, 255, 0.82);
+        }
+
+        .execution-journey-option.is-active::after {
+            content: '';
+            position: absolute;
+            right: -9px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 9px solid transparent;
+            border-bottom: 9px solid transparent;
+            border-left: 9px solid hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            pointer-events: none;
         }
 
         .execution-journey-option.is-transition {
@@ -2047,7 +2119,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .execution-option-kicker {
             margin-bottom: 0.35rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.64rem;
             font-weight: 700;
             letter-spacing: 0.1em;
@@ -2059,14 +2131,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: var(--font-display);
             font-size: 1rem;
             line-height: 1.2;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-weight: 500;
+            letter-spacing: 0;
             color: #1b2433;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.65rem;
         }
 
         .execution-option-body {
-            margin-top: 0.45rem;
+            margin-top: 0;
             color: #3a4452;
             font-size: 0.92rem;
             line-height: 1.48;
@@ -2224,7 +2296,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 0.7rem;
             height: 0.7rem;
             background: #064e3b;
-            border: 3px solid #fafafa;
+            border: 3px solid #FAF8F5;
             box-shadow: 0 0.25rem 0.7rem rgba(6, 78, 59, 0.24);
             transform: translate(-50%, -50%);
         }
@@ -2587,7 +2659,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .adoption-model-kicker {
-            font-family: 'IBM Plex Mono', monospace;
+            font-family: var(--font-mono);
             font-size: 0.68rem;
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -2612,7 +2684,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             align-items: center;
             border: 1px solid transparent;
             background: transparent;
-            color: var(--color-deep);
+            color: #5C5146;
             padding: 0.32rem 0.55rem;
         }
 
@@ -2627,7 +2699,6 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background: #edf8f1;
             color: #064e3b;
             padding: 0.32rem 0.55rem;
-            border-radius: 6px;
         }
 
         .adoption-equation-symbol {
@@ -2636,8 +2707,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             justify-content: center;
             width: 1.45rem;
             height: 1.45rem;
-            border: none;
-            background: transparent;
+            border: 1px solid rgba(71, 71, 71, 0.16);
+            background: #fcfbf9;
             color: #1b2433;
             font-weight: 700;
         }
@@ -2645,43 +2716,27 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .value-prop-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 2.25rem;
             margin-top: 1.5rem;
             margin-bottom: 2.25rem;
+            margin-left: -3rem;
+            margin-right: -3rem;
         }
 
         .strategy-finding {
             position: relative;
             overflow: hidden;
+            display: flex;
+            align-items: center;
             border: 1px solid rgba(6, 78, 59, 0.34);
             border-radius: 0.85rem;
             background: rgba(237, 248, 241, 0.7);
             padding: 1.25rem 2rem;
-            display: flex;
-            align-items: center;
         }
 
         .strategy-finding::before,
         .strategy-finding::after {
-            position: absolute;
-            font-family: var(--font-display);
-            font-size: 3rem;
-            font-weight: 700;
-            line-height: 1;
-            color: rgba(18, 63, 44, 0.06);
-            pointer-events: none;
-        }
-
-        .strategy-finding::before {
-            content: "“";
-            top: 0.2rem;
-            left: 0.55rem;
-        }
-
-        .strategy-finding::after {
-            content: "”";
-            right: 0.6rem;
-            bottom: -1.05rem;
+            content: none;
         }
 
         .strategy-finding > * {
@@ -2701,33 +2756,44 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             grid-template-columns: repeat(3, 1fr);
             width: min(100%, 52rem);
             margin-inline: auto;
-            gap: 0.85rem;
+            gap: 1.75rem;
         }
 
         .persona-id-shell {
-            display: block;
+            display: grid;
+            grid-template-columns: 1fr 12rem;
+            grid-template-rows: auto auto;
+            column-gap: 5rem;
+            row-gap: 0;
+            position: relative;
             margin-top: 1.25rem;
             margin-bottom: 1rem;
         }
 
         .persona-card-stack {
-            position: relative;
-            float: right;
+            position: absolute;
             display: grid;
+            grid-column: 2;
+            grid-row: 2;
+            top: calc(50% - 1rem);
             width: 21.5rem;
-            margin: 2rem 0rem 1.5rem 3rem;
+            margin: 0;
+            transform: translateX(-0.75rem) translateY(-50%);
             isolation: isolate;
             perspective: 900px;
             cursor: pointer;
-            --stack-offset: 0.9rem;
         }
 
         .persona-id-copy {
+            grid-column: 1;
+            grid-row: 2;
             padding-top: 0.1rem;
         }
 
-        .persona-id-copy h4 {
-            margin-bottom: 0.5rem;
+        .persona-id-shell > h4 {
+            grid-column: 1;
+            grid-row: 1;
+            margin-bottom: var(--heading-body-gap);
             font-family: var(--font-display);
             font-size: 1.15rem;
             line-height: 1.35;
@@ -2736,7 +2802,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-copy p {
-            color: var(--color-deep);
+            color: theme('colors.deep');
         }
 
         .persona-id-card {
@@ -2799,8 +2865,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 3;
             opacity: 1;
             pointer-events: none;
-            transform: translate3d(calc(-1 * var(--stack-offset)), 0, 0) scale(0.97);
-            transform-origin: center center;
+            transform: translate3d(-0.9rem, 0, 0) scale(0.97);
             box-shadow: none;
             border-color: rgba(var(--persona-accent-rgb), 0.56);
         }
@@ -2809,8 +2874,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 2;
             opacity: 1;
             pointer-events: none;
-            transform: translate3d(calc(-2 * var(--stack-offset)), 0, 0) scale(0.94);
-            transform-origin: center center;
+            transform: translate3d(-1.65rem, 0, 0) scale(0.95);
             box-shadow: none;
             border-color: rgba(var(--persona-accent-rgb), 0.56);
         }
@@ -2819,8 +2883,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: 1;
             opacity: 0;
             pointer-events: none;
-            transform: translate3d(calc(-3 * var(--stack-offset)), 0, 0) scale(0.91);
-            transform-origin: center center;
+            transform: translate3d(-2.3rem, 0, 0) scale(0.93);
             box-shadow: none;
         }
 
@@ -2838,12 +2901,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 transform 0.65s cubic-bezier(0.4, 0, 0.25, 1),
                 opacity 0.0975s linear 0.23s,
                 box-shadow 0.65s ease;
-            transform: translate3d(2.2rem, 1.05rem, 0) rotate(5deg) scale(0.96);
+            transform: translate3d(2.5rem, 0, 0) rotate(4deg) scale(0.96);
         }
 
         .persona-id-card.is-entering {
             opacity: 0;
-            transform: translate3d(-1.85rem, 1.42rem, 0) rotate(-2.8deg) scale(0.94);
+            transform: translate3d(-2.5rem, 0, 0) scale(0.93);
         }
 
         .persona-id-card.is-revealing-back {
@@ -2855,7 +2918,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .persona-id-card-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: flex-start;
             gap: 0.72rem;
             margin-bottom: 0.95rem;
@@ -2870,6 +2933,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 2.25rem;
             height: 2.25rem;
             flex: 0 0 auto;
+            order: 2;
+            margin-left: auto;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2886,7 +2951,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-label {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             font-size: 1rem;
             line-height: 1.2;
             letter-spacing: -0.02em;
@@ -2895,7 +2960,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-subtext {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             margin-top: 0.18rem;
             font-size: 0.78rem;
             line-height: 1.28;
@@ -2918,7 +2983,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .persona-id-attribute-label {
             margin-bottom: 0.24rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 0.66rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
@@ -2926,7 +2991,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-attribute-value {
-            font-family: var(--font-display);
+            font-family: var(--font-body);
             font-size: 0.98rem;
             line-height: 1.26;
             font-weight: 600;
@@ -2938,8 +3003,21 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
+            .persona-id-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .persona-id-shell > h4 {
+                grid-row: 1;
+            }
+
+            .persona-id-copy {
+                grid-row: 2;
+            }
+
             .persona-card-stack {
-                float: none;
+                grid-column: 1;
+                grid-row: 3;
                 width: auto;
                 margin: 0 0 1rem;
             }
@@ -2964,6 +3042,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: flex;
             flex-direction: column;
             gap: 0.85rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .value-prop-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .value-prop-label {
@@ -3033,7 +3117,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .value-prop-icon.is-secure {
             background: #e9f1ff;
-            color: #2747e0;
+            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
         }
 
         .value-prop-icon.is-convenient {
@@ -3052,45 +3136,43 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             letter-spacing: 0.08em;
             text-transform: uppercase;
             color: #5f5f5f;
-            margin-bottom: 1.6rem;
+            margin-bottom: 0.85rem;
             text-align: center;
         }
 
         .kyc-step-grid {
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
-            gap: 0.65rem;
-            counter-reset: kyc-step;
+            gap: 1.5rem;
+            margin-left: -7rem;
+            margin-right: -7rem;
         }
 
         .kyc-step-card {
             position: relative;
-            min-height: 3rem;
-            border: 1px solid rgba(39, 71, 224, 0.15);
-            background: linear-gradient(135deg, rgba(39, 71, 224, 0.02), #fff);
-            padding: 0.85rem 1.5rem 0.85rem 0.85rem;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            counter-increment: kyc-step;
+            min-height: 7.25rem;
+            border: 1px dashed rgba(71, 71, 71, 0.18);
+            border-radius: 0.85rem;
+            background: #fff;
+            padding: 1.25rem;
         }
 
-        .kyc-step-card::before {
-            content: counter(kyc-step);
-            flex-shrink: 0;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 50%;
-            background: rgba(39, 71, 224, 0.08);
-            border: 1px solid rgba(39, 71, 224, 0.2);
-            color: rgba(39, 71, 224, 0.7);
-            font-family: var(--font-display);
-            font-size: 0.7rem;
-            font-weight: 700;
-            display: flex;
+        .kyc-step-card h4 {
+            margin-bottom: 0.65rem;
+        }
+
+        .kyc-step-number {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 1.8rem;
+            height: 1.8rem;
+            margin-bottom: 1rem;
+            background: #1b2433;
+            color: #fff;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
         @media (max-width: 767px) {
@@ -3114,7 +3196,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .scope-flow-tabs {
             display: inline-flex;
             border: 1px solid rgba(71, 71, 71, 0.22);
-            border-radius: 7px;
+            border-radius: 0.45rem;
             overflow: hidden;
         }
 
@@ -3164,10 +3246,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border: 1px solid rgba(71, 71, 71, 0.22);
             background: #fcfbf9;
             padding: 0.9rem 1rem;
-            border-radius: 8px;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            border-radius: 0.5rem;
         }
 
         .scope-node-card .mono {
@@ -3247,20 +3329,28 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         body.is-offscreen-unfaded .stack-section::after {
             transition-duration: 1.05s;
         }
+        /* Keep the slow 1.05s opacity reveal, but don't let it slow the hover scale. */
+        body.is-offscreen-unfaded .stack-section .section-header {
+            transition: background-color 0.25s ease, opacity 1.05s cubic-bezier(0.22, 1, 0.36, 1), transform var(--hover-duration) ease, border-radius var(--hover-duration) ease;
+        }
         body.is-any-expanded main > section,
         body.is-any-expanded .stack-section:not(.is-expanded) > div,
         body.is-any-expanded .stack-section:not(.is-expanded)::before,
         body.is-any-expanded .stack-section:not(.is-expanded)::after {
             opacity: 0.18;
-            transition-duration: 1.15s;
+            transition-duration: 0.3s;
             transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        body.is-any-expanded .stack-section:not(.is-expanded) .section-header {
+            transition: background-color 0.25s ease, opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform var(--hover-duration) ease, border-radius var(--hover-duration) ease;
         }
 
         body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover > div,
         body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover::before,
         body.is-any-expanded:not(.is-animating-motion) .stack-section:not(.is-expanded):hover::after {
             opacity: 1;
-            transition-duration: 0.22s;
+            transition-duration: var(--hover-duration);
         }
 
 
@@ -3322,13 +3412,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             left: var(--floating-preview-left, -9999px);
         }
 
-        @keyframes growth-visual-float {
-            0%, 100% { transform: translateY(-21px); }
-            50%       { transform: translateY(-9px); }
-        }
         .editable-placeholder[data-placeholder-id="impact-results-visual"].legacy-wallet-floating-preview {
-            transform: translateY(-15px);
-            animation: growth-visual-float 4.5s ease-in-out infinite;
+            transform: translateY(-30px);
         }
 
         body.is-placeholder-editing .editable-placeholder {
@@ -3354,7 +3439,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .placeholder-edit-dialog {
             width: min(36rem, 100%);
-            background: #fafafa;
+            background: #FAF8F5;
             border: 1px solid rgba(71, 71, 71, 0.24);
             padding: 1.25rem;
         }
@@ -3435,7 +3520,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             border-left: 4px solid theme('colors.outline');
             padding-left: 1.5rem;
             font-style: italic;
-            color: var(--color-deep);
+            color: theme('colors.deep');
             margin: 2rem 0;
             font-size: 1.125rem;
         }
@@ -3475,8 +3560,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .stack-section.is-expanded .sticky-note.pop-on-expand {
             opacity: 1;
             transform: scale(1) rotate(var(--rot, 0deg));
-            transition: opacity 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s, 
-                        transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.35s;
+            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s, 
+                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
         }
         
         @media (min-width: 1400px) {
@@ -3551,7 +3636,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             min-width: 7rem;
         }
         #text-edit-save-btn {
-            background: #2747e0;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
             color: #fff;
             border: none;
             padding: 0.42rem 1rem;
@@ -3594,7 +3679,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 transparent 100%,
                 rgba(250, 250, 250, 0.45) 210%,
                 rgba(250, 250, 250, 0.88) 380%,
-                #fafafa 500%);
+                #FAF8F5 500%);
             z-index: 10;
             transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
         }
@@ -3661,7 +3746,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             user-select: none;
             width: 14px;
             height: 14px;
-            background: #2747e0;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
             border: 2px solid #fff;
             box-shadow: 0 2px 6px rgba(0,0,0,0.35);
             display: none;
@@ -3783,7 +3868,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font: inherit;
         }
         .hi-panel button:hover { background: rgba(255,255,255,0.22); }
-        .hi-panel .hi-panel-done { background: #2747e0; }
+        .hi-panel .hi-panel-done { background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%)); }
         .hi-panel .hi-panel-done:hover { background: #1c37b5; }
     </style>
 <script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
@@ -3791,17 +3876,17 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
     <!-- Vertical guide lines along content edges -->
     <div id="left-vertical-guide" class="fixed inset-0 pointer-events-none z-[2] flex justify-center">
-        <div class="relative w-full max-w-5xl h-full">
+        <div class="relative w-full max-w-4xl h-full">
             <div class="vertical-guide-line" style="left: -2px;"></div>
         </div>
     </div>
     <div id="vertical-guides" class="fixed inset-0 pointer-events-none z-0 flex justify-center">
-        <div class="relative w-full max-w-5xl h-full">
+        <div class="relative w-full max-w-4xl h-full">
             <div class="vertical-guide-line" style="right: -2px;"></div>
         </div>
     </div>
 
-    <main class="relative z-[1] max-w-5xl mx-auto pb-24 bg-[#fafafa]">
+    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[#FAF8F5]">
         
         <!-- Hero Section -->
         <section class="pt-[5.9rem]">
@@ -3809,58 +3894,61 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             <!-- Hero Bento: Text, pills, stats on left + Screen showcase on right -->
             <div class="grid grid-cols-1 md:grid-cols-5 gap-8 pl-10 pr-0 pt-0 pb-0 items-stretch relative">
                 <!-- Left: Headings, Role/Responsibility, and Stats (3/5 width) -->
-                <div class="md:col-span-4 flex flex-col items-start text-left pt-[68px] pb-[68px] relative z-10">
-                    <div class="flex items-center gap-4 mb-3">
-                        <h1 class="text-[2.0rem] md:text-[2.3rem] font-bold leading-[1.05] text-ink" data-text-key="hero-title" spellcheck="false">Building</h1>
-                        <div class="editable-placeholder has-saved-image" data-placeholder-id="hero-zapp-logo" data-placeholder-name="Zapp Account logo" aria-label="Zapp Account logo" tabindex="-1">
-                            <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-hero-zapp-logo.png" style="object-fit: contain; object-position: center; width: 100%; height: 100%;">
-                        </div>
+                <div class="md:col-span-3 flex flex-col items-start text-left pt-0 pb-[68px] relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-500/[0.12] text-brand-700 rounded-full text-xs font-semibold tracking-wide mb-6 border border-brand-500/[0.35]">
+                        <span data-text-key="hero-category" spellcheck="false">UX Design • Fintech</span>
                     </div>
+                    <h1 class="text-4xl md:text-5xl font-light leading-[1.05] text-ink mb-5" data-text-key="hero-title" spellcheck="false">Building <span class="italic font-normal text-brand-500">Zapp Account</span></h1>
                     <p class="text-lg md:text-xl text-deep mb-8 max-w-lg" data-text-key="hero-subtitle" spellcheck="false">
                         Rebrand and upgrade the existing digital wallet for PayZapp to Zapp Account</p>
 
-                    <div class="flex flex-wrap gap-3 text-[13px] mono text-muted mb-8">
-                        <span class="px-4 pt-1.5 pb-2 border border-outline/30 flex items-baseline gap-2.5">
-                            <span class="mono text-[11px] text-muted">Role</span>
-                            <span class="mono text-[13px] font-semibold text-deep" data-text-key="hero-role" spellcheck="false">Team Lead</span>
-                        </span>
-                        <span class="px-4 pt-1.5 pb-2 border border-outline/30 flex items-baseline gap-2.5">
-                            <span class="mono text-[11px] text-muted">Duration</span>
-                            <span class="mono text-[13px] font-semibold text-deep" data-text-key="hero-duration" spellcheck="false">Dec 2024 - Feb 2025</span>
-                        </span>
-                    </div>
-
                     <!-- Metrics -->
                     <div class="flex flex-wrap gap-4">
-                        <div class="border border-[#cfcfca]/60 p-5 rounded-lg bg-white/40 flex flex-col items-start text-left w-48">
-                            <div class="text-4xl font-bold mb-1 text-emerald-600" data-text-key="hero-stat1-value" spellcheck="false">2.1x</div>
-                            <div class="mono text-[10.5px] tracking-widest text-muted" data-text-key="hero-stat1-label" spellcheck="false">MOM Growth in Spends</div>
+                        <div class="border border-warm-200 p-5 rounded-2xl bg-warm-50/60 flex flex-col items-start text-left w-48">
+                            <div class="text-4xl font-medium mb-1 text-brand-500" style="font-family: var(--font-display);" data-text-key="hero-stat1-value" spellcheck="false">2.1x</div>
+                            <div class="mono normal-case text-[10.5px] tracking-widest text-deep" data-text-key="hero-stat1-label" spellcheck="false">MoM GROWTH IN SPENDS</div>
                         </div>
-                        <div class="border border-[#cfcfca]/60 p-5 rounded-lg bg-white/40 flex flex-col items-start text-left w-48">
-                            <div class="text-4xl font-bold mb-1 text-emerald-600" data-text-key="hero-stat2-value" spellcheck="false">1.5x</div>
-                            <div class="mono text-[10.5px] tracking-widest text-muted" data-text-key="hero-stat2-label" spellcheck="false"><span style="letter-spacing: 1.05px;">MOM&nbsp;</span>growth in loads</div>
+                        <div class="border border-warm-200 p-5 rounded-2xl bg-warm-50/60 flex flex-col items-start text-left w-48">
+                            <div class="text-4xl font-medium mb-1 text-brand-500" style="font-family: var(--font-display);" data-text-key="hero-stat2-value" spellcheck="false">1.5x</div>
+                            <div class="mono normal-case text-[10.5px] tracking-widest text-deep" data-text-key="hero-stat2-label" spellcheck="false"><span style="letter-spacing: 1.05px;">MoM GROWTH IN <br>LOADS</span></div>
                         </div>
-                        <div class="border border-[#cfcfca]/60 p-5 rounded-lg bg-white/40 flex flex-col items-start text-left w-48">
+                        <div class="border border-warm-200 p-5 rounded-2xl bg-warm-50/60 flex flex-col items-start text-left w-48">
                             <div class="flex items-center gap-2 mb-1">
-                                <div class="text-4xl font-bold text-emerald-600" data-text-key="hero-stat3-value" spellcheck="false">#5</div>
-                                <svg width="12" height="12" viewBox="0 0 14 12" fill="none" aria-hidden="true" class="text-emerald-600">
+                                <div class="text-4xl font-medium text-brand-500" style="font-family: var(--font-display);" data-text-key="hero-stat3-value" spellcheck="false">#5</div>
+                                <svg width="12" height="12" viewBox="0 0 14 12" fill="none" aria-hidden="true" class="text-brand-500">
                                     <polygon points="7,0 14,12 0,12" fill="currentColor"></polygon>
                                 </svg>
                             </div>
-                            <div class="mono text-[10.5px] tracking-widest text-muted" data-text-key="hero-stat3-label" spellcheck="false">in the industry</div>
+                            <div class="mono normal-case text-[10.5px] tracking-widest text-deep" data-text-key="hero-stat3-label" spellcheck="false">IN THE INDUSTRY</div>
                         </div>
                     </div>
 
                 </div>
 
                 <!-- Right: Standalone Showcase Image (2/5 width) -->
-                <div class="md:col-span-1 flex justify-end items-start w-full h-72 md:h-full">
-                    <div class="hero-phone-wrap editable-placeholder has-saved-image w-full h-full" data-placeholder-id="hero-zapp-account" data-placeholder-name="Hero Zapp Account screen" aria-label="Preview placeholder for Zapp Account screen" tabindex="-1">
-                            <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-hero-zapp-account.png">
+                <div class="md:col-span-2 flex justify-end items-start w-full">
+                    <div class="editable-placeholder has-saved-image" data-placeholder-id="hero-zapp-account" data-placeholder-name="Hero Zapp Account screen" aria-label="Preview placeholder for Zapp Account screen" tabindex="-1" style="position:relative;width:100%;height:100%;display:flex;align-items:center;">
+                            <img class="placeholder-image-layer" alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png" style="position:relative;inset:auto;width:100%;height:auto;display:block;object-fit:contain;">
                         </div>
                     </div>
                 </div>
             
+            <!-- Case study metadata — full-width, between bento and section rule -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-warm-200 mb-[0.6rem]">
+                <div>
+                    <span class="block text-xs uppercase tracking-widest text-muted font-bold mb-2">My Role</span>
+                    <span class="text-sm font-semibold text-ink" data-text-key="hero-role" spellcheck="false">Team Lead</span>
+                </div>
+                <div>
+                    <span class="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Duration</span>
+                    <span class="text-sm font-semibold text-ink" data-text-key="hero-duration" spellcheck="false">Dec 2024 – Feb 2025</span>
+                </div>
+                <div>
+                    <span class="block text-xs uppercase tracking-widest text-muted font-bold mb-2">Focus</span>
+                    <span class="text-sm font-semibold text-ink" data-text-key="hero-focus" spellcheck="false">UX &amp; Product Design</span>
+                </div>
+            </div>
+
             <div class="container-line-bottom"></div>
         </section>
 
@@ -3868,59 +3956,27 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             <!-- Card 1: Context (always expanded, no toggle) -->
             <article class="stack-section static-section">
-                <div class="section-header !pb-[36px] md:!pb-[52px] pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="context-kicker" spellcheck="false">What is Zapp Account?</h2>
-                    <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display mb-0" data-text-key="context-description" spellcheck="false">Zapp Account is a digital prepaid payments account offered by HDFC Bank through PayZapp, built to give users a more capable, controlled, and convenient way to pay, transact, and manage everyday money. It supports UPI, Tap and Pay, Peer to Peer, Peer to Merchant, Bank Transfers and Online Payments using a Virtual Card.</p>
-
-                    <div class="mt-3 flex flex-wrap items-center justify-center gap-5">
-                        <div class="flex items-center gap-3 px-4 py-3 border border-outline/30 rounded-md">
-                            <div class="editable-placeholder w-9 h-9 bg-accent flex items-center justify-center text-white font-display font-bold text-lg" data-placeholder-id="context-payzapp-icon" data-placeholder-name="PayZapp app icon" aria-label="PayZapp icon" tabindex="-1" style="flex-shrink:0;">
-                                <img class="placeholder-image-layer" alt="" src="" style="object-fit:fill;width:100%;height:100%;">
-                                <span class="placeholder-default" aria-hidden="true" style="font-family:'Inter',sans-serif;">P</span>
-                            </div>
-                            <div>
-                                <div class="font-display font-semibold text-base text-ink">PayZapp</div>
-                                <div class="mono text-[10px] text-muted">Parent app</div>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col items-center">
-                            <div class="mono text-[10px] text-muted mb-1.5">contains</div>
-                            <svg width="64" height="10" viewBox="0 0 64 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <path d="M0 5 L56 5" stroke="rgba(71,71,71,0.5)" stroke-width="1.5" stroke-dasharray="3 3"></path>
-                                <path d="M56 1 L62 5 L56 9" stroke="rgba(71,71,71,0.5)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
-                            </svg>
-                        </div>
-
-                        <div class="flex items-center gap-3 px-4 py-3 border border-outline/30 rounded-md">
-                            <div class="editable-placeholder w-9 h-9 bg-ink flex items-center justify-center text-white font-display font-bold text-lg has-saved-image" data-placeholder-id="context-zapp-icon" data-placeholder-name="Zapp Account app icon" aria-label="Zapp Account icon" tabindex="-1" style="flex-shrink:0;">
-                                <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-context-zapp-icon.png" style="object-fit:fill;width:100%;height:100%;">
-                                <span class="placeholder-default" aria-hidden="true" style="font-family:'Inter',sans-serif;">Z</span>
-                            </div>
-                            <div>
-                                <div class="font-display font-semibold text-base text-ink">Zapp Account</div>
-                                <div class="mono text-[10px] text-muted">Prepaid Payment Instrument</div>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display mb-0" data-text-key="context-description" spellcheck="false">Zapp Account is a digital prepaid payments account offered by HDFC Bank through PayZapp, built to give users a more capable, controlled, and convenient way to pay, transact, and manage everyday money. It supports UPI, Tap and Pay, Peer to Peer, Peer to Merchant, Bank Transfers and Online Payments using a Virtual Card.</p>
                 </div>
             </article>
 
             <!-- Card 2: Enablers -->
             <article class="stack-section has-floating-preview">
-                <div class="section-header pt-8 pb-3 pl-10 pr-20">
-                    <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2.5deg;">
+                <div class="section-header py-8 pl-10 pr-10">
+                    <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2deg;">
                         The requirement came to us from the HDFC Bank
                     </div>
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="enablers-kicker" spellcheck="false">What we had to do</h2>
-                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="enablers-summary" spellcheck="false">Brand the PayZapp Wallet as Zapp Account, introduce Video KYC, and create entry points that could promote it across the app.</p>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="enablers-summary" spellcheck="false">Brand the PayZapp Wallet as Zapp Account, introduce Video KYC, and create entry points that could promote it across the app.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -236.875px; --floating-preview-left: 1493.840576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: 868.546875px; --floating-preview-left: 1430.481201171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -3943,7 +3999,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         </div>
                     </aside>
                     <div class="card-body-clip" style="">
-                        <div class="card-body-content px-10 pt-0 pb-3 text-deep">
+                        <div class="card-body-content px-10 pb-8 text-deep">
                         <div class="section-side-preview mb-8">
                             <aside class="legacy-wallet-preview legacy-wallet-flow-spacer has-saved-image" data-placeholder-clone="before-payzapp-wallet" aria-hidden="true">
                                 <div class="legacy-wallet-device">
@@ -3970,12 +4026,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                             <div>
                                 <div class="mb-5 relative">
-                                    <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What It Was Before and What the Bank Wanted</h3>
+                                    <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What it was before and What the bank wanted</h3>
                                     <p class="text-[15px] md:text-base mb-3" data-text-key="enablers-origin-body" spellcheck="false">Before Zapp Account, the product existed as <b>PayZapp Wallet</b>. <br>In its most complete form, it could support a wider set of payment actions. But most users only operated with MinKYC: the minimum verification needed to use PayZapp itself which offered limited options.</p>
-                                    <div class="capability-comparison my-6" data-kyc-view="full">
-                                        <div class="inline-flex border border-emerald-800/25 mb-5 text-[12px] font-display font-semibold rounded-[7px] overflow-hidden" role="tablist" aria-label="KYC capability comparison">
-                                            <button class="px-3 py-1.5" type="button" role="tab" data-kyc-tab="full" aria-selected="true">Full KYC wallet</button>
-                                            <button class="px-3 py-1.5 border-l border-emerald-800/25" type="button" role="tab" data-kyc-tab="minkyc" aria-selected="false">MinKYC wallet</button>
+                                    <div class="capability-comparison my-6" data-kyc-view="minkyc">
+                                        <div class="inline-flex border border-emerald-800/25 mb-5 text-[12px] font-display font-semibold rounded-lg overflow-hidden" role="tablist" aria-label="KYC capability comparison">
+                                            <button class="px-3 py-1.5" type="button" role="tab" data-kyc-tab="full" aria-selected="false">Full KYC wallet</button>
+                                            <button class="px-3 py-1.5 border-l border-emerald-800/25" type="button" role="tab" data-kyc-tab="minkyc" aria-selected="true">MinKYC wallet</button>
                                         </div>
                                         <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-7 gap-y-3 text-[14px] md:text-[15px]">
                                             <li class="flex items-center gap-2" data-capability-item="" data-min-kyc="available">
@@ -4011,15 +4067,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                     <p class="text-[15px] md:text-base" data-text-key="enablers-origin-positioning-body" spellcheck="false">This meant a large chunk of users were not using the complete form of PayZapp Wallet, even when they technically could. Many others could not access the full capabilities because they were non-bank customers. The bank wanted to reposition PayZapp Wallet as something closer to a digital payments account one could use for their discretionary spends. The name Zapp Account&nbsp;<span style="font-size: 15.84px;">was proposed</span>&nbsp;to support that shift and give the product a stronger role inside the PayZapp ecosystem.</p>
                                 </div>
 
-	                                <div class="mb-5 numbered-point mt-8">
-	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-kyc-heading" spellcheck="false">01 / Introduce Video KYC to Unlock Full Capabilities</h3>
+	                                <div class="mb-5 numbered-point">
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-kyc-heading" spellcheck="false"><span class="num-label">01 /</span> Introduce Video KYC To Unlock Full Capabilities</h3>
 	                                    <p class="text-[15px] md:text-base" data-text-key="enablers-kyc-body" spellcheck="false">The most immediate ask was Video KYC. Until then, non-bank customers did not have a way to the full capabilities of Zapp Account. Bank customers could complete 4 Digit card verification and unlock the complete experience, but everyone else was limited. Video KYC would change that y giving non-bank users a route to full access and made the product more open to the wider market.</p>
 	                                </div>
 
 	                                <div class="mb-5 numbered-point">
-	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-rebrand-heading" spellcheck="false">02 / Rebrand PayZapp Wallet to Zapp Account</h3>
+	                                    <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="enablers-rebrand-heading" spellcheck="false"><span class="num-label">02 /</span> Rebrand PayZapp Wallet to Zapp Account</h3>
 	                                    <p class="text-[15px] md:text-base" data-text-key="enablers-rebrand-body" spellcheck="false">This initiative covered the comprehensive rebranding of PayZapp Wallet to <b data-path-to-node="2,0" data-index-in-node="73">Zapp Account</b> within the app. The scope included updating all icons, nomenclature, and user nudges previously used for PayZapp Wallet education and promotion.</p>
-	                                    <div class="rebrand-phone-grid mt-10">
+	                                    <div class="rebrand-phone-grid mt-5">
 	                                        <div class="rebrand-phone-placeholder editable-placeholder has-saved-image" data-placeholder-id="enablers-rebrand-1" data-placeholder-name="Rebrand phone image 1" aria-label="Preview placeholder for rebrand phone image 1" tabindex="-1" data-hover-pan-zoom="" data-highlight-x="79.3" data-highlight-y="76.1" data-highlight-label-x="134.2" data-highlight-label-y="58.6" data-highlight-text="Wallet Anchor on Home Page" data-highlight-active="true" data-highlight-rw="20" data-highlight-rh="20" data-highlight-curve="16" data-highlight-arrow-gap="11">
 	                                            <div class="rebrand-phone-viewport">
 	                                            <div class="legacy-wallet-device">
@@ -4077,20 +4133,20 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
             <!-- Card 3: Objectives -->
             <article class="stack-section">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="objectives-kicker" spellcheck="false">What we wanted to achieve</h2>
-                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="objectives-summary" spellcheck="false">Increase wallet loads, improve adoption, and elevate the overall experience.</p>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="objectives-summary" spellcheck="false">Increase wallet loads, improve adoption, and elevate the overall experience.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
-                        <div class="px-10 pt-3 text-deep" style="padding-bottom: 2.2rem;">
+                        <div class="px-10 pt-3 pb-8 text-deep">
                         <p class="mb-5 text-[15px] md:text-base" data-text-key="objectives-intro" spellcheck="false">We were focusing on three core outcomes for Zapp Account:</p>
 
                         <div class="mb-5 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-adoption-heading" spellcheck="false">01 / Improve Adoption</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-adoption-heading" spellcheck="false"><span class="num-label">01 /</span> Improve Adoption</h3>
                             <p class="text-[15px] md:text-base" data-text-key="objectives-adoption-body" spellcheck="false">Adoption meant getting more people to enroll for Zapp Account in the first place. This became especially important because a large share of PayZapp users were new-to-bank or non-bank customers. With Video KYC, those users could now become eligible for the full Zapp Account experience. The opportunity was no longer limited to the existing bank customer base; we had to make the value proposition clear enough for this wider audience to sign up: speed, convenience, and security in one payment account.</p>
                             <div class="adoption-model mt-5">
                                 <div class="adoption-equation" aria-label="Adoption is directly proportional to load money amount plus monthly load amount plus frequency of loads">
@@ -4106,12 +4162,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-5 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-loads-heading" spellcheck="false">02 / Increase Wallet Loads via Auto Load</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-loads-heading" spellcheck="false"><span class="num-label">02 /</span> Increase Wallet Loads Via Auto Load</h3>
                             <p class="text-[15px] md:text-base" data-text-key="objectives-loads-body" spellcheck="false">Auto Load was one of the clearest ways to make Zapp Account more convenient and habit-forming. If users enabled it, they did not have to think about topping up the wallet each time they wanted to pay. It also became a strong signal that they intended to keep using Zapp Account and take fuller advantage of it as an everyday payments account.</p>
                         </div>
 
                         <div class="numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-experience-heading" spellcheck="false">03 / Elevate the Overall User Experience</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="objectives-experience-heading" spellcheck="false"><span class="num-label">03 /</span> Elevate The Overall User Experience</h3>
                             <p class="text-[15px] md:text-base" data-text-key="objectives-experience-body" spellcheck="false">The experience also needed to do a better job of selling and explaining the product inside PayZapp. The rebrand gave us room to refresh the visual language, make the landing page more load-centric, and improve how important features like auto load showed up. We also wanted clearer communication through nudges and progress states, so users could understand what Zapp Account offered, what they had already unlocked, and what they could do next. These were not just business targets; they came from our discussions with leadership about what Zapp Account needed to become.</p>
                         </div>
                     </div>
@@ -4120,29 +4176,29 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
             <!-- Card 3: Strategy -->
             <article class="stack-section">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="strategy-kicker" spellcheck="false">How did we approach it?</h2>
-                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="strategy-summary" spellcheck="false">Study what we already knew, some competitor research and design with independent rollouts in mind</p>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="strategy-summary" spellcheck="false">Study what we already knew, some competitor research and design with independent rollouts in mind</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
-                        <div class="px-10 pt-3 pb-16 text-deep">
-                        <div>
-                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-zapp-account-meaning-heading" spellcheck="false">What Was Zapp Account to Us?</h3>
+                        <div class="px-10 pt-0 pb-8 text-deep">
+                        <div class="mb-7">
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-zapp-account-meaning-heading" spellcheck="false">What was Zapp Account to us?</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-zapp-account-meaning-body" spellcheck="false">We believed Zapp Account was an ideal product for someone managing everyday fixed and discretionary spends, especially users with predictable monthly income and routine spending patterns. A capable secondary payments account for day-to-day money movement, making those spends easier to track because they were happening away from the primary bank account. Bank also looked at it as a low-barrier acquisition tool, bringing more users into a deeper financial relationship through a product they could use every day. With that role in mind, we looked at other payment apps to understand how they framed similar wallet-like accounts.</p>
                         </div>
 
                         <div class="mb-5 relative">
-                            <div class="sticky-note pop-on-expand" style="top: 5.5rem; left: -19.5rem; --rot: -3deg;">
-                                We also looked at international peers, like Revolut, Monzo, and Cash App.
+                            <div class="sticky-note pop-on-expand" style="top: 5.5rem; left: -19.5rem; --rot: -2deg;">
+                                We also looked at international peers, like Revolut.
                             </div>
                             <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-competitive-heading" spellcheck="false">The Competitors</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-competitive-body" spellcheck="false">We looked at the most prominent payment apps, that offered a digital wallet or were a digital wallet, to understand what they were prioritizing in this space: how they introduced wallet-like accounts, how onboarding was structured, how Mini KYC and full KYC states were handled, and which actions they made easiest to discover from the first few screens.</p>
                         </div>
-                        <div class="competitive-carousel mt-12" data-competitive-carousel="">
+                        <div class="competitive-carousel" data-competitive-carousel="">
                             <div class="competitive-carousel-stage" aria-label="Competitive research phone screenshot carousel">
                                 <div class="competitive-carousel-slide is-active" data-carousel-slide="" aria-hidden="false">
                                     <div class="rebrand-phone-placeholder editable-placeholder has-saved-image" data-placeholder-id="competitive-research-2" data-placeholder-name="Competitive research screen 2" aria-label="Preview placeholder for competitive research screen 2" tabindex="-1">
@@ -4272,7 +4328,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                             <p class="text-[15px] md:text-base" data-text-key="strategy-competitive-conclusion-body" spellcheck="false">The clearest pattern was that wallets were not treating full KYC as a compliance step alone. They were <span class="kw">using benefits, limits, and access to better wallet features</span> as the reason to complete it. We were also trying to understand things like how the long KYC journey was framed,&nbsp; what skipping the flow led to, and how users were given a reason to resume later and finish the upgrade. Across most competitors,<span class="kw"> the most prominent action was still add money</span>. The landing pages were designed to make loading the wallet feel quick, obvious, and possible in very few taps.</p>
                         </div>
 
-                        <div class="persona-id-shell mb-7 relative">
+                        <div class="persona-id-shell mb-7">
+                            <h4 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-persona-copy-heading" spellcheck="false">Who we were solving for</h4>
                             <div class="persona-card-stack" data-persona-stack="" aria-label="User profile examples">
                                 <div class="persona-id-card" data-persona-card="" data-stack-position="0" aria-hidden="false">
                                     <div class="persona-id-card-header">
@@ -4417,24 +4474,22 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 </div>
                             </div>
                             <div class="persona-id-copy">
-                                <h4 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-persona-copy-heading" spellcheck="false">Who We Were Solving For</h4>
                                 <p class="text-[15px] md:text-base" data-text-key="strategy-persona-copy-body" spellcheck="false">From existing data and market research shared by the bank, we knew that a large share of the <span class="kw">PayZapp user base was between 25-40 years old and came from Tier 2 and Tier 3 cities</span>. Within that group, salaried users had the strongest use case for Zapp Account, and this was a direction the bank believed in as well. Since PayZapp Wallet adoption was still limited, the immediate adoption goal was to <span class="kw">lean toward a user profile that closely represented existing PayZapp users</span> who had not meaningfully adopted the wallet so far.&nbsp;</p>
                             </div>
                         </div>
 
-                        <div class="mb-7 relative">
+                        <div class="mb-7">
                             <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-studywhat-heading" spellcheck="false">Understanding Existing Usage Patterns</h3>
                             <p class="mb-4 text-[15px] md:text-base" data-text-key="strategy-studywhat-body1" spellcheck="false">From the existing PayZapp Wallet usage data, we could see that most activity was concentrated around bills and recharges, largely because those were the easiest and most visible ways to use the wallet. <span class="kw">Auto-load feature adoption was especially lower</span>. That mattered because auto-load could drive more convenient usage and higher or more frequent load amounts, both of which were important goals for Zapp Account.</p>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-studywhat-body2" spellcheck="false"><span style="white-space-collapse: preserve;">A few observations from the PayZapp wallet users we interviewed:</span></p>
 
-                            <div class="mt-6 mb-7 py-4 space-y-3 relative">
-                                <div class="sticky-note pop-on-expand" style="top: 2.5rem; left: -19.5rem; --rot: 2.5deg;">Conducted ~30 user interviews over phone &amp; Google Meet</div>
+                            <div class="mt-6 mb-7 py-4 space-y-3">
                                 <div class="strategy-findings-grid">
                                     <div class="strategy-finding">
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding2" spellcheck="false">For most users, the wallet was primarily <b>a cashpoint conversion tool </b>- cashpoints earned on offers were added as wallet balance and spent on recharges and bill payments.</p>
                                     </div>
                                     <div class="strategy-finding relative">
-                                        <div class="sticky-note pop-on-expand" style="top: -0.25rem; left: -37.1rem; --rot: -1.5deg;">Swipe to Pay, offered by Zeta, is a quicker and safer way of authorizing payments using a single swipe. It's bound to the SIM.</div>
+                                        <div class="sticky-note pop-on-expand" style="top: -0.25rem; left: -37.1rem; --rot: -2deg;">Swipe to Pay, offered by Zeta, is a quicker and safer way of authorizing payments using a single swipe. It's bound to the SIM.</div>
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding1" spellcheck="false">Several wallet capabilities were less known, including Swipe to Pay, Tap and Pay and the benefits users could unlock with full KYC.</p>
                                     </div>
                                     <div class="strategy-finding">
@@ -4447,15 +4502,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
 
 
-                        <!-- Parent Group: The Strategy blueprint -->
-                        <div class="mt-12 strategy-blueprint-section">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" style="font-size: 1rem;" data-text-key="strategy-blueprint-heading" spellcheck="false">Using Insights to Derive Opportunities</h3>
-                            <p class="text-[15px] md:text-base text-deep mb-8" data-text-key="strategy-blueprint-body" spellcheck="false">Based on our research into competitor patterns, user profiles, and existing spending behaviors, we identified four core design opportunities to reposition the wallet. These strategic pillars—accompanied by a redefined access flowchart—formed the blueprint for our design revamp.</p>
-                            
-                            <!-- Indented Nested Container -->
-                            <div>
-                                <div class="mb-10 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-valueprop-heading" spellcheck="false">01 / Communicate Core Value Props for Zapp Account</h3>
+                        <div class="mb-10 numbered-point">
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-valueprop-heading" spellcheck="false"><span class="num-label">01 /</span> Communicate Core Value Props for Zapp Account</h3>
                             <p class="mb-5 text-[15px] md:text-base" data-text-key="strategy-valueprop-intro" spellcheck="false">We wanted our communication strategy to revolve around three core values, leveraging Zapp Account's capabilities to reinforce them across entry points and onboarding surfaces:</p>
 
                             <div class="value-prop-grid">
@@ -4465,8 +4513,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-fast-heading" spellcheck="false">Speed</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-fast-point-1" spellcheck="false">Quicker payment methods like Tap and Pay, scan-and-pay UPI, and Swipe to Pay.</li>
-                                        <li data-text-key="strategy-fast-point-2" spellcheck="false">Swipe to Pay, a pinless way to authorize upi payments without the need of a PIN with a swipe.</li>
+                                        <li data-text-key="strategy-fast-point-1" spellcheck="false">Quicker payment methods like Tap and Pay, scan-and-pay UPI, and Swipe to Pay</li>
+                                        <li data-text-key="strategy-fast-point-2" spellcheck="false">Swipe to Pay, a pinless way to authorize upi payments without the need of a PIN with a swipe</li>
                                     </ul>
                                 </div>
                                 <div class="value-prop-card">
@@ -4475,8 +4523,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-secure-heading" spellcheck="false">Security</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-secure-point-1" spellcheck="false">Trust &amp; Security from PayZapp's context as an HDFC Bank app.</li>
-                                        <li data-text-key="strategy-secure-point-2" spellcheck="false">Compliance expectations, safeguards, and trust markers around the account.</li>
+                                        <li data-text-key="strategy-secure-point-1" spellcheck="false">Trust &amp; Security from PayZapp's context as an HDFC Bank app</li>
+                                        <li data-text-key="strategy-secure-point-2" spellcheck="false">Compliance expectations, safeguards, and trust markers around the account</li>
                                     </ul>
                                 </div>
                                 <div class="value-prop-card">
@@ -4485,8 +4533,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <h4 class="font-display text-base font-semibold text-ink" data-text-key="strategy-convenient-heading" spellcheck="false">Convenience</h4>
                                     </div>
                                     <ul class="value-prop-points">
-                                        <li data-text-key="strategy-convenient-point-1" spellcheck="false">Versatile ways to pay &amp;&nbsp;Granular controls like payment limits, deactivation/activation of the account.</li>
-                                        <li data-text-key="strategy-convenient-point-3" spellcheck="false">Spends tracked separately, keeping your main bank statement uncluttered.</li>
+                                        <li data-text-key="strategy-convenient-point-1" spellcheck="false">Versatile ways to pay (e.g., UPI, virtual card transactions, etc.)</li>
+                                        <li data-text-key="strategy-convenient-point-2" spellcheck="false">Granular controls like&nbsp; payment limits, deactivation/activation of the account.</li>
+                                        <li data-text-key="strategy-convenient-point-3" spellcheck="false">A rich passbook that makes spends easier to review, keeping their main bank statement clean of small, frequent transaction entries</li>
                                     </ul>
                                 </div>
                             </div>
@@ -4494,38 +4543,48 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-10 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-kyc-heading" spellcheck="false">02 / Make Video KYC Clear and Trackable</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-kyc-heading" spellcheck="false"><span class="num-label">02 /</span> Make Video KYC Clear And Trackable</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-kyc-body" spellcheck="false">Video KYC could easily become a drop-off-heavy journey because it involved many steps. Users would need to share personal and PAN details, pay an applicable upgrade fee, prepare documents, ensure proper lighting, maintain a stable internet connection, complete the video verification, wait for the verification to go through, and then receive the upgraded Zapp Account. We decided to approach it as a clear timeline: break the journey into simple, one-step-at-a-time milestones, show what was done and what came next, and let users resume from the last completed step wherever the flow allowed it. Leaving the journey was not something we wanted to highlight, but it still needed to feel like a clear option rather than lost progress.</p>
 
                             <div class="kyc-stepper">
                                 <div class="kyc-stepper-label" data-text-key="strategy-kyc-stepper-label" spellcheck="false">Proposed Video KYC steps</div>
                                 <div class="kyc-step-grid">
                                     <div class="kyc-step-card">
-                                        <h4 class="font-display text-[14px] font-semibold text-ink" data-text-key="strategy-kyc-step1-heading" spellcheck="false">Verify PAN Details</h4>
+                                        <div class="kyc-step-number">01</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink" data-text-key="strategy-kyc-step1-heading" spellcheck="false">Verify PAN Details</h4>
+                                        <p class="text-[13px] leading-relaxed" data-text-key="strategy-kyc-step1-body" spellcheck="false">Start with PAN verification and explain why it was needed.</p>
                                     </div>
                                     <div class="kyc-step-card">
-                                        <h4 class="font-display text-[14px] font-semibold text-ink" data-text-key="strategy-kyc-step2-heading" spellcheck="false">Employment Details</h4>
+                                        <div class="kyc-step-number">02</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink" data-text-key="strategy-kyc-step2-heading" spellcheck="false">Employment Details</h4>
+                                        <p class="text-[13px] leading-relaxed" data-text-key="strategy-kyc-step2-body" spellcheck="false">Collect the required employment information in the next step.</p>
                                     </div>
                                     <div class="kyc-step-card">
-                                        <h4 class="font-display text-[14px] font-semibold text-ink" data-text-key="strategy-kyc-step3-heading" spellcheck="false">Zapp Account Upgrade Fee</h4>
+                                        <div class="kyc-step-number">03</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink" data-text-key="strategy-kyc-step3-heading" spellcheck="false">Zapp Account Upgrade Fee</h4>
+                                        <p class="text-[13px] leading-relaxed" data-text-key="strategy-kyc-step3-body" spellcheck="false">Show the applicable upgrade fee before the video step.</p>
                                     </div>
                                     <div class="kyc-step-card">
-                                        <h4 class="font-display text-[14px] font-semibold text-ink" data-text-key="strategy-kyc-step4-heading" spellcheck="false">Video KYC</h4>
+                                        <div class="kyc-step-number">04</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink" data-text-key="strategy-kyc-step4-heading" spellcheck="false">Video KYC</h4>
+                                        <p class="text-[13px] leading-relaxed" data-text-key="strategy-kyc-step4-body" spellcheck="false">Guide users into the live verification step with clear expectations.</p>
                                     </div>
                                     <div class="kyc-step-card">
-                                        <h4 class="font-display text-[14px] font-semibold text-ink" data-text-key="strategy-kyc-step5-heading" spellcheck="false">Unlock All Features</h4>
+                                        <div class="kyc-step-number">05</div>
+                                        <h4 class="font-display text-[14px] font-semibold mb-1.5 text-ink" data-text-key="strategy-kyc-step5-heading" spellcheck="false">Unlock All Features</h4>
+                                        <p class="text-[13px] leading-relaxed" data-text-key="strategy-kyc-step5-body" spellcheck="false">Confirm the upgrade and communicate full account capabilities.</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="mb-10 numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-loadcentric-heading" spellcheck="false">03 / Make the Home Page More Load Money-Centric</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-loadcentric-heading" spellcheck="false"><span class="num-label">03 /</span> Make The Home Page More Load Money-Centric</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-loadcentric-body" spellcheck="false">The older PayZapp Wallet landing page did not really push loading money as the hero action. It focused more heavily on the virtual card as many wallet capabilities could still be used contextually inside PayZapp payment flows, where users could simply choose PayZapp Wallet as the payment source. But that approach did not work as well for the positioning Zapp Account was trying to take. Since adoption was tied to monthly load amounts, and frequency of loads, making loading more prominent became a natural product decision. The first screen had to make balance the hero account state and Load Money the hero action. Users should be able to spot how much money they had, understand whether it was enough for upcoming payments, and notice cues like low balance before they ran into a payment failure. Most competitors also leaned towards a similar approach.</p>
                         </div>
 
                         <div class="numbered-point">
-                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-levers-heading" spellcheck="false">04 / Organize the Experience Around Contextual Levers</h3>
+                            <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="strategy-levers-heading" spellcheck="false"><span class="num-label">04 /</span> Organize The Experience Around Contextual Levers</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-levers-intro" spellcheck="false">Education came up as a consistent gap. Users didn't fully understand what Zapp Account offered, what they had already unlocked, or what action could move them forward. The challenge was addressing this <span class="kw">without too many dedicated education surfaces</span> — banners, tooltips, or separate screens that most users would skip past anyway.</p>
                         </div>
                         <div class="mt-10" data-scope-flow-placement=""><div class="scope-flow-shell">
@@ -4539,7 +4598,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 </div>
                             </div>
                             <div id="zapp-flow-before" class="scope-flow-panel" role="tabpanel" data-flow-panel="before" hidden="">
-                                <div class="scope-flowchart" data-scope-flow="before" aria-label="Before flowchart for Zapp Account access"><svg viewBox="0 0 577 846" width="531" height="779" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-before" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 286 169 L 286 188 L 286 188 L 286 207" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 295 373 L 295 378 Q 295 383 300 383 L 410 383 Q 424 383 424 397 L 424 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 277 373 L 277 378 Q 277 383 272 383 L 162 383 Q 148 383 148 397 L 148 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 480 L 424 499 L 424 499 L 424 518" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 656 L 424 676 L 424 676 L 424 696" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 148 480 L 148 499 L 148 499 L 148 518" marker-end="url(#scope-arrow-before)"></path></g><g><foreignObject x="146" y="18" width="280" height="143">
+                                <div class="scope-flowchart" data-scope-flow="before" aria-label="Before flowchart for Zapp Account access"><svg viewBox="0 0 577 956" width="531" height="880" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-before" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 286 169 L 286 188 L 286 188 L 286 207" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 295 373 L 295 378 Q 295 383 300 383 L 410 383 Q 424 383 424 397 L 424 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 277 373 L 277 378 Q 277 383 272 383 L 162 383 Q 148 383 148 397 L 148 411" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 480 L 424 499 L 424 499 L 424 518" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 424 656 L 424 731 L 424 731 L 424 806" marker-end="url(#scope-arrow-before)"></path><path class="scope-edge" d="M 148 480 L 148 499 L 148 499 L 148 518" marker-end="url(#scope-arrow-before)"></path></g><g><foreignObject x="146" y="18" width="280" height="143">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Onboarding From PayZapp</h3>
                     <p class="text-[14px]">Users entered the wallet journey from PayZapp, but the path still depended on whether they were already bank customers.</p>
@@ -4563,13 +4622,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     <p class="text-[14px]">Bank customers could complete the card-based check.</p>
                     
                 </div>
-            </foreignObject><foreignObject x="18" y="526" width="260" height="124">
+            </foreignObject><foreignObject x="18" y="526" width="260" height="234">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Zapp Account Limited Capabilities</h3>
                     <p class="text-[14px]">The non-bank path stayed limited to everyday wallet use.</p>
-                    
+                    <ul><li>Bills and recharges</li><li>Online payments with virtual card</li><li>Peer-to-merchant transfers</li><li>Tap-and-pay transactions</li></ul>
                 </div>
-            </foreignObject><foreignObject x="289" y="704" width="270" height="124">
+            </foreignObject><foreignObject x="289" y="814" width="270" height="124">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Zapp Account Full Capabilities</h3>
                     <p class="text-[14px]">Bank customers could unlock the complete account experience.</p>
@@ -4578,7 +4637,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             </foreignObject></g></svg></div>
                             </div>
                             <div id="zapp-flow-after" class="scope-flow-panel" role="tabpanel" data-flow-panel="after">
-                                <div class="scope-flowchart" data-scope-flow="after" aria-label="After flowchart for Zapp Account access"><svg viewBox="0 0 522 1075" width="481" height="989" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-after" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 263.5 170 L 263.5 189 L 263.5 189 L 263.5 208" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 263.5 346 L 263.5 365 L 263.5 365 L 263.5 384" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 272.5 550 L 272.5 555 Q 272.5 560 277.5 560 L 380 560 Q 394 560 394 574 L 394 588" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 254.5 550 L 254.5 555 Q 254.5 560 249.5 560 L 147 560 Q 133 560 133 574 L 133 588" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 394 657 L 394 676 L 394 676 L 394 695" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 133 657 L 133 676 L 133 676 L 133 695" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 394 833 L 394 847 Q 394 861 380 861 L 290.5 861 Q 272.5 861 272.5 879 L 272.5 905" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 133 833 L 133 847 Q 133 861 147 861 L 236.5 861 Q 254.5 861 254.5 879 L 254.5 905" marker-end="url(#scope-arrow-after)"></path></g><g><foreignObject x="133.5" y="18" width="260" height="144">
+                                <div class="scope-flowchart" data-scope-flow="after" aria-label="After flowchart for Zapp Account access"><svg viewBox="0 0 522 1096" width="481" height="1009" role="img" aria-label="Zapp Account scope flow"><defs><marker id="scope-arrow-after" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b3b3b3"></path></marker></defs><g><path class="scope-edge" d="M 263.5 170 L 263.5 189 L 263.5 189 L 263.5 208" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 263.5 346 L 263.5 365 L 263.5 365 L 263.5 384" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 272.5 550 L 272.5 555 Q 272.5 560 277.5 560 L 380 560 Q 394 560 394 574 L 394 588" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 254.5 550 L 254.5 555 Q 254.5 560 249.5 560 L 147 560 Q 133 560 133 574 L 133 588" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 394 657 L 394 676 L 394 676 L 394 695" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 133 657 L 133 676 L 133 676 L 133 695" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 394 833 L 394 864 Q 394 882 376 882 L 290.5 882 Q 272.5 882 272.5 900 L 272.5 926" marker-end="url(#scope-arrow-after)"></path><path class="scope-edge" d="M 133 854 L 133 868 Q 133 882 147 882 L 236.5 882 Q 254.5 882 254.5 900 L 254.5 926" marker-end="url(#scope-arrow-after)"></path></g><g><foreignObject x="133.5" y="18" width="260" height="144">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card is-worked">
                     <h3 class="text-lg font-bold text-ink">Entry Points Across The App</h3>
                     <p class="text-[14px]">Create banners, hooks, and other surfaces that brought users into the Zapp Account journey.</p>
@@ -4608,14 +4667,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     <p class="text-[14px]">Bank customers could continue through the card-based check.</p>
                     
                 </div>
-            </foreignObject><foreignObject x="18" y="703" width="230" height="122">
+            </foreignObject><foreignObject x="18" y="703" width="230" height="143">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card is-worked">
                     <h3 class="text-lg font-bold text-ink">Video KYC</h3>
                     <p class="text-[14px]">Non-bank users could complete Video KYC to unlock the same full capabilities.</p>
                     
                 </div>
-            </foreignObject><foreignObject x="123.5" y="913" width="280" height="144">
-                <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card is-worked">
+            </foreignObject><foreignObject x="123.5" y="934" width="280" height="144">
+                <div xmlns="http://www.w3.org/1999/xhtml" class="scope-node-card">
                     <h3 class="text-lg font-bold text-ink">Zapp Account Full Capabilities</h3>
                     <p class="text-[14px]">Both bank and non-bank customers now had a clear path to the complete account experience.</p>
                     
@@ -4624,21 +4683,21 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                             </div>
                         </div></div>
                     </div>
-                </div></div></div>
+                </div>
             </article>
 
             <!-- Card 4: Execution -->
             <article class="stack-section has-floating-preview">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="execution-kicker" spellcheck="false">How did we solve it?</h2>
-	                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="execution-summary" spellcheck="false">We’ll follow a non-bank PayZapp user’s path to unlocking the full capabilities of Zapp Account, while unpacking the design decisions behind each step.</p>
+	                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="execution-summary" spellcheck="false">We’ll follow a non-bank PayZapp user’s path to unlocking the full capabilities of Zapp Account, while unpacking the design decisions behind each step.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 1113.8828125px; --floating-preview-left: 1588.875px;">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 2347.3125px; --floating-preview-left: 1525.515625px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -4669,26 +4728,33 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </aside>
                     <div class="card-body-clip" style="">
-                        <div class="card-body-content px-10 pt-3 pb-16 text-deep">
+                        <div class="card-body-content px-10 pb-8 text-deep">
                         <div class="execution-journey-stage">
                             <div class="execution-journey-copyrail">
                                 <div class="execution-journey-intro">
                                     <p class="mb-4 text-[15px] md:text-base" data-text-key="execution-journey-intro-1" spellcheck="false">To explain the solution clearly, we’ll follow the journey of a non-bank PayZapp user trying to unlock the full capabilities of Zapp Account.</p>
                                     <p class="mb-4 text-[15px] md:text-base" data-text-key="execution-journey-intro-2" spellcheck="false">This path lets us move screen by screen while also unpacking the design decisions behind each step: where the user first encounters Zapp Account, how the value is explained, what moves them toward Video KYC, and how the product helps them understand progress until the account is fully unlocked.</p>
-                                    <!-- Filler runway: extra read-through length before the timeline engages so the
-                                         section opens with some free scroll instead of immediately taking control.
-                                         Safe to trim/remove later. -->
                                     <p class="mb-6 text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-1" spellcheck="false">Before we dive into the actual flows, here is what helped me close the designs faster.</p>
 
                                     <div class="mb-5 relative">
                                         <div class="sticky-note pop-on-expand" style="top: 0.5rem; right: -19.5rem; --rot: 1.5deg;">These plugins were one of the ways I found to use AI meaningfully in my workflow. Walked the team through it at a dedicated AI event we ran across design functions at Zeta.</div>
                                         <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-plugins-heading" spellcheck="false">Built Two Plugins That Helped Me Move Faster</h3>
-                                        <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project — <a href="#" class="font-medium text-ink" style="text-decoration: underline; text-decoration-color: rgba(39,71,224,0.35); text-underline-offset: 3px; text-decoration-thickness: 1.5px;">Fair Colors</a> and <a href="#" class="font-medium text-ink" style="text-decoration: underline; text-decoration-color: rgba(39,71,224,0.35); text-underline-offset: 3px; text-decoration-thickness: 1.5px;">Figma Recall</a> — both of which have their own case studies. Fair Colors let me tokenize the palette so color changes propagated everywhere without manually updating individual values. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.</p>
+                                        <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project — Fair Colors and Figma Recall — both of which have their own case studies. Fair Colors let me tokenize the palette so color changes propagated everywhere without manually updating individual values. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.</p>
                                     </div>
 
                                     <div class="mb-6">
                                         <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-color-heading" spellcheck="false">The Color Direction</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-color-body" spellcheck="false">We experimented with a few color directions, but the blueish primary theme with green accents was the clearest fit - partly because it sat naturally within PayZapp's existing color scheme and design system, without needing to fight against it. Green came in specifically for badges, nudges, and anywhere the UI needed to surface a value or highlight an action. The broader direction was pastel: soft, easy on the eye, nothing too loud. We weren't trying to stand out through contrast or bold color; we wanted the interface to feel calm and trustworthy, in a way that still felt at home inside PayZapp. Spacing and corner radii weren't something we had to experiment with much - those were inherited from PayZapp's existing design system.</p>
+                                    </div>
+                                    <div class="journey-nav-hint pop-on-expand" role="note">
+                                        <div class="journey-nav-hint-text">
+                                            <span class="journey-nav-hint-title" data-text-key="journey-nav-hint-title" spellcheck="false">Use your arrow keys to move through the flow</span>
+                                            <span class="journey-nav-hint-sub" data-text-key="journey-nav-hint-sub" spellcheck="false">Step forward and back, one screen at a time — scrolling works too.</span>
+                                        </div>
+                                        <div class="journey-nav-hint-keys" aria-hidden="true">
+                                            <span class="journey-nav-key journey-nav-key--up">↑</span>
+                                            <span class="journey-nav-key journey-nav-key--down">↓</span>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -4745,8 +4811,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
                                 <section class="execution-journey-section" data-journey-section="unlock">
                                     <div class="execution-journey-section-copy">
-                                        <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing the Unlock Journey</div>
-                                        <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilities</h3>
+                                        <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing The Unlock Journey</div>
+                                        <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilites</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-unlock-section-body" spellcheck="false">After KYC, the product had to make the change feel concrete: the user now had access to the full capabilities of Zapp Account, and the experience needed to guide them back into useful actions.</p>
                                     </div>
                                     <div class="execution-journey-options">
@@ -4795,8 +4861,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                     <div class="execution-journey-options">
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-recap" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-recap-kicker" spellcheck="false">Extra step 01</div><div class="execution-option-title" data-text-key="execution-extra-recap-title" spellcheck="false">Welcome Animation</div><p class="execution-option-body" data-text-key="execution-extra-recap-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-two" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-two-kicker" spellcheck="false">Extra step 02</div><div class="execution-option-title" data-text-key="execution-extra-two-title" spellcheck="false">A Load-Centric Homepage</div><p class="execution-option-body" data-text-key="execution-extra-two-body" spellcheck="false">We shifted the homepage layout to prioritize loading funds as the primary action. To capitalize on this intent, we positioned the Auto-Load trigger adjacent to the balance, ensuring it felt discoverable at the exact moment users think about funding their account.</p></button>
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-three" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-three-kicker" spellcheck="false">Extra step 03</div><div class="execution-option-title" data-text-key="execution-extra-three-title" spellcheck="false">Let the homepage explain itself</div><p class="execution-option-body" data-text-key="execution-extra-three-body" spellcheck="false">We introduced contextual nudges that allow the core anchors and action buttons to act as their own explainers—changing dynamically based on the user's lifecycle with Zapp Account to drive discovery and native education.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-two" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-two-kicker" spellcheck="false">Extra step 02</div><div class="execution-option-title" data-text-key="execution-extra-two-title" spellcheck="false">The Home Page</div><p class="execution-option-body" data-text-key="execution-extra-two-body" spellcheck="false">While load money was our most prominent action on the home page we placed auto-load near it, where the intent to keep the account funded was already clear and Auto-Load felt more discoverable in context.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-three" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-three-kicker" spellcheck="false">Extra step 03</div><div class="execution-option-title" data-text-key="execution-extra-three-title" spellcheck="false">Contextual Nudges that reinforce value and educate</div><p class="execution-option-body" data-text-key="execution-extra-three-body" spellcheck="false">The core anchors acted as their own explainers along with action buttons with the help of the education nudges that would change contextually to drive discovery and education and dynamically based on the user's lifecyle with Zapp Account.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-four" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-four-kicker" spellcheck="false">Extra step 04</div><div class="execution-option-title" data-text-key="execution-extra-four-title" spellcheck="false">Value first offers</div><p class="execution-option-body" data-text-key="execution-extra-four-body" spellcheck="false">One of the simpler and main aspect of this section was the value first communication of the offers wthout their association with the task to be done. This was done to keep the notion cashpoint clear for user to understand as the badge on the top right 1CP = ₹1 already establishes what it stood for.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-five" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-five-kicker" spellcheck="false">Extra step 05</div><div class="execution-option-title" data-text-key="execution-extra-five-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-five-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-six" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-six-kicker" spellcheck="false">Extra step 06</div><div class="execution-option-title" data-text-key="execution-extra-six-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-six-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
@@ -4813,21 +4879,21 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
             <!-- Card 5: Impact -->
             <article class="stack-section has-floating-preview">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="impact-kicker" spellcheck="false">What were the results?</h2>
-                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="impact-summary" spellcheck="false">Double-digit month-on-month growth in spends and loads, ~20% of wallet loaders on Auto-Load, and a climb into the top 5 digital wallet accounts in the industry</p>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="impact-summary" spellcheck="false">Double-digit month-on-month growth in spends and loads, ~20% of wallet loaders on Auto-Load, and a climb into the top 5 digital wallet accounts in the industry</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 5442.96875px; --floating-preview-left: 1518.390625px;">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview img-placeholder editable-placeholder has-saved-image" data-placeholder-id="impact-results-visual" data-placeholder-name="Zapp Account Growth Visual" aria-label="Preview placeholder for Zapp Account Growth Visual" tabindex="-1" style="--floating-preview-top: 1797.890625px; --floating-preview-left: 1455.03125px;">
                         <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                     </aside>
 
                     <div class="card-body-clip" style="">
-                        <div class="card-body-content impact-results-content px-10 pt-3 pb-16 text-deep">
+                        <div class="card-body-content impact-results-content px-10 pb-8 text-deep">
                             <p class="mb-8 text-[15px] md:text-base" data-text-key="impact-intro" spellcheck="false">The revised experience helped make Zapp Account easier to understand, easier to enter, and easier to use as a place to load and spend money inside PayZapp.</p>
 
                         <!-- Results dashboard (six-month performance) -->
@@ -4866,12 +4932,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#e2f4ec] pointer-events-none z-10 w-[8px] h-[8px]" style="left: 90%; top: 25%; border-width: 2.5px; border-color: rgba(31, 138, 95, 0.70);"></div>
 
                                     <div class="relative z-10 flex flex-col items-start">
-                                        <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(31, 138, 95, 0.08); border-color: rgba(31, 138, 95, 0.18); color: #1f8a5f; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;">April 2025 – September 2025</div>
+                                        <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(31, 138, 95, 0.08); border-color: rgba(31, 138, 95, 0.18); color: #1f8a5f; font-family: var(--font-mono);">April 2025 – September 2025</div>
                                     </div>
                                     <div class="relative z-10 flex flex-col gap-3 mt-4">
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="2.1" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~2.1×</div>
-                                            <div class="bento-cap">Growth in Monthly Spends</div>
+                                            <div class="bento-cap">Linear spends growth</div>
                                         </div>
                                         
                                         <!-- Subtle Divider -->
@@ -4880,7 +4946,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <!-- Loads Cumulative Growth -->
                                         <div>
                                             <div class="bento-num" data-countup="" data-to="1.5" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~1.5×</div>
-                                            <div class="bento-cap">Growth in Monthly Loads</div>
+                                            <div class="bento-cap">Linear loads growth</div>
                                         </div>
                                     </div>
                                 </div>
@@ -4949,14 +5015,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                  </div>
                             </div>
 
-                            <div class="flex gap-3 items-stretch" style="overflow: visible;">
-                                <div class="results-card results-ranking flex-1" style="position: relative;">
-                                    <div class="sticky-note pop-on-expand" style="top: 1.25rem; left: -18rem; --rot: -2deg;">We weren't even in the race — and six months later, we're in the top 5.</div>
-                                    <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[10px] uppercase font-mono tracking-wider font-bold select-none" style="background: #ffffff; color: #6b7280; border-radius: 4px; border: 1px solid rgba(0,0,0,0.12);">as of July 2025</div>
-                                    <div class="results-leaderboard-wrapper" style="padding: 6px;">
+                            <div class="results-card results-ranking">
+                                <div class="sticky-note pop-on-expand" style="top: 1.25rem; left: -18rem; --rot: -2deg;">We weren't even in the race — and six months later, we're in the top 5.</div>
+                                <div class="results-ranking-container">
+                                    <div class="results-leaderboard-wrapper">
                                         <div class="results-card-head">
-                                            <span class="results-card-label">Top Digital Wallets by Monthly Spends</span>
-                                        </div>
+                                             <span class="results-card-label">Breaking into the top digital wallet accounts</span>
+                                         </div>
                                         <ol class="results-leaderboard">
                                             <li class="results-rank-row"><span class="results-rank">#1</span><span class="results-rank-name">FamPay</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="100" data-barred="true" style="width: 100%;"></div></div><span class="results-rank-val">₹800 Cr</span></li>
                                             <li class="results-rank-row"><span class="results-rank">#2</span><span class="results-rank-name">PhonePe</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="100" data-barred="true" style="width: 100%;"></div></div><span class="results-rank-val">₹800 Cr</span></li>
@@ -4965,17 +5030,21 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                             <li class="results-rank-row is-self"><span class="results-rank">#5</span><span class="results-rank-name">Zapp Account</span><div class="results-rank-track"><div class="results-rank-fill" data-bar="19" data-barred="true" style="width: 19%;"></div></div><span class="results-rank-val">₹150 Cr</span></li>
                                         </ol>
                                     </div>
-                                </div>
-                                <div class="results-today-callout" style="padding-top: 0.9rem; padding-bottom: 0.65rem;">
-                                    <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #ffffff; color: #1f8a5f; border-radius: 4px;">as of February 2026</div>
-                                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                                        <div class="results-today-v">~₹500 Cr</div>
-                                        <div class="results-today-s">in Monthly Spends</div>
-                                    </div>
-                                    <div class="w-[20%]" style="height: 1px; background: rgba(31, 138, 95, 0.16); margin: 0.5rem 0 0.75rem;"></div>
-                                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
-                                        <div class="results-today-v">~₹600 Cr</div>
-                                        <div class="results-today-s">in Monthly Loads</div>
+                                    <div class="results-today-callout">
+                                        <!-- Top-edge timestamp badge overlapping the border -->
+                                        <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: #FAF8F5; color: #1f8a5f; border-radius: 4px;">as of February 2026</div>
+                                        
+                                        <div class="mb-3">
+                                            <div class="results-today-v">~₹500 Cr</div>
+                                            <div class="results-today-s">in Monthly Spends — up from ₹150 Cr (April 2025)</div>
+                                        </div>
+                                        
+                                        <div class="w-[20%] my-2" style="height: 1px; background: rgba(31, 138, 95, 0.16);"></div>
+                                        
+                                        <div>
+                                            <div class="results-today-v">~₹600 Cr</div>
+                                            <div class="results-today-s">in Monthly Loads</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -4984,21 +5053,21 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 </div>
 
             </div>
-        </article></div>
-            
+        </article>
+
 
             <!-- Card 6: What's Next -->
             <article class="stack-section">
-                <div class="section-header py-8 pl-10 pr-20">
+                <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="next-kicker" spellcheck="false">What's Next?</h2>
-                            <p class="text-xl md:text-2xl font-medium text-deep leading-snug font-display" data-text-key="next-summary" spellcheck="false">Turning the Zapp Account into a full money dashboard inside the PayZapp ecosystem.</p>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="next-summary" spellcheck="false">Turning the Zapp Account into a full money dashboard inside the PayZapp ecosystem.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
-                        <div class="px-10 pt-3 pb-16 text-deep">
+                        <div class="px-10 pt-3 pb-8 text-deep">
                         <p class="mb-4 text-[15px] md:text-base" data-text-key="next-body1" spellcheck="false">Phase 1 was foundational. It successfully migrated the user base to the new mental model of the Zapp Account.</p>
                         <p class="mb-16 text-[15px] md:text-base" data-text-key="next-body2" spellcheck="false">Version 2 (currently in progress) builds on this by evolving the Zapp Account into a full dashboard view. This will integrate the account even deeper into the broader PayZapp ecosystem, creating a seamless, interconnected financial hub for the user.</p>
 
@@ -5010,7 +5079,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 </div>
             </article>
 
-        
+        </div>
     </main>
 
     <div id="text-edit-toolbar" hidden="">
@@ -5018,6 +5087,264 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         <button id="text-edit-download-btn" type="button">Download</button>
         <button id="text-edit-save-btn" type="button" disabled="">Save</button>
     </div>
+
+    <!-- Edit-mode only: design controls (top-left). Accent hue + spacing tokens.
+         Both write inline CSS vars onto <html> and flag an unsaved change, so the
+         existing bottom-right Save button persists them into the saved file.
+         The panel itself is generated by the script below (see buildDesignControlPanel),
+         so it self-heals after the save step strips it from the on-disk file. -->
+
+    
+    
+
+    <style>
+        #design-control {
+            position: fixed; top: 16px; left: 16px; z-index: 9999;
+            width: 232px; padding: 14px 15px;
+            background: rgba(250, 248, 245, 0.94); backdrop-filter: blur(10px);
+            border: 1px solid #EBE5DC; border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(44, 38, 33, 0.14);
+            font-family: 'Instrument Sans', sans-serif;
+            max-height: calc(100vh - 32px); overflow-y: auto;
+        }
+        #design-control .dc-divider { height: 1px; background: #EBE5DC; margin: 13px 0; }
+        #design-control .dc-heading {
+            font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+            color: #A89B8F; margin-bottom: 10px;
+        }
+        #design-control .ahc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        #design-control .ahc-swatch {
+            width: 16px; height: 16px; border-radius: 50%;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%)); border: 1px solid rgba(0, 0, 0, 0.12);
+        }
+        #design-control .ahc-title { font-size: 12px; font-weight: 600; color: #2C2621; letter-spacing: 0.02em; }
+        #design-control .ahc-value { margin-left: auto; font-size: 11px; color: #7A6F64; font-variant-numeric: tabular-nums; }
+        #design-control .dc-field { margin-bottom: 12px; }
+        #design-control .dc-field:last-child { margin-bottom: 0; }
+        #design-control .dc-field-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 5px; }
+        #design-control .dc-label { font-size: 11.5px; color: #2C2621; }
+        #design-control .dc-val { margin-left: auto; font-size: 11px; color: #7A6F64; font-variant-numeric: tabular-nums; }
+        #design-control input[type=range] {
+            width: 100%; height: 6px; border-radius: 6px; -webkit-appearance: none; appearance: none; cursor: pointer;
+            background: #E3DBD0;
+        }
+        #design-control input[type=range].dc-hue,
+        #design-control input[type=range].dc-sat,
+        #design-control input[type=range].dc-lit {
+            height: 10px;
+        }
+        #design-control input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 15px; height: 15px; border-radius: 50%;
+            background: #fff; border: 2px solid #2C2621; cursor: grab; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        #design-control input[type=range]::-moz-range-thumb {
+            width: 15px; height: 15px; border-radius: 50%; background: #fff; border: 2px solid #2C2621; cursor: grab;
+        }
+        #design-control #dc-reset {
+            margin-top: 13px; width: 100%; padding: 6px; font-size: 11px; font-weight: 600;
+            background: transparent; border: 1px solid #D5C9BA; border-radius: 8px; color: #5C5146; cursor: pointer;
+        }
+        #design-control #dc-reset:hover { background: #F4EFEA; }
+        #design-control .dc-note { margin-top: 9px; font-size: 10px; line-height: 1.4; color: #A89B8F; }
+        #design-control .dc-check { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #2C2621; cursor: pointer; }
+        #design-control .dc-check input { width: 14px; height: 14px; cursor: pointer; accent-color: #2C2621; margin: 0; }
+    </style>
+    
+    <script>
+        (function () {
+            const HSL_KEY  = 'zapp-accent-hsl';
+            const SPACE_KEY = 'zapp-spacing-tokens';
+            const DEF_H = 14, DEF_S = 56, DEF_L = 55;
+            const root = document.documentElement;
+
+            // Spacing tokens exposed (only ones actually used in the stylesheet). Values in rem.
+            const SPACING = [
+                { v: '--section-gap',                   label: 'Section gap',            def: 4,    min: 0, max: 8, step: 0.05 },
+                { v: '--block-gap',                     label: 'Block gap',              def: 3,    min: 0, max: 6, step: 0.05 },
+                { v: '--heading-body-gap',              label: 'Heading–body gap',  def: 0.95, min: 0, max: 3, step: 0.05 },
+                { v: '--section-heading-gap-collapsed', label: 'Section title (collapsed)', def: 0.9,  min: 0, max: 3, step: 0.05 },
+                { v: '--section-heading-gap-expanded',  label: 'Section title (expanded)',  def: 0.35, min: 0, max: 2, step: 0.05 },
+            ];
+
+            // ---- Apply saved HSL on every load (so choices show everywhere, not just edit mode) ----
+            let savedHsl = { h: DEF_H, s: DEF_S, l: DEF_L };
+            try {
+                const raw = localStorage.getItem(HSL_KEY);
+                if (raw) savedHsl = Object.assign(savedHsl, JSON.parse(raw));
+                // backward compat: old single-hue key
+                const oldH = localStorage.getItem('zapp-accent-hue');
+                if (oldH !== null && !JSON.parse(raw || '{}').h) savedHsl.h = Number(oldH);
+            } catch (e) {}
+            root.style.setProperty('--accent-h', savedHsl.h);
+            root.style.setProperty('--accent-s', savedHsl.s);
+            root.style.setProperty('--accent-l', savedHsl.l);
+
+            let savedSpacing = {};
+            try { savedSpacing = JSON.parse(localStorage.getItem(SPACE_KEY) || '{}'); } catch (e) { savedSpacing = {}; }
+            Object.keys(savedSpacing).forEach(function (k) {
+                root.style.setProperty(k, savedSpacing[k] + 'rem');
+            });
+
+            // ---- Section separators toggle (only override the baked-in value if a choice was saved) ----
+            const SEP_KEY = 'zapp-section-separators';
+            const SEP_COLOR_ON = 'rgba(71, 71, 71, 0.12)';
+            const savedSep = localStorage.getItem(SEP_KEY);
+            if (savedSep === 'off') root.style.setProperty('--section-separator-color', 'transparent');
+            else if (savedSep === 'on') root.style.setProperty('--section-separator-color', SEP_COLOR_ON);
+
+            const isEditMode = new URLSearchParams(window.location.search).get('edit') === 'true';
+            let ctrl = document.getElementById('design-control');
+            if (!isEditMode) { if (ctrl) ctrl.remove(); return; }
+            if (!ctrl) ctrl = buildDesignControlPanel();
+            ctrl.hidden = false;
+
+            function buildDesignControlPanel() {
+                const el = document.createElement('div');
+                el.id = 'design-control';
+                el.innerHTML =
+                    '<div class="dc-heading">Accent color</div>' +
+                    '<div class="ahc-row">' +
+                        '<span class="ahc-swatch" id="ahc-swatch"></span>' +
+                        '<span class="ahc-title">Accent</span>' +
+                        '<span class="ahc-value" id="ahc-value"></span>' +
+                    '</div>' +
+                    '<div class="dc-field"><div class="dc-field-row"><span class="dc-label">Hue</span><span class="dc-val" id="ahc-h-val"></span></div>' +
+                        '<input type="range" class="dc-hue" id="ahc-h-slider" min="0" max="360" step="1" value="14"></div>' +
+                    '<div class="dc-field"><div class="dc-field-row"><span class="dc-label">Saturation</span><span class="dc-val" id="ahc-s-val"></span></div>' +
+                        '<input type="range" class="dc-sat" id="ahc-s-slider" min="0" max="100" step="1" value="56"></div>' +
+                    '<div class="dc-field"><div class="dc-field-row"><span class="dc-label">Lightness</span><span class="dc-val" id="ahc-l-val"></span></div>' +
+                        '<input type="range" class="dc-lit" id="ahc-l-slider" min="0" max="100" step="1" value="55"></div>' +
+                    '<div class="dc-divider"></div>' +
+                    '<div class="dc-heading">Spacing</div>' +
+                    '<div id="dc-spacing"></div>' +
+                    '<div class="dc-divider"></div>' +
+                    '<div class="dc-heading">Layout</div>' +
+                    '<label class="dc-check"><input type="checkbox" id="dc-separators"><span>Section separators</span></label>' +
+                    '<button type="button" id="dc-reset">Reset to defaults</button>' +
+                    '<div class="dc-note">Changes are written into the page when you press Save.</div>';
+                document.body.appendChild(el);
+                return el;
+            }
+
+            function markChange(key) {
+                if (typeof window.__caseStudyMarkChange === 'function') window.__caseStudyMarkChange(key);
+                else (window.__caseStudyPendingChanges = window.__caseStudyPendingChanges || []).push(key);
+            }
+            function fmtRem(n) { return (Math.round(n * 100) / 100).toString().replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '') + 'rem'; }
+
+            // ---- Accent H / S / L sliders ----
+            const hSlider = document.getElementById('ahc-h-slider');
+            const sSlider = document.getElementById('ahc-s-slider');
+            const lSlider = document.getElementById('ahc-l-slider');
+            const hVal    = document.getElementById('ahc-h-val');
+            const sVal    = document.getElementById('ahc-s-val');
+            const lVal    = document.getElementById('ahc-l-val');
+            const summary = document.getElementById('ahc-value');
+            const swatch  = document.getElementById('ahc-swatch');
+
+            hSlider.value = savedHsl.h;
+            sSlider.value = savedHsl.s;
+            lSlider.value = savedHsl.l;
+
+            function updateAccentUI(h, s, l) {
+                hVal.textContent    = h + '°';
+                sVal.textContent    = s + '%';
+                lVal.textContent    = l + '%';
+                summary.textContent = h + '  ' + s + '%  ' + l + '%';
+                swatch.style.background = 'hsl(' + h + ' ' + s + '% ' + l + '%)';
+                // Update slider track gradients
+                const stops = [0,60,120,180,240,300,360].map(function(deg){ return 'hsl('+deg+' '+s+'% '+l+'%)'; }).join(',');
+                hSlider.style.background = 'linear-gradient(to right,' + stops + ')';
+                sSlider.style.background = 'linear-gradient(to right,hsl('+h+' 0% '+l+'%),hsl('+h+' 100% '+l+'%))';
+                lSlider.style.background = 'linear-gradient(to right,hsl('+h+' '+s+'% 0%),hsl('+h+' '+s+'% 50%),hsl('+h+' '+s+'% 100%))';
+            }
+            updateAccentUI(savedHsl.h, savedHsl.s, savedHsl.l);
+
+            function onHslChange() {
+                const h = Number(hSlider.value), s = Number(sSlider.value), l = Number(lSlider.value);
+                root.style.setProperty('--accent-h', h);
+                root.style.setProperty('--accent-s', s);
+                root.style.setProperty('--accent-l', l);
+                updateAccentUI(h, s, l);
+                savedHsl = { h: h, s: s, l: l };
+                localStorage.setItem(HSL_KEY, JSON.stringify(savedHsl));
+                markChange('design:accent-hsl');
+            }
+            hSlider.addEventListener('input', onHslChange);
+            sSlider.addEventListener('input', onHslChange);
+            lSlider.addEventListener('input', onHslChange);
+
+            // ---- Spacing sliders (generated) ----
+            const wrap = document.getElementById('dc-spacing');
+            SPACING.forEach(function (t) {
+                const start = (t.v in savedSpacing) ? Number(savedSpacing[t.v]) : t.def;
+                const field = document.createElement('div');
+                field.className = 'dc-field';
+                field.innerHTML =
+                    '<div class="dc-field-row"><span class="dc-label">' + t.label + '</span>' +
+                    '<span class="dc-val"></span></div>' +
+                    '<input type="range" min="' + t.min + '" max="' + t.max + '" step="' + t.step + '" value="' + start + '">';
+                const val = field.querySelector('.dc-val');
+                const input = field.querySelector('input');
+                val.textContent = fmtRem(start);
+                input.addEventListener('input', function (e) {
+                    const n = Number(e.target.value);
+                    root.style.setProperty(t.v, n + 'rem');
+                    val.textContent = fmtRem(n);
+                    savedSpacing[t.v] = n;
+                    localStorage.setItem(SPACE_KEY, JSON.stringify(savedSpacing));
+                    markChange('design:' + t.v);
+                });
+                t._input = input; t._val = val;
+                wrap.appendChild(field);
+            });
+
+            // ---- Section separators checkbox ----
+            const sepCheck = document.getElementById('dc-separators');
+            // Reflect current state: saved choice wins, else read the baked-in inline value.
+            if (savedSep === 'off') sepCheck.checked = false;
+            else if (savedSep === 'on') sepCheck.checked = true;
+            else sepCheck.checked = root.style.getPropertyValue('--section-separator-color').trim() !== 'transparent';
+            sepCheck.addEventListener('change', function () {
+                if (sepCheck.checked) {
+                    root.style.setProperty('--section-separator-color', SEP_COLOR_ON);
+                    localStorage.setItem(SEP_KEY, 'on');
+                } else {
+                    root.style.setProperty('--section-separator-color', 'transparent');
+                    localStorage.setItem(SEP_KEY, 'off');
+                }
+                markChange('design:section-separators');
+            });
+
+            // ---- Reset everything to defaults ----
+            document.getElementById('dc-reset').addEventListener('click', function () {
+                hSlider.value = DEF_H; sSlider.value = DEF_S; lSlider.value = DEF_L;
+                root.style.setProperty('--accent-h', DEF_H);
+                root.style.setProperty('--accent-s', DEF_S);
+                root.style.setProperty('--accent-l', DEF_L);
+                updateAccentUI(DEF_H, DEF_S, DEF_L);
+                savedHsl = { h: DEF_H, s: DEF_S, l: DEF_L };
+                localStorage.removeItem(HSL_KEY);
+                localStorage.removeItem('zapp-accent-hue');
+                markChange('design:accent-hsl');
+
+                SPACING.forEach(function (t) {
+                    t._input.value = t.def;
+                    t._val.textContent = fmtRem(t.def);
+                    root.style.removeProperty(t.v); // fall back to stylesheet :root default
+                    markChange('design:' + t.v);
+                });
+                savedSpacing = {};
+                localStorage.removeItem(SPACE_KEY);
+
+                // Separators default to on: drop the override so the stylesheet default applies.
+                sepCheck.checked = true;
+                root.style.removeProperty('--section-separator-color');
+                localStorage.removeItem(SEP_KEY);
+                markChange('design:section-separators');
+            });
+        })();
+    </script>
 
     <div class="placeholder-edit-modal" data-placeholder-modal="" aria-hidden="true">
         <div class="placeholder-edit-dialog" role="dialog" aria-modal="true" aria-labelledby="placeholder-modal-title">
@@ -5229,6 +5556,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         kicker: "03B / Limited",
                         title: "Zapp Account Limited Capabilities",
                         body: "The non-bank path stayed limited to everyday wallet use.",
+                        bullets: ["Bills and recharges", "Online payments with virtual card", "Peer-to-merchant transfers", "Tap-and-pay transactions"],
                         width: 260
                     },
                     {
@@ -5305,7 +5633,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         kicker: "05 / Outcome",
                         title: "Zapp Account Full Capabilities",
                         body: "Both bank and non-bank customers now had a clear path to the complete account experience.",
-                        variant: "worked",
                         width: 280,
                         offsetY: 34
                     }
@@ -6612,7 +6939,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             let journeyEntered = false;
             let journeyEntryArmed = false;
             const JOURNEY_ENTRY_BAND_TOP = 0.48;
-            const JOURNEY_ENTRY_BAND_BOTTOM = 1.0;
+            const JOURNEY_ENTRY_BAND_BOTTOM = 0.72;
 
             function journeyControlEngaged(direction = 0) {
                 const last = visibleOptions[visibleOptions.length - 1];
@@ -6659,65 +6986,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 journeyEntered = true;
                 journeyEntryArmed = false;
                 journeyControlWasEngaged = true;
+                root.querySelector(".journey-nav-hint")?.classList.add("is-interacted");
                 scrollFirstBoxIntoView();
-            }
-
-            // ── Debug: visualize the entry band with ?band=active ──────────────
-            // Shows the arming band (translucent strip) plus a live marker at the
-            // entry-divider center. Marker turns green while inside the band.
-            const ENTRY_BAND_DEBUG = new URLSearchParams(location.search).get("band") === "active";
-            let entryBandEls = null;
-            function buildEntryBandDebug() {
-                const wrap = document.createElement("div");
-                wrap.style.cssText = "position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;pointer-events:none;display:none;";
-                const band = document.createElement("div");
-                band.style.cssText = "position:absolute;left:0;right:0;background:rgba(39,71,224,0.10);border-top:1px dashed rgba(39,71,224,0.55);border-bottom:1px dashed rgba(39,71,224,0.55);";
-                const bandLabel = document.createElement("div");
-                bandLabel.textContent = "ENTRY BAND";
-                bandLabel.style.cssText = "position:absolute;right:8px;top:2px;font:700 10px/1 ui-monospace,monospace;letter-spacing:0.08em;color:rgba(39,71,224,0.8);";
-                band.appendChild(bandLabel);
-                const marker = document.createElement("div");
-                marker.style.cssText = "position:absolute;left:0;right:0;height:0;border-top:2px solid #d11;";
-                const markerLabel = document.createElement("div");
-                markerLabel.style.cssText = "position:absolute;left:8px;top:2px;font:700 10px/1 ui-monospace,monospace;letter-spacing:0.05em;color:#d11;";
-                marker.appendChild(markerLabel);
-                wrap.appendChild(band);
-                wrap.appendChild(marker);
-                document.body.appendChild(wrap);
-                return { wrap, band, marker, markerLabel };
-            }
-            function updateEntryBandDebug() {
-                if (!ENTRY_BAND_DEBUG) return;
-                if (!entryBandEls) entryBandEls = buildEntryBandDebug();
-                const { wrap, band, marker, markerLabel } = entryBandEls;
-                wrap.style.display = "block";
-                const vh = window.innerHeight;
-                const top = vh * JOURNEY_ENTRY_BAND_TOP;
-                const bottom = vh * JOURNEY_ENTRY_BAND_BOTTOM;
-                band.style.top = top + "px";
-                band.style.height = (bottom - top) + "px";
-                const dc = getEntryDividerCenter();
-                if (dc == null) { marker.style.display = "none"; return; }
-                marker.style.display = "block";
-                marker.style.top = dc + "px";
-                const inBand = dc >= top && dc <= bottom;
-                const color = journeyEntered ? "#888" : (inBand ? "#1a8a3f" : "#d11");
-                marker.style.borderTopColor = color;
-                markerLabel.style.color = color;
-                markerLabel.textContent = `divider ${Math.round(dc)}px  ${journeyEntered ? "ENTERED" : (journeyEntryArmed ? "ARMED" : inBand ? "IN-BAND" : "free")}`;
-            }
-            if (ENTRY_BAND_DEBUG) {
-                (function bandDebugLoop() {
-                    updateEntryBandDebug();
-                    requestAnimationFrame(bandDebugLoop);
-                })();
             }
 
             // Scroll-frame detection only arms/disarms. It never commits. The scroll that
             // lands the divider in the band is allowed to finish naturally; the next downward
             // wheel input consumes the event and glides the first box into view.
             function maybeAutoEnterFromTop() {
-                updateEntryBandDebug();
                 if (!steppingEnabled || !section?.classList.contains("is-expanded")) return;
 
                 if (journeyEntered) {
@@ -7229,11 +7505,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     return;
                 }
                 if (direction < 0 && activeIndex === 0) {
-                    const transitionNode = getTransitionNodeBefore(sectionStep.sectionEl);
-                    if (transitionNode) {
-                        enterTransitionStepBackward(transitionNode);
-                        return;
-                    }
+                    // Going backward, skip any transition step that sits between this
+                    // section and the previous one — land straight on the previous
+                    // section's last box instead of pausing on the transition.
                     const prev = journeySectionSteps[sectionIndex - 1];
                     if (prev) {
                         const prevCards = getSectionRealOptions(prev.sectionEl);
@@ -7372,6 +7646,23 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 }
                 if (!section?.classList.contains("is-expanded")) return;
                 if (isEditingInteractionTarget(event.target)) return;
+
+                // If the nav hint is visible and the journey hasn't been entered yet,
+                // any arrow key auto-enters the flow (same as scrolling to the divider).
+                if (!journeyEntered && scrollKeys.has(event.key)) {
+                    const hint = root.querySelector(".journey-nav-hint");
+                    if (hint) {
+                        const rect = hint.getBoundingClientRect();
+                        const inView = rect.top < window.innerHeight && rect.bottom > 0;
+                        if (inView) {
+                            event.preventDefault();
+                            event.stopImmediatePropagation();
+                            commitAutoEnter();
+                            return;
+                        }
+                    }
+                }
+
                 if (!journeyControlEngaged()) {
                     journeyControlWasEngaged = false;
                     return;
@@ -9028,10 +9319,10 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         <small class="hi-word-count" data-hi-word-count>${highlightWordCount(currentNoteText)} / ${HIGHLIGHT_NOTE_WORD_LIMIT} words</small>
                     </label>
                     <label><input type="checkbox" data-hi-active ${ph.dataset.highlightActive === "true" ? "checked" : ""}> Active</label>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">W <input type="range" data-hi-rw min="2" max="100" step="1" value="${rwVal}" style="flex:1;accent-color:#2747e0;cursor:pointer;"></label>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">H <input type="range" data-hi-rh min="2" max="100" step="1" value="${rhVal}" style="flex:1;accent-color:#2747e0;cursor:pointer;"></label>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">Curve <input type="range" data-hi-curve min="0" max="60" step="1" value="${curveSliderVal}" style="flex:1;accent-color:#2747e0;cursor:pointer;"></label>
-                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">Arrow gap <input type="range" data-hi-arrow-gap min="0" max="80" step="1" value="${arrowGapVal}" style="flex:1;accent-color:#2747e0;cursor:pointer;"></label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">W <input type="range" data-hi-rw min="2" max="100" step="1" value="${rwVal}" style="flex:1;accent-color:hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));cursor:pointer;"></label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">H <input type="range" data-hi-rh min="2" max="100" step="1" value="${rhVal}" style="flex:1;accent-color:hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));cursor:pointer;"></label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">Curve <input type="range" data-hi-curve min="0" max="60" step="1" value="${curveSliderVal}" style="flex:1;accent-color:hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));cursor:pointer;"></label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.78rem;">Arrow gap <input type="range" data-hi-arrow-gap min="0" max="80" step="1" value="${arrowGapVal}" style="flex:1;accent-color:hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));cursor:pointer;"></label>
                     <div style="display:flex;gap:0.4rem;margin-top:0.15rem;">
                         <button type="button" data-hi-panel-action="remove" style="flex:1;">Remove</button>
                         <button type="button" data-hi-panel-action="done" class="hi-panel-done" style="flex:1;">Done</button>
@@ -9687,6 +9978,10 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 // Hide toolbar in saved output
                 const tb = clone.querySelector("#text-edit-toolbar");
                 if (tb) tb.hidden = true;
+
+                // Remove the design-controls panel from saved output (chosen tokens stay inline on <html>)
+                const ahc = clone.querySelector("#design-control");
+                if (ahc) ahc.remove();
 
                 // Reset placeholder tabindex (set to "0" in edit mode, should be "-1" at rest)
                 Array.from(clone.querySelectorAll("[data-placeholder-id]")).forEach((el) => {
@@ -15735,16 +16030,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             animateCounter(stat2El, 0, target2, v => v.toFixed(1) + "x");
             animateCounter(stat3El, 20, target3, v => "#" + Math.round(v));
 
-            // Hero image slides up in sync
-            if (heroImage) {
-                const heroGrid = heroImage.closest(".grid");
-                heroImage.classList.add("hero-image-slide-up");
-                if (heroGrid) heroGrid.classList.add("hero-grid-animating");
-                heroImage.addEventListener("animationend", function () {
-                    heroImage.classList.remove("hero-image-slide-up");
-                    if (heroGrid) heroGrid.classList.remove("hero-grid-animating");
-                }, { once: true });
-            }
+            // Hero image animation removed — image always fully visible
         }
 
         // Fire once when stats scroll into view (immediate on load since hero is above fold)
@@ -15766,44 +16052,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
-</script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
