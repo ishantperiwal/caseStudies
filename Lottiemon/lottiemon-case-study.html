@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head>
+<html lang="en" style="--accent-h: 160; --accent-s: 54; --accent-l: 29; --color-bg: hsl(var(--accent-h), 12%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Why I built Lottiemon — A No-B.S. Lottie Animation Editor</title>
@@ -7,7 +7,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@400;500;600&family=Caveat:wght@500;600&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Playpen+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,17 +15,42 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['"IBM Plex Sans"', 'sans-serif'],
-                        display: ['Space Grotesk', 'sans-serif'],
+                        sans: ['"Instrument Sans"', 'sans-serif'],
+                        display: ['Fraunces', 'serif'],
+                    },
+                    fontSize: {
+                        base: ['1rem', { lineHeight: '1.65rem' }]
                     },
                     colors: {
-                        canvas: '#ededed',
-                        ink: '#1f2937',
-                        deep: '#434957',
-                        medium: '#949494',
-                        muted: '#7f8694',
-                        outline: '#474747',
-                        accent: '#2747e0'
+                        canvas: 'var(--color-bg)',
+                        ink: '#2C2621',
+                        deep: '#5C5146',
+                        medium: '#A89B8F',
+                        muted: '#7A6F64',
+                        outline: '#433A31',
+                        accent: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                        warm: {
+                            50: 'var(--color-bg)',
+                            100: '#F4EFEA',
+                            200: '#EBE5DC',
+                            300: '#D5C9BA',
+                            400: '#A89B8F',
+                            500: '#7A6F64',
+                            600: '#5C5146',
+                            700: '#433A31',
+                            800: '#2C2621',
+                            900: '#1C1815',
+                            950: '#13110F',
+                        },
+                        brand: {
+                            50:  'hsl(var(--accent-h) calc((var(--accent-s) + 16) * 1%) calc((var(--accent-l) + 42) * 1%) / <alpha-value>)',
+                            100: 'hsl(var(--accent-h) calc((var(--accent-s) + 20) * 1%) calc((var(--accent-l) + 38) * 1%) / <alpha-value>)',
+                            200: 'hsl(var(--accent-h) calc((var(--accent-s) + 15) * 1%) calc((var(--accent-l) + 31) * 1%) / <alpha-value>)',
+                            500: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                            600: 'hsl(var(--accent-h) calc((var(--accent-s) - 1) * 1%) calc((var(--accent-l) - 8) * 1%) / <alpha-value>)',
+                            700: 'hsl(var(--accent-h) calc((var(--accent-s) + 4) * 1%) calc((var(--accent-l) - 19) * 1%) / <alpha-value>)',
+                            accent: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                        }
                     }
                 }
             }
@@ -36,28 +61,52 @@
         html {
             font-size: 99%;
             overflow-y: scroll;
+            overflow-x: hidden;
             scrollbar-gutter: stable;
+            overflow-anchor: none;
+        }
+        html::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) 1.5px, transparent 1.5px);
+            background-size: 22px 22px;
+        }
+        html::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            background: radial-gradient(ellipse 46% 120% at center,
+                var(--color-bg) 0%,
+                var(--color-bg) 45%,
+                color-mix(in srgb, var(--color-bg) 28%, transparent) 72%,
+                transparent 100%
+            );
         }
         body {
-            background-color: #fafafa;
-            background-image: radial-gradient(circle, rgba(71, 71, 71, 0.12) 1px, transparent 1px);
-            background-size: 18px 18px;
-            color: var(--color-deep);
+            position: relative;
+            z-index: 2;
+            background-color: var(--color-bg);
             -webkit-font-smoothing: antialiased;
             line-height: 1.65rem;
-            font-size: 15px;
+            font-size: 16px;
+            letter-spacing: 0.012em;
             overflow-x: hidden;
         }
 
         :root {
-            --font-display: 'Space Grotesk', sans-serif;
-            --font-body:    'IBM Plex Sans', sans-serif;
-            --color-deep:   #434957;
+            --font-display: 'Fraunces', serif;
+            --font-body:    'Instrument Sans', sans-serif;
+            --font-sticky:  'Playpen Sans', cursive;
+            --font-mono:    'DM Mono', monospace;
+            --color-deep:   #4A4038;
             --gap-point:     2rem;
-            --gap-paragraph: 1.1rem;
+            --gap-paragraph: 1rem;
         }
-
-        body { font-family: var(--font-body); }
 
         h1, h2, h3, h4, .font-display {
             font-family: var(--font-display);
@@ -65,133 +114,84 @@
             letter-spacing: -0.02em;
         }
 
-        /* ── Editorial guide lines ─────────────────────────────── */
-        .vertical-guide-line {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background-image: linear-gradient(to bottom, rgba(71,71,71,0.20) 50%, transparent 50%);
-            background-size: 2px 12px;
-            background-repeat: repeat-y;
-        }
-        .container-line-top,
-        .container-line-bottom {
-            position: relative;
-            height: 2px;
-            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
-            background-size: 12px 2px;
-            background-repeat: repeat-x;
-        }
-
-        /* ── Section rhythm (single continuous read — no accordions) ── */
         .read-section {
             position: relative;
             padding-top: 3.4rem;
             padding-bottom: 3.4rem;
         }
-        .read-section + .read-section::before {
-            content: '';
-            position: absolute;
-            left: 0; right: 0; top: 0;
-            height: 2px;
-            background-image: linear-gradient(to right, rgba(71, 71, 71, 0.20) 50%, transparent 50%);
-            background-size: 12px 2px;
-            background-repeat: repeat-x;
-            pointer-events: none;
-        }
-        /* Single section heading = the section name */
         .section-kicker {
             font-family: var(--font-display);
             font-weight: 600;
-            color: #0f1420;
+            color: theme('colors.ink');
             font-size: 1.55rem;
             line-height: 1.2;
             letter-spacing: -0.02em;
             margin-bottom: 1rem;
         }
-        /* Former "summary" line — now just the opening body paragraph */
         .read-section .section-summary {
             font-family: var(--font-body);
             font-weight: 400;
             color: var(--color-deep);
-            font-size: 15px;
-            line-height: 1.7;
+            font-size: 16px;
+            line-height: 1.65;
             max-width: none;
             margin-bottom: var(--gap-paragraph) !important;
         }
 
-        /* Body copy fills the full available column width */
         .read-section .prose-block { max-width: none !important; }
 
         .prose-block p {
-            font-size: 15px;
-            line-height: 1.7;
+            font-size: 16px;
+            line-height: 1.65;
             margin-bottom: var(--gap-paragraph);
             color: var(--color-deep);
         }
         .prose-block p:last-child { margin-bottom: 0; }
         .prose-block b { color: theme('colors.ink'); font-weight: 600; }
 
-        /* ── Marker keyword highlight ── */
-        .kw {
-            background-image: linear-gradient(to top,
-                rgba(124, 214, 156, 0.34) 0,
-                rgba(124, 214, 156, 0.34) 22%,
-                transparent 22%,
-                transparent 100%);
-            padding: 0 0.12em;
-            color: theme('colors.ink');
-        }
-
         .mono {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             letter-spacing: 0.05em;
             text-transform: uppercase;
             font-weight: 600;
         }
 
-        /* ── Slash mini-headings for the feature list ── */
         .section-mini-heading {
             font-weight: 600;
             font-size: 1.15rem;
             line-height: 1.35;
             color: theme('colors.ink');
-            margin-top: 1.25rem;   /* extra space above so a new beat starts clearly */
+            margin-top: 1.25rem;
         }
         .slash-num {
-            color: #aab0bb;
+            color: theme('colors.medium');
             font-weight: 500;
             font-size: 0.78em;
             letter-spacing: 0.02em;
             display: inline-block;
             width: 2rem;
-            margin-left: -2rem;   /* hang the number in the gutter */
+            margin-left: -2rem;
         }
-        /* align title text + body to the same left edge (after "01 /") */
         .numbered-point .section-mini-heading { padding-left: 2rem; }
         .numbered-point .prose-block { padding-left: 2rem; }
-
         .numbered-point { margin-bottom: var(--gap-point); }
 
-        /* ── Screenshot frame (editorial window casing, shrink-wrapped to the image) ── */
         .shot {
             display: block;
-            width: fit-content;          /* frame hugs the image — no empty space */
+            width: fit-content;
             max-width: 100%;
-            margin: 2.5rem auto;         /* breathing room + centered */
+            margin: 4rem auto 4.5rem;
             background: transparent;
             border: 1px solid rgba(71, 71, 71, 0.16);
             border-radius: 10px;
-            overflow: hidden;            /* clip image corners to the frame */
+            overflow: hidden;
         }
         .shot:has(+ .shot-caption) { margin-bottom: 0 !important; }
-        .shot-caption { margin-bottom: 2.5rem; }
+        .shot-caption { margin-bottom: 3.5rem; }
 
-        /* window chrome bar */
         .shot-bar {
             display: flex;
-            flex-direction: row-reverse;   /* dots sit on the right, after the title */
+            flex-direction: row-reverse;
             align-items: center;
             gap: 6px;
             padding: 9px 12px;
@@ -200,8 +200,8 @@
         }
         .shot-dot { width: 9px; height: 9px; border-radius: 999px; background: rgba(71,71,71,0.22); }
         .shot-bar .shot-label {
-            margin-right: auto;            /* push title to the left edge */
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            margin-right: auto;
+            font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: 0.04em;
             color: theme('colors.muted');
@@ -216,25 +216,21 @@
             height: auto;
             object-fit: contain;
         }
-        /* frames that should keep the image's full natural height & fill width */
         .shot.shot-free { width: 100%; }
         .shot.shot-free img { max-height: none; width: 100%; }
-        /* frameless image — no casing/border at all */
         .shot.shot-bare { border: 0; border-radius: 0; }
         .shot-caption {
             text-align: center;
             margin-top: 0.65rem;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 10px;
             letter-spacing: 0.04em;
             color: theme('colors.muted');
             text-transform: uppercase;
         }
 
-        /* phone-shaped shot for the Flutter capture */
         .shot.shot-phone { max-width: 19rem; margin-left: auto; margin-right: auto; }
 
-        /* ── Hero metric cards ── */
         .metric-card {
             border: 1px solid rgba(207, 207, 202, 0.7);
             padding: 1.25rem;
@@ -242,7 +238,6 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-        /* ── Options list (the "we could…" trade-off block) ── */
         .opt {
             position: relative;
             display: flex;
@@ -256,13 +251,13 @@
         }
         .opt-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.1rem; }
         .opt-kicker {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 700;
             color: theme('colors.muted');
         }
         .opt-no {
             display: inline-flex; align-items: center; gap: 5px;
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700;
             color: #a25656; background: rgba(153, 27, 27, 0.06); border: 1px solid rgba(153, 27, 27, 0.16);
             padding: 3px 8px; border-radius: 999px;
@@ -270,20 +265,19 @@
         .opt-title {
             display: flex; align-items: center; gap: 0.55rem;
             font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
-            color: #1f2937;
+            color: theme('colors.ink');
         }
         .opt-title svg { width: 18px; height: 18px; color: theme('colors.medium'); flex: none; }
         .opt-body { font-size: 14px; line-height: 1.55; color: var(--color-deep); }
         .opt-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
         .opt-tag {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
             color: theme('colors.muted'); background: rgba(71, 71, 71, 0.035);
             border: 1px solid rgba(71, 71, 71, 0.14);
             padding: 3px 7px; border-radius: 6px;
         }
 
-        /* ── Impact equation + bento ── */
         .impact-equation {
             display: flex;
             flex-wrap: wrap;
@@ -293,7 +287,7 @@
             font-family: var(--font-display);
             font-size: 1rem;
             font-weight: 600;
-            color: #1b2433;
+            color: hsl(var(--accent-h), 20%, 15%);
             margin: 0.5rem 0 1.75rem;
         }
         .eq-term {
@@ -305,7 +299,7 @@
             text-align: center;
         }
         .eq-term small { display: block; font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(6,78,59,0.7); font-weight: 600; margin-top: 2px; }
-        .eq-sym { font-weight: 700; color: #1b2433; }
+        .eq-sym { font-weight: 700; color: hsl(var(--accent-h), 20%, 15%); }
         .eq-total {
             border: 1px solid rgba(71,71,71,0.2);
             background: rgba(255,255,255,0.6);
@@ -326,9 +320,9 @@
             background: rgba(255, 255, 255, 0.55);
             padding: 1rem 1.1rem;
         }
-        .bento-num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: #1f8a5f; line-height: 1.1; }
+        .bento-num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: #1a5f67; line-height: 1.1; }
         .bento-sub { font-size: 11px; color: theme('colors.muted'); margin-top: 0.25rem; }
-        .bento-label { font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: theme('colors.muted'); margin-bottom: 0.35rem; }
+        .bento-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: theme('colors.muted'); margin-bottom: 0.35rem; }
 
         .twoway {
             display: grid;
@@ -340,19 +334,18 @@
         .way-card { border: 1px solid rgba(71,71,71,0.16); border-radius: 10px; padding: 1.25rem 1.35rem; }
         .way-old { background: rgba(254, 226, 226, 0.24); border-color: rgba(153, 27, 27, 0.18); }
         .way-new { background: #edf8f1; border-color: rgba(6, 78, 59, 0.2); }
-        .way-tag { display: inline-flex; align-items: center; gap: 6px; font-family: ui-monospace, monospace; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.75rem; }
+        .way-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.75rem; }
         .way-old .way-tag { background: #fee2e2; color: #991b1b; }
-        .way-new .way-tag { background: #d6f0e0; color: #064e3b; }
+        .way-new .way-tag { background: #c2e8d0; color: #064e3b; }
         .step { display: flex; gap: 0.7rem; margin-bottom: 0.7rem; font-size: 14px; line-height: 1.5; }
         .step b { font-family: var(--font-display); color: theme('colors.ink'); }
 
-        /* ── Sticky notes ── */
         .sticky-note {
             position: absolute;
             width: 210px;
             background-color: #fff1a8;
             padding: 1.1rem 1.2rem;
-            font-family: 'Playpen Sans', cursive;
+            font-family: var(--font-sticky);
             font-size: 0.95rem;
             line-height: 1.4;
             letter-spacing: -0.01em;
@@ -365,21 +358,20 @@
         }
         @media (min-width: 1380px) { .sticky-note { display: block; } }
 
-        /* ── URL call-to-action ── */
         .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center; justify-content: center; margin-top: 1.75rem; }
         .url-cta {
             display: inline-flex;
             align-items: center;
             gap: 0.85rem;
             padding: 0.7rem 0.85rem 0.7rem 1.1rem;
-            background: #131313;
-            border: 1px solid #131313;
+            background: theme('colors.warm.900');
+            border: 1px solid theme('colors.warm.900');
             border-radius: 12px;
             text-decoration: none;
-            box-shadow: 0 6px 20px rgba(19, 19, 19, 0.16);
+            box-shadow: 0 6px 20px rgba(28, 24, 21, 0.16);
             transition: transform 0.16s ease, box-shadow 0.16s ease;
         }
-        .url-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(19, 19, 19, 0.24); }
+        .url-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(28, 24, 21, 0.24); }
         .url-cta .u-dot {
             width: 9px; height: 9px; border-radius: 999px; flex: none;
             background: #34d27b;
@@ -387,7 +379,7 @@
         }
         .url-cta .u-text { display: flex; flex-direction: row; align-items: center; gap: 0.7rem; line-height: 1; }
         .url-cta .u-label {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-family: var(--font-mono);
             font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
             color: rgba(255, 255, 255, 0.5);
             padding-right: 0.7rem;
@@ -407,35 +399,24 @@
             transition: background 0.16s ease, transform 0.16s ease;
         }
         .url-cta:hover .u-arrow { background: #34d27b; color: #062c19; transform: translate(2px, -2px); }
-        /* beta variant — accent blue accent */
-        .url-cta.is-beta .u-dot { background: #5b8bff; box-shadow: 0 0 0 4px rgba(91, 139, 255, 0.22); }
-        .url-cta.is-beta:hover .u-arrow { background: #5b8bff; color: #ffffff; }
+        .url-cta.is-beta .u-dot { background: hsl(var(--accent-h), calc(var(--accent-s) * 1%), 55%); box-shadow: 0 0 0 4px hsla(var(--accent-h), calc(var(--accent-s) * 1%), 55%, 0.22); }
+        .url-cta.is-beta:hover .u-arrow { background: hsl(var(--accent-h), calc(var(--accent-s) * 1%), 55%); color: #ffffff; }
 
-        .lead { font-size: 1.05rem; line-height: 1.7; color: var(--color-deep); }
+        .lead { font-size: 1.05rem; line-height: 1.65; color: var(--color-deep); }
     </style>
 </head>
 <body>
 
-    <!-- Vertical guide lines -->
-    <div class="fixed inset-0 pointer-events-none z-[2] flex justify-center">
-        <div class="relative w-full max-w-4xl h-full">
-            <div class="vertical-guide-line" style="left: -2px;"></div>
-            <div class="vertical-guide-line" style="right: -2px;"></div>
-        </div>
-    </div>
-
-    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[#fafafa]">
+    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[var(--color-bg)]">
 
         <!-- ───────── Hero ───────── -->
         <section class="pt-[5.5rem] px-10">
-            <div class="container-line-top -mx-10"></div>
-
             <div class="pt-14 pb-10">
-                <h1 class="text-[2.1rem] md:text-[2.7rem] font-bold leading-[1.05] text-ink mb-4">
-                    Why I built <span class="text-accent">Lottiemon</span><br>A no-B.S. Lottie animation editor
+                <h1 class="font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
+                    Why I built <span class="italic font-normal text-brand-500" style="font-variation-settings: 'opsz' 72;">Lottiemon</span><br>A no-B.S. Lottie animation editor
                 </h1>
                 <p class="lead max-w-2xl mb-3">
-                    This is how I ended up building Lottiemon — a <span class="kw">“no-B.S.” web tool</span> designed to empower quick, client-side manipulation of Lottie animations.
+                    This is how I ended up building Lottiemon — a "no-B.S." web tool designed to empower quick, client-side manipulation of Lottie animations.
                 </p>
 
             </div>
@@ -446,28 +427,28 @@
                     I used Figma to 3D to make this image — pretty cool tool!
                 </div>
                 <div class="shot shot-free shot-bare !mt-0 mb-2">
-                    <img src="case study assets/hero-lottiemon-cover.png" alt="Lottiemon — change colors, replace assets, edit segments, crop, GIF/video export">
+                    <img src="case study assets/hero-lottiemon-cover.png" alt="Lottiemon — change colours, replace assets, edit segments, crop, GIF/video export">
                 </div>
             </div>
 
-            <div class="container-line-bottom -mx-10 mt-12"></div>
+            </div>
         </section>
 
         <!-- ───────── The Trigger ───────── -->
         <section class="read-section px-10">
             <div class="section-kicker">The Trigger</div>
-            <p class="section-summary mb-7">When the one site we relied on for quick Lottie edits went offline, a “simple” colour change became a major friction point.</p>
+            <p class="section-summary mb-7">When the one site we relied on for quick Lottie edits went offline, a "simple" colour change became a major friction point.</p>
 
             <div class="prose-block max-w-2xl mb-8">
-                <p>As a product designer at Zeta, working with Lottie animations is almost a daily staple. We use them for everything from sleek loading spinners to complex hero illustrations. For a long time, our go-to for quick colour adjustments was a website called <b>drawer.design</b>. Its web previewer let us upload a Lottie JSON, listed every unique solid colour, and let us change it instantly. Sometimes we’d use it just to preview a file quickly. Super convenient.</p>
+                <p>As a product designer at Zeta, working with Lottie animations is almost a daily staple. We use them for everything from sleek loading spinners to complex hero illustrations. For a long time, our go-to for quick colour adjustments was a website called <b>drawer.design</b>. Its web previewer let us upload a Lottie JSON, listed every unique solid colour, and let us change it instantly. Sometimes we'd use it just to preview a file quickly. Super convenient.</p>
                 <p>Our workflow hit a snag when a teammate needed to recolour a loading spinner for a darker screen. We relied on drawer.design for these rapid edits — but this time the site was inaccessible, and would stay that way for the next couple of weeks. Probably a server issue, maybe maintenance.</p>
             </div>
 
-            <div class="shot mb-3 max-w-3xl">
+            <div class="shot max-w-3xl">
                 <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">drawer.design — preview lottie</span></div>
-                <img src="case study assets/trigger-drawer-design.png" alt="drawer.design Preview Lottie Animation Live page with a color editor">
+                <img src="case study assets/trigger-drawer-design.png" alt="drawer.design Preview Lottie Animation Live page with a colour editor">
             </div>
-            <div class="shot-caption mb-9">The old way — drawer.design’s live preview &amp; colour editor</div>
+            <div class="shot-caption">The old way — drawer.design's live preview &amp; colour editor</div>
 
             <div class="prose-block max-w-2xl mb-5">
                 <p>With it offline, we had two ways to make the edit — neither great:</p>
@@ -486,7 +467,7 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 2 20 20"/><path d="M5.782 5.782A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.307-.193"/><path d="M21.532 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7.008 7.008 0 0 0 10 5.07"/></svg>
                         Paid / limited cloud services
                     </div>
-                    <div class="opt-body">Options like LottieFiles or LottieLab exist, but come with login friction and privacy trade-offs since they’re cloud-based. Even after signing up, you hit restrictive free-tier barriers.</div>
+                    <div class="opt-body">Options like LottieFiles or LottieLab exist, but come with login friction and privacy trade-offs since they're cloud-based. Even after signing up, you hit restrictive free-tier barriers.</div>
                     <div class="opt-tags">
                         <span class="opt-tag">Login wall</span>
                         <span class="opt-tag">Watermarks</span>
@@ -514,7 +495,7 @@
             </div>
 
             <div class="prose-block max-w-2xl">
-                <p>Neither appealed to me. Which got me wondering: <span class="kw">could I just recreate what drawer.design did?</span></p>
+                <p>Neither appealed to me. Which got me wondering: could I just recreate what drawer.design did?</p>
             </div>
         </section>
 
@@ -525,11 +506,11 @@
             </div>
 
             <div class="section-kicker">The Vibe Prototype</div>
-            <p class="section-summary mb-7">I didn’t want to go back to the “After Effects way,” so I did what many of us do these days — I asked an AI to help me build it.</p>
+            <p class="section-summary mb-7">I didn't want to go back to the "After Effects way," so I did what many of us do these days — I asked an AI to help me build it.</p>
 
             <div class="prose-block max-w-2xl">
-                <p>I prompted Gemini to write a simple colour-change web tool to edit a Lottie animation and download the asset back. And just like that, I had a freshly baked service that solved the immediate crisis. It wasn’t perfect, but it got the job done for that moment.</p>
-                <p>It was a good feeling to have avoided what I’d otherwise do — and it got me thinking:</p>
+                <p>I prompted Gemini to write a simple colour-change web tool to edit a Lottie animation and download the asset back. And just like that, I had a freshly baked service that solved the immediate crisis. It wasn't perfect, but it got the job done for that moment.</p>
+                <p>It was a good feeling to have avoided what I'd otherwise do — and it got me thinking:</p>
                 <p class="!text-[1.15rem] !leading-snug font-display text-ink !mt-9 !mb-5" style="font-weight:600;">If I could do this quickly for myself, why not build a robust, no-B.S. editing tool for the entire team?</p>
                 <p>I pushed the code to my GitHub, hosted it on GitHub Pages, and shared the URL with the team. And it made me realise how much sense it made to grow it into what I always wanted it to be — something that could solve more than just changing solid colours, one of those frequent silly problems we kept running into.</p>
             </div>
@@ -544,7 +525,7 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">01 /</span> Intelligent Colour Manipulation</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>I designed Lottiemon to <span class="kw">group solid colours by uniqueness</span>, giving a “first pass” at re-theming — but I also made sure each one could be changed individually. That flexibility offered far more control than our previous tools ever did.</p>
+                    <p>I designed Lottiemon to group solid colours by uniqueness, giving a "first pass" at re-theming — but I also made sure each one could be changed individually. That flexibility offered far more control than our previous tools ever did.</p>
                 </div>
                 <div class="shot max-w-3xl">
                     <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — colour clusters</span></div>
@@ -556,7 +537,7 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">02 /</span> The Crop &amp; Expand Tool</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>Developers frequently come back asking to “trim the extra negative space” or “add a bit more padding” around an animation. Historically that meant changing composition settings in After Effects. Lottiemon now has a built-in crop/expand tool to resize the canvas around the animation effortlessly.</p>
+                    <p>Developers frequently come back asking to "trim the extra negative space" or "add a bit more padding" around an animation. Historically that meant changing composition settings in After Effects. Lottiemon now has a built-in crop/expand tool to resize the canvas around the animation effortlessly.</p>
                 </div>
                 <div class="shot max-w-3xl">
                     <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — crop / expand</span></div>
@@ -568,7 +549,7 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">03 /</span> Segment Editor — One File, Multiple Uses</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>Rather than handling five different files for a single sequence, I always suggest the team mark <b>“segments”</b> within one file. But creating those sections was hard without After Effects. So I built a simple segment editor that lets you define and test start/end frames within a single Lottie file.</p>
+                    <p>Rather than handling five different files for a single sequence, I always suggest the team mark <b>"segments"</b> within one file. But creating those sections was hard without After Effects. So I built a simple segment editor that lets you define and test start/end frames within a single Lottie file.</p>
                 </div>
                 <div class="relative">
                     <div class="sticky-note" style="top: 34%; left: -19rem; --rot: -2.5deg;">
@@ -585,11 +566,11 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">04 /</span> Scalable Asset Replacement</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>To make animations scalable, we often embed images for parts of the animation (like a spotlight banner). Lottiemon lets you redesign those assets separately and replace them <span class="kw">without ever touching the core project file</span>.</p>
+                    <p>To make animations scalable, we often embed images for parts of the animation (like a spotlight banner). Lottiemon lets you redesign those assets separately and replace them without ever touching the core project file.</p>
                 </div>
                 <div class="relative">
                     <div class="sticky-note" style="top: 30%; right: -19rem; --rot: 2.5deg;">
-                        At Zeta we’d sometimes add image sequences in Lotties for raster effects — so I added a sequence replacement mechanism too.
+                        At Zeta we'd sometimes add image sequences in Lotties for raster effects — so I added a sequence replacement mechanism too.
                     </div>
                     <div class="shot max-w-3xl">
                         <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — asset replace</span></div>
@@ -614,7 +595,7 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">06 /</span> Flutter Preview Integration</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>Working on PayZapp means working with Flutter constantly. Lottie animations often behave differently in Flutter compared to Web or native iOS/Android. So I built an integrated Flutter previewer — now, before handoff, we can verify everything looks exactly as intended in a Flutter context, preventing <span class="kw">“it looks broken on mobile”</span> bugs.</p>
+                    <p>Working on PayZapp means working with Flutter constantly. Lottie animations often behave differently in Flutter compared to Web or native iOS/Android. So I built an integrated Flutter previewer — now, before handoff, we can verify everything looks exactly as intended in a Flutter context, preventing "it looks broken on mobile" bugs.</p>
                 </div>
                 <div class="shot shot-phone shot-free">
                     <img src="case study assets/feature-flutter-preview.png" alt="Lottiemon Flutter preview rendering the animation inside a phone frame">
@@ -637,7 +618,7 @@
             <p class="section-summary mb-7">Before this tool, even a minor request — changing a hex code, removing an element — triggered a long chain of communication and technical steps.</p>
 
             <div class="prose-block max-w-2xl mb-8">
-                <p>A roughly <b>40-minute loop</b> on every edit created a “dependency bottleneck.” Here’s what one request actually cost:</p>
+                <p>A roughly <b>40-minute loop</b> on every edit created a "dependency bottleneck." Here's what one request actually cost:</p>
             </div>
 
             <!-- equation -->
@@ -692,7 +673,7 @@
             </div>
 
             <div class="prose-block max-w-2xl mt-7">
-                <p>By moving the power into the browser, we didn’t just save time — we reclaimed mental space. All of us now frequently use tools like LottieLab and Jitter to <i>create</i> animations, while Lottiemon takes care of the quick edits later.</p>
+                <p>By moving the power into the browser, we didn't just save time — we reclaimed mental space. All of us now frequently use tools like LottieLab and Jitter to <i>create</i> animations, while Lottiemon takes care of the quick edits later.</p>
             </div>
         </section>
 
@@ -702,8 +683,8 @@
             <p class="section-summary mb-7">The most rewarding part of this journey has been realising how much agency we have as creators.</p>
 
             <div class="prose-block max-w-2xl">
-                <p>I love that we’re all so capable today. We can shape solutions to our own problems rather than searching for them elsewhere. AI has brought a significant shift in how I personally prefer to work — it lets us bridge the gap between <span class="kw">“I wish this existed”</span> and <span class="kw">“here it is.”</span> It’s an incredibly exciting time to be in product design.</p>
-                <p>Lottiemon has already saved us so much time and trouble of “dependency bottlenecks,” and I think it could be handy for anyone else tired of the export loop — so I’m making it public. It works entirely on the client side (in your browser), making it fast, secure, and cost-effective. It’s saved me and my team untold hours, since many of these tasks can now be handled by my colleagues themselves without ever depending on me.</p>
+                <p>I love that we're all so capable today. We can shape solutions to our own problems rather than searching for them elsewhere. AI has brought a significant shift in how I personally prefer to work — it lets us bridge the gap between "I wish this existed" and "here it is." It's an incredibly exciting time to be in product design.</p>
+                <p>Lottiemon has already saved us so much time and trouble of "dependency bottlenecks," and I think it could be handy for anyone else tired of the export loop — so I'm making it public. It works entirely on the client side (in your browser), making it fast, secure, and cost-effective. It's saved me and my team untold hours, since many of these tasks can now be handled by my colleagues themselves without ever depending on me.</p>
             </div>
 
             <div class="cta-row">
@@ -724,19 +705,19 @@
                 State machines in a single .lottie — interactivity without the headache.
             </div>
 
-            <div class="section-kicker">What’s Next?</div>
-            <p class="section-summary mb-7">I plan to maintain Lottiemon simply because I love working on it. It’s incredibly fun to build things that solve real problems.</p>
+            <div class="section-kicker">What's Next?</div>
+            <p class="section-summary mb-7">I plan to maintain Lottiemon simply because I love working on it. It's incredibly fun to build things that solve real problems.</p>
 
             <div class="prose-block max-w-2xl mb-7">
-                <p>Right now I’m building a tool within Lottiemon that lets you create <b>State Machines</b> for your Lottie animations. The most recent LottieFiles release lets us package state-machine-based interactions with the animation in a single <b>dotLottie</b> file. That format might let us approach interactivity in a hassle-free, simple way for common use cases — and I’ve already hosted a beta branch at <b>lottiemon.xyz</b> where you can access the state machine builder.</p>
-                <p>Here’s a quick demo of an animation powered by state machines — tap those buttons at the bottom when they appear.</p>
+                <p>Right now I'm building a tool within Lottiemon that lets you create <b>State Machines</b> for your Lottie animations. The most recent LottieFiles release lets us package state-machine-based interactions with the animation in a single <b>dotLottie</b> file. That format might let us approach interactivity in a hassle-free, simple way for common use cases — and I've already hosted a beta branch at <b>lottiemon.xyz</b> where you can access the state machine builder.</p>
+                <p>Here's a quick demo of an animation powered by state machines — tap those buttons at the bottom when they appear.</p>
             </div>
 
-            <div class="shot shot-free max-w-3xl mb-3">
+            <div class="shot shot-free max-w-3xl">
                 <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon.xyz — state machine demo</span></div>
-                <iframe src="https://codepen.io/ishantperiwal/embed/PwzzNyq?default-tab=result&theme-id=light" style="width:100%;height:680px;border:0;display:block;" loading="lazy" allowfullscreen title="State machine demo — Lottiemon"></iframe>
+                <iframe src="https://codepen.io/ishantperiwal/embed/PwzzNyq?default-tab=result&amp;theme-id=light" style="width:100%;height:680px;border:0;display:block;" loading="lazy" allowfullscreen title="State machine demo — Lottiemon"></iframe>
             </div>
-            <div class="shot-caption mb-8">Interactive state-machine demo (beta)</div>
+            <div class="shot-caption">Interactive state-machine demo (beta)</div>
 
             <div class="prose-block max-w-2xl mb-2">
                 <p>Feel free to use it and let me know what you think — your feedback is super appreciated! 👏</p>
