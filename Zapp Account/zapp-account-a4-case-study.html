@@ -331,7 +331,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Importing Grotesque Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter:wght@400;500;600;700&amp;family=Caveat:wght@500&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter:wght@400;500;600;700&amp;family=Playpen+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -429,7 +429,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         :root {
             --font-display: 'Fraunces', serif;
             --font-body:    'Instrument Sans', sans-serif;
-            --font-sticky:  'Caveat', cursive;
+            --font-sticky:  'Playpen Sans', cursive;
             --font-mono:   'DM Mono', var(--font-mono);
             --color-deep:   #4A4038;
 
@@ -3649,9 +3649,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 220px;
             background-color: #fff1a8;
             padding: 1.25rem;
-            font-family: 'Caveat', cursive;
-            font-size: 1.4rem;
-            line-height: 1.2;
+            font-family: var(--font-sticky);
+            font-size: 1rem;
+            line-height: 1.4;
             color: #1a1a1a;
             border: 1px solid rgba(96, 72, 8, 0.16);
             box-shadow: 2px 7px 16px rgba(0,0,0,0.075);
@@ -5210,7 +5210,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
 
             <!-- Card 6: What's Next -->
-            <article class="stack-section">
+            <article class="stack-section hidden">
                 <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
