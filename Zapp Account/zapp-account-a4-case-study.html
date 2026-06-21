@@ -313,6 +313,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -5155,8 +5157,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
     
     <script>
         (function () {
-            const HSL_KEY  = 'zapp-accent-hsl';
-            const SPACE_KEY = 'zapp-spacing-tokens';
             const DEF_H = 14, DEF_S = 56, DEF_L = 55;
             const root = document.documentElement;
 
@@ -5169,31 +5169,26 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 { v: '--section-heading-gap-expanded',  label: 'Section title (expanded)',  def: 0.35, min: 0, max: 2, step: 0.05 },
             ];
 
-            // ---- Apply saved HSL on every load (so choices show everywhere, not just edit mode) ----
-            let savedHsl = { h: DEF_H, s: DEF_S, l: DEF_L };
-            try {
-                const raw = localStorage.getItem(HSL_KEY);
-                if (raw) savedHsl = Object.assign(savedHsl, JSON.parse(raw));
-                // backward compat: old single-hue key
-                const oldH = localStorage.getItem('zapp-accent-hue');
-                if (oldH !== null && !JSON.parse(raw || '{}').h) savedHsl.h = Number(oldH);
-            } catch (e) {}
-            root.style.setProperty('--accent-h', savedHsl.h);
-            root.style.setProperty('--accent-s', savedHsl.s);
-            root.style.setProperty('--accent-l', savedHsl.l);
-
+            // The page renders whatever design tokens are baked into the file (inline on
+            // <html> + the :root stylesheet). localStorage is intentionally NOT read here,
+            // so what you see always matches the file — locally and on GitHub Pages alike.
+            // The edit panel below seeds its controls from the current values and writes
+            // edits straight onto <html>; the Save button bakes them back into the file.
+            function readNumVar(name, def) {
+                const inline = root.style.getPropertyValue(name).trim();
+                const val = inline !== '' ? inline : getComputedStyle(root).getPropertyValue(name).trim();
+                const n = parseFloat(val);
+                return Number.isFinite(n) ? n : def;
+            }
+            let savedHsl = {
+                h: readNumVar('--accent-h', DEF_H),
+                s: readNumVar('--accent-s', DEF_S),
+                l: readNumVar('--accent-l', DEF_L)
+            };
             let savedSpacing = {};
-            try { savedSpacing = JSON.parse(localStorage.getItem(SPACE_KEY) || '{}'); } catch (e) { savedSpacing = {}; }
-            Object.keys(savedSpacing).forEach(function (k) {
-                root.style.setProperty(k, savedSpacing[k] + 'rem');
-            });
 
-            // ---- Section separators toggle (only override the baked-in value if a choice was saved) ----
-            const SEP_KEY = 'zapp-section-separators';
             const SEP_COLOR_ON = 'rgba(71, 71, 71, 0.12)';
-            const savedSep = localStorage.getItem(SEP_KEY);
-            if (savedSep === 'off') root.style.setProperty('--section-separator-color', 'transparent');
-            else if (savedSep === 'on') root.style.setProperty('--section-separator-color', SEP_COLOR_ON);
+            const savedSep = null; // no stored override; reflect the file's baked-in value
 
             const isEditMode = new URLSearchParams(window.location.search).get('edit') === 'true';
             let ctrl = document.getElementById('design-control');
@@ -5270,7 +5265,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 root.style.setProperty('--accent-l', l);
                 updateAccentUI(h, s, l);
                 savedHsl = { h: h, s: s, l: l };
-                localStorage.setItem(HSL_KEY, JSON.stringify(savedHsl));
                 markChange('design:accent-hsl');
             }
             hSlider.addEventListener('input', onHslChange);
@@ -5280,7 +5274,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             // ---- Spacing sliders (generated) ----
             const wrap = document.getElementById('dc-spacing');
             SPACING.forEach(function (t) {
-                const start = (t.v in savedSpacing) ? Number(savedSpacing[t.v]) : t.def;
+                const start = readNumVar(t.v, t.def);
                 const field = document.createElement('div');
                 field.className = 'dc-field';
                 field.innerHTML =
@@ -5295,7 +5289,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     root.style.setProperty(t.v, n + 'rem');
                     val.textContent = fmtRem(n);
                     savedSpacing[t.v] = n;
-                    localStorage.setItem(SPACE_KEY, JSON.stringify(savedSpacing));
                     markChange('design:' + t.v);
                 });
                 t._input = input; t._val = val;
@@ -5311,10 +5304,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             sepCheck.addEventListener('change', function () {
                 if (sepCheck.checked) {
                     root.style.setProperty('--section-separator-color', SEP_COLOR_ON);
-                    localStorage.setItem(SEP_KEY, 'on');
                 } else {
                     root.style.setProperty('--section-separator-color', 'transparent');
-                    localStorage.setItem(SEP_KEY, 'off');
                 }
                 markChange('design:section-separators');
             });
@@ -5327,8 +5318,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 root.style.setProperty('--accent-l', DEF_L);
                 updateAccentUI(DEF_H, DEF_S, DEF_L);
                 savedHsl = { h: DEF_H, s: DEF_S, l: DEF_L };
-                localStorage.removeItem(HSL_KEY);
-                localStorage.removeItem('zapp-accent-hue');
                 markChange('design:accent-hsl');
 
                 SPACING.forEach(function (t) {
@@ -5338,12 +5327,10 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     markChange('design:' + t.v);
                 });
                 savedSpacing = {};
-                localStorage.removeItem(SPACE_KEY);
 
                 // Separators default to on: drop the override so the stylesheet default applies.
                 sepCheck.checked = true;
                 root.style.removeProperty('--section-separator-color');
-                localStorage.removeItem(SEP_KEY);
                 markChange('design:section-separators');
             });
         })();
@@ -16055,6 +16042,44 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
