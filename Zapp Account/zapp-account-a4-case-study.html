@@ -323,6 +323,18 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -3664,8 +3676,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
-        /* Pop-on-expand sticky notes (Hidden / Collapsed State) */
+        /* Pop-on-expand sticky notes (Hidden / Collapsed State).
+           display:none (not just opacity) so a collapsed section's notes don't reserve
+           scroll height. These notes are position:absolute with a top offset measured
+           against the EXPANDED section; left only at opacity:0 they'd still extend the
+           document's scroll height into empty space (you'd scroll past the section into
+           a void the size of its expanded content). */
         .sticky-note.pop-on-expand {
+            display: none;
             opacity: 0;
             transform: scale(0.6) rotate(var(--rot, 0deg));
         }
@@ -3674,18 +3692,117 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         body.is-any-expanded .stack-section:not(.is-expanded) > .sticky-note.pop-on-expand {
             opacity: 0;
         }
-        
-        /* Expanded State (Pop up animation) */
+
+        /* Expanded State (Pop up animation). allow-discrete + @starting-style keep the
+           pop animation despite the display toggle (progressive enhancement; browsers
+           without support just appear/hide instantly). */
         .stack-section.is-expanded .sticky-note.pop-on-expand {
+            display: block;
             opacity: 1;
             transform: scale(1) rotate(var(--rot, 0deg));
-            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s, 
-                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s;
+            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s,
+                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s,
+                        display 0.5s allow-discrete 0.3s;
+        }
+        @starting-style {
+            .stack-section.is-expanded .sticky-note.pop-on-expand {
+                opacity: 0;
+                transform: scale(0.6) rotate(var(--rot, 0deg));
+            }
         }
         
         @media (min-width: 1400px) {
             .sticky-note { display: block; }
         }
+
+        /* ── Sticky-note authoring (edit mode only) ── */
+        /* Normal notes are forced visible/interactive while editing, regardless of the
+           1400px display gate, so they can be placed and edited at any width. */
+        body.is-text-editing .sticky-note:not(.pop-on-expand) {
+            display: block;
+            pointer-events: auto;
+        }
+        /* pop-on-expand notes still follow the expand rules; make them editable at any
+           width once their section is expanded. */
+        body.is-text-editing .stack-section.is-expanded .sticky-note.pop-on-expand {
+            display: block;
+            pointer-events: auto;
+        }
+        body.is-text-editing .sticky-note {
+            outline: 1.5px dashed rgba(39, 71, 224, 0.35);
+            cursor: text;
+        }
+        .sticky-note.is-dragging {
+            opacity: 0.9;
+            z-index: 9998 !important;
+            transition: none !important;
+            cursor: grabbing;
+        }
+        /* Edit affordances injected at runtime; hidden by default, shown only while editing. */
+        .sticky-note-handle,
+        .sticky-note-delete,
+        .sticky-note-tilt {
+            display: none;
+            position: absolute;
+            top: -0.7rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            border-radius: 999px;
+            border: 1px solid rgba(96, 72, 8, 0.28);
+            background: #fff;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            line-height: 1;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+            z-index: 2;
+            padding: 0;
+        }
+        body.is-text-editing .sticky-note .sticky-note-handle,
+        body.is-text-editing .sticky-note .sticky-note-delete,
+        body.is-text-editing .sticky-note .sticky-note-tilt {
+            display: flex;
+        }
+        .sticky-note-handle {
+            left: -0.7rem;
+            cursor: grab;
+            color: #60480a;
+        }
+        .sticky-note.is-dragging .sticky-note-handle { cursor: grabbing; }
+        .sticky-note-delete {
+            right: -0.7rem;
+            cursor: pointer;
+            color: #b23b2e;
+            font-weight: 700;
+        }
+        .sticky-note-delete:hover { background: #ffe9e6; }
+        .sticky-note-tilt {
+            top: auto;
+            bottom: -0.7rem;
+            left: -0.7rem;
+            cursor: pointer;
+            color: #60480a;
+        }
+        .sticky-note-tilt:hover { background: #fff6cf; }
+
+        #sticky-note-add-btn {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.82rem;
+            font-weight: 600;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.28);
+        }
+        #sticky-note-add-btn:hover { filter: brightness(1.08); }
 
         /* ── Text Edit Mode ── */
         .is-text-editing [data-text-key] {
@@ -4006,7 +4123,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         </div>
     </div>
 
-    <main class="relative z-[1] max-w-4xl mx-auto pb-24 bg-[var(--color-bg)]">
+    <main class="relative z-[1] max-w-4xl mx-auto pb-40 bg-[var(--color-bg)]">
         
         <!-- Hero Section -->
         <section class="pt-[5.9rem] relative">
@@ -4101,7 +4218,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             <!-- Card 2: Enablers -->
             <article class="stack-section has-floating-preview">
                 <div class="section-header py-8 pl-10 pr-10">
-                    <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2deg;">
+                    <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2deg;" data-sticky-id="sticky-mqo5ovob-0">
                         The requirement came to us from the HDFC Bank
                     </div>
                     <div class="flex justify-between items-start gap-4">
@@ -4112,7 +4229,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -5972.96875px; --floating-preview-left: 1470.090576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: 324.03125px; --floating-preview-left: 1470.090576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -4328,8 +4445,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
 
                         <div class="mb-5 relative">
-                            <div class="sticky-note pop-on-expand" style="top: 5.5rem; left: -19.5rem; --rot: -2deg;">
-                                We also looked at international peers, like Revolut.
+                            <div class="sticky-note pop-on-expand" style="top: 5.5rem; left: -19.5rem; --rot: -2deg;" data-sticky-id="sticky-mqo5ovoi-1">
+                                We also looked at international peers, like Revolut, Stripe mostly for their designs.
                             </div>
                             <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="strategy-competitive-heading" spellcheck="false">The Competitors</h3>
                             <p class="text-[15px] md:text-base" data-text-key="strategy-competitive-body" spellcheck="false">We looked at the most prominent payment apps, that offered a digital wallet or were a digital wallet, to understand what they were prioritizing in this space: how they introduced wallet-like accounts, how onboarding was structured, how Mini KYC and full KYC states were handled, and which actions they made easiest to discover from the first few screens.</p>
@@ -4625,7 +4742,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding2" spellcheck="false">For most users, the wallet was primarily <b>a cashpoint conversion tool </b>- cashpoints earned on offers were added as wallet balance and spent on recharges and bill payments.</p>
                                     </div>
                                     <div class="strategy-finding relative">
-                                        <div class="sticky-note pop-on-expand" style="top: -0.25rem; left: -37.1rem; --rot: -2deg;">Swipe to Pay, offered by Zeta, is a quicker and safer way of authorizing payments using a single swipe. It's bound to the SIM.</div>
+                                        <div class="sticky-note pop-on-expand" style="top: -0.25rem; left: -37.1rem; --rot: -2deg;" data-sticky-id="sticky-mqo5ovoi-2">Swipe to Pay, offered by Zeta, is a quicker and safer way of authorizing payments using a single swipe. It's bound to the SIM.</div>
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding1" spellcheck="false">Several wallet capabilities were less known, including Swipe to Pay (Pin-Less), Tap and Pay and the benefits users could unlock with a full KYC.</p>
                                     </div>
                                     <div class="strategy-finding">
@@ -4814,7 +4931,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div></div>
                     </div>
                 </div>
-            </article>
+            <div class="sticky-note pop-on-expand" style="--rot: 2deg; top: 1682px; right: auto; left: -19.5rem;" data-sticky-id="sticky-mqo626lw-0">Most interviews were on a call and some of the were on google meet to people.</div></article>
 
             <!-- Card 4: Execution -->
             <article class="stack-section has-floating-preview">
@@ -4826,8 +4943,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </div>
                 </div>
-                <div class="card-body" data-execution-journey="" style="" data-active-state="extra-six">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 103.203125px; --floating-preview-left: 1525.515625px;">
+                <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 1935.8599853515625px; --floating-preview-left: 1525.515625px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -4835,7 +4952,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                             </div>
                                         </div>
                                         <div class="execution-startup-tap-layer" data-startup-tap-layer="" aria-hidden="true"><span class="execution-startup-touchpoint"></span><span class="execution-startup-ripple"></span><span class="execution-startup-marker"></span></div>
-                                        <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-spotlight" data-placeholder-id="execution-entry-spotlight" data-placeholder-name="Entry point spotlight banner screen" aria-label="Preview placeholder for spotlight banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="87.8" data-highlight-y="31.4" data-highlight-label-x="133.3" data-highlight-label-y="18.7" data-highlight-text="Spotlight banner" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="20" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-spotlight.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="mono text-[9px] text-muted mb-1">Spotlight</div><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Unlock more ways to pay</div><div class="execution-phone-pill mt-3">Explore account</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-saved-image is-active" data-journey-screen-state="entry-spotlight" data-placeholder-id="execution-entry-spotlight" data-placeholder-name="Entry point spotlight banner screen" aria-label="Preview placeholder for spotlight banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="87.8" data-highlight-y="31.4" data-highlight-label-x="133.3" data-highlight-label-y="18.7" data-highlight-text="Spotlight banner" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="20" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-spotlight.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="mono text-[9px] text-muted mb-1">Spotlight</div><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Unlock more ways to pay</div><div class="execution-phone-pill mt-3">Explore account</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-anchor" data-placeholder-id="execution-entry-anchor" data-placeholder-name="Entry point home anchor screen" aria-label="Preview placeholder for home anchor entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="89.8" data-highlight-y="64.1" data-highlight-label-x="127.6" data-highlight-label-y="47.1" data-highlight-text="MoEngage Bottom Sheet" data-highlight-rw="64" data-highlight-rh="44" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-anchor.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Persistent home anchor</div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-inline" data-placeholder-id="execution-entry-inline" data-placeholder-name="Entry point inline banner screen" aria-label="Preview placeholder for inline banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="72.1" data-highlight-y="61.3" data-highlight-label-x="127.3" data-highlight-label-y="48.8" data-highlight-text="Animated Anchor Icon" data-highlight-rw="24" data-highlight-rh="32" data-highlight-curve="19" data-highlight-arrow-gap="8" aria-hidden="true" data-overlay-src="case study assets/zapp-overlay-execution-entry-inline.gif" data-overlay-active="true" data-overlay-x="62.40" data-overlay-y="62.27" data-overlay-scale="16.00"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-inline.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-mini-list"><div class="execution-phone-mini-item"></div><div class="execution-phone-mini-item"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Upgrade with Zapp Account</div><div class="text-[11px] text-muted mt-1">Inline contextual banner</div></div><div class="execution-phone-mini-item"></div></div></div><img class="execution-phone-overlay" alt="" draggable="false" src="case study assets/zapp-overlay-execution-entry-inline.gif" style="--overlay-x: 62.4%; --overlay-y: 62.27%; --overlay-w: 16%;"></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-entry-kyc" data-transition-state="true" data-placeholder-id="execution-transition-entry-kyc" data-placeholder-name="Transition from entry points to Video KYC" aria-label="Preview placeholder for transition into Video KYC" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="74" data-highlight-label-y="40" data-highlight-text="Continue" data-highlight-rw="24" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-entry-kyc.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Unlock full capabilities</div><div class="text-[11px] text-muted mt-1">Move into Video KYC</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
@@ -4856,7 +4973,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-four-b" data-placeholder-id="execution-extra-four-b" data-placeholder-name="Extra placeholder screen 4b" aria-label="Preview placeholder for extra section box 4b" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=actions" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-two.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-extra-outside" data-transition-state="true" data-placeholder-id="execution-transition-extra-outside" data-placeholder-name="Transition from extra section to outside the account" aria-label="Preview placeholder for transition to outside the account" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="64" data-highlight-label-x="74" data-highlight-label-y="48" data-highlight-text="Continue" data-highlight-rw="32" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-outro-extra.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Moving outside the account</div><div class="text-[11px] text-muted mt-1">Heading to next section</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="extra-five" data-placeholder-id="execution-extra-five" data-placeholder-name="Extra placeholder screen 5" aria-label="Preview placeholder for extra section box 5" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-five.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen five</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
-                                        <div class="execution-phone-state editable-placeholder has-saved-image is-active" data-journey-screen-state="extra-six" data-placeholder-id="execution-extra-six" data-placeholder-name="Extra placeholder screen 6" aria-label="Preview placeholder for extra section box 6" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-six.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen six</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="extra-six" data-placeholder-id="execution-extra-six" data-placeholder-name="Extra placeholder screen 6" aria-label="Preview placeholder for extra section box 6" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-six.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen six</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                         </div>
                     </aside>
                     <div class="card-body-clip" style="">
@@ -4869,7 +4986,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <p class="mb-6 text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-1" spellcheck="false">Before we dive into the actual flows, here is what helped me close the designs faster.</p>
 
                                     <div class="mb-5 relative">
-                                        <div class="sticky-note pop-on-expand" style="top: 0.5rem; right: -19.5rem; --rot: 1.5deg;">These plugins were one of the ways I found to use AI meaningfully in my workflow. Walked the team through it at a dedicated AI event we ran across design functions at Zeta.</div>
+                                        
                                         <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-plugins-heading" spellcheck="false">Built Two Plugins That Helped Me Move Faster</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project — Fair Colors and Figma Recall — both of which have their own case studies. Fair Colors let me tokenize the palette so color changes propagated everywhere without manually updating individual values. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.</p>
                                     </div>
@@ -4894,14 +5011,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                      the way down, control takes over and the first box glides to center. -->
                                 <div class="execution-journey-entry-divider" data-journey-entry-divider="" aria-hidden="true"></div>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="entry-points">
+                                <section class="execution-journey-section is-timeline-active" data-journey-section="entry-points">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-entrypoints-label" spellcheck="false">01 / Entry Points Across PayZapp</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-entrypoints-heading" spellcheck="false">The Entry Points</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-entrypoints-body" spellcheck="false">Users had to encounter Zapp Account at moments where the value made sense inside PayZapp, instead of depending on a single education page. These entry points helped introduce the account from familiar surfaces before asking users to continue into the full-KYC journey.</p>
                                     </div>
                                     <div class="execution-journey-options">
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-spotlight" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-spotlight-kicker" spellcheck="false">Entry point 01</div><div class="execution-option-title" data-text-key="execution-entry-spotlight-title" spellcheck="false">Spotlight Banners</div><p class="execution-option-body" data-text-key="execution-entry-spotlight-body" spellcheck="false">High-visibility banners introduced Zapp Account from discovery moments where users were already scanning for offers, payments, or wallet actions.</p></button>
+                                        <button class="execution-journey-option is-active" type="button" data-journey-option="" data-journey-state="entry-spotlight" aria-pressed="true"><div class="execution-option-kicker" data-text-key="execution-entry-spotlight-kicker" spellcheck="false">Entry point 01</div><div class="execution-option-title" data-text-key="execution-entry-spotlight-title" spellcheck="false">Spotlight Banners</div><p class="execution-option-body" data-text-key="execution-entry-spotlight-body" spellcheck="false">High-visibility banners introduced Zapp Account from discovery moments where users were already scanning for offers, payments, or wallet actions.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-anchor" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-anchor-kicker" spellcheck="false">Entry point 02</div><div class="execution-option-title" data-text-key="execution-entry-anchor-title" spellcheck="false">MoEngage Bottom Sheets</div><p class="execution-option-body" data-text-key="execution-entry-anchor-body" spellcheck="false">A persistent home-page anchor gave Zapp Account a stable place inside PayZapp, so users could return to it after the first exposure.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-inline" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-inline-kicker" spellcheck="false">Entry point 03</div><div class="execution-option-title" data-text-key="execution-entry-inline-title" spellcheck="false">Anchor Icon On The Home Page</div><p class="execution-option-body" data-text-key="execution-entry-inline-body" spellcheck="false">Inline placements let us introduce Zapp Account closer to relevant payment contexts, where the benefit of unlocking more capabilities felt easier to understand.</p></button>
                                         <button class="execution-journey-option is-transition" type="button" data-journey-option="" data-transition-option="" data-journey-state="transition-entry-kyc" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-transition-entry-kyc-kicker" spellcheck="false">Edit-only transition</div><div class="execution-option-title" data-text-key="execution-transition-entry-kyc-title" spellcheck="false">Tap Into Video KYC</div><p class="execution-option-body" data-text-key="execution-transition-entry-kyc-body" spellcheck="false">Use this state to edit the transition screenshot that appears while scrolling into the Video KYC section.</p></button>
@@ -4912,13 +5029,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-entry-kyc" data-transition-step="" data-journey-state="transition-entry-kyc" data-startup-tap-x="62.2" data-startup-tap-y="62.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-entry-kyc" data-transition-step="" data-journey-state="transition-entry-kyc" data-startup-tap-x="62.2" data-startup-tap-y="62.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-entry-kyc-heading" spellcheck="false">To Onboarding</h3>
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="video-kyc">
+                                <section class="execution-journey-section" data-journey-section="video-kyc">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-kyc-section-label" spellcheck="false">02 / Getting Into Video KYC</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-kyc-section-heading" spellcheck="false">Onboarding to Zapp Account</h3>
@@ -4935,13 +5052,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-kyc-unlock" data-transition-step="" data-journey-state="transition-kyc-unlock" data-startup-tap-x="9.7" data-startup-tap-y="8.2" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-kyc-unlock" data-transition-step="" data-journey-state="transition-kyc-unlock" data-startup-tap-x="9.7" data-startup-tap-y="8.2" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-kyc-unlock-heading" spellcheck="false">Skipping Video KYC</h3>
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="unlock">
+                                <section class="execution-journey-section" data-journey-section="unlock">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing The Unlock Journey</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilites</h3>
@@ -4957,13 +5074,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-unlock-outro" data-transition-step="" data-journey-state="transition-unlock-outro" data-startup-tap-x="39.6" data-startup-tap-y="21.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-unlock-outro" data-transition-step="" data-journey-state="transition-unlock-outro" data-startup-tap-x="39.6" data-startup-tap-y="21.7" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-unlock-outro-heading" spellcheck="false">To The Recap</h3>
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="outro">
+                                <section class="execution-journey-section" data-journey-section="outro">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-outro-section-label" spellcheck="false">04 / Closing The Loop</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-outro-section-heading" spellcheck="false">Placeholder Section</h3>
@@ -4979,13 +5096,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-outro-extra" data-transition-step="" data-journey-state="transition-outro-extra" data-startup-tap-x="75.0" data-startup-tap-y="81.1" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-outro-extra" data-transition-step="" data-journey-state="transition-outro-extra" data-startup-tap-x="75.0" data-startup-tap-y="81.1" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-outro-extra-heading" spellcheck="false">To The Next Step</h3>
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="extra-a">
+                                <section class="execution-journey-section" data-journey-section="extra-a">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-extra-section-label" spellcheck="false">05 / Another Placeholder</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-extra-section-heading" spellcheck="false">Zapp Account - Fully Upgraded</h3>
@@ -5000,13 +5117,13 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-complete" data-journey-section="transition-extra-outside" data-transition-step="" data-journey-state="transition-extra-outside" data-startup-tap-x="10.5" data-startup-tap-y="9.5" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-extra-outside" data-transition-step="" data-journey-state="transition-extra-outside" data-startup-tap-x="10.5" data-startup-tap-y="9.5" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-extra-outside-heading" spellcheck="false">Outside the Account</h3>
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-active" data-journey-section="extra-b">
+                                <section class="execution-journey-section" data-journey-section="extra-b">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-extra-b-section-label" spellcheck="false">06 / Zapp Account Across PayZapp</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-extra-b-section-heading" spellcheck="false">Zapp Account Across PayZapp</h3>
@@ -5014,7 +5131,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                     <div class="execution-journey-options">
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-five" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-five-kicker" spellcheck="false">Extra step 05</div><div class="execution-option-title" data-text-key="execution-extra-five-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-five-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
-                                        <button class="execution-journey-option is-active" type="button" data-journey-option="" data-journey-state="extra-six" aria-pressed="true"><div class="execution-option-kicker" data-text-key="execution-extra-six-kicker" spellcheck="false">Extra step 06</div><div class="execution-option-title" data-text-key="execution-extra-six-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-six-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
+                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="extra-six" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-extra-six-kicker" spellcheck="false">Extra step 06</div><div class="execution-option-title" data-text-key="execution-extra-six-title" spellcheck="false">Placeholder Journey Box</div><p class="execution-option-body" data-text-key="execution-extra-six-body" spellcheck="false">Placeholder description for this journey box. Replace with the screen's narrative.</p></button>
                                     </div>
                                 </section>
                             </div>
@@ -5024,7 +5141,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </div>
                 </div>
-            </article>
+            <div class="sticky-note pop-on-expand" style="--rot: -2.1deg; top: 718px; right: auto; left: -19.5rem;" data-sticky-id="sticky-mqo5r1qf-4">One of the plugins I built was for testing different colors instantly.</div><div class="sticky-note pop-on-expand" style="--rot: -1.6deg; top: 488px; right: -19.5rem; left: auto;" data-sticky-id="sticky-mqo5sirz-0"><span style="font-size: 15.84px; letter-spacing: 0.18px;">These plugins were one of the ways I found to use AI meaningfully in my workflow. Walked the team through it at a dedicated AI event we ran across design functions at Zeta.</span>New note</div><div class="sticky-note" style="--rot: 2deg; top: 53px; right: -19.5rem; left: auto;" data-sticky-id="sticky-mqo634yf-0">A lot of iterations that went through bank leadership.</div></article>
 
             <!-- Card 5: Impact -->
             <article class="stack-section has-floating-preview">
@@ -5233,6 +5350,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             </article>
 
         </div>
+
+        <div class="text-center px-10 pt-24 pb-8">
+            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
+                <span data-text-key="cta-line" spellcheck="false">Thank you for reading</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+        </div>
+
     </main>
 
     <div id="text-edit-toolbar" hidden="">
@@ -10042,6 +10167,185 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             (window.__caseStudyPendingChanges || []).forEach(window.__caseStudyMarkChange);
             window.__caseStudyPendingChanges = [];
 
+            // ── Sticky-note authoring ────────────────────────────────────────────
+            (function setupStickyNotes() {
+                const GUTTER = "-19.5rem"; // shared left/right gutter offset (matches existing notes)
+                let stickySeq = 0;
+
+                function markStickyChanged(id) {
+                    if (window.__caseStudyMarkChange) window.__caseStudyMarkChange("sticky:" + id);
+                }
+
+                function ensureId(note) {
+                    if (!note.dataset.stickyId) {
+                        note.dataset.stickyId = "sticky-" + Date.now().toString(36) + "-" + (stickySeq++);
+                    }
+                    return note.dataset.stickyId;
+                }
+
+                // The .stack-section whose vertical span contains viewportY, else the nearest.
+                function hostSectionAt(viewportY) {
+                    const sections = Array.from(document.querySelectorAll(".stack-section"));
+                    let host = null, hostDist = Infinity;
+                    for (const sec of sections) {
+                        const r = sec.getBoundingClientRect();
+                        if (viewportY >= r.top && viewportY <= r.bottom) return sec;
+                        const dist = viewportY < r.top ? r.top - viewportY : viewportY - r.bottom;
+                        if (dist < hostDist) { hostDist = dist; host = sec; }
+                    }
+                    return host;
+                }
+
+                // Reparent into a section as an absolute child; snap to a gutter; auto-bind to expand.
+                function placeInSection(note, section, viewportY, grabOffset, side) {
+                    if (!section) return;
+                    const r = section.getBoundingClientRect();
+                    const top = viewportY - r.top - grabOffset;
+                    section.appendChild(note);
+                    note.style.position = "";
+                    note.style.top = Math.round(top) + "px";
+                    if (side === "left") { note.style.left = GUTTER; note.style.right = "auto"; }
+                    else { note.style.right = GUTTER; note.style.left = "auto"; }
+                    // Dropped over a currently-expanded section → only-visible-when-expanded.
+                    note.classList.toggle("pop-on-expand", section.classList.contains("is-expanded"));
+                }
+
+                function makeDraggable(note, handle) {
+                    handle.addEventListener("pointerdown", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const noteRect = note.getBoundingClientRect();
+                        const grabOffset = e.clientY - noteRect.top;
+                        let side = note.style.left && note.style.left !== "auto" ? "left" : "right";
+                        note.classList.add("is-dragging");
+                        // Drag in viewport space for free movement, then settle into a section.
+                        // Seed the fixed coords from the current rect so the grab doesn't jump.
+                        note.style.position = "fixed";
+                        note.style.top = noteRect.top + "px";
+                        note.style.left = noteRect.left + "px";
+                        note.style.right = "auto";
+
+                        function onMove(ev) {
+                            side = ev.clientX < window.innerWidth / 2 ? "left" : "right";
+                            note.style.top = (ev.clientY - grabOffset) + "px";
+                            if (side === "left") { note.style.left = "1.5rem"; note.style.right = "auto"; }
+                            else { note.style.right = "1.5rem"; note.style.left = "auto"; }
+                        }
+                        function onUp(ev) {
+                            window.removeEventListener("pointermove", onMove);
+                            window.removeEventListener("pointerup", onUp);
+                            note.classList.remove("is-dragging");
+                            placeInSection(note, hostSectionAt(ev.clientY), ev.clientY, grabOffset, side);
+                            markStickyChanged(ensureId(note));
+                        }
+                        window.addEventListener("pointermove", onMove);
+                        window.addEventListener("pointerup", onUp);
+                    });
+                }
+
+                function decorate(note) {
+                    if (note.dataset.stickyReady === "true") return;
+                    note.dataset.stickyReady = "true";
+                    const id = ensureId(note);
+                    note.setAttribute("contenteditable", "true");
+                    note.setAttribute("spellcheck", "false");
+
+                    // Editing a note must not bubble to the section-header expand toggle.
+                    note.addEventListener("click", (e) => e.stopPropagation());
+
+                    const handle = document.createElement("span");
+                    handle.className = "sticky-note-handle";
+                    handle.textContent = "⠿";
+                    handle.title = "Drag to move";
+                    handle.setAttribute("contenteditable", "false");
+                    note.appendChild(handle);
+                    makeDraggable(note, handle);
+
+                    const del = document.createElement("button");
+                    del.type = "button";
+                    del.className = "sticky-note-delete";
+                    del.textContent = "×";
+                    del.title = "Delete note";
+                    del.setAttribute("contenteditable", "false");
+                    del.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); });
+                    del.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const sid = ensureId(note);
+                        note.remove();
+                        markStickyChanged(sid);
+                    });
+                    note.appendChild(del);
+
+                    const tilt = document.createElement("button");
+                    tilt.type = "button";
+                    tilt.className = "sticky-note-tilt";
+                    tilt.textContent = "↻";
+                    tilt.title = "Toggle tilt";
+                    tilt.setAttribute("contenteditable", "false");
+                    tilt.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); });
+                    tilt.addEventListener("click", (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const cur = parseFloat(note.style.getPropertyValue("--rot")) || 0;
+                        note.style.setProperty("--rot", (cur < 0 ? 2 : -2) + "deg"); // −2° ⇄ +2°
+                        markStickyChanged(ensureId(note));
+                    });
+                    note.appendChild(tilt);
+
+                    note.addEventListener("input", () => markStickyChanged(id));
+                }
+
+                function createNote() {
+                    const note = document.createElement("div");
+                    note.className = "sticky-note";
+                    note.style.setProperty("--rot", "-2deg");
+                    note.appendChild(document.createTextNode("New note"));
+
+                    const centerY = window.innerHeight / 2;
+                    const host = document.querySelector(".stack-section.is-expanded") || hostSectionAt(centerY);
+                    if (host) {
+                        const r = host.getBoundingClientRect();
+                        note.style.top = Math.round(centerY - r.top) + "px";
+                        note.style.right = GUTTER;
+                        note.style.left = "auto";
+                        host.appendChild(note);
+                        note.classList.toggle("pop-on-expand", host.classList.contains("is-expanded"));
+                    } else {
+                        note.style.position = "fixed";
+                        note.style.top = centerY + "px";
+                        note.style.right = "1.5rem";
+                        document.body.appendChild(note);
+                    }
+
+                    const textNode = note.firstChild;
+                    decorate(note);
+                    markStickyChanged(ensureId(note));
+
+                    note.focus();
+                    if (textNode) {
+                        const sel = window.getSelection();
+                        const range = document.createRange();
+                        range.selectNodeContents(textNode);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                }
+
+                function buildAddButton() {
+                    if (document.getElementById("sticky-note-add-btn")) return;
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.id = "sticky-note-add-btn";
+                    btn.textContent = "+ Sticky note";
+                    btn.addEventListener("click", createNote);
+                    document.body.appendChild(btn);
+                }
+
+                document.querySelectorAll(".sticky-note").forEach(decorate);
+                buildAddButton();
+            })();
+
             function getEditableFromSelection() {
                 const selection = window.getSelection();
                 if (!selection || selection.rangeCount === 0) return null;
@@ -10190,6 +10494,18 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     el.removeAttribute("style");
                 });
                 Array.from(clone.querySelectorAll(".execution-startup-tap-control")).forEach((el) => el.remove());
+
+                // Strip sticky-note edit affordances (handle/delete buttons rebuilt at runtime;
+                // only the note markup + inline position/rotation persist).
+                Array.from(clone.querySelectorAll(".sticky-note-handle, .sticky-note-delete, .sticky-note-tilt")).forEach((el) => el.remove());
+                Array.from(clone.querySelectorAll("#sticky-note-add-btn")).forEach((el) => el.remove());
+                Array.from(clone.querySelectorAll(".sticky-note")).forEach((el) => {
+                    el.classList.remove("is-dragging");
+                    el.removeAttribute("contenteditable");
+                    el.removeAttribute("spellcheck");
+                    el.removeAttribute("data-sticky-ready");
+                    el.style.removeProperty("position");
+                });
 
                 // Remove contenteditable from all text elements
                 Array.from(clone.querySelectorAll("[data-text-key]")).forEach((el) => {
@@ -16284,6 +16600,234 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>
