@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" style="--accent-h: 145; --accent-s: 50; --accent-l: 28; --color-bg: hsl(var(--accent-h), 30%, 97%); --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15);">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theming PayZapp for the IPL Season — Case Study</title>
+    <title>Theming PayZapp for the IPL Season â€” Case Study</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,6 +53,27 @@
         }
     </script>
     <style>
+        body { transition: opacity 0.3s ease-in; }
+        body[unresolved] { opacity: 0; display: block; overflow: hidden; position: relative; }
+
+        /* ── Page Loader ── */
+        #page-loader {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--color-bg);
+            display: flex; align-items: center; justify-content: center;
+            transition: opacity 0.35s ease-out;
+        }
+        #page-loader.done { opacity: 0; pointer-events: none; }
+        @keyframes loader-spin {
+            to { transform: rotate(360deg); }
+        }
+        .loader-ring {
+            width: 2.4rem; height: 2.4rem;
+            border: 2.5px solid var(--color-outline);
+            border-top-color: hsl(var(--accent-h) var(--accent-s) var(--accent-l));
+            border-radius: 50%;
+            animation: loader-spin 0.7s linear infinite;
+        }
         :root {
             /* Fonts */
             --font-display: 'Fraunces', serif;
@@ -61,7 +82,7 @@
             --font-mono:    'DM Mono', monospace;
 
             /* Base Palette */
-            --color-body-text:    #4A4038;
+            --color-body-text:    #5E544C;
             --color-ink:          #2C2621;
             --color-deep:         #5C5146;
             --color-summary-text: #453B32;
@@ -144,22 +165,22 @@
         }
         .mono { font-family: var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
 
-        /* ── Section dividers ── */
+        /* â”€â”€ Section dividers â”€â”€ */
         .section-divider {
             border: 0; border-top: 1px solid var(--section-separator-color);
             margin: 2rem 2rem;
         }
-        /* ── Section headings ── */
+        /* â”€â”€ Section headings â”€â”€ */
         .section-kicker {
             font-size: 13px; font-weight: 500; color: var(--color-muted); margin-bottom: 0.65rem; font-family: var(--font-body); letter-spacing: 0.2px;
         }
         @media (min-width: 768px) { .section-kicker { font-size: 1rem; } }
         .section-summary {
             font-size: 1.25rem; font-weight: 400; color: var(--color-summary-text); line-height: 1.5;
-            font-family: var(--font-display); margin-bottom: 2rem;
+            font-family: var(--font-display); margin-bottom: 2rem; letter-spacing: 0;
         }
         @media (min-width: 768px) { .section-summary { font-size: 1.5rem; } }
-        .section-body-copy { font-size: 16px; line-height: 1.75; margin-bottom: 1.25rem; }
+        .section-body-copy { font-size: 17.5px; line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 1.25rem; }
         .section-mini-heading { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-ink); margin-top: 1.5rem; }
         .numbered-point { margin-bottom: 2rem; }
         .num-label {
@@ -173,7 +194,7 @@
             vertical-align: -0.1em; border-radius: 2px;
         }
 
-        /* ── Phone mockup ── */
+        /* â”€â”€ Phone mockup â”€â”€ */
         .legacy-wallet-device {
             background: linear-gradient(145deg, var(--color-device-grad-start) 0%, var(--color-device-grad-mid) 36%, var(--color-device-grad-end) 100%);
             border-radius: 2.2rem; padding: 0.55rem; position: relative; overflow: hidden;
@@ -221,7 +242,7 @@
             font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
         }
 
-        /* ── Android status bar & nav bar ── */
+        /* â”€â”€ Android status bar & nav bar â”€â”€ */
         .phone-status-bar {
             height: 2.15rem; flex-shrink: 0;
             background: #09235A; display: flex; align-items: flex-start;
@@ -259,12 +280,11 @@
             background: rgba(255,255,255,0.45); border-radius: 999px;
         }
 
-        /* ── Two-column layout ── */
+        /* â”€â”€ Two-column layout â”€â”€ */
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0; }
         @media (max-width: 767px) { .two-col { grid-template-columns: 1fr; } }
         .two-col-aside { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4.5rem; margin: 2rem 0; align-items: center; }
         .two-col-aside .section-mini-heading { font-weight: 500; color: hsl(var(--accent-h) var(--accent-s) var(--accent-l)); }
-        .two-col-aside .section-body-copy { font-size: 17.5px; line-height: 1.7; letter-spacing: 0.3px; }
         @media (min-width: 768px) {
             .two-col-aside > div:first-child { padding-bottom: 5rem; }
         }
@@ -274,7 +294,7 @@
         }
         .phone-col .legacy-wallet-device { width: 100%; max-width: 21.2rem; }
 
-        /* ── Cards / pills ── */
+        /* â”€â”€ Cards / pills â”€â”€ */
         .campaign-card {
             border: 1px solid var(--color-card-border); border-radius: 0.75rem;
             background: var(--color-card-bg); padding: 1.5rem 1.75rem; margin-bottom: 2rem;
@@ -316,20 +336,74 @@
         }
         .inline-link:hover { border-bottom-color: var(--color-link); }
 
-        /* ── Hero ── */
+        /* â”€â”€ Hero â”€â”€ */
         @keyframes hero-float {
             0% { transform: translate3d(0,0,0); }
             50% { transform: translate3d(0,-10px,0); }
             100% { transform: translate3d(0,0,0); }
         }
         .hero-image-float { animation: hero-float 5s ease-in-out infinite; }
+
+        /* â”€â”€ App opening scale-up â”€â”€ */
+        @keyframes app-open {
+            0%   { transform: scale(0.5); opacity: 0; border-radius: 2rem; }
+            30%  { opacity: 1; }
+            60%  { transform: scale(0.98); }
+            80%  { transform: scale(1); border-radius: 0; }
+            100% { transform: scale(1); opacity: 1; border-radius: 0; }
+        }
+        .app-splash-overlay {
+            position: absolute; inset: 0; z-index: 10;
+            background: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            transform-origin: center center;
+            opacity: 0;
+            transform: scale(0.5);
+            border-radius: 2rem;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .app-splash-overlay.opening {
+            animation: app-open 0.65s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+        }
+        .app-splash-overlay.visible {
+            transform: scale(1); border-radius: 0;
+            opacity: 1;
+        }
+        .app-splash-overlay .splash-inner {
+            position: relative; width: 100%;
+            transform: translateY(-4%);
+        }
+
+        /* â”€â”€ Touch-dot â”€â”€ */
+        @keyframes touch-dot-move {
+            0%   { top: 48%; left: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            20%  { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+            80%  { top: 93%; left: 38%; transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            85%  { top: 93%; left: 38%; transform: translate(-50%, -50%) scale(0.7); }
+            90%  { top: 93%; left: 38%; transform: translate(-50%, -50%) scale(1.3); opacity: 0.5; }
+            100% { top: 93%; left: 38%; transform: translate(-50%, -50%) scale(0.7); opacity: 0; }
+        }
+        .touch-dot {
+            position: absolute; z-index: 8; top: 48%; left: 50%;
+            width: 1rem; height: 1rem;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.38);
+            box-shadow: 0 0 2px rgba(0,0,0,0.25);
+            pointer-events: none;
+            opacity: 0;
+        }
+        .touch-dot.active {
+            animation: touch-dot-move 2.2s ease-in-out forwards;
+        }
     </style>
 </head>
-<body>
-    <main class="relative z-[1] max-w-4xl mx-auto pb-40 bg-[var(--color-bg)]">
+<body unresolved>
+    <div id="page-loader"><div class="loader-ring"></div></div>
+    <main class="relative z-[1] max-w-4xl mx-auto bg-[var(--color-bg)]">
 
-        <!-- ── Hero ── -->
-        <section class="pt-[5.9rem] relative">
+        <!-- â”€â”€ Hero â”€â”€ -->
+        <section class="pt-[2.9rem] relative">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-10 pb-0 items-stretch" style="z-index:1;">
                 <div class="md:col-span-3 flex flex-col items-start text-left justify-center relative z-10 pt-10 pb-20">
                     <h1 class="font-light leading-[1.20] text-ink mb-5 tracking-[-0.015em]" style="font-size: clamp(2.4rem,5.2vw,3.8rem); font-family:var(--font-display);">
@@ -342,25 +416,26 @@
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-[var(--section-separator-color)]" style="position:relative;z-index:1;">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-[var(--section-separator-color)]" style="position:relative;z-index:1;margin-bottom:2rem;">
                 <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">My Role</span><span class="text-sm font-semibold text-ink">Design Lead</span></div>
-                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Duration</span><span class="text-sm font-semibold text-ink">Mar -- May 2025 (IPL Season)</span></div>
-                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Focus</span><span class="text-sm font-semibold text-ink">Growth &amp; Visual Design</span></div>
+                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Duration</span><span class="text-sm font-semibold text-ink">Mar -- May 2024 (IPL Season)</span></div>
+                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Focus</span><span class="text-sm font-semibold text-ink">Motion Design and Execution</span></div>
             </div>
         </section>
 
-        <!-- ── Context ── -->
+        <!-- â”€â”€ Context â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">The Brief</h2>
-            <p class="section-summary max-w-3xl">A visual overhaul of PayZapp to drive growth during the IPL season, partnering with Jio’s Dhan Dhana Dhan campaign alongside in-app initiatives focused on increasing activation and general engagement.</p>
+            <p class="section-summary max-w-3xl">A visual overhaul of PayZapp for the IPL season for growth and activation campaigns</p>
+            <p class="section-body-copy max-w-3xl">The goal was twofold: drive growth through the co-branded Jio's Jeeto Dhan Dhana Dhan campaign while simultaneously running in-app initiatives focused on increasing user activation and overall engagement across the product.</p>
         </section>
 
-        <!-- ── Campaigns ── -->
+        <!-- â”€â”€ Campaigns â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">The Campaigns</h2>
             <p class="section-summary max-w-3xl">Two growth initiatives designed to drive engagement, transactions, and new user acquisition during IPL.</p>
 
-            <div class="two-col">
+            <div class="two-col" style="margin-top:3.5rem;">
                 <div class="campaign-card flex flex-col justify-between relative overflow-hidden" style="background: #B45309; border: none;">
                     <div class="pr-20">
                         <h3 style="color: #ffffff;">Jeeto Dhan Dhana Dhan</h3>
@@ -384,7 +459,7 @@
 
         </section>
 
-        <!-- ── Design Scope ── -->
+        <!-- â”€â”€ Design Scope â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">Design Tasks at Hand</h2>
             <p class="section-summary max-w-3xl">Identify all the surfaces that could be revamped and themed within the existing constructs to minimize dev effort with a flavor of IPL and design artifacts to support the ongoing campaigns.</p>
@@ -392,7 +467,7 @@
             <p class="section-body-copy">To bring the energy of the IPL season directly into the app, we set out to celebrate the tournament by overhauling key user-facing surfaces. Here is what we ended up designing and implementing to transform the in-app experience.</p>
         </section>
 
-        <!-- ── Design 01: Promo Video ── -->
+        <!-- â”€â”€ Design 01: Promo Video â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -425,7 +500,7 @@
             </div>
         </section>
 
-        <!-- ── Design 02: Leaderboard ── -->
+        <!-- â”€â”€ Design 02: Leaderboard â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -458,7 +533,7 @@
             </div>
         </section>
 
-        <!-- ── Design 02: Scan QR ── -->
+        <!-- â”€â”€ Design 02: Scan QR â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -492,7 +567,7 @@
             </div>
         </section>
 
-        <!-- ── Design 03: Referral Revamp ── -->
+        <!-- â”€â”€ Design 03: Referral Revamp â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -527,7 +602,7 @@
             </div>
         </section>
 
-        <!-- ── Design 04: Transaction Success Animation ── -->
+        <!-- â”€â”€ Design 04: Transaction Success Animation â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -565,14 +640,47 @@
             </div>
         </section>
 
-        <!-- ── Promotional Surfaces ── -->
+        <!-- â”€â”€ Design 05: Splash Screen â”€â”€ -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">The Splash Screen</h3>
+                    <p class="section-body-copy mb-3">To set the tone from the very second the app is opened, we updated the entry splash screen with a dynamic IPL-themed logo animation. This immediate visual handshake primes the user for the cricket celebration waiting inside.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar" id="splash-status-bar" style="height: 1.5rem; background: #5B7E9C;">
+                                    <time>4:16</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content" style="background: #ffffff;">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/Home Screen.png" style="display: block; top: 0; bottom: auto; height: auto; width: 100%; z-index: 0;">
+                                    <div class="touch-dot" id="splash-touch-dot"></div>
+                                    <div class="app-splash-overlay" id="splash-overlay">
+                                        <div class="splash-inner">
+                                            <div id="splash-screen-lottie" style="width: 100%; aspect-ratio: 9/16; pointer-events: none;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar" style="background: #1c1c1c;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- â”€â”€ Promotional Surfaces â”€â”€ -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
 
             <h3 class="section-mini-heading" style="font-weight: 500; color: hsl(var(--accent-h) var(--accent-s) var(--accent-l));">Spotlight Banners &amp; Bottom Sheets</h3>
-            <p class="section-body-copy mb-3">We created a set of spotlight banners that first teased the campaigns and then, once they went live, turned into entry points for users to start engaging with them. Alongside these, we designed bottom sheets that did the same job — sent out to segmented users to make them aware of the campaigns and nudge them into participating.</p>
+            <p class="section-body-copy mb-3">We created a set of spotlight banners that first teased the campaigns and then, once they went live, turned into entry points for users to start engaging with them. Alongside these, we designed bottom sheets that did the same job â€” sent out to segmented users to make them aware of the campaigns and nudge them into participating.</p>
 
-            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; flex-wrap: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
+            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; margin-bottom: 4rem;: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
                 <div class="phone-col" style="flex: 0 0 19rem;">
                     <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
                         <div class="legacy-wallet-device">
@@ -603,9 +711,9 @@
                     <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
-                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
-                                    <time>9:41</time>
-                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem; background: #75C9E5;">
+                                    <time style="color:#1a1a1a;font-weight:700;">9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="#1a1a1a"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="#1a1a1a"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="#1a1a1a" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="#1a1a1a" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="#1a1a1a" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="#1a1a1a"/><path d="M17.5 3.5v3" stroke="#1a1a1a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
                                 </div>
                                 <div class="phone-screen-content">
                                     <img class="placeholder-image-layer" alt="" src="case study assets/Bottom Sheets.png" style="top: 0; bottom: auto; height: auto; width: 100%;">
@@ -620,20 +728,40 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- â”€â”€ Conclusion â”€â”€ -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+            <h2 class="section-kicker">Conclusion</h2>
+            <p class="section-summary max-w-3xl">What began with the IPL season evolved into a repeatable theming system.</p>
+            <p class="section-body-copy max-w-3xl">From this project emerged a standardized framework of feature-flagged, themifiable surfaces that could be redeployed for any celebration â€” Diwali, Holi, Christmas, and beyond â€” with minimal lift. All it took was preparing assets in the established format and handing them off to developers for a swift deployment. A new campaign could be live just like that.</p>
+
+            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; margin-bottom: 4rem; flex-wrap: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
                 <div class="phone-col" style="flex: 0 0 19rem;">
-                    <div class="editable-placeholder" style="width:100%;max-width:19rem;">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-screen-content" style="background: #000000;">
+                                    <img class="placeholder-image-layer example-fade-set1" alt="" src="case study assets/examples/Christmas.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 1;">
+                                    <img class="placeholder-image-layer example-fade-set1" alt="" src="case study assets/examples/Diwali.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-col" style="flex: 0 0 19rem;">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
                                     <time>9:41</time>
                                     <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
                                 </div>
-                                <div class="phone-screen-content">
-                                    <div class="placeholder-default">
-                                        <div class="legacy-wallet-bar"></div>
-                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Promo</div><div class="font-display text-sm font-medium text-ink">Promotional Surface</div><div class="text-[11px] text-muted mt-1">Campaign entry point</div></div>
-                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
-                                    </div>
+                                <div class="phone-screen-content" style="background: #ffffff;">
+                                    <img class="placeholder-image-layer example-fade-set2" alt="" src="case study assets/examples/Navratri.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 1;">
+                                    <img class="placeholder-image-layer example-fade-set2" alt="" src="case study assets/examples/Dussehra.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
                                 </div>
                                 <div class="phone-nav-bar"></div>
                             </div>
@@ -643,15 +771,27 @@
             </div>
         </section>
 
-        <!-- ── Impact ── -->
-        <section class="pt-12 pb-12 pl-10 pr-10">
-            <h2 class="section-kicker">Conclusion</h2>
-            <p class="section-summary max-w-3xl">The IPL theming effort brought a cohesive, energetic feel to PayZapp during the cricket season, driving growth and engagement across 5 core in-app surfaces and promotional banners—all within the existing contracts.</p>
-        </section>
-
     </main>
+
+    <div class="text-center px-10 pt-8 pb-24">
+        <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
+            Thank you for reading
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+        </div>
+    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            var splashLottieAnim = lottie.loadAnimation({
+                container: document.getElementById('splash-screen-lottie'),
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: 'case study assets/lottie/splash_screen_ipl_v2.json',
+                rendererSettings: {
+                    preserveAspectRatio: 'xMidYMid meet'
+                }
+            });
+
             lottie.loadAnimation({
                 container: document.getElementById('scan-qr-lottie'),
                 renderer: 'svg',
@@ -796,7 +936,7 @@
                 }
             });
 
-            // ── Leaderboard auto-scroll: pan down to bottom, hold, pan back to top, hold, loop ──
+            // â”€â”€ Leaderboard auto-scroll: pan down to bottom, hold, pan back to top, hold, loop â”€â”€
             var lbImg = document.getElementById('leaderboard-img');
             var lbFade = document.getElementById('leaderboard-top-fade');
             if (lbImg) {
@@ -823,7 +963,94 @@
                 else lbImg.addEventListener('load', startLeaderboardScroll);
             }
 
-            // ── Spotlight banners: crossfade through the set, holding each ──
+            // â”€â”€ Splash screen: app-open sequence â”€â”€
+            var splashOverlay = document.getElementById('splash-overlay');
+            var splashStatusBar = document.getElementById('splash-status-bar');
+            var splashTime = splashStatusBar ? splashStatusBar.querySelector('time') : null;
+            var splashDot = document.getElementById('splash-touch-dot');
+            var SPLASH_WAIT = 2200;   // wait before opening
+            var SPLASH_SHOW = 7500;   // how long after opening before fade
+            var SPLASH_FADE = 250;    // fade out duration
+            var SPLASH_BAR_DELAY = 340; // ms before status bar flips to white (within 900ms animation)
+            var SPLASH_BAR_IN_MS  = 400;  // fade in to white duration
+            var SPLASH_BAR_OUT_MS = 250;  // fade back to brand color duration
+
+            function splashReset() {
+                if (!splashOverlay) return;
+                splashOverlay.classList.remove('visible', 'opening');
+                splashOverlay.style.animation = 'none';
+                splashOverlay.style.transition = 'none';
+                splashOverlay.style.opacity = '0';
+                splashOverlay.style.transform = 'scale(0.5)';
+                splashOverlay.style.borderRadius = '2rem';
+                void splashOverlay.offsetWidth;
+                if (splashDot) { splashDot.classList.remove('active'); splashDot.style.animation = 'none'; void splashDot.offsetWidth; splashDot.style.animation = ''; }
+                if (splashStatusBar) {
+                    splashStatusBar.style.transition = 'none';
+                    splashStatusBar.style.background = '#5B7E9C';
+                    splashStatusBar.classList.remove('status-bar-light');
+                }
+                if (splashTime) {
+                    splashTime.style.transition = 'none';
+                    splashTime.style.color = '#fff';
+                    splashTime.style.fontWeight = '';
+                }
+            }
+
+            function splashFadeOut() {
+                if (!splashOverlay) return;
+                splashOverlay.style.transition = 'opacity 0.25s ease-in';
+                splashOverlay.style.opacity = '0';
+                if (splashStatusBar) {
+                    splashStatusBar.style.transition = 'background ' + (SPLASH_BAR_OUT_MS / 1000) + 's ease-in';
+                    splashStatusBar.style.background = '#5B7E9C';
+                    splashStatusBar.classList.remove('status-bar-light');
+                }
+                if (splashTime) {
+                    splashTime.style.transition = 'color ' + (SPLASH_BAR_OUT_MS / 1000) + 's ease-in';
+                    splashTime.style.color = '#fff';
+                    splashTime.style.fontWeight = '';
+                }
+                setTimeout(function () {
+                    splashStart();
+                }, SPLASH_FADE);
+            }
+
+            function splashStart() {
+                if (!splashOverlay) return;
+                splashReset();
+                if (splashDot) { splashDot.classList.add('active'); }
+                setTimeout(function () {
+                    splashOverlay.style.animation = '';
+                    splashOverlay.style.opacity = '';
+                    splashOverlay.style.transform = '';
+                    splashOverlay.style.borderRadius = '';
+                    splashOverlay.classList.add('opening');
+                    if (splashDot) { splashDot.classList.remove('active'); }
+                    splashLottieAnim.goToAndPlay(0);
+                    setTimeout(function () {
+                        if (splashStatusBar) {
+                            splashStatusBar.style.transition = 'background ' + (SPLASH_BAR_IN_MS / 1000) + 's ease-out';
+                            splashStatusBar.style.background = '#ffffff';
+                            splashStatusBar.classList.add('status-bar-light');
+                        }
+                        if (splashTime) {
+                            splashTime.style.transition = 'color ' + (SPLASH_BAR_IN_MS / 1000) + 's ease-out';
+                            splashTime.style.color = '#3a3a3a';
+                            splashTime.style.fontWeight = '700';
+                        }
+                    }, SPLASH_BAR_DELAY);
+                    setTimeout(function () {
+                        splashOverlay.classList.remove('opening');
+                        splashOverlay.classList.add('visible');
+                        setTimeout(splashFadeOut, SPLASH_SHOW);
+                    }, 650); // animation duration
+                }, SPLASH_WAIT);
+            }
+
+            splashStart();
+
+            // â”€â”€ Spotlight banners: crossfade through the set, holding each â”€â”€
             var spotlightImgs = document.querySelectorAll('.spotlight-banner');
             if (spotlightImgs.length > 1) {
                 var SPOTLIGHT_HOLD = 4000; // time each banner stays
@@ -838,7 +1065,58 @@
                     spotlightImgs[spotIdx].style.opacity = '1';
                 }, SPOTLIGHT_HOLD);
             }
+
+            // â”€â”€ Conclusion examples: crossfade between pairs â”€â”€
+            function crossfadeSet(selector, holdMs, fadeMs) {
+                var imgs = document.querySelectorAll(selector);
+                if (imgs.length < 2) return;
+                imgs.forEach(function (img) {
+                    img.style.transition = 'opacity ' + fadeMs + 'ms ease-in-out';
+                });
+                var idx = 0;
+                setInterval(function () {
+                    imgs[idx].style.opacity = '0';
+                    idx = (idx + 1) % imgs.length;
+                    imgs[idx].style.opacity = '1';
+                }, holdMs);
+            }
+            crossfadeSet('.example-fade-set1', 5000, 800);
+            crossfadeSet('.example-fade-set2', 5000, 800);
+
         });
+
+        // ── Page load reveal ──
+        var loader = document.getElementById('page-loader');
+        function revealPage() {
+            if (!loader) return;
+            loader.classList.add('done');
+            document.body.removeAttribute('unresolved');
+            setTimeout(function () { if (loader.parentNode) loader.remove(); }, 400);
+        }
+
+        var criticalAssets = document.querySelectorAll('img[src], video[src]');
+        var criticalCount = criticalAssets.length;
+        var criticalLoaded = 0;
+        if (criticalCount === 0) {
+            revealPage();
+        } else {
+            criticalAssets.forEach(function (el) {
+                if (el.complete || el.readyState >= 3) {
+                    criticalLoaded++;
+                    if (criticalLoaded >= criticalCount) revealPage();
+                } else {
+                    el.addEventListener('load', function () {
+                        criticalLoaded++;
+                        if (criticalLoaded >= criticalCount) revealPage();
+                    });
+                    el.addEventListener('error', function () {
+                        criticalLoaded++;
+                        if (criticalLoaded >= criticalCount) revealPage();
+                    });
+                }
+            });
+        }
+        setTimeout(function () { if (loader && !loader.classList.contains('done')) revealPage(); }, 5000);
     </script>
 </body>
 </html>
