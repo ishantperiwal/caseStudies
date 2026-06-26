@@ -1915,6 +1915,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .execution-journey-stage {
             --execution-phone-column: 14.5rem;
             --execution-stage-gap: clamp(2.5rem, 4vw, 4rem);
+            /* Shifts ONLY the journey flow sections (timeline line + checkpoint dots +
+               boxes, incl. their heading/body) and the phone mock left by the SAME amount.
+               The intro / explanatory text above the flow stays exactly where it is.
+               Tune this one value; sections and phone move together. Zeroed on mobile. */
+            --execution-journey-shift: 2.5rem;
             display: grid;
             grid-template-columns: minmax(0, 1fr) var(--execution-phone-column);
             align-items: start;
@@ -2049,6 +2054,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --timeline-dot-size: 10px;
             --timeline-dot-border: 5px;
             --timeline-dot-top: 0.35rem;
+            /* Slides the whole flow section (timeline + checkpoints + boxes) left, leaving
+               the intro text above untouched. Same value drives the phone (see spacer). */
+            transform: translateX(calc(-1 * var(--execution-journey-shift, 0rem)));
         }
 
         .execution-journey-section + .execution-journey-section {
@@ -2297,6 +2305,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             justify-self: end;
             visibility: hidden;
             pointer-events: none;
+            /* Moves the phone mock left by the SAME amount as the journey sections
+               (--execution-journey-shift). The floating phone tracks this invisible
+               spacer's on-screen position in JS, so transforming it just repositions the
+               phone with no layout or scroll impact. */
+            transform: translateX(calc(-1 * var(--execution-journey-shift, 0rem)));
         }
 
         .execution-phone-floating {
@@ -2744,6 +2757,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
             .execution-journey-stage {
                 grid-template-columns: 1fr;
+                /* Single-column, phone centered on mobile — no horizontal nudge. */
+                --execution-journey-shift: 0rem;
             }
 
             .execution-journey-intro,
@@ -7125,20 +7140,17 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
             function updateFromScroll() {
                 scrollRaf = null;
-                // In stepping (view) mode the active box is driven entirely by discrete
-                // wheel/key/touch ticks, so we never pick the active box from raw scroll
-                // position (which is what allowed fast scrolling to skip boxes). We still
-                // watch for the entry-divider trigger here.
-                if (steppingEnabled) {
-                    maybeAutoEnterFromTop();
-                    return;
-                }
                 if (startupTapActive) return;
                 if (stepScrollActive) return;
                 if (Date.now() < manualUntil) return;
 
+                // Free-flow scrolling: whichever journey box (or transition step) is nearest
+                // the viewport center becomes active, swapping the phone screen + highlight.
+                // In view mode this stays "quiet" (allowStartup: false) so a passing scroll
+                // never fires a transition's tap orchestration or yanks the page — arrow keys
+                // own the orchestrated stepping. Edit mode keeps its existing behavior.
                 const stateId = getNearestStateFromScroll();
-                if (stateId) setActiveState(stateId);
+                if (stateId) setActiveState(stateId, steppingEnabled ? { allowStartup: false } : {});
             }
 
             function scheduleScrollUpdate() {
@@ -7968,6 +7980,19 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 return rootRect.top < window.innerHeight * 0.95 && rootRect.bottom > window.innerHeight * 0.05;
             }
 
+            // Free-scroll arrow stepping only engages while the journey's boxes straddle the
+            // viewport center — i.e. the user has scrolled down to the flow itself, not the
+            // intro above it or past the last box. Outside that range, arrow/page keys scroll
+            // the page normally instead of being captured by the journey.
+            function journeyStepsOwnCenter() {
+                const first = journeySteps[0]?.anchorEl;
+                const last = journeySteps[journeySteps.length - 1]?.anchorEl;
+                if (!first || !last) return false;
+                const center = window.innerHeight / 2;
+                return first.getBoundingClientRect().top <= center
+                    && last.getBoundingClientRect().bottom >= center;
+            }
+
             function handleJourneyKeyDown(event) {
                 // While a transition is mid-orchestration, a distinct scroll-key tick should
                 // still drive it (forward = fast-forward to the next section, back = cancel),
@@ -7994,26 +8019,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 if (!section?.classList.contains("is-expanded")) return;
                 if (isEditingInteractionTarget(event.target)) return;
 
-                // If the nav hint is visible and the journey hasn't been entered yet,
-                // any arrow key auto-enters the flow (same as scrolling to the divider).
-                if (!journeyEntered && scrollKeys.has(event.key)) {
-                    const hint = root.querySelector(".journey-nav-hint");
-                    if (hint) {
-                        const rect = hint.getBoundingClientRect();
-                        const inView = rect.top < window.innerHeight && rect.bottom > 0;
-                        if (inView) {
-                            event.preventDefault();
-                            event.stopImmediatePropagation();
-                            commitAutoEnter();
-                            return;
-                        }
-                    }
-                }
-
-                if (!journeyControlEngaged()) {
+                // Free-scroll mode: arrow/page keys only take over the flow once the journey
+                // boxes own the viewport center. Above the first box (e.g. reading the intro)
+                // or past the last box, keys scroll the page normally.
+                if (!journeyStepsOwnCenter()) {
                     journeyControlWasEngaged = false;
                     return;
                 }
+                root.querySelector(".journey-nav-hint")?.classList.add("is-interacted");
 
                 let direction = 0;
                 if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === " " || event.key === "Spacebar") {
@@ -8080,14 +8093,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             phone?.addEventListener("pointerdown", handleStartupTapPointerDown);
             window.addEventListener("keydown", handleStartupTapKeyDown);
 
-            // View mode: one journey box per scroll tick (no skipping). Capture phase +
-            // stopImmediatePropagation so this wins over the page's smooth-scroll handler
-            // while the journey is expanded and on screen; elsewhere it no-ops.
+            // View mode: free native scrolling. The nearest box to the viewport center is
+            // highlighted on scroll (see updateFromScroll); arrow/page keys step through the
+            // flow one box at a time with orchestrated centering + transitions. The old
+            // wheel/touch scroll-lock is intentionally no longer registered so the page
+            // scrolls freely (keyboard stays capture-phase so it wins over the page's
+            // smooth-scroll handler while the journey owns the viewport center).
             if (steppingEnabled) {
-                window.addEventListener("wheel", handleSectionSnapWheel, { passive: false, capture: true });
                 window.addEventListener("keydown", handleJourneyKeyDown, { capture: true });
-                window.addEventListener("touchstart", handleJourneyTouchStart, { passive: true, capture: true });
-                window.addEventListener("touchmove", handleJourneyTouchMove, { passive: false, capture: true });
             }
 
             setActiveState(options[0]?.dataset.journeyState || states[0]?.dataset.journeyScreenState);
