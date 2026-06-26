@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en" style="--accent-h: 145; --accent-s: 50; --accent-l: 28; --color-bg: hsl(var(--accent-h), 30%, 97%); --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15);">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theming PayZapp for the IPL Season — Case Study</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;0,700;1,400&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Caveat:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ink: 'var(--color-ink)',
+                        deep: 'var(--color-deep)',
+                        muted: 'var(--color-muted)',
+                        medium: 'var(--color-medium)',
+                        outline: 'var(--color-outline)',
+                        warm: {
+                            50:  'var(--color-bg)',
+                            100: 'var(--color-warm-100)',
+                            200: 'var(--color-warm-200)',
+                            300: 'var(--color-warm-300)',
+                            400: 'var(--color-medium)',
+                            500: 'var(--color-muted)',
+                            600: 'var(--color-deep)',
+                            700: 'var(--color-outline)',
+                            800: 'var(--color-ink)',
+                            900: 'var(--color-warm-900)',
+                            950: 'var(--color-warm-950)'
+                        },
+                        brand: {
+                            50:  'hsl(var(--accent-h) 80% 95%)', 100: 'hsl(var(--accent-h) 80% 88%)',
+                            200: 'hsl(var(--accent-h) 75% 76%)', 300: 'hsl(var(--accent-h) 70% 62%)',
+                            400: 'hsl(var(--accent-h) 65% 50%)',
+                            500: 'hsl(var(--accent-h) var(--accent-s) var(--accent-l))',
+                            600: 'hsl(var(--accent-h) calc(var(--accent-s) * 1.05) calc(var(--accent-l) * 0.85))',
+                            700: 'hsl(var(--accent-h) calc(var(--accent-s) * 1.1) calc(var(--accent-l) * 0.65))'
+                        }
+                    },
+                    fontFamily: {
+                        sans:    ["'Instrument Sans'", 'sans-serif'],
+                        display: ["'Fraunces'", 'serif'],
+                        body:    ["'Instrument Sans'", 'sans-serif'],
+                        mono:    ["'DM Mono'", 'monospace'],
+                        sticky:  ["'Caveat'", 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            /* Fonts */
+            --font-display: 'Fraunces', serif;
+            --font-body:    'Instrument Sans', sans-serif;
+            --font-sticky:  'Caveat', cursive;
+            --font-mono:    'DM Mono', monospace;
+
+            /* Base Palette */
+            --color-body-text:    #4A4038;
+            --color-ink:          #2C2621;
+            --color-deep:         #5C5146;
+            --color-summary-text: #453B32;
+            --color-muted:        #7A6F64;
+            --color-medium:    #A89B8F;
+            --color-outline:   #433A31;
+
+            /* Warm Shades */
+            --color-warm-100: #F4EFEA;
+            --color-warm-200: #EBE5DC;
+            --color-warm-300: #D5C9BA;
+            --color-warm-900: #1C1815;
+            --color-warm-950: #13110F;
+
+            /* Accent/Dynamic colors based on --accent-h */
+            --color-num-label:            hsl(var(--accent-h), 16%, 46%);
+            --color-slash-heading:         hsl(var(--accent-h), 45%, 42%);
+            --color-caption-text:          hsl(var(--accent-h), 20%, 15%);
+            --color-link:                  hsl(var(--accent-h), 35%, 42%);
+            --color-link-border:           hsl(var(--accent-h), 35%, 52%, 0.4);
+            --color-placeholder-bg-start:  hsl(var(--accent-h), 40%, 92%);
+            --color-placeholder-bg-end:    hsl(var(--accent-h), 30%, 97%);
+            --color-placeholder-text:      hsl(var(--accent-h), 20%, 15%);
+
+            /* Device / Mockup Colors */
+            --color-device-grad-start:     #303033;
+            --color-device-grad-mid:       #1d1d1f;
+            --color-device-grad-end:       #161617;
+            --color-device-screen-bg:      #1a1a1a;
+            --color-device-border:         rgba(71, 71, 71, 0.14);
+            --color-device-bar-bg:         rgba(255, 255, 255, 0.55);
+            --color-device-card-bg:        #d7eee7;
+            --color-device-card-border:    rgba(71, 71, 71, 0.16);
+            --color-device-caption-border: rgba(71, 71, 71, 0.18);
+
+            /* Cards & Badges */
+            --color-card-border:    rgba(71, 71, 71, 0.14);
+            --color-card-bg:        rgba(255, 255, 255, 0.55);
+            --color-badge-bg:       rgba(255, 255, 255, 0.6);
+            --color-badge-border:   rgba(71, 71, 71, 0.16);
+
+            /* Campaign Pills */
+            --color-pill-green-bg:     rgba(26, 95, 103, 0.08);
+            --color-pill-green-border: rgba(26, 95, 103, 0.22);
+            --color-pill-green-text:   #1a5f67;
+            --color-pill-amber-bg:     rgba(138, 90, 0, 0.08);
+            --color-pill-amber-border: rgba(138, 90, 0, 0.22);
+            --color-pill-amber-text:   #8a5a00;
+        }
+        html {
+            font-size: 99%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+        }
+        html::before {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 0;
+            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) 1.5px, transparent 1.5px);
+            background-size: 22px 22px;
+        }
+        html::after {
+            content: '';
+            position: fixed; inset: 0; pointer-events: none; z-index: 1;
+            background: radial-gradient(ellipse 46% 120% at center,
+                var(--color-bg) 0%, var(--color-bg) 45%,
+                color-mix(in srgb, var(--color-bg) 28%, transparent) 72%, transparent 100%);
+        }
+        body {
+            font-family: var(--font-body);
+            position: relative; z-index: 2;
+            background-color: var(--color-bg);
+            color: var(--color-body-text);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.75rem; font-size: 16px; letter-spacing: 0.025em;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, .font-display {
+            font-family: var(--font-display); color: var(--color-ink); letter-spacing: 0; line-height: 1.15;
+        }
+        .mono { font-family: var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
+
+        /* ── Section dividers ── */
+        .section-divider {
+            border: 0; border-top: 1px solid var(--section-separator-color);
+            margin: 2rem 2rem;
+        }
+        /* ── Section headings ── */
+        .section-kicker {
+            font-size: 13px; font-weight: 500; color: var(--color-muted); margin-bottom: 0.65rem; font-family: var(--font-body); letter-spacing: 0.2px;
+        }
+        @media (min-width: 768px) { .section-kicker { font-size: 1rem; } }
+        .section-summary {
+            font-size: 1.25rem; font-weight: 400; color: var(--color-summary-text); line-height: 1.5;
+            font-family: var(--font-display); margin-bottom: 2rem;
+        }
+        @media (min-width: 768px) { .section-summary { font-size: 1.5rem; } }
+        .section-body-copy { font-size: 16px; line-height: 1.75; margin-bottom: 1.25rem; }
+        .section-mini-heading { font-family: var(--font-display); font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-ink); margin-top: 1.5rem; }
+        .numbered-point { margin-bottom: 2rem; }
+        .num-label {
+            font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+            color: var(--color-num-label); margin-right: 0.5rem;
+        }
+        .slash-heading::before {
+            content: '';
+            display: inline-block; width: 3px; height: 1em;
+            background: var(--color-slash-heading); margin-right: 0.5rem;
+            vertical-align: -0.1em; border-radius: 2px;
+        }
+
+        /* ── Phone mockup ── */
+        .legacy-wallet-device {
+            background: linear-gradient(145deg, var(--color-device-grad-start) 0%, var(--color-device-grad-mid) 36%, var(--color-device-grad-end) 100%);
+            border-radius: 2.2rem; padding: 0.55rem; position: relative; overflow: hidden;
+        }
+        .legacy-wallet-device::after {
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            box-shadow:
+                inset 0 0 0 0.55rem var(--color-device-grad-end),
+                inset 1px 1px 1.5px rgba(255,255,255,0.18),
+                inset 0 0 0 1px rgba(255,255,255,0.04),
+                inset -1px -1.5px 2px rgba(0,0,0,0.45);
+            pointer-events: none; z-index: 100;
+        }
+        .legacy-wallet-screen {
+            background: var(--color-bg); border-radius: 1.5rem; aspect-ratio: 9 / 19.8;
+            padding: 0; display: flex; flex-direction: column; gap: 0;
+            overflow: hidden; position: relative;
+        }
+        .legacy-wallet-screen::after {
+            content: ""; position: absolute; inset: 0; border-radius: inherit;
+            box-shadow: inset 0 -4px 8px rgba(0,0,0,0.16); pointer-events: none; z-index: 6;
+        }
+        .placeholder-image-layer {
+            position: absolute; inset: -4px; width: calc(100% + 8px); height: calc(100% + 8px);
+            max-width: none; max-height: none; object-fit: cover; object-position: top center;
+            display: none; z-index: 0;
+        }
+        .has-saved-image .placeholder-image-layer { display: block; }
+        .has-saved-image .legacy-wallet-screen { background: var(--color-device-screen-bg); }
+        .has-saved-image .placeholder-default { opacity: 0; }
+        .legacy-wallet-bar, .legacy-wallet-tile {
+            border: 1px solid var(--color-device-border); background: var(--color-device-bar-bg);
+        }
+        .legacy-wallet-bar { height: 2.5rem; }
+        .legacy-wallet-card {
+            background: var(--color-device-card-bg); border: 1px solid var(--color-device-card-border);
+            border-radius: 0.8rem; padding: 0.9rem 1rem;
+        }
+        .legacy-wallet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+        .legacy-wallet-tile { aspect-ratio: 3.5 / 2; border-radius: 0.65rem; }
+        .legacy-wallet-caption {
+            display: inline-block; margin-top: 0.85rem; padding: 0.4rem 0.7rem;
+            border: 1px solid var(--color-device-caption-border); border-radius: 0.35rem;
+            color: var(--color-caption-text); font-family: var(--font-mono);
+            font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+        }
+
+        /* ── Android status bar & nav bar ── */
+        .phone-status-bar {
+            height: 2.15rem; flex-shrink: 0;
+            background: #09235A; display: flex; align-items: flex-start;
+            justify-content: space-between; padding: 0.45rem 1.1rem 0 1.35rem;
+        }
+        .phone-status-bar time {
+            font-family: var(--font-body); font-size: 11px; font-weight: 500;
+            color: #fff; letter-spacing: 0.06em;
+        }
+        .phone-status-bar .status-icons { display: flex; align-items: center; gap: 5px; margin-top: 2px; }
+        .phone-status-bar.status-bar-light { background: #ffffff; }
+        .phone-status-bar.status-bar-light time { color: #3a3a3a; font-weight: 700; }
+        .phone-status-bar.status-bar-light [fill="white"] { fill: #3a3a3a; }
+        .phone-status-bar.status-bar-light [stroke="white"] { stroke: #3a3a3a; }
+        .phone-status-bar.status-bar-promo time { color: hsl(219, 72%, 18%); font-weight: 700; }
+        .phone-status-bar.status-bar-promo [fill="white"] { fill: hsl(219, 72%, 18%); }
+        .phone-status-bar.status-bar-promo [stroke="white"] { stroke: hsl(219, 72%, 18%); }
+        .phone-screen-content {
+            flex: 1; position: relative; overflow: hidden;
+        }
+        .phone-screen-content .placeholder-image-layer {
+            inset: 0; width: 100%; height: 100%;
+        }
+        .phone-screen-content .placeholder-default {
+            display: flex; flex-direction: column; gap: 0.7rem;
+            padding: 0.6rem 0.85rem;
+        }
+        .phone-nav-bar {
+            height: 0.95rem; flex-shrink: 0;
+            background: #1c1c1c; display: flex; align-items: center;
+            justify-content: center;
+        }
+        .phone-nav-bar::after {
+            content: ''; display: block; width: 2.5rem; height: 0.22rem;
+            background: rgba(255,255,255,0.45); border-radius: 999px;
+        }
+
+        /* ── Two-column layout ── */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0; }
+        @media (max-width: 767px) { .two-col { grid-template-columns: 1fr; } }
+        .two-col-aside { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4.5rem; margin: 2rem 0; align-items: center; }
+        .two-col-aside .section-mini-heading { font-weight: 500; color: hsl(var(--accent-h) var(--accent-s) var(--accent-l)); }
+        .two-col-aside .section-body-copy { font-size: 17.5px; line-height: 1.7; letter-spacing: 0.3px; }
+        @media (min-width: 768px) {
+            .two-col-aside > div:first-child { padding-bottom: 5rem; }
+        }
+        @media (max-width: 767px) { .two-col-aside { grid-template-columns: 1fr; } }
+        .phone-col {
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .phone-col .legacy-wallet-device { width: 100%; max-width: 21.2rem; }
+
+        /* ── Cards / pills ── */
+        .campaign-card {
+            border: 1px solid var(--color-card-border); border-radius: 0.75rem;
+            background: var(--color-card-bg); padding: 1.5rem 1.75rem; margin-bottom: 2rem;
+            min-height: 18rem;
+        }
+        .campaign-card h3 { font-family: var(--font-display); font-size: 1.55rem; font-weight: 600; margin-bottom: 0.9rem; }
+        .campaign-card p { font-size: 15px; color: var(--color-deep); line-height: 1.6; }
+        .colored-pill {
+            display: inline-flex; align-items: center; gap: 0.35rem;
+            padding: 0.25rem 0.55rem; border-radius: 999px;
+            font-family: var(--font-mono); font-size: 9.5px; font-weight: 700;
+            letter-spacing: 0.05em; text-transform: uppercase;
+        }
+        .pill-green { background: var(--color-pill-green-bg); border: 1px solid var(--color-pill-green-border); color: var(--color-pill-green-text); }
+        .pill-amber { background: var(--color-pill-amber-bg); border: 1px solid var(--color-pill-amber-border); color: var(--color-pill-amber-text); }
+        .partner-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.4rem 0.8rem; border: 1px solid var(--color-badge-border);
+            border-radius: 0.5rem; background: var(--color-badge-bg);
+            font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em;
+            text-transform: uppercase; color: var(--color-deep);
+        }
+        .score-breakdown { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem; margin: 2rem 0; }
+        .score-card {
+            border: 1px solid var(--color-card-border); border-radius: 0.75rem;
+            background: var(--color-card-bg); padding: 1.25rem 1.35rem;
+        }
+        .score-card-num {
+            font-family: var(--font-display); font-size: 1.75rem; font-weight: 700;
+            color: var(--color-ink); line-height: 1; margin-bottom: 0.3rem;
+        }
+        .score-card-label { font-size: 13px; color: var(--color-deep); line-height: 1.4; }
+        .score-card-lg .score-card-num { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .inline-link {
+            display: inline-flex; align-items: center; gap: 0.3rem;
+            color: var(--color-link); font-size: 13px; font-weight: 500;
+            text-decoration: none; border-bottom: 1px dashed var(--color-link-border);
+            transition: border-color 0.2s ease;
+        }
+        .inline-link:hover { border-bottom-color: var(--color-link); }
+
+        /* ── Hero ── */
+        @keyframes hero-float {
+            0% { transform: translate3d(0,0,0); }
+            50% { transform: translate3d(0,-10px,0); }
+            100% { transform: translate3d(0,0,0); }
+        }
+        .hero-image-float { animation: hero-float 5s ease-in-out infinite; }
+    </style>
+</head>
+<body>
+    <main class="relative z-[1] max-w-4xl mx-auto pb-40 bg-[var(--color-bg)]">
+
+        <!-- ── Hero ── -->
+        <section class="pt-[5.9rem] relative">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-10 pb-0 items-stretch" style="z-index:1;">
+                <div class="md:col-span-3 flex flex-col items-start text-left justify-center relative z-10 pt-10 pb-20">
+                    <h1 class="font-light leading-[1.20] text-ink mb-5 tracking-[-0.015em]" style="font-size: clamp(2.4rem,5.2vw,3.8rem); font-family:var(--font-display);">
+                        <span class="italic text-brand-500 font-normal">Theming PayZapp</span><br><span class="font-light">for the IPL season</span>
+                    </h1>
+                </div>
+                <div class="md:col-span-2 flex justify-end items-start w-full">
+                    <div class="editable-placeholder hero-image-float" style="position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
+                        <img class="placeholder-image-layer" alt="" src="case study assets/IPL themification.png" style="position:relative;inset:auto;width:50%;height:auto;display:block;object-fit:contain;margin-top:-2.5rem;">
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-[var(--section-separator-color)]" style="position:relative;z-index:1;">
+                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">My Role</span><span class="text-sm font-semibold text-ink">Design Lead</span></div>
+                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Duration</span><span class="text-sm font-semibold text-ink">Mar -- May 2025 (IPL Season)</span></div>
+                <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Focus</span><span class="text-sm font-semibold text-ink">Growth &amp; Visual Design</span></div>
+            </div>
+        </section>
+
+        <!-- ── Context ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+            <h2 class="section-kicker">The Brief</h2>
+            <p class="section-summary max-w-3xl">A visual overhaul of PayZapp to drive growth during the IPL season, partnering with Jio’s Dhan Dhana Dhan campaign alongside in-app initiatives focused on increasing activation and general engagement.</p>
+        </section>
+
+        <!-- ── Campaigns ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+            <h2 class="section-kicker">The Campaigns</h2>
+            <p class="section-summary max-w-3xl">Two growth initiatives designed to drive engagement, transactions, and new user acquisition during IPL.</p>
+
+            <div class="two-col">
+                <div class="campaign-card flex flex-col justify-between relative overflow-hidden" style="background: #B45309; border: none;">
+                    <div class="pr-20">
+                        <h3 style="color: #ffffff;">Jeeto Dhan Dhana Dhan</h3>
+                        <p style="color: rgba(255, 255, 255, 0.9);">While watching the IPL match answer cricket trivia questions and win coupons redeemable directly on PayZapp. This was partnered with Jio.</p>
+                    </div>
+                    <a href="https://www.hotstar.com/in/sports/cricket/how-to-win-big-prizes-everyday-jeeto-dhan-dhana-dhan-tata-ipl-jiocinema/1970979638/watch" class="inline-link mt-4 self-start" style="color: #ffffff; border-bottom-color: rgba(255, 255, 255, 0.4); display: inline-flex; align-items: center;" target="_blank" rel="noopener">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;"><polygon points="5 3 19 12 5 21 5 3"/></svg>How to play
+                    </a>
+                    <img src="case study assets/jeeto-campaign.png" alt="Jeeto Dhan Dhana Dhan" class="absolute -bottom-4 right-0 h-32 w-auto object-contain pointer-events-none">
+                </div>
+
+                <div class="campaign-card flex flex-col justify-between relative overflow-hidden" style="background: hsl(var(--accent-h) var(--accent-s) var(--accent-l)); border: none;">
+                    <div class="pr-24">
+                        <h3 style="color: #ffffff;">Score &amp; Win</h3>
+                        <p style="color: rgba(255, 255, 255, 0.9);">A campaign-specific score metric called <b>'Runs'</b> powered a competitive leaderboard. Top scorers won prizes. Users earned runs by doing everyday PayZapp activities.</p>
+                    </div>
+                    <img src="case study assets/score-campaign.png" alt="Score & Win" class="absolute bottom-0 right-0 h-16 w-auto object-contain pointer-events-none">
+                </div>
+            </div>
+
+
+        </section>
+
+        <!-- ── Design Scope ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+            <h2 class="section-kicker">Design Tasks at Hand</h2>
+            <p class="section-summary max-w-3xl">Identify all the surfaces that could be revamped and themed within the existing constructs to minimize dev effort with a flavor of IPL and design artifacts to support the ongoing campaigns.</p>
+
+            <p class="section-body-copy">To bring the energy of the IPL season directly into the app, we set out to celebrate the tournament by overhauling key user-facing surfaces. Here is what we ended up designing and implementing to transform the in-app experience.</p>
+        </section>
+
+        <!-- ── Design 01: Promo Video ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">The Promo Video</h3>
+                    <p class="section-body-copy mb-3">A short promo video served as an education piece for users, introducing the season's theming and campaigns. It played once whenever a user engaged with any promotion-based entry point across the app.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar status-bar-promo" style="background: #BCD3FE;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <video src="case study assets/promo video.mp4" autoplay loop muted playsinline style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"></video>
+                                    <div style="position: absolute; top: -0.7rem; left: -0.6rem; right: -0.6rem; height: 1.5rem; z-index: 3; pointer-events: none; background: #BCD3FE; filter: blur(5px);"></div>
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Promo</div><div class="font-display text-sm font-medium text-ink">Season Explainer</div><div class="text-[11px] text-muted mt-1">Promotional video</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Design 02: Leaderboard ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">The Runs Leaderboard</h3>
+                    <p class="section-body-copy mb-3">We created a leaderboard for 'Runs' that lists the top scorers and the user's own ranking ('You' state), along with information about the campaign offers to keep users engaged and motivated.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <img id="leaderboard-img" class="placeholder-image-layer" alt="" src="case study assets/Leaderboard Page.png" style="top: 0; bottom: auto; height: auto; width: 100%;">
+                                    <div id="leaderboard-top-fade" style="position: absolute; top: -0.7rem; left: -0.6rem; right: -0.6rem; height: 1.5rem; z-index: 3; opacity: 0; pointer-events: none; background: #ffffff; filter: blur(5px);"></div>
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Leaderboard</div><div class="font-display text-sm font-medium text-ink">Top Scorers</div><div class="text-[11px] text-muted mt-1">Season standings</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Design 02: Scan QR ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">The Scanner Got a Stadium Vibe</h3>
+                    <p class="section-body-copy mb-3">Revamped the scanner screen with delightful animations like fours and sixes which play randomly each time the scan window is opened, bringing a cricket flavor right into the payment flow.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/scan-qr-bg.png" style="z-index: 2;">
+                                    <div id="scan-qr-lottie" style="position: absolute; top: -1.2rem; left: 0; right: 0; height: 100%; z-index: 5; pointer-events: none;"></div>
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/scan-qr-overlay.png" style="top: auto; bottom: 0; height: auto; z-index: 10; pointer-events: none;">
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Scan QR</div><div class="font-display text-sm font-medium text-ink">Scan to Pay</div><div class="text-[11px] text-muted mt-1">Point camera at QR code</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Design 03: Referral Revamp ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">Rebranding to Refer &amp; Score</h3>
+                    <p class="section-body-copy mb-3">Referring a friend earns 50 runs (the highest single reward). We revamped the referral section to Refer and Score, making sure the interface oozes a special feeling to capture user attention and drive growth.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/referral.png" style="top: auto; bottom: 0; height: auto; width: 100%;">
+                                    <div id="referral-scrim" style="position: absolute; inset: 0; background: #000; opacity: 0; z-index: 4; pointer-events: none;"></div>
+                                    <div id="referral-lottie" style="position: absolute; bottom: 0; left: 0; right: 0; height: 100%; z-index: 5; pointer-events: none;"></div>
+                                    <img id="referral-sheet" class="placeholder-image-layer" alt="" src="case study assets/refrral bottom sheet.png" style="top: auto; bottom: 0; left: 0; right: 0; margin: 0 auto; height: auto; width: 99%; opacity: 0; z-index: 6; pointer-events: none;">
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Refer</div><div class="font-display text-sm font-medium text-ink">Refer and Score</div><div class="text-[11px] text-muted mt-1">Earn 50 runs per referral</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Design 04: Transaction Success Animation ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+            <div class="two-col-aside">
+                <div>
+                    <h3 class="section-mini-heading">Transaction Success</h3>
+                    <p class="section-body-copy mb-3">Purely for the delight factor, we revamped the conveniently circular success tick into a bouncing cricket ball that settles into the checkmark. And if the transaction was eligible for runs, an animated bottom sheet slides up right after, celebrating the moment and showing the user exactly how many runs they just scored.</p>
+                </div>
+                <div class="phone-col">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar" style="background: #40DB81; height: 1.4rem;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/Transacrtion Success.png" style="top: 0; bottom: auto; height: auto; width: 100%;">
+                                    <div id="txn-success-lottie" style="position: absolute; top: 1.2rem; left: 0; right: 0; height: 100%; z-index: 5; pointer-events: none; transform: scale(0.9); transform-origin: top center;"></div>
+                                    <div id="txn-overlay-lottie" style="position: absolute; bottom: 0; left: 0; right: 0; height: 100%; z-index: 6; opacity: 0; pointer-events: none;"></div>
+                                    <div id="txn-runs-text" style="position: absolute; left: 1.1rem; right: 1.1rem; bottom: 2.2rem; z-index: 7; opacity: 0; transform: translateY(1.5rem); pointer-events: none; text-align: left;">
+                                        <div style="font-family: 'Inter', sans-serif; font-weight: 800; font-size: 1.45rem; line-height: 0.95; color: #ffffff; text-transform: uppercase; letter-spacing: 0.01em;">6 Runs<br>Scored</div>
+                                        <div style="font-family: var(--font-body); font-size: 0.74rem; line-height: 1.55; color: #C2D4F0; opacity: 0.75; max-width: 65%; margin-top: 0.6rem;">Book flights on PayZapp Shop, get 25 runs!</div>
+                                    </div>
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Transaction</div><div class="font-display text-sm font-medium text-ink">Payment Successful</div><div class="text-[11px] text-muted mt-1">Bouncing ball animation</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Promotional Surfaces ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+
+
+            <h3 class="section-mini-heading" style="font-weight: 500; color: hsl(var(--accent-h) var(--accent-s) var(--accent-l));">Spotlight Banners &amp; Bottom Sheets</h3>
+            <p class="section-body-copy mb-3">We created a set of spotlight banners that first teased the campaigns and then, once they went live, turned into entry points for users to start engaging with them. Alongside these, we designed bottom sheets that did the same job — sent out to segmented users to make them aware of the campaigns and nudge them into participating.</p>
+
+            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; flex-wrap: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
+                <div class="phone-col" style="flex: 0 0 19rem;">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content" style="background: #ffffff;">
+                                    <img class="placeholder-image-layer spotlight-banner" alt="" src="case study assets/spotlights/1.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 1;">
+                                    <img class="placeholder-image-layer spotlight-banner" alt="" src="case study assets/spotlights/2.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                    <img class="placeholder-image-layer spotlight-banner" alt="" src="case study assets/spotlights/3.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                    <img class="placeholder-image-layer spotlight-banner" alt="" src="case study assets/spotlights/4.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                    <img class="placeholder-image-layer spotlight-banner" alt="" src="case study assets/spotlights/5.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/home spotlight.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 2;">
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Spotlight</div><div class="font-display text-sm font-medium text-ink">Spotlight Banner</div><div class="text-[11px] text-muted mt-1">Campaign teaser / entry point</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-col" style="flex: 0 0 19rem;">
+                    <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <img class="placeholder-image-layer" alt="" src="case study assets/Bottom Sheets.png" style="top: 0; bottom: auto; height: auto; width: 100%;">
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Bottom Sheet</div><div class="font-display text-sm font-medium text-ink">Campaign Bottom Sheet</div><div class="text-[11px] text-muted mt-1">Sent to segmented users</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="phone-col" style="flex: 0 0 19rem;">
+                    <div class="editable-placeholder" style="width:100%;max-width:19rem;">
+                        <div class="legacy-wallet-device">
+                            <div class="legacy-wallet-screen">
+                                <div class="phone-status-bar status-bar-light" style="height: 1.5rem;">
+                                    <time>9:41</time>
+                                    <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                </div>
+                                <div class="phone-screen-content">
+                                    <div class="placeholder-default">
+                                        <div class="legacy-wallet-bar"></div>
+                                        <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Promo</div><div class="font-display text-sm font-medium text-ink">Promotional Surface</div><div class="text-[11px] text-muted mt-1">Campaign entry point</div></div>
+                                        <div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div>
+                                    </div>
+                                </div>
+                                <div class="phone-nav-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Impact ── -->
+        <section class="pt-12 pb-12 pl-10 pr-10">
+            <h2 class="section-kicker">Conclusion</h2>
+            <p class="section-summary max-w-3xl">The IPL theming effort brought a cohesive, energetic feel to PayZapp during the cricket season, driving growth and engagement across 5 core in-app surfaces and promotional banners—all within the existing contracts.</p>
+        </section>
+
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            lottie.loadAnimation({
+                container: document.getElementById('scan-qr-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'case study assets/lottie/scanqrIPL.json',
+                rendererSettings: {
+                    preserveAspectRatio: 'xMidYMin slice'
+                }
+            });
+
+            lottie.loadAnimation({
+                container: document.getElementById('txn-success-lottie'),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: 'case study assets/lottie/payment success.json',
+                rendererSettings: {
+                    preserveAspectRatio: 'xMidYMin meet'
+                }
+            });
+
+            var txnOverlayAnim = lottie.loadAnimation({
+                container: document.getElementById('txn-overlay-lottie'),
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: 'case study assets/lottie/txnRuns.json',
+                rendererSettings: {
+                    preserveAspectRatio: 'xMidYMax meet'
+                }
+            });
+            var txnOverlayEl = document.getElementById('txn-overlay-lottie');
+            var txnRunsText  = document.getElementById('txn-runs-text');
+
+            var TXN_SHOW_DELAY = 4000;  // wait before (re)appearing
+            var TXN_VISIBLE_MS = 10000; // how long it stays before fading off
+
+            function txnRunsShow() {
+                txnOverlayEl.style.transition = 'opacity 300ms ease-out';
+                txnOverlayEl.style.opacity = '1';
+                txnRunsText.style.transition = 'transform 300ms ease-out, opacity 300ms ease-out';
+                txnRunsText.style.transform = 'translateY(0)';
+                txnRunsText.style.opacity = '1';
+                txnOverlayAnim.goToAndPlay(0, true);
+                setTimeout(txnRunsHide, TXN_VISIBLE_MS);
+            }
+
+            function txnRunsHide() {
+                txnOverlayEl.style.transition = 'opacity 300ms ease-in';
+                txnOverlayEl.style.opacity = '0';
+                txnRunsText.style.transition = 'transform 300ms ease-in, opacity 300ms ease-in';
+                txnRunsText.style.transform = 'translateY(1.5rem)';
+                txnRunsText.style.opacity = '0';
+                setTimeout(txnRunsShow, TXN_SHOW_DELAY);
+            }
+
+            setTimeout(txnRunsShow, TXN_SHOW_DELAY);
+
+            var referralAnim = lottie.loadAnimation({
+                container: document.getElementById('referral-lottie'),
+                renderer: 'svg',
+                loop: false,
+                autoplay: false,
+                path: 'case study assets/lottie/User Referral/userReferral.json',
+                assetsPath: 'case study assets/lottie/User Referral/images/',
+                rendererSettings: {
+                    preserveAspectRatio: 'xMidYMax meet'
+                }
+            });
+
+            var REFERRAL_HOLD_FRAME    = 15;   // pause point after intro
+            var REFERRAL_HOLD_MS       = 3500; // hold on frame 26
+            var REFERRAL_GAP_MS        = 3500; // blank gap before replaying
+            var REFERRAL_FADEIN_MS     = 450;  // lottie + scrim fade in at start
+            var REFERRAL_EXIT_MS       = 650;  // lottie slide-down/fade + scrim fade out
+            var REFERRAL_SHEET_MS      = 150;  // frame-15 sheet image fade in/out
+            var REFERRAL_SHEET_DELAY   = 300;  // delay before sheet image fades in
+            var REFERRAL_SCRIM_OPACITY = 0.55; // dimmed-background strength
+            var referralLastFrame      = 0;
+            var referralPhase          = 'intro';
+
+            var referralEl    = document.getElementById('referral-lottie');
+            var referralScrim = document.getElementById('referral-scrim');
+            var referralSheet = document.getElementById('referral-sheet');
+
+            function referralResetInstant() {
+                referralEl.style.transition = 'none';
+                referralEl.style.transform = 'translateY(0)';
+                referralEl.style.opacity = '0';
+                referralScrim.style.transition = 'none';
+                referralScrim.style.opacity = '0';
+                referralSheet.style.transition = 'none';
+                referralSheet.style.opacity = '0';
+                void referralEl.offsetWidth; // commit without animating
+            }
+
+            function referralEnter() {
+                referralEl.style.transition = 'opacity ' + REFERRAL_FADEIN_MS + 'ms ease-out';
+                referralEl.style.opacity = '1';
+                referralScrim.style.transition = 'opacity ' + REFERRAL_FADEIN_MS + 'ms ease-out';
+                referralScrim.style.opacity = String(REFERRAL_SCRIM_OPACITY);
+                referralSheet.style.transition = 'opacity ' + REFERRAL_SHEET_MS + 'ms ease-out ' + REFERRAL_SHEET_DELAY + 'ms';
+                referralSheet.style.opacity = '1';
+            }
+
+            function referralHideSheet() {
+                referralSheet.style.transition = 'opacity ' + REFERRAL_SHEET_MS + 'ms ease-in';
+                referralSheet.style.opacity = '0';
+            }
+
+            function referralExit() {
+                referralEl.style.transition = 'transform ' + REFERRAL_EXIT_MS + 'ms ease-in, opacity ' + REFERRAL_EXIT_MS + 'ms ease-in';
+                referralEl.style.transform = 'translateY(110%)';
+                referralEl.style.opacity = '0';
+                referralScrim.style.transition = 'opacity ' + REFERRAL_EXIT_MS + 'ms ease-in';
+                referralScrim.style.opacity = '0';
+            }
+
+            function referralStart() {
+                referralPhase = 'intro';
+                referralResetInstant();
+                referralEnter();
+                referralAnim.playSegments([0, REFERRAL_HOLD_FRAME], true);
+            }
+
+            referralAnim.addEventListener('DOMLoaded', function () {
+                referralLastFrame = referralAnim.getDuration(true); // total frames
+                referralStart();
+            });
+
+            referralAnim.addEventListener('complete', function () {
+                if (referralPhase === 'intro') {
+                    referralPhase = 'rest';
+                    setTimeout(function () {
+                        referralHideSheet();
+                        referralAnim.playSegments([REFERRAL_HOLD_FRAME, referralLastFrame], true);
+                    }, REFERRAL_HOLD_MS);
+                } else {
+                    referralExit();
+                    setTimeout(referralStart, REFERRAL_GAP_MS);
+                }
+            });
+
+            // ── Leaderboard auto-scroll: pan down to bottom, hold, pan back to top, hold, loop ──
+            var lbImg = document.getElementById('leaderboard-img');
+            var lbFade = document.getElementById('leaderboard-top-fade');
+            if (lbImg) {
+                var LB_SCROLL_MS = 5000; // pan duration each direction
+                var LB_HOLD_MS   = 1500; // pause at each end
+                function startLeaderboardScroll() {
+                    var container = lbImg.parentElement; // .phone-screen-content
+                    var offset = lbImg.offsetHeight - container.clientHeight;
+                    if (offset <= 0) return; // nothing to scroll
+                    var atTop = true;
+                    function step() {
+                        atTop = !atTop;
+                        if (lbFade) {
+                            lbFade.style.transition = 'opacity 300ms ease-out';
+                            lbFade.style.opacity = '1'; // reveal top fade once scrolling begins
+                        }
+                        lbImg.style.transition = 'transform ' + LB_SCROLL_MS + 'ms ease-in-out';
+                        lbImg.style.transform = atTop ? 'translateY(0)' : 'translateY(-' + offset + 'px)';
+                        setTimeout(step, LB_SCROLL_MS + LB_HOLD_MS);
+                    }
+                    setTimeout(step, LB_HOLD_MS);
+                }
+                if (lbImg.complete) startLeaderboardScroll();
+                else lbImg.addEventListener('load', startLeaderboardScroll);
+            }
+
+            // ── Spotlight banners: crossfade through the set, holding each ──
+            var spotlightImgs = document.querySelectorAll('.spotlight-banner');
+            if (spotlightImgs.length > 1) {
+                var SPOTLIGHT_HOLD = 4000; // time each banner stays
+                var SPOTLIGHT_FADE = 800;  // crossfade duration
+                spotlightImgs.forEach(function (img) {
+                    img.style.transition = 'opacity ' + SPOTLIGHT_FADE + 'ms ease-in-out';
+                });
+                var spotIdx = 0;
+                setInterval(function () {
+                    spotlightImgs[spotIdx].style.opacity = '0';
+                    spotIdx = (spotIdx + 1) % spotlightImgs.length;
+                    spotlightImgs[spotIdx].style.opacity = '1';
+                }, SPOTLIGHT_HOLD);
+            }
+        });
+    </script>
+</body>
+</html>
