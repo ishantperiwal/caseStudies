@@ -263,10 +263,49 @@ function deterministicShuffle(array) {
 
 function main() {
   console.log('Scanning assets...');
+  
+  // Load existing manifest to preserve customizations
+  const existingMap = new Map();
+  if (fs.existsSync(OUTPUT_FILE)) {
+    try {
+      const existingContent = fs.readFileSync(OUTPUT_FILE, 'utf-8');
+      const existing = JSON.parse(existingContent);
+      if (Array.isArray(existing)) {
+        existing.forEach(a => {
+          if (a && a.id) {
+            existingMap.set(a.id, a);
+          }
+        });
+      }
+    } catch (e) {
+      console.warn('Could not read existing manifest:', e.message);
+    }
+  }
+
   const lottieAssets = scanDir(LOTTIES_DIR);
   const illustrationAssets = scanDir(ILLUSTRATIONS_DIR);
   
-  const allAssets = [...lottieAssets, ...illustrationAssets];
+  let allAssets = [...lottieAssets, ...illustrationAssets];
+  
+  // Merge scanned assets with existing customizations
+  allAssets = allAssets.map(asset => {
+    const existing = existingMap.get(asset.id);
+    if (existing) {
+      // Preserve user edits if they exist
+      return {
+        ...asset,
+        name: existing.name !== undefined ? existing.name : asset.name,
+        size: existing.size !== undefined ? existing.size : asset.size,
+        backdrop: existing.backdrop !== undefined ? existing.backdrop : asset.backdrop,
+        zoom: existing.zoom !== undefined ? existing.zoom : asset.zoom,
+        offsetX: existing.offsetX !== undefined ? existing.offsetX : asset.offsetX,
+        offsetY: existing.offsetY !== undefined ? existing.offsetY : asset.offsetY,
+        padding: existing.padding !== undefined ? existing.padding : asset.padding,
+        borderRadius: existing.borderRadius !== undefined ? existing.borderRadius : asset.borderRadius,
+      };
+    }
+    return asset;
+  });
   
   // Log original sizes
   const counts = { square: 0, wide: 0, tall: 0, large: 0 };
