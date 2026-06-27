@@ -1,30 +1,34 @@
 [
   {
-    "id": "lotties_s2pay_education_gif",
-    "path": "lotties/s2pay education.gif",
-    "name": "S2pay Education",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_payment_reminders_json",
-    "path": "lotties/payment reminders.json",
-    "name": "Payment Reminders",
+    "id": "lotties_bottom_text_recharges_made_simple_json",
+    "path": "lotties/bottom text/recharges made simple.json",
+    "name": "Recharges Made Simple",
     "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_mandala_json",
-    "path": "lotties/mandala.json",
-    "name": "Mandala",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "category": "bottom text",
+    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
     "size": "wide"
+  },
+  {
+    "id": "lotties_Tap_n_Pay_Education_Screens_1_json",
+    "path": "lotties/Tap n Pay Education Screens/1.json",
+    "name": "Tap and Pay Education",
+    "type": "lottie",
+    "category": "Tap n Pay Education Screens",
+    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.75,
+    "offsetX": 0,
+    "offsetY": -14
+  },
+  {
+    "id": "lotties_loadAndTickfast_json",
+    "path": "lotties/loadAndTickfast.json",
+    "name": "Load And Tickfast",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
+    "size": "square"
   },
   {
     "id": "lotties_Tap_n_Pay_Education_Screens_2_json",
@@ -32,8 +36,24 @@
     "name": "2",
     "type": "lottie",
     "category": "Tap n Pay Education Screens",
+    "backdrop": "#762aab",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.75,
+    "offsetX": 0,
+    "offsetY": -18
+  },
+  {
+    "id": "lotties_Dot_Button_Loader_json",
+    "path": "lotties/Dot Button Loader.json",
+    "name": "Dot Button Loader",
+    "type": "lottie",
+    "category": "general",
     "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "square"
+    "size": "square",
+    "padding": "default",
+    "offsetX": 0,
+    "offsetY": -2
   },
   {
     "id": "lotties_Invite_Home_page_illustration_wide_better_shadow_1_json",
@@ -42,106 +62,55 @@
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
-    "size": "wide"
+    "size": "large",
+    "padding": "none",
+    "zoom": 1.1,
+    "offsetX": 0,
+    "offsetY": -12
   },
   {
-    "id": "lotties_Pixel_Unboxing_json",
-    "path": "lotties/Pixel Unboxing.json",
-    "name": "Pixel Unboxing",
+    "id": "lotties_migrate_gif",
+    "path": "lotties/migrate.gif",
+    "name": "Migrate",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
+    "size": "square",
+    "zoom": 2.4,
+    "offsetX": 0,
+    "offsetY": 8
+  },
+  {
+    "id": "lotties_fastag_json",
+    "path": "lotties/fastag.json",
+    "name": "Fastag",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "tall"
+    "backdrop": "#001942",
+    "size": "tall-large",
+    "padding": "none",
+    "zoom": 1.2
   },
   {
-    "id": "lotties_pixel_card_banner_mp4",
-    "path": "lotties/pixel card banner.mp4",
-    "name": "Pixel Card Banner",
-    "type": "video",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_home_page_nav_json",
-    "path": "lotties/home page nav.json",
-    "name": "Home Page Nav",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_cardsTabHeroAnimation_json",
-    "path": "lotties/cardsTabHeroAnimation.json",
-    "name": "Cards Tab Hero Animation",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_recap_spotlight_full_json",
-    "path": "lotties/recap spotlight full.json",
-    "name": "Recap Spotlight Full",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_bank_and_user_json",
-    "path": "lotties/bank and user.json",
-    "name": "Bank And User",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_splash_screen_ipl_v2_json",
-    "path": "lotties/splash_screen_ipl_v2.json",
-    "name": "Splash Screen Ipl V2",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_emojis_smile_json",
-    "path": "lotties/emojis/smile.json",
-    "name": "Smile",
-    "type": "lottie",
-    "category": "emojis",
-    "backdrop": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_id_json",
-    "path": "lotties/id.json",
-    "name": "Id",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_dog2_json",
-    "path": "lotties/dog2.json",
-    "name": "Dog2",
+    "id": "lotties_sendMoney_HomePage_json",
+    "path": "lotties/sendMoney HomePage.json",
+    "name": "Send Money Home Page",
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
-    "size": "square"
+    "size": "square",
+    "borderRadius": 24,
+    "zoom": 1.05
   },
   {
-    "id": "lotties_Onb_SMS_Veri_json",
-    "path": "lotties/Onb SMS Veri.json",
-    "name": "Onb SMS Veri",
+    "id": "lotties_payment_reminders_json",
+    "path": "lotties/payment reminders.json",
+    "name": "Payment Reminders",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "square"
+    "backdrop": "#2167c6",
+    "size": "tall",
+    "zoom": 1.3
   },
   {
     "id": "lotties_green_circle_tick_json",
@@ -150,42 +119,6 @@
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Onboarding_Onboarding_Walkthrough_3_json",
-    "path": "lotties/Onboarding/Onboarding Walkthrough 3.json",
-    "name": "Onboarding Walkthrough 3",
-    "type": "lottie",
-    "category": "Onboarding",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_Failure_json",
-    "path": "lotties/Failure.json",
-    "name": "Failure",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_p2s_json",
-    "path": "lotties/p2s.json",
-    "name": "P2s",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_Lens_json",
-    "path": "lotties/Lens.json",
-    "name": "Lens",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
     "size": "square"
   },
   {
@@ -198,157 +131,100 @@
     "size": "square"
   },
   {
-    "id": "lotties_bottom_text_safest_way_to_carry_your_cards_json",
-    "path": "lotties/bottom text/safest way to carry your cards.json",
-    "name": "Safest Way To Carry Your Cards",
-    "type": "lottie",
-    "category": "bottom text",
-    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_migrate_gif",
-    "path": "lotties/migrate.gif",
-    "name": "Migrate",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_emojis_happy_json",
-    "path": "lotties/emojis/happy.json",
-    "name": "Happy",
-    "type": "lottie",
-    "category": "emojis",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Figma_Recall_gif",
-    "path": "lotties/Figma Recall.gif",
-    "name": "Figma Recall",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_zapp_static_json",
-    "path": "lotties/zapp static.json",
-    "name": "Zapp Static",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_walletSetup_json",
-    "path": "lotties/walletSetup.json",
-    "name": "Wallet Setup",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Tap_n_Pay_Education_Screens_1_json",
-    "path": "lotties/Tap n Pay Education Screens/1.json",
-    "name": "1",
-    "type": "lottie",
-    "category": "Tap n Pay Education Screens",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Onboarding_Onboarding_Walkthrough_1__UPI__json",
-    "path": "lotties/Onboarding/Onboarding Walkthrough 1 (UPI).json",
-    "name": "Onboarding Walkthrough 1 (UPI)",
-    "type": "lottie",
-    "category": "Onboarding",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_medal_bottom_sheet_mp4",
-    "path": "lotties/medal bottom sheet.mp4",
-    "name": "Medal Bottom Sheet",
-    "type": "video",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_sendMoney_HomePage_json",
-    "path": "lotties/sendMoney HomePage.json",
-    "name": "Send Money Home Page",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_bottom_text_recharges_made_simple_json",
-    "path": "lotties/bottom text/recharges made simple.json",
-    "name": "Recharges Made Simple",
-    "type": "lottie",
-    "category": "bottom text",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
     "id": "lotties_hand_clap3_json",
     "path": "lotties/hand clap3.json",
-    "name": "Hand Clap3",
+    "name": "Referral ",
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_Payment_Mandate_json",
-    "path": "lotties/Payment Mandate.json",
-    "name": "Payment Mandate",
+    "id": "lotties_splash_screen_ipl_v2_json",
+    "path": "lotties/splash_screen_ipl_v2.json",
+    "name": "Splash Screen Ipl V2",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#ffffff",
+    "size": "tall",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_Lens_json",
+    "path": "lotties/Lens.json",
+    "name": "Lens",
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_Loading_Screen_mp4",
-    "path": "lotties/Loading Screen.mp4",
-    "name": "Loading Screen",
-    "type": "video",
+    "id": "lotties_swipe2pay_gif",
+    "path": "lotties/swipe2pay.gif",
+    "name": "Swipe2pay",
+    "type": "gif",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_Loader_json",
-    "path": "lotties/Loader.json",
-    "name": "Loader",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_bottom_text_offers_and_cashback_json",
-    "path": "lotties/bottom text/offers and cashback.json",
-    "name": "Offers And Cashback",
-    "type": "lottie",
-    "category": "bottom text",
     "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
     "size": "wide"
   },
   {
-    "id": "lotties_Zapp_Box_Animation_box_card_animation_end_shimmer__json",
-    "path": "lotties/Zapp Box Animation/box card animation end shimmer .json",
-    "name": "Box Card Animation End Shimmer",
+    "id": "lotties_transaction_animations_json",
+    "path": "lotties/transaction animations.json",
+    "name": "Transaction Animations",
     "type": "lottie",
-    "category": "Zapp Box Animation",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
+    "size": "wide",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_home_page_nav_json",
+    "path": "lotties/home page nav.json",
+    "name": "Home Page Nav",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "rgba(15, 15, 23, 0.6)",
+    "size": "wide",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": 26
+  },
+  {
+    "id": "lotties_s2pay_education_gif",
+    "path": "lotties/s2pay education.gif",
+    "name": "S2pay Education",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
     "size": "square"
+  },
+  {
+    "id": "lotties_emojis_star_json",
+    "path": "lotties/emojis/star.json",
+    "name": "Star",
+    "type": "lottie",
+    "category": "emojis",
+    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_Pixel_Unboxing_json",
+    "path": "lotties/Pixel Unboxing.json",
+    "name": "Pixel Unboxing",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#141525",
+    "size": "extra-tall",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_p2s_json",
+    "path": "lotties/p2s.json",
+    "name": "P2s",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    "size": "wide"
   },
   {
     "id": "lotties_upiCircleSearchYourFamily_json",
@@ -356,35 +232,24 @@
     "name": "Upi Circle Search Your Family",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "wide"
+    "backdrop": "#f2f8ff",
+    "size": "wide",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": -5
   },
   {
-    "id": "lotties_payment_success_loop_json",
-    "path": "lotties/payment success loop.json",
-    "name": "Payment Success Loop",
+    "id": "lotties_card_and_confetti_json",
+    "path": "lotties/card and confetti.json",
+    "name": "Card And Confetti",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_1Cr_Celebration_json",
-    "path": "lotties/1Cr Celebration.json",
-    "name": "1Cr Celebration",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_Tap_n_Pay_Education_Screens_4_json",
-    "path": "lotties/Tap n Pay Education Screens/4.json",
-    "name": "4",
-    "type": "lottie",
-    "category": "Tap n Pay Education Screens",
-    "backdrop": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-    "size": "square"
+    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "size": "square",
+    "zoom": 1.8,
+    "padding": "default",
+    "offsetX": 0,
+    "offsetY": 5
   },
   {
     "id": "lotties_emojis_poker_json",
@@ -396,22 +261,257 @@
     "size": "square"
   },
   {
+    "id": "lotties_Tap_and_Pay_gif",
+    "path": "lotties/Tap and Pay.gif",
+    "name": "Tap And Pay",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_payment_success_json",
+    "path": "lotties/payment success.json",
+    "name": "Payment Success",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
+    "size": "wide"
+  },
+  {
+    "id": "lotties_Onboarding_Onboarding_Walkthrough_2_json",
+    "path": "lotties/Onboarding/Onboarding Walkthrough 2.json",
+    "name": "Payzapp Onboarding",
+    "type": "lottie",
+    "category": "Onboarding",
+    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
+    "size": "large",
+    "padding": "none",
+    "zoom": 3,
+    "offsetX": 0,
+    "offsetY": 10
+  },
+  {
+    "id": "lotties_walletSetup_json",
+    "path": "lotties/walletSetup.json",
+    "name": "Wallet Setup",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.35,
+    "offsetX": 0,
+    "offsetY": 4
+  },
+  {
+    "id": "lotties_Loader_json",
+    "path": "lotties/Loader.json",
+    "name": "Loader",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    "size": "square",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_motion_nudge_json",
+    "path": "lotties/motion nudge.json",
+    "name": "Motion Nudge",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#b5e4ff",
+    "size": "wide",
+    "padding": "default",
+    "zoom": 3
+  },
+  {
+    "id": "lotties_pixel_card_banner_mp4",
+    "path": "lotties/pixel card banner.mp4",
+    "name": "Pixel Card Banner",
+    "type": "video",
+    "category": "general",
+    "backdrop": "#f3f9fe",
+    "size": "tall-large",
+    "padding": "none",
+    "zoom": 1.1,
+    "offsetX": 0,
+    "offsetY": -10
+  },
+  {
+    "id": "lotties_bottom_text_safest_way_to_carry_your_cards_json",
+    "path": "lotties/bottom text/safest way to carry your cards.json",
+    "name": "Safest Way To Carry Your Cards",
+    "type": "lottie",
+    "category": "bottom text",
+    "backdrop": "#ffffff",
+    "size": "wide",
+    "padding": "default",
+    "zoom": 1
+  },
+  {
+    "id": "lotties_id_json",
+    "path": "lotties/id.json",
+    "name": "Id",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#c2ebff",
+    "size": "square",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_only_transactipon_mp4",
+    "path": "lotties/only transactipon.mp4",
+    "name": "Transaction Animation in App",
+    "type": "video",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
+    "size": "large",
+    "padding": "none",
+    "zoom": 2.65,
+    "offsetX": 0,
+    "offsetY": 22
+  },
+  {
+    "id": "lotties_recap_spotlight_full_json",
+    "path": "lotties/recap spotlight full.json",
+    "name": "Recap Spotlight Full",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#abb3fe",
+    "size": "square",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_zapp_static_json",
+    "path": "lotties/zapp static.json",
+    "name": "Zapp Static",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_bottom_text_offers_and_cashback_json",
+    "path": "lotties/bottom text/offers and cashback.json",
+    "name": "Offers And Cashback",
+    "type": "lottie",
+    "category": "bottom text",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "wide"
+  },
+  {
+    "id": "lotties_bank_and_user_json",
+    "path": "lotties/bank and user.json",
+    "name": "Bank And User",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "square"
+  },
+  {
+    "id": "illustrations_Comp_1_gif",
+    "path": "illustrations/Comp_1.gif",
+    "name": "Comp 1",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #2d2206 0%, #110d02 100%)",
+    "size": "square",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": -2
+  },
+  {
+    "id": "lotties_Zapp_Box_Animation_box_card_animation_end_shimmer__json",
+    "path": "lotties/Zapp Box Animation/box card animation end shimmer .json",
+    "name": "Box Card Animation End Shimmer",
+    "type": "lottie",
+    "category": "Zapp Box Animation",
+    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
+    "size": "square",
+    "zoom": 1.75,
+    "offsetX": 0,
+    "offsetY": -20
+  },
+  {
+    "id": "lotties_1Cr_Celebration_json",
+    "path": "lotties/1Cr Celebration.json",
+    "name": "1Cr Celebration",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "#162238",
+    "size": "extra-tall",
+    "zoom": 1.35,
+    "offsetX": 0,
+    "offsetY": 6
+  },
+  {
     "id": "lotties_wallet_lottie_json",
     "path": "lotties/wallet lottie.json",
     "name": "Wallet Lottie",
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "size": "square",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_Delight_Stars_json",
+    "path": "lotties/Delight Stars.json",
+    "name": "Delight Stars",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_Dot_Button_Loader_json",
-    "path": "lotties/Dot Button Loader.json",
-    "name": "Dot Button Loader",
+    "id": "lotties_lottie_trailed_loader_json",
+    "path": "lotties/lottie trailed loader.json",
+    "name": "Lottie Trailed Loader",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "wide"
+    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_Payment_Themes_gif",
+    "path": "lotties/Payment Themes.gif",
+    "name": "Payment Themes",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "#fff2d1",
+    "size": "large",
+    "padding": "none",
+    "zoom": 1
+  },
+  {
+    "id": "lotties_emojis_sad_json",
+    "path": "lotties/emojis/sad.json",
+    "name": "Sad",
+    "type": "lottie",
+    "category": "emojis",
+    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_emojis_happy_json",
+    "path": "lotties/emojis/happy.json",
+    "name": "Happy",
+    "type": "lottie",
+    "category": "emojis",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "square"
+  },
+  {
+    "id": "lotties_Loading_Screen_mp4",
+    "path": "lotties/Loading Screen.mp4",
+    "name": "PayZapp Splash Screen",
+    "type": "video",
+    "category": "general",
+    "backdrop": "#ffffff",
+    "size": "tall",
+    "borderRadius": 0,
+    "padding": "none"
   },
   {
     "id": "lotties_tap_and_pay_load_state_json",
@@ -423,22 +523,17 @@
     "size": "square"
   },
   {
-    "id": "lotties_animate_without_bg_json",
-    "path": "lotties/animate_without bg.json",
-    "name": "Animate Without Bg",
+    "id": "lotties_Tap_n_Pay_Education_Screens_4_json",
+    "path": "lotties/Tap n Pay Education Screens/4.json",
+    "name": "4",
     "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_transaction_animations_json",
-    "path": "lotties/transaction animations.json",
-    "name": "Transaction Animations",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
+    "category": "Tap n Pay Education Screens",
+    "backdrop": "#302b92",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.7,
+    "offsetX": 0,
+    "offsetY": -18
   },
   {
     "id": "lotties_Bills_Anchor_Icon_json",
@@ -456,7 +551,10 @@
     "type": "lottie",
     "category": "Zapp Box Animation",
     "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
+    "size": "tall-large",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": -14
   },
   {
     "id": "lotties_scanner_orb_211_json",
@@ -477,45 +575,41 @@
     "size": "square"
   },
   {
-    "id": "lotties_only_transactipon_mp4",
-    "path": "lotties/only transactipon.mp4",
-    "name": "Only Transactipon",
-    "type": "video",
+    "id": "lotties_animate_without_bg_json",
+    "path": "lotties/animate_without bg.json",
+    "name": "Animate Without Bg",
+    "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "tall"
+    "backdrop": "#17002e",
+    "size": "tall-large",
+    "padding": "none"
   },
   {
-    "id": "lotties_swipe2pay_gif",
-    "path": "lotties/swipe2pay.gif",
-    "name": "Swipe2pay",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "wide"
+    "id": "lotties_Tap_n_Pay_Education_Screens_5_json",
+    "path": "lotties/Tap n Pay Education Screens/5.json",
+    "name": "5",
+    "type": "lottie",
+    "category": "Tap n Pay Education Screens",
+    "backdrop": "#4d258f",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.95,
+    "offsetX": 0,
+    "offsetY": -16
   },
   {
-    "id": "lotties_Tap_and_Pay_gif",
-    "path": "lotties/Tap and Pay.gif",
-    "name": "Tap And Pay",
-    "type": "gif",
+    "id": "lotties_mandate_tick_animation_Green_json",
+    "path": "lotties/mandate tick animation Green.json",
+    "name": "Mandate Tick Animation Green",
+    "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_loadeing_container_gif",
-    "path": "lotties/loadeing container.gif",
-    "name": "Loadeing Container",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Delight_Stars_json",
-    "path": "lotties/Delight Stars.json",
-    "name": "Delight Stars",
+    "id": "lotties_dog2_json",
+    "path": "lotties/dog2.json",
+    "name": "For some internal Website",
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
@@ -528,34 +622,40 @@
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "square"
+    "size": "large",
+    "zoom": 1,
+    "padding": "none"
   },
   {
-    "id": "lotties_zapp_full_json",
-    "path": "lotties/zapp full.json",
-    "name": "Zapp Full",
+    "id": "lotties_Failure_json",
+    "path": "lotties/Failure.json",
+    "name": "Failure",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
-    "size": "large"
-  },
-  {
-    "id": "lotties_emojis_think_json",
-    "path": "lotties/emojis/think.json",
-    "name": "Think",
-    "type": "lottie",
-    "category": "emojis",
     "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_emojis_sad_json",
-    "path": "lotties/emojis/sad.json",
-    "name": "Sad",
+    "id": "lotties_emojis_smile_json",
+    "path": "lotties/emojis/smile.json",
+    "name": "Smile",
     "type": "lottie",
     "category": "emojis",
-    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "backdrop": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
     "size": "square"
+  },
+  {
+    "id": "lotties_Onboarding_Onboarding_Walkthrough_1__UPI__json",
+    "path": "lotties/Onboarding/Onboarding Walkthrough 1 (UPI).json",
+    "name": "Onboarding Walkthrough 1 (UPI)",
+    "type": "lottie",
+    "category": "Onboarding",
+    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
+    "size": "large",
+    "padding": "none",
+    "zoom": 2.3,
+    "offsetX": 0,
+    "offsetY": 14
   },
   {
     "id": "lotties_coin_2_json",
@@ -564,7 +664,9 @@
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #2d2206 0%, #110d02 100%)",
-    "size": "square"
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.2
   },
   {
     "id": "lotties_circularLoader_0066B4_json",
@@ -581,7 +683,38 @@
     "name": "Rive Test 2",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
+    "backdrop": "#000000",
+    "size": "square",
+    "padding": "none"
+  },
+  {
+    "id": "lotties_payment_success_loop_json",
+    "path": "lotties/payment success loop.json",
+    "name": "Payment Success Loop",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
+    "size": "wide"
+  },
+  {
+    "id": "lotties_medal_bottom_sheet_mp4",
+    "path": "lotties/medal bottom sheet.mp4",
+    "name": "Medal Bottom Sheet",
+    "type": "video",
+    "category": "general",
+    "backdrop": "#39526b",
+    "size": "square",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": 6
+  },
+  {
+    "id": "lotties_emojis_think_json",
+    "path": "lotties/emojis/think.json",
+    "name": "Think",
+    "type": "lottie",
+    "category": "emojis",
+    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
     "size": "square"
   },
   {
@@ -590,35 +723,12 @@
     "name": "Cards Tb",
     "type": "video",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_Payment_Processing_gif",
-    "path": "lotties/Payment Processing.gif",
-    "name": "Payment Processing",
-    "type": "gif",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "wide"
-  },
-  {
-    "id": "lotties_mandate_tick_animation_Green_json",
-    "path": "lotties/mandate tick animation Green.json",
-    "name": "Mandate Tick Animation Green",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #062b1b 0%, #02120b 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_emojis_star_json",
-    "path": "lotties/emojis/star.json",
-    "name": "Star",
-    "type": "lottie",
-    "category": "emojis",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "square"
+    "backdrop": "#061e37",
+    "size": "tall-large",
+    "padding": "none",
+    "zoom": 1,
+    "offsetX": 0,
+    "offsetY": 0
   },
   {
     "id": "lotties_Security_json",
@@ -630,39 +740,34 @@
     "size": "square"
   },
   {
-    "id": "lotties_Tap_n_Pay_Education_Screens_5_json",
-    "path": "lotties/Tap n Pay Education Screens/5.json",
-    "name": "5",
+    "id": "lotties_Pan_Card_json",
+    "path": "lotties/Pan Card.json",
+    "name": "Pan Card",
     "type": "lottie",
-    "category": "Tap n Pay Education Screens",
-    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
-    "size": "square"
-  },
-  {
-    "id": "lotties_Onboarding_Onboarding_Walkthrough_2_json",
-    "path": "lotties/Onboarding/Onboarding Walkthrough 2.json",
-    "name": "Onboarding Walkthrough 2",
-    "type": "lottie",
-    "category": "Onboarding",
+    "category": "general",
     "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
-    "size": "tall"
-  },
-  {
-    "id": "lotties_lottie_trailed_loader_json",
-    "path": "lotties/lottie trailed loader.json",
-    "name": "Lottie Trailed Loader",
-    "type": "lottie",
-    "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
     "size": "square"
   },
   {
-    "id": "lotties_loadAndTickfast_json",
-    "path": "lotties/loadAndTickfast.json",
-    "name": "Load And Tickfast",
+    "id": "lotties_mandala_json",
+    "path": "lotties/mandala.json",
+    "name": "Mandala",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "wide",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": 2,
+    "zoom": 1.1
+  },
+  {
+    "id": "lotties_loadeing_container_gif",
+    "path": "lotties/loadeing container.gif",
+    "name": "Loadeing Container",
+    "type": "gif",
+    "category": "general",
+    "backdrop": "#135bb9",
     "size": "square"
   },
   {
@@ -675,13 +780,25 @@
     "size": "wide"
   },
   {
-    "id": "lotties_card_and_confetti_json",
-    "path": "lotties/card and confetti.json",
-    "name": "Card And Confetti",
+    "id": "lotties_cardsTabHeroAnimation_json",
+    "path": "lotties/cardsTabHeroAnimation.json",
+    "name": "Cards Tab Hero Animation",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
-    "size": "square"
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "wide",
+    "padding": "none",
+    "offsetX": 0,
+    "offsetY": 10
+  },
+  {
+    "id": "lotties_zapp_full_json",
+    "path": "lotties/zapp full.json",
+    "name": "Zapp Full",
+    "type": "lottie",
+    "category": "general",
+    "backdrop": "linear-gradient(135deg, #0b090a 0%, #161a1d 100%)",
+    "size": "large"
   },
   {
     "id": "lotties_Delight_Affirmation_json",
@@ -693,22 +810,25 @@
     "size": "wide"
   },
   {
-    "id": "illustrations_Comp_1_gif",
-    "path": "illustrations/Comp_1.gif",
-    "name": "Comp 1",
+    "id": "lotties_Payment_Processing_gif",
+    "path": "lotties/Payment Processing.gif",
+    "name": "Payment Processing",
     "type": "gif",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #11042c 0%, #04010b 100%)",
-    "size": "square"
+    "backdrop": "#ffffff",
+    "size": "wide",
+    "padding": "none"
   },
   {
-    "id": "lotties_fastag_json",
-    "path": "lotties/fastag.json",
-    "name": "Fastag",
-    "type": "lottie",
+    "id": "lotties_Figma_Recall_gif",
+    "path": "lotties/Figma Recall.gif",
+    "name": "Figma Recall",
+    "type": "gif",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
-    "size": "square"
+    "backdrop": "#134936",
+    "size": "square",
+    "padding": "none",
+    "zoom": 1.2
   },
   {
     "id": "lotties_bottom_text_love_and_care_new_json",
@@ -720,13 +840,17 @@
     "size": "wide"
   },
   {
-    "id": "lotties_motion_nudge_json",
-    "path": "lotties/motion nudge.json",
-    "name": "Motion Nudge",
+    "id": "lotties_Onb_SMS_Veri_json",
+    "path": "lotties/Onb SMS Veri.json",
+    "name": "Onb SMS Veri",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
-    "size": "wide"
+    "backdrop": "linear-gradient(135deg, #1d1d1d 0%, #151515 100%)",
+    "size": "square",
+    "padding": "default",
+    "offsetX": 10,
+    "offsetY": 0,
+    "zoom": 1.15
   },
   {
     "id": "lotties_lottie_confetti_json",
@@ -735,15 +859,29 @@
     "type": "lottie",
     "category": "general",
     "backdrop": "linear-gradient(135deg, #141e30 0%, #243b55 100%)",
-    "size": "square"
+    "size": "square",
+    "padding": "none"
   },
   {
-    "id": "lotties_Pan_Card_json",
-    "path": "lotties/Pan Card.json",
-    "name": "Pan Card",
+    "id": "lotties_Onboarding_Onboarding_Walkthrough_3_json",
+    "path": "lotties/Onboarding/Onboarding Walkthrough 3.json",
+    "name": "Onboarding Walkthrough 3",
+    "type": "lottie",
+    "category": "Onboarding",
+    "backdrop": "linear-gradient(135deg, #1a2a6c 0%, #275d8c 100%)",
+    "size": "large",
+    "padding": "none",
+    "zoom": 2.25,
+    "offsetX": 0,
+    "offsetY": 14
+  },
+  {
+    "id": "lotties_Payment_Mandate_json",
+    "path": "lotties/Payment Mandate.json",
+    "name": "Payment Mandate",
     "type": "lottie",
     "category": "general",
-    "backdrop": "linear-gradient(135deg, #2c3e50 0%, #000000 100%)",
+    "backdrop": "linear-gradient(135deg, #1e1e38 0%, #111124 100%)",
     "size": "square"
   }
 ]
