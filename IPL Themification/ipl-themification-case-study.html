@@ -226,6 +226,28 @@
         .has-saved-image .placeholder-image-layer { display: block; }
         .has-saved-image .legacy-wallet-screen { background: var(--color-device-screen-bg); }
         .has-saved-image .placeholder-default { opacity: 0; }
+        @keyframes execution-loader-pulse {
+            0%   { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes execution-loader-fade {
+            0%, 100% { opacity: 0.22; }
+            50%      { opacity: 0.65; }
+        }
+        .is-content-loading .legacy-wallet-screen::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255, 255, 255, 0.16);
+            border-top-color: rgba(255, 255, 255, 0.50);
+            animation: execution-loader-pulse 0.9s linear infinite, execution-loader-fade 1.6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 10;
+        }
         .legacy-wallet-bar, .legacy-wallet-tile {
             border: 1px solid var(--color-device-border); background: var(--color-device-bar-bg);
         }
@@ -246,6 +268,7 @@
         /* â”€â”€ Android status bar & nav bar â”€â”€ */
         .phone-status-bar {
             height: 2.15rem; flex-shrink: 0;
+            transition: opacity 0.35s ease;
             background: #09235A; display: flex; align-items: flex-start;
             justify-content: space-between; padding: 0.45rem 1.1rem 0 1.35rem;
         }
@@ -263,7 +286,11 @@
         .phone-status-bar.status-bar-promo [stroke="white"] { stroke: hsl(219, 72%, 18%); }
         .phone-screen-content {
             flex: 1; position: relative; overflow: hidden;
+            transition: opacity 0.35s ease;
         }
+        .is-content-loading .phone-screen-content,
+        .is-content-loading .phone-status-bar,
+        .is-content-loading .phone-nav-bar { opacity: 0; }
         .phone-screen-content .placeholder-image-layer {
             inset: 0; width: 100%; height: 100%;
         }
@@ -273,6 +300,7 @@
         }
         .phone-nav-bar {
             height: 0.95rem; flex-shrink: 0;
+            transition: opacity 0.35s ease;
             background: #1c1c1c; display: flex; align-items: center;
             justify-content: center;
         }
@@ -772,14 +800,15 @@
             </div>
         </section>
 
+        <div class="text-center px-10 pt-8 pb-24">
+            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
+                Thank you for reading
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+        </div>
+
     </main>
 
-    <div class="text-center px-10 pt-8 pb-24">
-        <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
-            Thank you for reading
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-        </div>
-    </div>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             var splashLottieAnim = lottie.loadAnimation({
@@ -1118,6 +1147,39 @@
             });
         }
         setTimeout(function () { if (loader && !loader.classList.contains('done')) revealPage(); }, 1500);
+
+        // ── Phone content loaders ──
+        // Show a spinner on each phone screen until its image/video finishes loading.
+        (function setupPhoneLoaders() {
+            var phones = document.querySelectorAll('.editable-placeholder.has-saved-image');
+            phones.forEach(function (phone) {
+                var screen = phone.querySelector('.legacy-wallet-screen');
+                if (!screen) return;
+                var media = Array.prototype.slice.call(
+                    phone.querySelectorAll('img.placeholder-image-layer, video')
+                );
+                if (!media.length) return;
+                var pending = 0;
+                function done() {
+                    pending--;
+                    if (pending <= 0) phone.classList.remove('is-content-loading');
+                }
+                media.forEach(function (m) {
+                    if (m.tagName === 'VIDEO') {
+                        if (m.readyState >= 2) return;
+                        pending++;
+                        m.addEventListener('loadeddata', done, { once: true });
+                        m.addEventListener('error', done, { once: true });
+                    } else {
+                        if (m.complete && m.naturalWidth > 0) return;
+                        pending++;
+                        m.addEventListener('load', done, { once: true });
+                        m.addEventListener('error', done, { once: true });
+                    }
+                });
+                if (pending > 0) phone.classList.add('is-content-loading');
+            });
+        })();
     </script>
 </body>
 </html>
