@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<!-- saved from url=(0033)https://ishantresume.netlify.app/ -->
+<html lang="en" class="theme-v3"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ishant - Resume</title>
+    <meta name="description" content="Resume of Ishant - Principal Product Designer">
+    
+    <!-- Warm Editorial Fonts: Fraunces for headings, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Default / v1 / v3 - Cream & Green */
+            --bg: #faf7f2; /* Warm Cream background */
+            --primary: #1b3e2b; /* Deep Forest Green */
+            --text-body: #2e3330; /* Charcoal/Dark Olive */
+            --text-muted: #6b7280; /* Neutral grey for dates */
+            --font-headings: 'Fraunces', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        :root.theme-v2, :root.theme-v4 {
+            /* v2 / v4 - White & Black */
+            --bg: #ffffff; /* White background */
+            --primary: #111827; /* Almost Black */
+            --text-body: #374151; /* Dark Grey */
+            --text-muted: #9ca3af; /* Muted Grey */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-body);
+            font-family: var(--font-body);
+            line-height: 1.7;
+            margin: 0;
+            padding: 80px 40px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .resume-container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        /* ================= HEADER LAYOUTS ================= */
+        header {
+            width: 100%;
+            margin-bottom: 80px;
+        }
+
+        /* Default Header Layout (v3 / v4 style) */
+        header.header-v3 {
+            display: grid;
+            grid-template-columns: 220px 280px 1fr;
+            gap: 0;
+            align-items: baseline;
+        }
+
+        header.header-v1 {
+            display: none;
+        }
+
+        /* Theme-based Header Toggling */
+        .theme-v1 .header-v1, .theme-v2 .header-v1 {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 0;
+            align-items: baseline;
+        }
+        .theme-v1 .header-v3, .theme-v2 .header-v3 {
+            display: none !important;
+        }
+
+        header h1 {
+            font-family: var(--font-headings);
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+            letter-spacing: -0.01em;
+            line-height: 1.1;
+        }
+
+        .intro-block p {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-body);
+            margin: 0;
+        }
+
+        .contact-block-vertical {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .contact-block-vertical a {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .contact-block-vertical a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Horizontal Contact Block (v1 / v2 style) */
+        .contact-block-horizontal {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .contact-block-horizontal a {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--primary);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .contact-block-horizontal a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            header.header-v3, .theme-v1 header.header-v1, .theme-v2 header.header-v1 {
+                display: flex !important;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+                margin-bottom: 50px;
+            }
+            .contact-block-vertical, .contact-block-horizontal {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        /* ================= BODY CONTENT ================= */
+        /* Editorial Layout Section */
+        .section-container {
+            display: flex;
+            margin-bottom: 80px;
+        }
+
+        .section-container:last-child {
+            margin-bottom: 0;
+        }
+
+        .left-col {
+            width: 220px;
+            flex-shrink: 0;
+        }
+
+        .right-col-wrapper {
+            flex-grow: 1;
+        }
+
+        @media (max-width: 800px) {
+            .section-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .left-col {
+                width: 100%;
+            }
+            h2 {
+                margin-top: 0 !important;
+            }
+        }
+
+        /* Section Titles */
+        h2 {
+            font-family: var(--font-headings);
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+            margin-top: -4px;
+            text-transform: lowercase;
+        }
+
+        /* Row Layout */
+        .row-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .row-grid:last-child {
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 650px) {
+            .row-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        /* Inner Row Metadata (Mid Column) */
+        .mid-col h3 {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0 0 4px 0;
+        }
+
+        .mid-col .role {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin: 0 0 4px 0;
+            color: var(--text-body);
+        }
+
+        .mid-col .date {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        /* Right Column Descriptions */
+        .right-col {
+            margin-top: -3px;
+        }
+
+        .right-col p {
+            font-size: 0.95rem;
+            color: var(--text-body);
+            margin: 0 0 16px 0;
+            line-height: 1.6;
+        }
+
+        .right-col p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Skills/Tools styling */
+        .skills-list {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        /* Selection Colors */
+        ::selection {
+            background: rgba(27, 62, 43, 0.1);
+        }
+
+        .theme-v2 ::selection, .theme-v4 ::selection {
+            background: rgba(17, 24, 39, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="resume-container">
+        
+        <!-- Header v1 (Simple layout for v1 / v2) -->
+        <header class="header-v1">
+            <h1>Ishant</h1>
+            <div class="contact-block-horizontal">
+                <a href="mailto:ishantperiwal@gmail.com">ishantperiwal@gmail.com</a>
+                <a href="tel:+919034401875">+91 9034401875</a>
+                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com</a>
+            </div>
+        </header>
+
+        <!-- Header v3 (Polished bio layout for v3 / v4) -->
+        <header class="header-v3">
+            <h1>Ishant</h1>
+            <div class="contact-block-vertical">
+                <a href="mailto:ishantperiwal@gmail.com">ishantperiwal@gmail.com</a>
+                <a href="tel:+919034401875">+91 9034401875</a>
+                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com</a>
+            </div>
+            <div class="intro-block">
+                <p>Principal Product Designer @ Titan, ex-Zeta. With almost 9 years of experience, including 5 years in fintech. My journey began as a motion design specialist before evolving into a multidisciplinary product designer. My passion lies in core product design, delightful interaction design, and motion systems.</p>
+            </div>
+        </header>
+
+        <!-- Experience Section -->
+        <div class="section-container">
+            <div class="left-col">
+                <h2>experience</h2>
+            </div>
+            <div class="right-col-wrapper">
+                
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>Titan</h3>
+                        <p class="role">Principal Product Designer</p>
+                        <p class="date">Now - Bangalore, India</p>
+                    </div>
+                    <div class="right-col">
+                        <p>Leading end to end feature initiatives and systematizing interaction design across Titan Email</p>
+                        <p>Sole product designer on a new, unannounced offering in the personal digital identity building space, partnering directly with the CEO to shape product direction</p>
+                    </div>
+                </div>
+
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>Zeta</h3>
+                        <p class="role">Principal Product Designer</p>
+                        <p class="date">2021 - 2026 (5 yrs)<br>Bangalore, India</p>
+                    </div>
+                    <div class="right-col">
+                        <p>Led end-to-end product design for Zapp Account, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
+                        <p>Co-led growth initiatives across PayZapp, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
+                        <p>Led cross-functional efforts to establish interaction and motion implementation standards, improving collaboration between design and engineering while raising experience quality across the app.</p>
+                        <p>Helped shape the team's AI-assisted design workflow by identifying practical use cases, leading discussions, and driving adoption across the design process.</p>
+                    </div>
+                </div>
+
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>GeeksforGeeks</h3>
+                        <p class="role">Senior Motion Graphic Designer</p>
+                        <p class="date">2018 - 2021 (3 yrs)<br>Noida, India</p>
+                    </div>
+                    <div class="right-col">
+                        <p>Handled motion and product design for GeeksforGeeks Courses and Portal.</p>
+                        <p>Created motion graphics for marketing videos and campaigns.</p>
+                        <p>Established GeeksforGeeks' design function from scratch as the founding designer</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Education Section -->
+        <div class="section-container">
+            <div class="left-col">
+                <h2>education</h2>
+            </div>
+            <div class="right-col-wrapper">
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>DCRUST</h3>
+                        <p class="role">Murthal, Sonepat</p>
+                        <p class="date">2014 - 2018</p>
+                    </div>
+                    <div class="right-col">
+                        <p class="skills-list">Bachelor of Technology, Computer Science</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="section-container">
+            <div class="left-col">
+                <h2>skills</h2>
+            </div>
+            <div class="right-col-wrapper">
+                
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>Tools</h3>
+                    </div>
+                    <div class="right-col">
+                        <p class="skills-list">After Effects, Affinity, Illustrator, Plasticity, Blender, Cavalry, Visual Code, Cursor, Github</p>
+                    </div>
+                </div>
+
+                <div class="row-grid">
+                    <div class="mid-col">
+                        <h3>Expertise</h3>
+                    </div>
+                    <div class="right-col">
+                        <p class="skills-list">Visual Design, Interaction Design, Motion Design, Animations, Illustrations, User Research, AI-Assisted Design &amp; Coded Prototyping</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script to toggle themes and headers based on the URL query parameter ?v=1, ?v=2, ?v=3, ?v=4 -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        let version = urlParams.get('v') || '3'; // Default to v=3 (Polished Cream & Green)
+        
+        // Ensure version is a valid option, fallback to 3
+        if (!['1', '2', '3', '4'].includes(version)) {
+            version = '3';
+        }
+        
+        // Clean up any old classes
+        document.documentElement.classList.remove('theme-v1', 'theme-v2', 'theme-v3', 'theme-v4');
+        
+        // Apply current theme class
+        document.documentElement.classList.add(`theme-v${version}`);
+
+        // Apply zoom factor if provided (e.g. ?z=1.25)
+        const zoom = urlParams.get('z');
+        if (zoom) {
+            const zoomFactor = parseFloat(zoom);
+            if (!isNaN(zoomFactor) && zoomFactor > 0) {
+                document.body.style.zoom = zoomFactor;
+            }
+        }
+    </script>
+
+<veepn-lock-screen><template shadowrootmode="open"><style>html{box-sizing:border-box;-webkit-text-size-adjust:100%;-moz-text-size-adjust:100%;text-size-adjust:100%;word-break:normal;tab-size:4}*,:before,:after{box-sizing:border-box;background-repeat:no-repeat}:before,:after{-webkit-text-decoration:inherit;text-decoration:inherit;vertical-align:inherit}*{margin:0;padding:0}hr{height:0;color:inherit;border:0;border-top:1px solid;overflow:visible}details,main{display:block}summary{display:list-item}small{font-size:80%}[hidden]{display:none!important}abbr[title]{border-bottom:none;-webkit-text-decoration:underline dotted;text-decoration:underline dotted}a{background-color:#0000}a:active,a:hover{outline-width:0}code,kbd,pre,samp{font-family:monospace}pre{font-size:1em}b,strong{font-weight:bolder}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{border-color:inherit;text-indent:0}iframe{border-style:none}input{border-radius:0}[type=number]::-webkit-inner-spin-button{height:auto}[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{appearance:none}textarea{resize:vertical;overflow:auto}button,input,optgroup,select,textarea{font:inherit;color:inherit}optgroup{font-weight:700}button{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit],[role=button]{cursor:pointer}button::-moz-focus-inner{border-style:none;padding:0}[type=button]::-moz-focus-inner{border-style:none;padding:0}[type=reset]::-moz-focus-inner{border-style:none;padding:0}[type=submit]::-moz-focus-inner{border-style:none;padding:0}button,html [type=button],[type=reset],[type=submit]{appearance:auto}button,input,select,textarea{background-color:#0000;border-style:none}button:-moz-focusring{outline:1px dotted buttontext}[type=button]::-moz-focus-inner{outline:1px dotted buttontext}[type=reset]::-moz-focus-inner{outline:1px dotted buttontext}[type=submit]::-moz-focus-inner{outline:1px dotted buttontext}select{appearance:none}a:focus,button:focus,input:focus,select:focus,textarea:focus{outline-width:0}select::-ms-expand{display:none}select::-ms-value{color:currentColor}legend{color:inherit;white-space:normal;border:0;max-width:100%;display:table}::-webkit-file-upload-button{appearance:auto;color:inherit;font:inherit}[disabled]{cursor:default}img{border-style:none}progress{vertical-align:baseline}[aria-busy=true]{cursor:progress}[aria-controls]{cursor:pointer}[aria-disabled=true]{cursor:default}ul,ol{list-style-type:none}figure{margin:0}@keyframes slide-in{0%{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0%)}}.gradient-blue{background:radial-gradient(106.41% 128.47% at 50.15% 128.47%,#23abff 0%,#3066ff 100%)}.gradient-green{background:radial-gradient(92.26% 118.88% at 50.15% .13%,#00c3c3 0%,#00aab3 100%)}.gradient-purple{background:radial-gradient(165.12% 115.56% at 50.15% .13%,#a15aff 0%,#00a0eb 100%)}.bg-blue{background-color:#f2f5ff}.bg-purple{background-color:#f7f0ff}.bg-green{background-color:#ebffed}.lock-screen{letter-spacing:normal;z-index:2147483638;border-radius:24px;width:327px;font-family:FigtreeVF,sans-serif;animation:.3s ease-in-out forwards slide-in;position:fixed;bottom:24px;right:24px;overflow:hidden;box-shadow:0 24px 32px #00000014}.lock-screen__content{padding:24px 24px 64px;position:relative}.lock-screen__close{opacity:.5;justify-content:center;align-items:center;width:24px;height:24px;display:flex;position:absolute;top:16px;right:16px}.lock-screen__label{color:#fff;background-color:#fff3;border-radius:50px;justify-content:center;align-items:center;gap:8px;width:fit-content;height:26px;margin:-8px auto 16px;padding-inline:16px;font-size:12px;line-height:18px;display:flex}.lock-screen__title{color:#fff;text-align:center;margin-bottom:8px;font-size:20px;font-weight:600;line-height:28px}.lock-screen__description{color:#f5f6f7;text-align:center;font-size:14px;line-height:20px}.lock-screen__description b{font-weight:600}.lock-screen__card{z-index:1;background-color:#fff;border-radius:24px;margin-top:-44px;padding:32px 20px 20px;position:relative}.lock-screen__inner{margin-bottom:24px}.lock-screen__submit{color:#fff;background-color:#f70;border-radius:12px;justify-content:center;align-items:center;gap:10px;width:100%;height:40px;margin-bottom:16px;padding-inline:16px;font-size:16px;font-weight:700;display:flex}.lock-screen__skip{color:#82829c;justify-content:center;align-items:center;margin-inline:auto;font-size:14px;line-height:20px;display:flex}.price-card{background:linear-gradient(254.14deg,#fafbff .04%,#f5f8ff 100.04%);border:1px solid #f2f2fc;border-radius:24px;padding:24px 28px}.price-card__label{color:#4a5764;text-align:center;text-transform:uppercase;margin-bottom:16px;font-size:14px;line-height:20px}.price-card__price{justify-content:center;align-items:flex-start;column-gap:2px;margin-bottom:12px;display:flex}.price-card__currency{color:#515478;font-size:18px;line-height:28px}.price-card__number{color:#14142a;text-align:center;font-size:64px;line-height:54px}.price-card__wrap{flex-direction:column;display:flex}.price-card__decimal{color:#515478;font-size:18px;font-weight:600;line-height:28px}.price-card__period{color:#515478;margin-top:-6px;font-size:14px;line-height:20px}.price-card__discount{justify-content:center;align-items:center;margin-bottom:12px;display:flex;position:relative}.price-card__discount-divider{z-index:0;background-color:#dbe2f9;width:100%;height:1px;position:absolute;top:50%;left:0;transform:translateY(-50%)}.price-card__discount-icon{z-index:1;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}.price-card__discount-text{z-index:2;color:#fff;font-size:12px;font-weight:600;line-height:18px;position:relative}.price-card__features{justify-content:center;align-items:center;column-gap:16px;display:flex}.price-card__feature{color:#222e3a;align-items:center;gap:6px;font-size:14px;line-height:20px;display:flex}.price-card__feature:before{content:"";background-color:#20df9e;border-radius:50%;flex-shrink:0;width:4px;height:4px;display:block}.features-list{grid-template-columns:repeat(3,1fr);gap:12px;display:grid}.features-list__item{flex-direction:column;align-items:center;gap:6px;display:flex}.features-list__icon{border-radius:12px;justify-content:center;align-items:center;width:52px;height:52px;display:flex}.features-list__text{color:#293a53;text-align:center;letter-spacing:-.1px;font-size:16px;line-height:24px}</style></template><style>@font-face{font-family:FigtreeVF;src:url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2)format("woff2 supports variations"),url(chrome-extension://majdfhpaihoncoakbjgbdhglocklcgno/fonts/FigtreeVF.woff2)format("woff2-variations");font-weight:100 1000;font-display:swap}</style></veepn-lock-screen></body></html>
