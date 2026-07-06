@@ -141,8 +141,12 @@
         html::before {
             content: '';
             position: fixed; inset: 0; pointer-events: none; z-index: 0;
-            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) 1.5px, transparent 1.5px);
-            background-size: 22px 22px;
+            /* Gently scales with viewport: fixed base + small vw component, so density
+               shrinks only slightly on smaller screens instead of fully proportionally.
+               Calibrated so a 2560px (2K) screen ≈ 22px tile; a ~1440px laptop ≈ 18px.
+               clamp() bounds keep it sane on very small or ultrawide displays. */
+            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) clamp(1.1px, 0.05vw, 1.4px), transparent clamp(1.1px, 0.05vw, 1.4px));
+            background-size: clamp(16px, calc(13px + 0.35vw), 24px) clamp(16px, calc(13px + 0.35vw), 24px);
         }
         /* Edge fades: soft strips bonded to the content column's left/right edges */
         main::before, main::after {
