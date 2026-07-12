@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="--accent-h: 206; --block-gap: 3.65rem; --heading-body-gap: 1.2rem; --section-heading-gap-collapsed: 0.8rem; --section-heading-gap-expanded: 0.85rem; --accent-s: 54; --accent-l: 29; --section-gap: 2.5rem; --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15); --color-bg: hsl(var(--accent-h), 30%, 97%);"><head><style>body {transition: opacity ease-in 0.2s; } 
+<html lang="en" style="--accent-h: 206; --block-gap: 3.65rem; --heading-body-gap: 1.2rem; --section-heading-gap-collapsed: 0.8rem; --section-heading-gap-expanded: 0.85rem; --accent-s: 54; --accent-l: 29; --section-gap: 2.5rem; --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15); --color-bg: hsl(var(--accent-h), 30%, 97%);"><head><script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
@@ -3825,6 +3825,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         
         @media (min-width: 1400px) {
             .sticky-note { display: block; }
+        }
+
+        /* ?sticky=false — forcibly hide all sticky notes regardless of other rules */
+        html.hide-sticky-notes .sticky-note {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
         }
 
         /* All-or-nothing clip guard: if any shown note is clipped horizontally, hide the whole set.

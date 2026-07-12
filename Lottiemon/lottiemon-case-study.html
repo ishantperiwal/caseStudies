@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" style="--accent-h: 160; --accent-s: 54; --accent-l: 29; --color-bg: hsl(var(--accent-h), 12%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head>
+<html lang="en" style="--accent-h: 160; --accent-s: 54; --accent-l: 29; --color-bg: hsl(var(--accent-h), 12%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head><script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Why I built Lottiemon — A No-B.S. Lottie Animation Editor</title>
@@ -360,6 +360,14 @@
             display: none;
         }
         @media (min-width: 1380px) { .sticky-note { display: block; } }
+
+        /* ?sticky=false — forcibly hide all sticky notes regardless of other rules */
+        html.hide-sticky-notes .sticky-note {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
 
         .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center; justify-content: center; margin-top: 1.75rem; }
         .url-cta {
