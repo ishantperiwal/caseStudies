@@ -593,13 +593,39 @@
             // ?section=<name> instantly positions the same screen to a given block
             // (no scroll animation) so different journey boxes can reuse this one file.
             const STEPS = [
-                { dir: "up",   arrowLeft: 50,  text: "Scan & Pay one-liner goes here" },
-                { dir: "up",   arrowLeft: 147, text: "Send Money one-liner goes here" },
-                { dir: "up",   arrowLeft: 244, text: "Transfer to Account one-liner goes here" },
-                { dir: "down", arrowLeft: 16,  text: "Payment History one-liner goes here" },
-                { dir: "down", arrowLeft: 103, text: "Tap & Pay one-liner goes here" },
-                { dir: "down", arrowLeft: 190, text: "View Card one-liner goes here" },
-                { dir: "down", arrowLeft: 278, text: "Manage Account one-liner goes here" }
+                // Scan & Pay
+                { dir: "up",   arrowLeft: 50,  text: "Scan any QR, for faster and secure payments" },
+                { dir: "up",   arrowLeft: 50,  text: "Scan any QR and pay seamlessly with your Zapp Account" },
+                { dir: "up",   arrowLeft: 50,  text: "Experience faster and secure payments without a PIN" },
+                { dir: "up",   arrowLeft: 50,  text: "Your average transaction takes just 1 second with Zapp Account" },
+                { dir: "up",   arrowLeft: 50,  text: "You've had 100% successful transactions in the last month" },
+                // Send Money to Anyone
+                { dir: "up",   arrowLeft: 147, text: "Send money to GPay, PhonePe, Paytm or any other UPI app instantly" },
+                { dir: "up",   arrowLeft: 147, text: "Easily transfer money to any contact or phone number" },
+                { dir: "up",   arrowLeft: 147, text: "Your average transaction takes just 1 second with Zapp Account" },
+                { dir: "up",   arrowLeft: 147, text: "Yay! You've made 10 seamless payments to your contacts" },
+                // Transfer to Account
+                { dir: "up",   arrowLeft: 244, text: "Send money to any bank account, fast and secure" },
+                { dir: "up",   arrowLeft: 244, text: "Transfer money to your own or any other bank account, effortlessly" },
+                { dir: "up",   arrowLeft: 244, text: "You've made your first bank transfer, great job!" },
+                // Payment History
+                { dir: "down", arrowLeft: 16,  text: "Keep track of all your Zapp Account payments, right here!" },
+                { dir: "down", arrowLeft: 16,  text: "Monitor your finances easily with your payment history" },
+                { dir: "down", arrowLeft: 16,  text: "Yay! You've made your first payment using Zapp Account" },
+                { dir: "down", arrowLeft: 16,  text: "Wow! 25 payments made this week so far" },
+                { dir: "down", arrowLeft: 16,  text: "Your January bank statement just got cleaner, 20 fewer entries!" },
+                { dir: "down", arrowLeft: 16,  text: "Your bank statement is looking neat, only 3 entries this week!" },
+                // Tap & Pay
+                { dir: "down", arrowLeft: 103, text: "Pay at any merchant's counter, Zara, Croma, H&M, and more!" },
+                { dir: "down", arrowLeft: 103, text: "Tap and Pay at an offline merchant store, hassle-free" },
+                { dir: "down", arrowLeft: 103, text: "Yay! You've completed your first Tap & Pay" },
+                { dir: "down", arrowLeft: 103, text: "You've made your first Tap & Pay payment, keep going!" },
+                // Zapp Card
+                { dir: "down", arrowLeft: 190, text: "Use your digital card to shop effortlessly on any website or app" },
+                { dir: "down", arrowLeft: 190, text: "Enjoy shopping at top merchants like Flipkart, Amazon, and more" },
+                { dir: "down", arrowLeft: 190, text: "Awesome! Your first Zapp Card transaction is complete" },
+                // Manage Account
+                { dir: "down", arrowLeft: 278, text: "Manage online payments, set payment limits and more" }
             ];
 
             const pointer = document.getElementById("pointer");
