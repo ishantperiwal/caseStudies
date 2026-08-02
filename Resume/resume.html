@@ -22,6 +22,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --text-muted: #6b7280; /* Neutral grey for dates */
             --font-headings: 'Fraunces', serif;
             --font-body: 'Inter', sans-serif;
+            --case-study-link: #a44a2a;
+            --case-study-link-hover: #78351f;
         }
 
         :root.theme-v2, :root.theme-v4 {
@@ -267,6 +269,40 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 0;
         }
 
+        .case-study-link {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.25em;
+            color: var(--case-study-link) !important;
+            font-weight: 600;
+            text-decoration: none !important;
+            text-underline-offset: 3px;
+        }
+
+        .case-study-link:hover,
+        .case-study-link:focus-visible {
+            color: var(--case-study-link-hover) !important;
+            text-decoration: underline !important;
+        }
+
+        .external-link-icon {
+            width: 0.76em;
+            height: 0.76em;
+            flex: 0 0 auto;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transform: translateY(-0.08em);
+            transition: transform 0.2s ease;
+        }
+
+        .case-study-link:hover .external-link-icon,
+        .case-study-link:focus-visible .external-link-icon {
+            transform: translate(0.08em, -0.16em);
+        }
+
         /* Skills/Tools styling */
         .skills-list {
             font-size: 0.95rem;
@@ -364,9 +400,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <p class="date">2021 - 2026 (5 yrs)<br>Bangalore, India</p>
                     </div>
                     <div class="right-col">
-                        <p>Led end-to-end product design for <a href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">Zapp Account</a>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
-                        <p>Co-led growth initiatives across PayZapp, including a successful <a href="../IPL Themification/ipl-themification-case-study.html" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;">IPL season campaign</a>, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
-                        <p>Led cross-functional efforts to establish interaction and motion implementation standards, improving collaboration between design and engineering while raising experience quality across the app.</p>
+                        <p>Led end-to-end product design for <a class="case-study-link" href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer">Zapp Account<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
+                        <p>Co-led growth initiatives across PayZapp, including a successful <a class="case-study-link" href="../IPL Themification/ipl-themification-case-study.html" target="_blank" rel="noopener noreferrer">IPL season campaign<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
+                        <p>Led cross-functional efforts to establish interaction and motion implementation standards, including building <a class="case-study-link" href="../Lottiemon/lottiemon-case-study.html" target="_blank" rel="noopener noreferrer">Lottiemon<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, an internal tool that helped the team self-serve common Lottie edits and previews.</p>
                         <p>Helped shape the team's AI-assisted design workflow by identifying practical use cases, leading discussions, and driving adoption across the design process.</p>
                     </div>
                 </div>
@@ -399,7 +435,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <h3>Tools</h3>
                     </div>
                     <div class="right-col">
-                        <p class="skills-list">After Effects, Affinity, Illustrator, Plasticity, Blender, Cavalry, Visual Code, Cursor, Github</p>
+                        <p class="skills-list">After Effects, Affinity, Illustrator, Plasticity, Blender, Cavalry, VS Code, Cursor, Github</p>
                     </div>
                 </div>
 

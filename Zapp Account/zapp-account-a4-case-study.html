@@ -468,6 +468,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) clamp(1.1px, 0.05vw, 1.4px), transparent clamp(1.1px, 0.05vw, 1.4px));
             background-size: clamp(16px, calc(13px + 0.35vw), 24px) clamp(16px, calc(13px + 0.35vw), 24px);
         }
+        /* The content column. Replaces the hard-coded Tailwind `max-w-4xl` on <main>
+           and on both fixed vertical-guide overlays, so all three track one value.
+           Width comes from --content-w (see :root). */
+        .content-column {
+            max-width: var(--content-w);
+        }
         /* Edge fades: soft strips bonded to the content column's left/right edges */
         main::before, main::after {
             content: '';
@@ -510,6 +516,33 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --section-heading-gap-expanded: 0.35rem;
             --block-gap: 3rem;
             --hover-duration: 0.3s;
+
+            /* ── Content column width ──────────────────────────────────────────
+               --content-w is THE KNOB. Change this one value to try a different
+               column width; everything below derives from it, so margin-floating
+               elements (phones, bled grids, previews) re-fit automatically.
+               56rem = 896px = the original Tailwind `max-w-4xl`.
+
+               --gutter      : free space on each side of the centered column.
+               --content-pad : the column's inner padding (Tailwind px-10). Bled
+                               elements start inside it, so a -7rem margin only
+                               reaches 7rem - 2.5rem past the column edge. This
+                               is added back so bleeds are not pulled in early.
+               --bleed-safe  : minimum breathing room kept at the viewport edge.
+               --bleed-room  : max outward bleed that still fits on screen.
+                               Elements clamp their own bleed against this, so as
+                               the column grows they get pushed back inward
+                               instead of being clipped by `overflow-x: hidden`.
+               --measure     : cap for long-form prose. Deliberately does NOT
+                               follow --content-w — layout widens, but reading
+                               line length stays readable. Raise it if you do
+                               want paragraphs to stretch with the column. */
+            --content-w:   62rem;
+            --content-pad: 2.5rem;
+            --bleed-safe:  1.5rem;
+            --gutter:      calc((100vw - var(--content-w)) / 2);
+            --bleed-room:  calc(var(--gutter) + var(--content-pad) - var(--bleed-safe));
+            --measure:     52rem;
         }
 
         h1, h2, h3, h4, .font-display {
@@ -525,7 +558,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             color: hsl(var(--accent-h), 20%, 15%);
             font-size: 1.125rem;
             line-height: 1.5;
-            max-width: 78%;
+            max-width: min(78%, var(--measure));
             transform-origin: left center;
             transition:
                 color 0.35s ease,
@@ -571,7 +604,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         body.is-animating-motion .stack-section:not(.static-section) .section-header p.font-display {
-            max-width: 78%;
+            max-width: min(78%, var(--measure));
         }
 
         @media (min-width: 768px) {
@@ -742,13 +775,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             .b-autoload { grid-area: autoload; }
         }
         @media (min-width: 1024px) {
+            /* Bleed clamped to available gutter — see --bleed-room in :root. */
             .results-dashboard > .results-bento {
-                margin-left: -2rem;
-                margin-right: -2rem;
+                margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
+                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
             }
             .results-dashboard > .results-ranking {
-                margin-left: -2rem;
-                margin-right: -2rem;
+                margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
+                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
             }
         }
         .bento-cell {
@@ -1306,7 +1340,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .legacy-wallet-preview {
             float: right;
             width: 17rem;
-            margin: 0 -8.5rem 1.5rem 2rem;
+            /* Right bleed clamped to available gutter — see --bleed-room in :root. */
+            margin: 0 calc(-1 * clamp(0rem, var(--bleed-room), 8.5rem)) 1.5rem 2rem;
             position: relative;
             z-index: 2;
             transform: translateX(-7.5rem);
@@ -1356,7 +1391,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
            the preview out in-flow with its own spacing. */
         @media (min-width: 768px) {
             .legacy-wallet-flow-spacer:not(.img-placeholder) {
-                margin: 1.5rem -11rem 2.75rem 2rem;
+                margin: 1.5rem calc(-1 * clamp(0rem, var(--bleed-room), 11rem)) 2.75rem 2rem;
             }
         }
 
@@ -1410,10 +1445,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .competitive-carousel {
             position: relative;
             margin-bottom: 2rem;
-            margin-left: -3.5rem;
-            margin-right: -3.5rem;
-            padding-left: 3.5rem;
-            padding-right: 3.5rem;
+            /* Margin and padding use the SAME clamp so the inner content stays put;
+               only the overflow stage widens/narrows with the available gutter. */
+            margin-left:   calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem));
+            margin-right:  calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem));
+            padding-left:  clamp(0rem, var(--bleed-room), 3.5rem);
+            padding-right: clamp(0rem, var(--bleed-room), 3.5rem);
         }
 
         .competitive-carousel-stage {
@@ -2355,7 +2392,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 19rem;
             max-width: 100%;
             aspect-ratio: 9 / 20;
-            margin-right: -4.5rem;
+            /* Overhang clamped to available gutter (see --bleed-room in :root).
+               The visible phone is JS-pinned to this spacer's measured left edge,
+               so clamping here moves the phone too — no JS change needed. */
+            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 4.5rem));
             justify-self: end;
             visibility: hidden;
             pointer-events: none;
@@ -2409,7 +2449,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         @media (min-width: 768px) and (max-width: 1750px) {
             .execution-phone-spacer {
                 width: 16.5rem;
-                margin-right: -3.5rem; /* Proportional overhang margin */
+                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem)); /* Proportional overhang margin */
             }
             .execution-phone-floating {
                 width: 16.5rem;
@@ -2929,8 +2969,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             gap: 2.25rem;
             margin-top: 1.5rem;
             margin-bottom: 2.25rem;
-            margin-left: -3rem;
-            margin-right: -3rem;
+            margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 3rem));
+            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 3rem));
         }
 
         .strategy-finding {
@@ -3349,8 +3389,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 1.5rem;
-            margin-left: -7rem;
-            margin-right: -7rem;
+            margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 7rem));
+            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 7rem));
         }
 
         .kyc-step-card {
@@ -4243,17 +4283,17 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
     <!-- Vertical guide lines along content edges -->
     <div id="left-vertical-guide" class="fixed inset-0 pointer-events-none z-[2] flex justify-center">
-        <div class="relative w-full max-w-4xl h-full">
+        <div class="relative w-full content-column h-full">
             <div class="vertical-guide-line" style="left: -2px;"></div>
         </div>
     </div>
     <div id="vertical-guides" class="fixed inset-0 pointer-events-none z-0 flex justify-center">
-        <div class="relative w-full max-w-4xl h-full">
+        <div class="relative w-full content-column h-full">
             <div class="vertical-guide-line" style="right: -2px;"></div>
         </div>
     </div>
 
-    <main class="relative z-[1] max-w-4xl mx-auto pb-40 bg-[var(--color-bg)]">
+    <main class="relative z-[1] content-column mx-auto pb-40 bg-[var(--color-bg)]">
         
         <!-- Hero Section -->
         <section class="pt-[5.9rem] relative">
@@ -4377,7 +4417,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                             </div>
                         </div>
                         <div class="text-center">
-                            <span class="legacy-wallet-caption mono text-[10px]">Before / PayZapp Wallet</span>
+                            <span class="legacy-wallet-caption mono text-[10px]">PayZapp Wallet</span>
                         </div>
                     </aside>
                     <div class="card-body-clip" style="">
