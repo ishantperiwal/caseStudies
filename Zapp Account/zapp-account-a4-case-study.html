@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" style="--accent-h: 206; --block-gap: 3.65rem; --heading-body-gap: 1.2rem; --section-heading-gap-collapsed: 0.8rem; --section-heading-gap-expanded: 0.85rem; --accent-s: 54; --accent-l: 29; --section-gap: 2.5rem; --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15); --color-bg: hsl(var(--accent-h), 30%, 97%);"><head><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script><style>body {transition: opacity ease-in 0.2s; } 
 body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
 </style><style>body {transition: opacity ease-in 0.2s; } 
@@ -413,7 +415,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     colors: {
                         canvas: 'var(--color-bg)', /* was: hsl(36, 33%, 97%) / #FAF8F5 */
                         ink: '#2C2621',
-                        deep: '#5C5146',
+                        deep: '#52483F', /* was #5C5146 — darkened slightly */
                         medium: '#A89B8F',
                         muted: '#7A6F64',
                         outline: '#433A31',
@@ -727,7 +729,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: var(--font-mono);
             font-size: 11px;
             letter-spacing: 0.03em;
-            color: #5C5146;
+            color: #52483F;
         }
         .results-timeframe-dot {
             width: 7px;
@@ -847,7 +849,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-family: var(--font-mono);
             font-size: 12px;
             letter-spacing: 0.02em;
-            color: #5C5146;
+            color: #52483F;
         }
         .b-autoload .bento-cap {
             max-width: 220px;
@@ -2966,7 +2968,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             align-items: center;
             border: 1px solid transparent;
             background: transparent;
-            color: #5C5146;
+            color: #52483F;
             padding: 0.32rem 0.55rem;
         }
 
@@ -3849,6 +3851,101 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-size: 1.125rem;
         }
 
+        /* ── "Where could this go next?" — parallel direction explorations ──
+           Each .direction-block is one direction that was explored but not
+           shipped: a mono label, a heading, a short rationale, then a row of
+           phone placeholders with a caption under each. Images live in
+           `case study assets/next-directions/`. */
+        .direction-block { margin-bottom: 3rem; }
+        .direction-block:last-of-type { margin-bottom: 0; }
+
+        .direction-label {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: theme('colors.muted');
+            margin-bottom: 0.45rem;
+        }
+
+        /* Plain images, horizontally centered as a row — no phone casing, since
+           these are sketches and exploration screens rather than shipped UI. */
+        .direction-screens {
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: clamp(1.25rem, 3vw, 2rem);
+            margin-top: 1.35rem;
+        }
+
+        .direction-screen-item {
+            display: flex;
+            flex-direction: column;
+            flex: 0 1 17rem;
+            max-width: 100%;
+        }
+
+        /* Bare image box: keeps the .img-placeholder border/centering base, drops
+           the frame. The image sits at its natural aspect ratio (height: auto),
+           so tall screens and wide sketches both render undistorted. */
+        .direction-shot {
+            min-height: 11rem;
+            border-radius: 10px;
+            /* Must not clip: highlight handles/labels sit outside the box. */
+            overflow: visible;
+        }
+
+        .direction-shot > img {
+            display: none;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .direction-shot.has-saved-image {
+            min-height: 0;
+            border-color: transparent;
+        }
+
+        .direction-shot.has-saved-image > img { display: block; }
+
+        .direction-shot-hint {
+            padding: 1rem;
+            font-size: 0.8125rem;
+            letter-spacing: 0.02em;
+            text-align: center;
+        }
+
+        .direction-shot.has-saved-image .direction-shot-hint { display: none; }
+
+        /* Direction headings use the same h3.section-mini-heading size (1.15rem)
+           as sub-headings elsewhere in the case study, but must drop its 3rem
+           top margin, since each sits directly beneath its own mono label. */
+        .direction-block h3.section-mini-heading { margin-top: 0; }
+
+        .direction-iteration { margin-top: 2rem; }
+
+        /* Per-image captions are currently unused — kept so they can be switched
+           back on by re-adding <p class="direction-caption"> under a shot. */
+        .direction-caption {
+            margin: 0.65rem 0 0;
+            font-size: 11.5px;
+            line-height: 1.5;
+            color: theme('colors.muted');
+        }
+
+        /* Full-width landscape slot that closes the section. Not inside the
+           centered row, so it spans the whole content column. */
+        .direction-wide { margin-top: 2.75rem; }
+        .direction-shot.is-wide { min-height: 16rem; }
+        .direction-wide .direction-caption { max-width: 34rem; }
+
+        @media (max-width: 767px) {
+            .direction-screen-item { flex-basis: 100%; max-width: 18rem; }
+        }
+
         .sticky-note {
             position: absolute;
             width: 220px;
@@ -4441,7 +4538,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                 </div>
                 <div class="card-body" style="">
-                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -4828.859375px; --floating-preview-left: 1470.090576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
+                    <aside class="legacy-wallet-preview legacy-wallet-floating-preview editable-placeholder has-saved-image" data-placeholder-id="before-payzapp-wallet" data-placeholder-name="Before PayZapp Wallet screen" aria-label="Preview placeholder for old PayZapp Wallet screen" tabindex="-1" style="--floating-preview-top: -165.46875px; --floating-preview-left: 1115.090576171875px;" data-highlight-x="96.0" data-highlight-y="23.2" data-highlight-label-x="142.0" data-highlight-label-y="17.7" data-highlight-text="Virtual Card offered by PayZapp Wallet" data-highlight-active="true" data-highlight-radius="13" data-highlight-curve="12" data-highlight-aspect="120" data-highlight-rw="61" data-highlight-rh="72" data-highlight-arrow-gap="11">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
@@ -5160,8 +5257,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </div>
                 </div>
-                <div class="card-body" data-execution-journey="" style="" data-active-state="transition-outro-extra">
-                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 330.8599853515625px; --floating-preview-left: 1485.9156494140625px;">
+                <div class="card-body" data-execution-journey="" style="" data-active-state="entry-spotlight">
+                    <aside class="execution-phone-floating" aria-label="Journey screen preview" style="--floating-preview-top: 1733.7193603515625px; --floating-preview-left: 1130.9156494140625px;">
                         <div class="execution-journey-phone" data-journey-phone="">
                                         <div class="execution-phone-frame" aria-hidden="true">
                                             <div class="legacy-wallet-device">
@@ -5169,7 +5266,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                             </div>
                                         </div>
                                         <div class="execution-startup-tap-layer" data-startup-tap-layer="" aria-hidden="true"><span class="execution-startup-touchpoint"></span><span class="execution-startup-ripple"></span><span class="execution-startup-marker"></span></div>
-                                        <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-spotlight" data-placeholder-id="execution-entry-spotlight" data-placeholder-name="Entry point spotlight banner screen" aria-label="Preview placeholder for spotlight banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="87.8" data-highlight-y="31.4" data-highlight-label-x="133.3" data-highlight-label-y="18.7" data-highlight-text="Spotlight banner" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="20" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-spotlight.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="mono text-[9px] text-muted mb-1">Spotlight</div><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Unlock more ways to pay</div><div class="execution-phone-pill mt-3">Explore account</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-saved-image is-active" data-journey-screen-state="entry-spotlight" data-placeholder-id="execution-entry-spotlight" data-placeholder-name="Entry point spotlight banner screen" aria-label="Preview placeholder for spotlight banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="87.8" data-highlight-y="31.4" data-highlight-label-x="133.3" data-highlight-label-y="18.7" data-highlight-text="Spotlight banner" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="20" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-spotlight.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="mono text-[9px] text-muted mb-1">Spotlight</div><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Unlock more ways to pay</div><div class="execution-phone-pill mt-3">Explore account</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-anchor" data-placeholder-id="execution-entry-anchor" data-placeholder-name="Entry point home anchor screen" aria-label="Preview placeholder for home anchor entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="89.8" data-highlight-y="64.1" data-highlight-label-x="127.6" data-highlight-label-y="47.1" data-highlight-text="MoEngage Bottom Sheet" data-highlight-rw="64" data-highlight-rh="44" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-anchor.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Zapp Account</div><div class="text-[11px] text-muted mt-1">Persistent home anchor</div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-saved-image" data-journey-screen-state="entry-inline" data-placeholder-id="execution-entry-inline" data-placeholder-name="Entry point inline banner screen" aria-label="Preview placeholder for inline banner entry point" tabindex="-1" data-highlight-active="true" data-highlight-x="72.1" data-highlight-y="61.3" data-highlight-label-x="127.3" data-highlight-label-y="48.8" data-highlight-text="Animated Anchor Icon" data-highlight-rw="24" data-highlight-rh="32" data-highlight-curve="19" data-highlight-arrow-gap="8" aria-hidden="true" data-overlay-src="case study assets/zapp-overlay-execution-entry-inline.gif" data-overlay-active="true" data-overlay-x="62.40" data-overlay-y="62.27" data-overlay-scale="16.00"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-entry-inline.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-mini-list"><div class="execution-phone-mini-item"></div><div class="execution-phone-mini-item"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Upgrade with Zapp Account</div><div class="text-[11px] text-muted mt-1">Inline contextual banner</div></div><div class="execution-phone-mini-item"></div></div></div><img class="execution-phone-overlay" alt="" draggable="false" src="case study assets/zapp-overlay-execution-entry-inline.gif" style="--overlay-x: 62.4%; --overlay-y: 62.27%; --overlay-w: 16%;"></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-entry-kyc" data-transition-state="true" data-placeholder-id="execution-transition-entry-kyc" data-placeholder-name="Transition from entry points to Video KYC" aria-label="Preview placeholder for transition into Video KYC" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="74" data-highlight-label-y="40" data-highlight-text="Continue" data-highlight-rw="24" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-entry-kyc.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Unlock full capabilities</div><div class="text-[11px] text-muted mt-1">Move into Video KYC</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
@@ -5181,7 +5278,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="unlock-capabilities" data-placeholder-id="execution-unlock-capabilities" data-placeholder-name="Unlocked capabilities screen" aria-label="Preview placeholder for unlocked capabilities" tabindex="-1" data-highlight-active="true" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="New actions" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-unlock-capabilities.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-mini-list"><div class="execution-phone-mini-item"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Pay, transfer, tap and load</div><div class="text-[11px] text-muted mt-1">Full account actions</div></div><div class="execution-phone-mini-item"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="unlock-next" data-placeholder-id="execution-unlock-next" data-placeholder-name="Unlocked account next actions screen" aria-label="Preview placeholder for unlocked account next actions" tabindex="-1" data-highlight-active="true" data-highlight-x="50" data-highlight-y="72" data-highlight-label-x="76" data-highlight-label-y="56" data-highlight-text="Next action" data-highlight-rw="42" data-highlight-rh="16" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-unlock-next.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Load money to start using it</div><div class="text-[11px] text-muted mt-1">Useful next action</div><div class="execution-phone-pill mt-3">Load money</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-unlock-outro" data-transition-state="true" data-placeholder-id="execution-transition-unlock-outro" data-placeholder-name="Transition from unlocked account to outro" aria-label="Preview placeholder for transition into the outro" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="64" data-highlight-label-x="74" data-highlight-label-y="48" data-highlight-text="Continue" data-highlight-rw="32" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-unlock-outro.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Account unlocked</div><div class="text-[11px] text-muted mt-1">Moving to recap</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
-                                        <div class="execution-phone-state editable-placeholder has-saved-image is-active is-highlight-clipped" data-journey-screen-state="outro-recap" data-placeholder-id="execution-outro-recap" data-placeholder-name="Outro recap screen" aria-label="Preview placeholder for outro recap" tabindex="-1" data-highlight-active="true" data-highlight-x="89.3" data-highlight-y="79.7" data-highlight-label-x="129.6" data-highlight-label-y="63.3" data-highlight-text="This starts VKYC handled via IDFy" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="false"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-outro-recap.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder recap screen</div><div class="text-[11px] text-muted mt-1">Final journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
+                                        <div class="execution-phone-state editable-placeholder has-saved-image is-highlight-clipped" data-journey-screen-state="outro-recap" data-placeholder-id="execution-outro-recap" data-placeholder-name="Outro recap screen" aria-label="Preview placeholder for outro recap" tabindex="-1" data-highlight-active="true" data-highlight-x="89.3" data-highlight-y="79.7" data-highlight-label-x="129.6" data-highlight-label-y="63.3" data-highlight-text="This starts VKYC handled via IDFy" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-outro-recap.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder recap screen</div><div class="text-[11px] text-muted mt-1">Final journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder" data-journey-screen-state="transition-outro-extra" data-transition-state="true" data-placeholder-id="execution-transition-outro-extra" data-placeholder-name="Transition from outro to next placeholder" aria-label="Preview placeholder for transition into the next placeholder" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="64" data-highlight-label-x="74" data-highlight-label-y="48" data-highlight-text="Continue" data-highlight-rw="32" data-highlight-rh="14" data-highlight-curve="14" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-transition-outro-extra.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Recap complete</div><div class="text-[11px] text-muted mt-1">Moving to next step</div><div class="execution-phone-pill mt-3">Continue</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div><span class="execution-transition-dot" aria-hidden="true"></span></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-recap" data-placeholder-id="execution-extra-recap" data-placeholder-name="Extra placeholder screen" aria-label="Preview placeholder for extra section" tabindex="-1" data-highlight-active="false" data-highlight-x="50" data-highlight-y="58" data-highlight-label-x="78" data-highlight-label-y="42" data-highlight-text="Placeholder" data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/intro-animation/embed.html" title="Intro animation prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-recap.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Another placeholder screen</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
                                         <div class="execution-phone-state editable-placeholder has-live-embed" data-journey-screen-state="extra-two" data-placeholder-id="execution-extra-two" data-placeholder-name="Extra placeholder screen 2" aria-label="Preview placeholder for extra section box 2" tabindex="-1" data-highlight-active="true" data-highlight-x="74.2" data-highlight-y="28.7" data-highlight-label-x="134.5" data-highlight-label-y="24.4" data-highlight-text="Add Money as hero action followed by contextually placed auto-load." data-highlight-rw="58" data-highlight-rh="34" data-highlight-curve="16" data-highlight-arrow-gap="8" aria-hidden="true"><div class="legacy-wallet-device"><div class="legacy-wallet-screen"><iframe class="execution-phone-embed" data-embed-src="prototypes/zapp-home/embed.html?section=actions" title="Zapp Account home prototype" loading="lazy" scrolling="no" tabindex="-1" aria-hidden="true"></iframe><img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-execution-extra-two.png"><div class="placeholder-default"><div class="legacy-wallet-bar"></div><div class="execution-phone-card"><div class="font-display text-sm font-medium text-ink">Placeholder screen two</div><div class="text-[11px] text-muted mt-1">Placeholder journey box</div></div><div class="legacy-wallet-grid"><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div><div class="legacy-wallet-tile"></div></div></div></div></div></div>
@@ -5205,7 +5302,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <div class="mb-5 relative">
                                         
                                         <h3 class="font-display text-base font-medium section-mini-heading mb-2 text-ink" data-text-key="execution-plugins-heading" spellcheck="false">Built Two Plugins That Helped Me Move Faster</h3>
-                                        <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project -&nbsp;&nbsp;<span style="font-size: 15.84px; letter-spacing: 0.18px;">Figma Recall</span>&nbsp;and&nbsp;<span style="font-size: 15.84px; letter-spacing: 0.18px;">Fair Colors.&nbsp;</span>Fair Colors let me add meaningful nomenclature to the locally used colors which could be linked to the core design system kind of maintaining a local alias of colors. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.<br><br></p>
+                                        <p class="text-[15px] md:text-base" data-text-key="execution-journey-intro-filler-2" spellcheck="false">I built two Figma plugins during this project -&nbsp;&nbsp;<span style="font-size: 15.84px; letter-spacing: 0.18px;">Figma Recall</span>&nbsp;and&nbsp;<span style="font-size: 15.84px; letter-spacing: 0.18px;">Fair Colors.&nbsp;</span>Fair Colors let you define local, meaningful names for colors while keeping them tied to the core design system, making aliases easy to swap and hand off to developers. Figma Recall let me manage iterations without crowding the canvas, and made it easy to pull up past versions during stakeholder meetings without digging through file history.<br><br></p>
 
                                         <div class="execution-inline-image img-placeholder editable-placeholder mt-4 has-saved-image" data-placeholder-id="execution-plugins-visual" data-placeholder-name="Plugins visual" aria-label="Image placeholder for the two plugins" tabindex="-1" data-highlight-x="90.1" data-highlight-y="70.9" data-highlight-label-x="114.6" data-highlight-label-y="68.8" data-highlight-text="Design Iterations Managed by Figma Recall" data-highlight-active="true" data-highlight-rw="100" data-highlight-rh="100" data-highlight-curve="13" data-highlight-arrow-gap="23">
                                             <img alt="" class="execution-inline-image-media" src="case study assets/zapp-placeholder-execution-plugins-visual.png">
@@ -5223,14 +5320,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                      the way down, control takes over and the first box glides to center. -->
                                 <div class="execution-journey-entry-divider" data-journey-entry-divider="" aria-hidden="true"></div>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="entry-points">
+                                <section class="execution-journey-section is-timeline-active" data-journey-section="entry-points">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-entrypoints-label" spellcheck="false">01 / Entry Points Across PayZapp</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-entrypoints-heading" spellcheck="false">The Entry Points</h3>
                                         <p class="text-[15px] md:text-base" data-text-key="execution-entrypoints-body" spellcheck="false">Users had to encounter Zapp Account at moments where the value made sense inside PayZapp, instead of depending on a single education page. These entry points helped introduce the account from familiar surfaces before asking users to continue into the full-KYC journey.</p>
                                     </div>
                                     <div class="execution-journey-options">
-                                        <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-spotlight" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-spotlight-kicker" spellcheck="false">Entry point 01</div><div class="execution-option-title" data-text-key="execution-entry-spotlight-title" spellcheck="false">Spotlight Banners</div><p class="execution-option-body" data-text-key="execution-entry-spotlight-body" spellcheck="false">High-visibility banners introduced Zapp Account from discovery moments where users were already scanning for offers, payments, or wallet actions.</p></button>
+                                        <button class="execution-journey-option is-active" type="button" data-journey-option="" data-journey-state="entry-spotlight" aria-pressed="true"><div class="execution-option-kicker" data-text-key="execution-entry-spotlight-kicker" spellcheck="false">Entry point 01</div><div class="execution-option-title" data-text-key="execution-entry-spotlight-title" spellcheck="false">Spotlight Banners</div><p class="execution-option-body" data-text-key="execution-entry-spotlight-body" spellcheck="false">High-visibility banners introduced Zapp Account from discovery moments where users were already scanning for offers, payments, or wallet actions.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-anchor" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-anchor-kicker" spellcheck="false">Entry point 02</div><div class="execution-option-title" data-text-key="execution-entry-anchor-title" spellcheck="false">MoEngage Bottom Sheets</div><p class="execution-option-body" data-text-key="execution-entry-anchor-body" spellcheck="false">A persistent home-page anchor gave Zapp Account a stable place inside PayZapp, so users could return to it after the first exposure.</p></button>
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="entry-inline" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-entry-inline-kicker" spellcheck="false">Entry point 03</div><div class="execution-option-title" data-text-key="execution-entry-inline-title" spellcheck="false">Anchor Icon On The Home Page</div><p class="execution-option-body" data-text-key="execution-entry-inline-body" spellcheck="false">Inline placements let us introduce Zapp Account closer to relevant payment contexts, where the benefit of unlocking more capabilities felt easier to understand.</p></button>
                                         <button class="execution-journey-option is-transition" type="button" data-journey-option="" data-transition-option="" data-journey-state="transition-entry-kyc" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-transition-entry-kyc-kicker" spellcheck="false">Edit-only transition</div><div class="execution-option-title" data-text-key="execution-transition-entry-kyc-title" spellcheck="false">Tap Into Video KYC</div><p class="execution-option-body" data-text-key="execution-transition-entry-kyc-body" spellcheck="false">Use this state to edit the transition screenshot that appears while scrolling into the Video KYC section.</p></button>
@@ -5247,7 +5344,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="video-kyc">
+                                <section class="execution-journey-section" data-journey-section="video-kyc">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-kyc-section-label" spellcheck="false">02 / Getting Into Video KYC</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-kyc-section-heading" spellcheck="false">Onboarding to Zapp Account</h3>
@@ -5270,7 +5367,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="unlock">
+                                <section class="execution-journey-section" data-journey-section="unlock">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-unlock-section-label" spellcheck="false">03 / Completing The Unlock Journey</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-unlock-section-heading" spellcheck="false">Zapp Account Limited Capabilites</h3>
@@ -5292,7 +5389,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-timeline-complete" data-journey-section="outro">
+                                <section class="execution-journey-section" data-journey-section="outro">
                                     <div class="execution-journey-section-copy">
                                         <div class="execution-journey-label" data-text-key="execution-outro-section-label" spellcheck="false">04 / Closing The Loop</div>
                                         <h3 class="font-display text-xl font-semibold mb-3 text-ink" data-text-key="execution-outro-section-heading" spellcheck="false">Completing the Video KYC</h3>
@@ -5300,7 +5397,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                     <div class="execution-journey-options">
                                         <button class="execution-journey-option" type="button" data-journey-option="" data-journey-state="outro-recap" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-outro-recap-kicker" spellcheck="false">Outro step 01</div><div class="execution-option-title" data-text-key="execution-outro-recap-title" spellcheck="false">Handing over the flow seamlessly</div><p class="execution-option-body" data-text-key="execution-outro-recap-body" spellcheck="false">We had to make sure before handing over the flow to IDfy all the pre-requisites were met as well as once the flow was complete we could communicate about the review process.</p></button>
-                                        <button class="execution-journey-option is-transition is-active" type="button" data-journey-option="" data-transition-option="" data-journey-state="transition-outro-extra" aria-pressed="true"><div class="execution-option-kicker" data-text-key="execution-transition-outro-extra-kicker" spellcheck="false">Edit-only transition</div><div class="execution-option-title" data-text-key="execution-transition-outro-extra-title" spellcheck="false">Into The Next Step</div><p class="execution-option-body" data-text-key="execution-transition-outro-extra-body" spellcheck="false">Use this state to edit the transition screenshot that appears while scrolling toward the next placeholder section.</p></button>
+                                        <button class="execution-journey-option is-transition" type="button" data-journey-option="" data-transition-option="" data-journey-state="transition-outro-extra" aria-pressed="false"><div class="execution-option-kicker" data-text-key="execution-transition-outro-extra-kicker" spellcheck="false">Edit-only transition</div><div class="execution-option-title" data-text-key="execution-transition-outro-extra-title" spellcheck="false">Into The Next Step</div><p class="execution-option-body" data-text-key="execution-transition-outro-extra-body" spellcheck="false">Use this state to edit the transition screenshot that appears while scrolling toward the next placeholder section.</p></button>
                                     </div>
                                     <div class="execution-transition-trigger" data-journey-transition-trigger="" data-journey-state="transition-outro-extra">
                                         <div class="execution-transition-heading" data-text-key="execution-transition-outro-extra-heading" spellcheck="false">From the recap into the next placeholder</div>
@@ -5308,7 +5405,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     </div>
                                 </section>
 
-                                <section class="execution-journey-section is-transition-step is-timeline-active is-orchestrating" data-journey-section="transition-outro-extra" data-transition-step="" data-journey-state="transition-outro-extra" data-startup-tap-x="75.0" data-startup-tap-y="81.1" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
+                                <section class="execution-journey-section is-transition-step" data-journey-section="transition-outro-extra" data-transition-step="" data-journey-state="transition-outro-extra" data-startup-tap-x="75.0" data-startup-tap-y="81.1" style="--orchestration-fill-delay: 150ms; --orchestration-fill-ms: 1630ms;">
                                     <div class="execution-journey-section-copy">
                                         <h3 class="font-display text-xl font-semibold text-ink" data-text-key="execution-transition-step-outro-extra-heading" spellcheck="false">Full KYC Complete</h3>
                                     </div>
@@ -5539,21 +5636,145 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
 
             <!-- Card 6: What's Next -->
-            <article class="stack-section hidden">
+            <article class="stack-section">
                 <div class="section-header py-8 pl-10 pr-10">
                     <div class="flex justify-between items-start gap-4">
                         <div>
-                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="next-kicker" spellcheck="false">What's Next?</h2>
-                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="next-summary" spellcheck="false">Turning the Zapp Account into a full money dashboard inside the PayZapp ecosystem.</p>
+                            <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="next-kicker" spellcheck="false">What could go next?</h2>
+                            <p class="text-xl md:text-2xl font-normal text-deep leading-snug font-display" data-text-key="next-summary" spellcheck="false">A full money dashboard inside the PayZapp ecosystem, and the directions we explored in parallel for where Zapp Account could go next.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-body" style="">
                         <div class="px-10 pt-3 pb-8 text-deep">
                         <p class="mb-4 text-[15px] md:text-base" data-text-key="next-body1" spellcheck="false">Phase 1 was foundational. It successfully migrated the user base to the new mental model of the Zapp Account.</p>
-                        <p class="mb-16 text-[15px] md:text-base" data-text-key="next-body2" spellcheck="false">Version 2 (currently in progress) builds on this by evolving the Zapp Account into a full dashboard view. This will integrate the account even deeper into the broader PayZapp ecosystem, creating a seamless, interconnected financial hub for the user.</p>
+                        <p class="mb-7 text-[15px] md:text-base" data-text-key="next-body2" spellcheck="false">Version 2 (currently in progress) builds on this by evolving the Zapp Account into a full dashboard view. This will integrate the account even deeper into the broader PayZapp ecosystem, creating a seamless, interconnected financial hub for the user.</p>
 
-                        <div class="font-display font-medium text-[15px] flex items-center gap-2">
+                        <div class="mb-8">
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="next-directions-heading" spellcheck="false">Directions we explored in parallel</h3>
+                            <p class="text-[15px] md:text-base" data-text-key="next-directions-body" spellcheck="false">While we explored a number of directions, almost all of them pointed at the future of Zapp Account: what shape it could take and where it could grow next. A few came from inputs the bank shared with us, but most were our own ideas, and all of them were kept deliberately low-fidelity and early-stage.</p>
+                        </div>
+
+                        <!-- Direction 01 - communication that leads with value -->
+                        <div class="direction-block">
+                            <div class="direction-label" data-text-key="next-dir1-label" spellcheck="false">Direction 01</div>
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="next-dir1-heading" spellcheck="false">Communication that leads with value</h3>
+                            <p class="text-[15px] md:text-base" data-text-key="next-dir1-body" spellcheck="false">In this direction communication took the front seat. Instead of naming what each part of the account did, every surface led with the value someone was already getting from it. The focus settled on three things: speed, convenience, and rewards.</p>
+                            <p class="mt-3 text-[15px] md:text-base" data-text-key="next-dir1-body2" spellcheck="false">In practice that meant surfacing what a user had already saved or earned. The passbook could tell you how many statement entries you avoided. Rewards could show how many cashbacks you had collected across the lifetime of the account. We also looked at badges that attach an adjective to each anchor icon, so Scan and Pay would carry a &ldquo;superfast&rdquo; badge rather than just a label.</p>
+                            <p class="mt-3 text-[15px] md:text-base" data-text-key="next-dir1-body3" spellcheck="false">Below are a few of the many iterations we tried for a communication-led Zapp Account home page.</p>
+                        <div class="direction-screens">
+                            <div class="direction-screen-item">
+                                <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-value-1" data-placeholder-name="Value-led screen 1" aria-label="Image placeholder for value-led communication screen 1" tabindex="-1">
+                                    <img alt="" src="case study assets/zapp-placeholder-next-value-1.png">
+                                    <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                </div>
+                            </div>
+                            <div class="direction-screen-item">
+                                <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-value-2" data-placeholder-name="Value-led screen 2" aria-label="Image placeholder for value-led communication screen 2" tabindex="-1">
+                                    <img alt="" src="case study assets/zapp-placeholder-next-value-2.png">
+                                    <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                </div>
+                            </div>
+                            <div class="direction-screen-item">
+                                <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-value-3" data-placeholder-name="Value-led screen 3" aria-label="Image placeholder for value-led communication screen 3" tabindex="-1">
+                                    <img alt="" src="case study assets/zapp-placeholder-next-value-3.png">
+                                    <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <!-- Direction 02 - budgets, insights and Gullaks, in three iterations -->
+                        <div class="direction-block">
+                            <div class="direction-label" data-text-key="next-dir2-label" spellcheck="false">Direction 02</div>
+                            <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="next-dir2-heading" spellcheck="false">Budgets, insights and Gullaks</h3>
+                            <p class="text-[15px] md:text-base" data-text-key="next-dir2-body" spellcheck="false">This direction assumed a salaried user with a predictable monthly income, split across discretionary and non-discretionary spends, and asked whether Zapp Account could help them plan around it. It went through three iterations, each one a reaction to the last.</p>
+
+                            <div class="direction-iteration">
+                                <h4 class="font-display text-base font-medium mb-1 text-ink" data-text-key="next-dir2-it1-heading" spellcheck="false">Iteration 01: a budget you set yourself</h4>
+                                <p class="text-[15px] md:text-base" data-text-key="next-dir2-it1-body" spellcheck="false">The first iteration let people set their own monthly budget and tracked it on a meter, calling it out once they crossed the line. The hypothesis did not hold up. A budget almost always ends on a negative note, because most people spend past the number they set. It is also counterintuitive for a spending account to discourage spending. We wanted the product to be assistive, not to police anyone&rsquo;s habits.</p>
+                            <div class="direction-screens">
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-budget-1" data-placeholder-name="Budget meter screen 1" aria-label="Image placeholder for the self-set budget iteration, screen 1" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-budget-1.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-budget-2" data-placeholder-name="Budget meter screen 2" aria-label="Image placeholder for the self-set budget iteration, screen 2" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-budget-2.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder" data-placeholder-id="next-budget-6" data-placeholder-name="Budget meter screen 3" aria-label="Image placeholder for the self-set budget iteration, screen 3" tabindex="-1">
+                                        <img alt="">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="direction-iteration">
+                                <h4 class="font-display text-base font-medium mb-1 text-ink" data-text-key="next-dir2-it2-heading" spellcheck="false">Iteration 02: insight instead of a limit</h4>
+                                <p class="text-[15px] md:text-base" data-text-key="next-dir2-it2-body" spellcheck="false">So the second iteration dropped the limit entirely. Rather than a target, it showed people their own averages and filled in detail based on how they actually spent. The value moved from restraint to insight: paying through Zapp Account gave you a clearer view of where your money went, and more control over it. We explored tags here too, and how they could be applied seamlessly or inferred automatically instead of being asked for.</p>
+                            <div class="direction-screens">
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-budget-3" data-placeholder-name="Spend insight screen 1" aria-label="Image placeholder for the insight iteration, screen 1" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-budget-3.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-budget-4" data-placeholder-name="Spend insight screen 2" aria-label="Image placeholder for the insight iteration, screen 2" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-budget-4.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-budget-5" data-placeholder-name="Spend insight screen 3" aria-label="Image placeholder for the insight iteration, screen 3" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-budget-5.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+
+                            <div class="direction-iteration">
+                                <h4 class="font-display text-base font-medium mb-1 text-ink" data-text-key="next-dir2-it3-heading" spellcheck="false">Iteration 03: Gullaks</h4>
+                                <p class="text-[15px] md:text-base" data-text-key="next-dir2-it3-body" spellcheck="false">The third iteration borrowed from Revolut. Money could be set aside into dedicated pockets for separate purposes, covering both short-term and long-term saving. We planned to call them Gullaks, after the piggy bank most people in India grew up with, because the mental model was already familiar.</p>
+                            <div class="direction-screens">
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-gullak-1" data-placeholder-name="Gullaks screen 1" aria-label="Image placeholder for the Gullaks iteration, screen 1" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-gullak-1.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-gullak-2" data-placeholder-name="Gullaks screen 2" aria-label="Image placeholder for the Gullaks iteration, screen 2" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-gullak-2.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                                <div class="direction-screen-item">
+                                    <div class="direction-shot img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-gullak-3" data-placeholder-name="Gullaks screen 3" aria-label="Image placeholder for the Gullaks iteration, screen 3" tabindex="-1">
+                                        <img alt="" src="case study assets/zapp-placeholder-next-gullak-3.png">
+                                        <span class="direction-shot-hint" aria-hidden="true">Add image in edit mode</span>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <!-- Wide landscape image closing out the section -->
+                        <div class="direction-wide">
+                            <div class="direction-shot is-wide img-placeholder editable-placeholder has-saved-image" data-placeholder-id="next-directions-wide" data-placeholder-name="Directions overview (wide)" aria-label="Wide image placeholder for the directions overview" tabindex="-1">
+                                <img alt="" src="case study assets/zapp-placeholder-next-directions-wide.png">
+                                <span class="direction-shot-hint" aria-hidden="true">Add wide image in edit mode</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-16 font-display font-medium text-[15px] flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-accent inline-block"></span>
                             <span data-text-key="next-closing" spellcheck="false">Thank you for reading.</span>
                         </div>
@@ -9115,9 +9336,15 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             });
         })();
 
+        /* True until the reader first clicks a section header. While set, the
+           focus-dim is held off so the default-expanded section (see
+           openDefaultSection below) does not make the whole page load at 18%
+           opacity. Normal accordion dimming resumes on first interaction. */
+        let deferSectionDim = true;
+
         function syncBodyDim() {
             const expanded = document.querySelector(".stack-section.is-expanded");
-            if (!expanded) {
+            if (!expanded || deferSectionDim) {
                 document.body.classList.remove("is-any-expanded");
                 document.body.classList.remove("is-offscreen-unfaded");
                 return;
@@ -9356,10 +9583,33 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             header.addEventListener("click", () => {
                 const section = header.closest(".stack-section");
                 if (!section) return;
+                deferSectionDim = false; // reader is driving now — restore focus dimming
                 const wasExpanded = section.classList.contains("is-expanded");
                 animateAccordion(wasExpanded ? null : section, section);
             });
         });
+
+        /* Open one section on load instead of starting fully collapsed.
+           Done in JS rather than by putting `is-expanded` in the markup because
+           the Save routine strips that class from saved output, so a markup
+           default would be lost the first time the page is saved from edit mode.
+           Sets the settled state directly (no tween, no scroll anchoring) so the
+           page simply loads with the section already open. */
+        (function openDefaultSection() {
+            const DEFAULT_OPEN_KEY = "impact-kicker"; // "What were the results?"
+            const kicker = document.querySelector('[data-text-key="' + DEFAULT_OPEN_KEY + '"]');
+            const section = kicker && kicker.closest(".stack-section");
+            if (!section) return;
+
+            section.classList.add("is-expanded");
+            const body = section.querySelector(".card-body");
+            if (body) body.style.height = "auto"; // matches the post-expand settled state
+
+            // This section carries a floating phone preview, which is positioned
+            // from a measured in-flow spacer — re-measure now that it has height.
+            if (typeof syncFloatingPreviews === "function") syncFloatingPreviews();
+            if (typeof syncExecutionFloatingPhone === "function") syncExecutionFloatingPhone();
+        })();
 
         window.addEventListener("scroll", scheduleAutoCollapseCheck, { passive: true });
         window.addEventListener("resize", () => {
@@ -16859,6 +17109,44 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         initHeroAnimations();
     }
 }());
+</script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
 </script>
 <!-- Code injected by live-server -->
 <script>

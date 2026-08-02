@@ -24,8 +24,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --font-body: 'Inter', sans-serif;
             --case-study-link: #a44a2a;
             --case-study-link-hover: #78351f;
-            --case-study-preview-border: rgba(27, 62, 43, 0.18);
-            --case-study-preview-subtext: #858d88;
+            --case-study-preview-border: rgba(27, 62, 43, 0.10);
+            --case-study-preview-subtext: #8b928e;
         }
 
         :root.theme-v2, :root.theme-v4 {
@@ -34,7 +34,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --primary: #111827; /* Almost Black */
             --text-body: #374151; /* Dark Grey */
             --text-muted: #9ca3af; /* Muted Grey */
-            --case-study-preview-border: rgba(17, 24, 39, 0.16);
+            --case-study-preview-border: rgba(17, 24, 39, 0.09);
         }
 
         * {
@@ -313,18 +313,18 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .case-study-popover {
             position: absolute;
-            top: calc(100% + 14px);
+            top: calc(100% + 18px);
             left: 0;
             z-index: 20;
             display: flex;
             width: min(276px, calc(100vw - 32px));
             flex-direction: column;
-            gap: 12px;
-            padding: 10px;
-            background: linear-gradient(180deg, #ffffff 0%, #fbfcfb 58%, #f7f9f7 100%);
+            gap: 16px;
+            padding: 16px;
+            background: linear-gradient(180deg, #ffffff 0%, #ffffff 38%, #f8faf8 100%);
             border: 1px solid var(--case-study-preview-border);
-            border-radius: 8px;
-            box-shadow: 0 16px 34px rgba(27, 62, 43, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 18px 38px rgba(28, 32, 30, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.98);
             opacity: 0;
             visibility: hidden;
             pointer-events: none;
@@ -349,46 +349,100 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             }
         }
 
-        .case-study-popover::before {
-            content: "";
-            position: absolute;
-            top: -6px;
-            left: 20px;
-            width: 10px;
-            height: 10px;
-            background: #ffffff;
-            border-top: 1px solid var(--case-study-preview-border);
-            border-left: 1px solid var(--case-study-preview-border);
-            transform: rotate(45deg);
-        }
-
-        .case-study-popover img {
+        .case-study-popover > img,
+        .case-study-popover__media {
             display: block;
             width: 100%;
-            height: 132px;
+            height: 138px;
             object-fit: cover;
-            border-radius: 5px;
+            border-radius: 12px;
             background: #eef1ef;
+        }
+
+        .case-study-popover__media {
+            position: relative;
+            overflow: hidden;
+            background: #eef7f8;
+        }
+
+        .zapp-impact-preview__date {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            z-index: 2;
+            padding: 3px 7px;
+            border: 1px solid rgba(26, 95, 103, 0.18);
+            border-radius: 999px;
+            background: rgba(26, 95, 103, 0.07);
+            color: #1a5f67;
+            font-size: 0.36rem;
+            font-weight: 600;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+
+        .zapp-impact-preview__metrics {
+            position: absolute;
+            left: 10px;
+            bottom: 10px;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .zapp-impact-preview__value {
+            color: #1a5f67;
+            font-family: var(--font-headings);
+            font-size: 1.45rem;
+            font-weight: 500;
+            line-height: 0.9;
+        }
+
+        .zapp-impact-preview__label {
+            display: block;
+            margin-top: 3px;
+            color: #51777a;
+            font-size: 0.42rem;
+            font-weight: 400;
+            line-height: 1.2;
+        }
+
+        .zapp-impact-preview__divider {
+            width: 44px;
+            height: 1px;
+            background: rgba(26, 95, 103, 0.2);
+        }
+
+        .zapp-impact-preview__phone {
+            position: absolute;
+            top: 5px;
+            right: -35px;
+            width: 72%;
+            height: auto;
+            object-fit: contain;
+            transform: rotate(1deg);
         }
 
         .case-study-popover__body {
             display: flex;
             min-width: 0;
             flex-direction: column;
-            gap: 8px;
+            gap: 11px;
         }
 
         .case-study-popover__title {
             color: var(--primary);
-            font-size: 0.98rem;
+            font-size: 1rem;
             font-weight: 700;
-            line-height: 1.2;
+            line-height: 1.25;
         }
 
         .case-study-popover__summary {
             color: var(--case-study-preview-subtext);
-            font-size: 0.74rem;
-            line-height: 1.4;
+            font-size: 0.76rem;
+            font-weight: 400;
+            line-height: 1.5;
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -495,7 +549,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <p class="date">2021 - 2026 (5 yrs)<br>Bangalore, India</p>
                     </div>
                     <div class="right-col">
-                        <p>Led end-to-end product design for <span class="case-study-preview"><a class="case-study-link" href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-zapp">Zapp Account<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-zapp" role="tooltip"><img src="../Zapp Account/prototypes/carousel/assets/hero-upi.webp" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">Zapp Account</strong><span class="case-study-popover__summary">Rebrand and upgrade of PayZapp's digital wallet, with 2.1x growth in monthly spends.</span></span></span></a></span>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
+                        <p>Led end-to-end product design for <span class="case-study-preview"><a class="case-study-link" href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-zapp">Zapp Account<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-zapp" role="tooltip"><span class="case-study-popover__media" aria-hidden="true"><span class="zapp-impact-preview__date">April 2025 - September 2025</span><span class="zapp-impact-preview__metrics"><span><span class="zapp-impact-preview__value">~2.1&times;</span><span class="zapp-impact-preview__label">Growth in monthly spends</span></span><span class="zapp-impact-preview__divider"></span><span><span class="zapp-impact-preview__value">~1.5&times;</span><span class="zapp-impact-preview__label">Growth in monthly loads</span></span></span><img class="zapp-impact-preview__phone" src="../Zapp Account/case study assets/zapp-placeholder-impact-results-visual.png" alt=""></span><span class="case-study-popover__body"><strong class="case-study-popover__title">Zapp Account</strong><span class="case-study-popover__summary">Rebrand and upgrade of PayZapp's digital wallet, with 2.1x growth in monthly spends.</span></span></span></a></span>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
                         <p>Co-led growth initiatives across PayZapp, including a successful <span class="case-study-preview"><a class="case-study-link" href="../IPL Themification/ipl-themification-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-ipl">IPL season campaign<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-ipl" role="tooltip"><img src="../IPL Themification/case study assets/spotlights/1.png" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">IPL season campaign</strong><span class="case-study-popover__summary">A visual overhaul of PayZapp for growth, activation, and engagement during the IPL season.</span></span></span></a></span>, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
                         <p>Led cross-functional efforts to establish interaction and motion implementation standards, including building <span class="case-study-preview"><a class="case-study-link" href="../Lottiemon/lottiemon-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-lottiemon">Lottiemon<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-lottiemon" role="tooltip"><img src="../Lottiemon/case study assets/hero-lottiemon-cover.png" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">Lottiemon</strong><span class="case-study-popover__summary">A no-B.S. Lottie editor built to make common animation edits and previews self-serve.</span></span></span></a></span>, an internal tool that helped the team self-serve common Lottie edits and previews.</p>
                         <p>Helped shape the team's AI-assisted design workflow by identifying practical use cases, leading discussions, and driving adoption across the design process.</p>
@@ -510,7 +564,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     </div>
                     <div class="right-col">
                         <p>Handled motion and product design for GeeksforGeeks Courses and Portal.</p>
-                        <p>Created motion graphics for marketing videos and campaigns.</p>
+                        <p>Created <a class="case-study-link" href="https://ishantperiwal.myportfolio.com" target="_blank" rel="noopener noreferrer">motion graphics<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a> for marketing videos and campaigns.</p>
                         <p>Established GeeksforGeeks' design function from scratch as the founding designer.</p>
                     </div>
                 </div>
