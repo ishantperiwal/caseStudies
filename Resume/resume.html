@@ -24,6 +24,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --font-body: 'Inter', sans-serif;
             --case-study-link: #a44a2a;
             --case-study-link-hover: #78351f;
+            --case-study-preview-border: rgba(27, 62, 43, 0.18);
+            --case-study-preview-subtext: #858d88;
         }
 
         :root.theme-v2, :root.theme-v4 {
@@ -32,6 +34,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --primary: #111827; /* Almost Black */
             --text-body: #374151; /* Dark Grey */
             --text-muted: #9ca3af; /* Muted Grey */
+            --case-study-preview-border: rgba(17, 24, 39, 0.16);
         }
 
         * {
@@ -303,6 +306,98 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transform: translate(0.08em, -0.16em);
         }
 
+        .case-study-preview {
+            position: relative;
+            display: inline-block;
+        }
+
+        .case-study-popover {
+            position: absolute;
+            top: calc(100% + 14px);
+            left: 0;
+            z-index: 20;
+            display: flex;
+            width: min(276px, calc(100vw - 32px));
+            flex-direction: column;
+            gap: 12px;
+            padding: 10px;
+            background: linear-gradient(180deg, #ffffff 0%, #fbfcfb 58%, #f7f9f7 100%);
+            border: 1px solid var(--case-study-preview-border);
+            border-radius: 8px;
+            box-shadow: 0 16px 34px rgba(27, 62, 43, 0.13), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(8px) scale(0.98);
+            transform-origin: top left;
+            transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+        }
+
+        .case-study-preview:focus-within .case-study-popover {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+
+        @media (hover: hover) {
+            .case-study-preview:hover .case-study-popover {
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .case-study-popover::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            left: 20px;
+            width: 10px;
+            height: 10px;
+            background: #ffffff;
+            border-top: 1px solid var(--case-study-preview-border);
+            border-left: 1px solid var(--case-study-preview-border);
+            transform: rotate(45deg);
+        }
+
+        .case-study-popover img {
+            display: block;
+            width: 100%;
+            height: 132px;
+            object-fit: cover;
+            border-radius: 5px;
+            background: #eef1ef;
+        }
+
+        .case-study-popover__body {
+            display: flex;
+            min-width: 0;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .case-study-popover__title {
+            color: var(--primary);
+            font-size: 0.98rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .case-study-popover__summary {
+            color: var(--case-study-preview-subtext);
+            font-size: 0.74rem;
+            line-height: 1.4;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .case-study-popover,
+            .external-link-icon {
+                transition: none;
+            }
+        }
+
         /* Skills/Tools styling */
         .skills-list {
             font-size: 0.95rem;
@@ -369,7 +464,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com</a>
             </div>
             <div class="intro-block">
-                <p>Principal Product Designer @ Titan, ex-Zeta. With almost 9 years of experience, including 5 years in fintech. My journey began as a motion design specialist before evolving into a multidisciplinary product designer. My passion lies in core product design, delightful interaction design, and motion systems.</p>
+                <p>Principal Product Designer @ Titan Email, ex-Zeta. With almost 9 years of experience, including 5 years in fintech. My journey began as a motion design specialist before evolving into a multidisciplinary product designer. My passion lies in core product design, delightful interaction design, and motion systems.</p>
             </div>
         </header>
 
@@ -400,9 +495,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                         <p class="date">2021 - 2026 (5 yrs)<br>Bangalore, India</p>
                     </div>
                     <div class="right-col">
-                        <p>Led end-to-end product design for <a class="case-study-link" href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer">Zapp Account<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
-                        <p>Co-led growth initiatives across PayZapp, including a successful <a class="case-study-link" href="../IPL Themification/ipl-themification-case-study.html" target="_blank" rel="noopener noreferrer">IPL season campaign<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
-                        <p>Led cross-functional efforts to establish interaction and motion implementation standards, including building <a class="case-study-link" href="../Lottiemon/lottiemon-case-study.html" target="_blank" rel="noopener noreferrer">Lottiemon<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>, an internal tool that helped the team self-serve common Lottie edits and previews.</p>
+                        <p>Led end-to-end product design for <span class="case-study-preview"><a class="case-study-link" href="../Zapp Account/zapp-account-a4-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-zapp">Zapp Account<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-zapp" role="tooltip"><img src="../Zapp Account/prototypes/carousel/assets/hero-upi.webp" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">Zapp Account</strong><span class="case-study-popover__summary">Rebrand and upgrade of PayZapp's digital wallet, with 2.1x growth in monthly spends.</span></span></span></a></span>, driving ~2.1x growth in monthly spends, working directly with the CEO on product direction and design reviews, driving stakeholder alignment, cross-functional execution, and design delivery with a small team.</p>
+                        <p>Co-led growth initiatives across PayZapp, including a successful <span class="case-study-preview"><a class="case-study-link" href="../IPL Themification/ipl-themification-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-ipl">IPL season campaign<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-ipl" role="tooltip"><img src="../IPL Themification/case study assets/spotlights/1.png" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">IPL season campaign</strong><span class="case-study-popover__summary">A visual overhaul of PayZapp for growth, activation, and engagement during the IPL season.</span></span></span></a></span>, identifying new opportunities and designing experiments to improve user acquisition, activation, and engagement.</p>
+                        <p>Led cross-functional efforts to establish interaction and motion implementation standards, including building <span class="case-study-preview"><a class="case-study-link" href="../Lottiemon/lottiemon-case-study.html" target="_blank" rel="noopener noreferrer" aria-describedby="case-study-preview-lottiemon">Lottiemon<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg><span class="case-study-popover" id="case-study-preview-lottiemon" role="tooltip"><img src="../Lottiemon/case study assets/hero-lottiemon-cover.png" alt=""><span class="case-study-popover__body"><strong class="case-study-popover__title">Lottiemon</strong><span class="case-study-popover__summary">A no-B.S. Lottie editor built to make common animation edits and previews self-serve.</span></span></span></a></span>, an internal tool that helped the team self-serve common Lottie edits and previews.</p>
                         <p>Helped shape the team's AI-assisted design workflow by identifying practical use cases, leading discussions, and driving adoption across the design process.</p>
                     </div>
                 </div>

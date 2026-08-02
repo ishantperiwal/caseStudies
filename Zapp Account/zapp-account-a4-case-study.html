@@ -537,12 +537,44 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                                follow --content-w — layout widens, but reading
                                line length stays readable. Raise it if you do
                                want paragraphs to stretch with the column. */
-            --content-w:   62rem;
+            --content-w:   62rem;   /* ← THE KNOB. 56rem = 896px = original width. */
             --content-pad: 2.5rem;
             --bleed-safe:  1.5rem;
             --gutter:      calc((100vw - var(--content-w)) / 2);
             --bleed-room:  calc(var(--gutter) + var(--content-pad) - var(--bleed-safe));
             --measure:     52rem;
+
+            /* ── Edge pull-in ──────────────────────────────────────────────────
+               As the column widens, elements sitting on its edges (the floating
+               phone previews, bled grids) are pulled back inward instead of
+               drifting outward toward the screen edges.
+
+               --content-w-base : the width these bleeds were designed against.
+                                  Leave at 56rem — it is the zero point, so at
+                                  --content-w: 56rem nothing moves at all.
+               --edge-pull      : strength. The column is centered, so each edge
+                                  moves outward by HALF the growth; 0.5 therefore
+                                  keeps edge elements visually PUT on screen while
+                                  the column grows around them.
+                                    0    = old behaviour (drifts outward)
+                                    0.5  = stays put on screen   (default)
+                                    0.75 = moves noticeably inward
+                                    1    = moves inward twice as fast
+               --pull           : resulting length subtracted from each bleed. */
+            --content-w-base: 56rem;
+            --edge-pull:      0.5;
+            --pull: calc(max(0rem, var(--content-w) - var(--content-w-base)) * var(--edge-pull));
+
+            /* Per-magnitude bleed tokens: each element's designed bleed, reduced
+               by --pull as the column grows, capped so it never runs off screen,
+               floored at 0 so it cannot invert. Used as calc(-1 * var(…)). */
+            --bleed-2:   max(0rem, min(calc(2rem   - var(--pull)), var(--bleed-room)));
+            --bleed-3:   max(0rem, min(calc(3rem   - var(--pull)), var(--bleed-room)));
+            --bleed-3-5: max(0rem, min(calc(3.5rem - var(--pull)), var(--bleed-room)));
+            --bleed-4-5: max(0rem, min(calc(4.5rem - var(--pull)), var(--bleed-room)));
+            --bleed-7:   max(0rem, min(calc(7rem   - var(--pull)), var(--bleed-room)));
+            --bleed-8-5: max(0rem, min(calc(8.5rem - var(--pull)), var(--bleed-room)));
+            --bleed-11:  max(0rem, min(calc(11rem  - var(--pull)), var(--bleed-room)));
         }
 
         h1, h2, h3, h4, .font-display {
@@ -775,14 +807,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             .b-autoload { grid-area: autoload; }
         }
         @media (min-width: 1024px) {
-            /* Bleed clamped to available gutter — see --bleed-room in :root. */
+            /* Bleed pulls inward as the column grows — see --bleed-2 in :root. */
             .results-dashboard > .results-bento {
-                margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
-                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
+                margin-left:  calc(-1 * var(--bleed-2));
+                margin-right: calc(-1 * var(--bleed-2));
             }
             .results-dashboard > .results-ranking {
-                margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
-                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 2rem));
+                margin-left:  calc(-1 * var(--bleed-2));
+                margin-right: calc(-1 * var(--bleed-2));
             }
         }
         .bento-cell {
@@ -1340,8 +1372,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .legacy-wallet-preview {
             float: right;
             width: 17rem;
-            /* Right bleed clamped to available gutter — see --bleed-room in :root. */
-            margin: 0 calc(-1 * clamp(0rem, var(--bleed-room), 8.5rem)) 1.5rem 2rem;
+            /* Right bleed pulls inward as the column grows — see --bleed-8-5 in :root. */
+            margin: 0 calc(-1 * var(--bleed-8-5)) 1.5rem 2rem;
             position: relative;
             z-index: 2;
             transform: translateX(-7.5rem);
@@ -1391,7 +1423,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
            the preview out in-flow with its own spacing. */
         @media (min-width: 768px) {
             .legacy-wallet-flow-spacer:not(.img-placeholder) {
-                margin: 1.5rem calc(-1 * clamp(0rem, var(--bleed-room), 11rem)) 2.75rem 2rem;
+                margin: 1.5rem calc(-1 * var(--bleed-11)) 2.75rem 2rem;
             }
         }
 
@@ -1447,10 +1479,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             margin-bottom: 2rem;
             /* Margin and padding use the SAME clamp so the inner content stays put;
                only the overflow stage widens/narrows with the available gutter. */
-            margin-left:   calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem));
-            margin-right:  calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem));
-            padding-left:  clamp(0rem, var(--bleed-room), 3.5rem);
-            padding-right: clamp(0rem, var(--bleed-room), 3.5rem);
+            margin-left:   calc(-1 * var(--bleed-3-5));
+            margin-right:  calc(-1 * var(--bleed-3-5));
+            padding-left:  var(--bleed-3-5);
+            padding-right: var(--bleed-3-5);
         }
 
         .competitive-carousel-stage {
@@ -2392,10 +2424,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             width: 19rem;
             max-width: 100%;
             aspect-ratio: 9 / 20;
-            /* Overhang clamped to available gutter (see --bleed-room in :root).
+            /* Overhang pulls inward as the column grows (see --bleed-4-5 in :root).
                The visible phone is JS-pinned to this spacer's measured left edge,
-               so clamping here moves the phone too — no JS change needed. */
-            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 4.5rem));
+               so changing this moves the phone too — no JS change needed. */
+            margin-right: calc(-1 * var(--bleed-4-5));
             justify-self: end;
             visibility: hidden;
             pointer-events: none;
@@ -2449,7 +2481,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         @media (min-width: 768px) and (max-width: 1750px) {
             .execution-phone-spacer {
                 width: 16.5rem;
-                margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 3.5rem)); /* Proportional overhang margin */
+                margin-right: calc(-1 * var(--bleed-3-5)); /* Proportional overhang margin */
             }
             .execution-phone-floating {
                 width: 16.5rem;
@@ -2969,8 +3001,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             gap: 2.25rem;
             margin-top: 1.5rem;
             margin-bottom: 2.25rem;
-            margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 3rem));
-            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 3rem));
+            margin-left:  calc(-1 * var(--bleed-3));
+            margin-right: calc(-1 * var(--bleed-3));
         }
 
         .strategy-finding {
@@ -3010,8 +3042,16 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .persona-id-shell {
+            /* The card stack is 21.5rem wide inside this 12rem track, so it overhangs
+               to the right. Growing the track with --pull drags the cards back inward
+               as the content column widens (the track is right-anchored, so a wider
+               track starts further left). Going through the grid — rather than nudging
+               the cards with a transform — means the 5rem column-gap is preserved
+               automatically, so the cards can never collide with the copy. Capped at
+               6rem so the card column never eats too much of the text column. */
+            --persona-inset: min(var(--pull), 6rem);
             display: grid;
-            grid-template-columns: 1fr 12rem;
+            grid-template-columns: 1fr calc(12rem + var(--persona-inset));
             grid-template-rows: auto auto;
             column-gap: 5rem;
             row-gap: 0;
@@ -3025,7 +3065,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: grid;
             grid-column: 2;
             grid-row: 2;
-            top: calc(50% - 1rem);
+            /* Row 2 is sized purely by .persona-id-copy (this stack is out of flow),
+               so 50% + translateY(-50%) centres the cards on the left text block.
+               Was `calc(50% - 1rem)`, which sat them 1rem high of true centre. */
+            top: 50%;
             width: 21.5rem;
             margin: 0;
             transform: translateX(-0.75rem) translateY(-50%);
@@ -3389,8 +3432,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 1.5rem;
-            margin-left:  calc(-1 * clamp(0rem, var(--bleed-room), 7rem));
-            margin-right: calc(-1 * clamp(0rem, var(--bleed-room), 7rem));
+            margin-left:  calc(-1 * var(--bleed-7));
+            margin-right: calc(-1 * var(--bleed-7));
         }
 
         .kyc-step-card {
