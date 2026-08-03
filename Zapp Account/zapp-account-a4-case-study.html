@@ -3910,6 +3910,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         .direction-standalone > h3 {
+            /* h3.section-mini-heading carries margin-top: var(--block-gap) (3rem).
+               This one heading opens the block, so it only needs a hairline gap. */
+            margin-top: 4px;
             margin-bottom: var(--heading-body-gap);
         }
 
@@ -4493,12 +4496,12 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                     <div class="flex items-stretch">
                         <div class="flex flex-col pr-11">
                             <div class="text-[2.5rem] font-medium leading-none text-brand-500 mb-2" style="font-family: var(--font-display);" data-text-key="hero-stat1-value" spellcheck="false">2.1x</div>
-                            <div class="mono normal-case text-[10px] tracking-widest text-muted leading-[1.5]" data-text-key="hero-stat1-label" spellcheck="false">MoM GROWTH<br>IN SPENDS</div>
+                            <div class="mono normal-case text-[10px] tracking-widest text-muted leading-[1.5]" data-text-key="hero-stat1-label" spellcheck="false">GROWTH IN<br>MONTHLY SPENDS</div>
                         </div>
                         <div class="w-px bg-[var(--section-separator-color)] self-stretch mx-0 flex-none" aria-hidden="true"></div>
                         <div class="flex flex-col px-11">
                             <div class="text-[2.5rem] font-medium leading-none text-brand-500 mb-2" style="font-family: var(--font-display);" data-text-key="hero-stat2-value" spellcheck="false">1.5x</div>
-                            <div class="mono normal-case text-[10px] tracking-widest text-muted leading-[1.5]" data-text-key="hero-stat2-label" spellcheck="false">MoM GROWTH<br>IN LOADS</div>
+                            <div class="mono normal-case text-[10px] tracking-widest text-muted leading-[1.5]" data-text-key="hero-stat2-label" spellcheck="false">GROWTH IN<br>MONTHLY LOADS</div>
                         </div>
                         <div class="w-px bg-[var(--section-separator-color)] self-stretch mx-0 flex-none" aria-hidden="true"></div>
                         <div class="flex flex-col pl-11">
