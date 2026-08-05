@@ -1,5 +1,5 @@
 window.ZAPP_SPEAKER_SCRIPT = {
-  totalSeconds: 1593,
+  totalSeconds: 1598,
   chapters: {
     opening: [{
       seconds: 55,
@@ -348,24 +348,29 @@ For me, this is the clearest closing evidence that the work moved beyond a rebra
     }],
     "future-budget": [{
       seconds: 20,
-      intent: "Introduce the first exploration and explain why a conventional budget was rejected.",
-      script: `We first explored a conventional monthly budget. It made progress visible and gave people a clear target.
+      intent: "Briefly introduce the monthly budget direction without evaluating it.",
+      script: `One direction we explored was a monthly budget. People could set an amount and see their spending progress against it through the month.
 
-But in a spending account, crossing that number repeatedly turned the experience into a negative judgment. We wanted the product to assist people, not police their spending. That tension led us to the next direction.`
+This was an exploration of whether lightweight spend management could give people another reason to return to Zapp Account.`
     }],
     "future-insights": [{
       seconds: 20,
-      intent: "Show how the budget concept evolved from control into useful reflection.",
-      script: `So we removed the limit and kept the visibility.
+      intent: "Briefly introduce spend insights as another possible reason to return.",
+      script: `We also explored making spend insights a more central part of the account.
 
-Instead of asking people to set a target, the account could show their usual monthly spend, the current month against that average, upcoming commitments, and recognizable categories. The same data became insight rather than a score.`
+The experience could surface monthly patterns, compare current spending with a familiar average, show upcoming spends, and organize activity into recognizable categories.`
     }],
     "future-plans": [{
       seconds: 20,
-      intent: "Close the exploratory directions with a more constructive form of commitment.",
-      script: `Plans took that thinking further. Money could move into dedicated pockets before it was spent, through recurring monthly plans or a plan for a specific goal.
+      intent: "Briefly introduce the spending-bucket direction inspired by established wallet patterns.",
+      script: `A third direction was a spending-bucket approach, inspired by products such as Revolut.
 
-This kept the useful structure of a budget without the scorekeeping, because the commitment happened upfront.`
+People could reserve money in dedicated pockets for recurring monthly spends or a specific goal, separating planned money from the balance available for everyday use.`
+    }],
+    closing: [{
+      seconds: 5,
+      intent: "Close cleanly and invite discussion.",
+      script: `Thank you. I am happy to go deeper into any part of the strategy, interaction design, or outcomes.`
     }]
   }
 };

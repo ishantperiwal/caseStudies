@@ -399,30 +399,39 @@ Budget exploration
 ============================================================
 
 BEAT 1 - 20 seconds
-Intent: Introduce the first exploration and explain why a conventional budget was rejected.
+Intent: Briefly introduce the monthly budget direction without evaluating it.
 
-We first explored a conventional monthly budget. It made progress visible and gave people a clear target.
+One direction we explored was a monthly budget. People could set an amount and see their spending progress against it through the month.
 
-But in a spending account, crossing that number repeatedly turned the experience into a negative judgment. We wanted the product to assist people, not police their spending. That tension led us to the next direction.
+This was an exploration of whether lightweight spend management could give people another reason to return to Zapp Account.
 
 ============================================================
 Spending insights
 ============================================================
 
 BEAT 1 - 20 seconds
-Intent: Show how the budget concept evolved from control into useful reflection.
+Intent: Briefly introduce spend insights as another possible reason to return.
 
-So we removed the limit and kept the visibility.
+We also explored making spend insights a more central part of the account.
 
-Instead of asking people to set a target, the account could show their usual monthly spend, the current month against that average, upcoming commitments, and recognizable categories. The same data became insight rather than a score.
+The experience could surface monthly patterns, compare current spending with a familiar average, show upcoming spends, and organize activity into recognizable categories.
 
 ============================================================
 Plans
 ============================================================
 
 BEAT 1 - 20 seconds
-Intent: Close the exploratory directions with a more constructive form of commitment.
+Intent: Briefly introduce the spending-bucket direction inspired by established wallet patterns.
 
-Plans took that thinking further. Money could move into dedicated pockets before it was spent, through recurring monthly plans or a plan for a specific goal.
+A third direction was a spending-bucket approach, inspired by products such as Revolut.
 
-This kept the useful structure of a budget without the scorekeeping, because the commitment happened upfront.
+People could reserve money in dedicated pockets for recurring monthly spends or a specific goal, separating planned money from the balance available for everyday use.
+
+============================================================
+Thank you
+============================================================
+
+BEAT 1 - 5 seconds
+Intent: Close cleanly and invite discussion.
+
+Thank you. I am happy to go deeper into any part of the strategy, interaction design, or outcomes.
