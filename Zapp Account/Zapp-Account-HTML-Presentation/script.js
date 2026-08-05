@@ -22,6 +22,7 @@ let entryPointStep = 0;
 let entryPointRotations = [];
 let entryTimeline = null;
 let entryTimelineTween = null;
+let entryHealTimer = 0;
 const scriptMode = new URLSearchParams(window.location.search).get("script") === "true";
 let speakerPanel = null;
 let speakerIntent = null;
@@ -137,10 +138,17 @@ function setEntryPointStep(step) {
     const label = `step${entryPointStep}`;
     entryTimelineTween?.kill();
     if (chapters[activeIndex] === entryPointsChapter) {
-      entryTimelineTween = entryTimeline.tweenTo(label, { ease: "none", overwrite: true });
+      entryTimelineTween = entryTimeline.tweenTo(label, {
+        ease: "none",
+        overwrite: true,
+        onComplete: restoreEntryTimelinePosition
+      });
     } else {
       entryTimeline.pause(entryTimeline.labels[label]);
     }
+    // Rapid stepping kills tweens mid-flight; assert the playhead once stepping settles.
+    window.clearTimeout(entryHealTimer);
+    entryHealTimer = window.setTimeout(restoreEntryTimelinePosition, 900);
   }
   if (chapters[activeIndex] === entryPointsChapter && entryPointStep === 0) startEntryPointRotations();
   if (entryPointStep > 0) stopEntryPointRotations();
@@ -214,6 +222,7 @@ function updateChapter(index) {
   if (chapter !== entryPointsChapter) setEntryPointStep(0);
   if (chapter === entryPointsChapter && entryPointStep === 0 && entryPointRotations.length === 0) startEntryPointRotations();
   if (chapter !== entryPointsChapter) stopEntryPointRotations();
+  if (chapter === entryPointsChapter) restoreEntryTimelinePosition();
   currentTitle.textContent = chapter.dataset.title;
   currentNumber.textContent = String(index + 1);
   previousButton.disabled = index === 0;
@@ -241,6 +250,62 @@ const revealObserver = new IntersectionObserver((entries, observer) => {
 }, { threshold: 0.18 });
 
 document.querySelectorAll(".reveal").forEach((section) => revealObserver.observe(section));
+
+function visibleHeight(rect) {
+  return Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+}
+
+// A fast scroll can deliver an IntersectionObserver batch with nothing intersecting,
+// so the observers alone can miss a chapter entirely. These recover from that.
+function restoreEntryTimelinePosition() {
+  if (!entryTimeline) return;
+  if (entryTimelineTween?.isActive()) {
+    window.clearTimeout(entryHealTimer);
+    entryHealTimer = window.setTimeout(restoreEntryTimelinePosition, 300);
+    return;
+  }
+  const target = entryTimeline.labels[`step${entryPointStep}`];
+  if (typeof target !== "number") return;
+  if (Math.abs(entryTimeline.time() - target) > 0.001) entryTimeline.pause(target);
+}
+
+function healRevealSections() {
+  document.querySelectorAll(".reveal:not(.is-visible)").forEach((section) => {
+    const rect = section.getBoundingClientRect();
+    if (visibleHeight(rect) > Math.min(rect.height, window.innerHeight) * 0.18) {
+      section.classList.add("is-visible");
+    }
+  });
+}
+
+function reconcileScrollState() {
+  healRevealSections();
+  let dominantIndex = -1;
+  let dominantVisible = 0;
+  chapters.forEach((chapter, index) => {
+    const visible = visibleHeight(chapter.getBoundingClientRect());
+    if (visible > dominantVisible) {
+      dominantVisible = visible;
+      dominantIndex = index;
+    }
+  });
+  if (dominantIndex < 0 || dominantVisible < window.innerHeight * 0.5) return;
+  if (dominantIndex !== activeIndex) {
+    updateChapter(dominantIndex);
+    return;
+  }
+  if (chapters[dominantIndex] === entryPointsChapter) restoreEntryTimelinePosition();
+}
+
+if ("onscrollend" in window) {
+  window.addEventListener("scrollend", reconcileScrollState);
+} else {
+  let scrollSettleTimer = 0;
+  window.addEventListener("scroll", () => {
+    window.clearTimeout(scrollSettleTimer);
+    scrollSettleTimer = window.setTimeout(reconcileScrollState, 160);
+  }, { passive: true });
+}
 
 window.addEventListener("wheel", (event) => event.preventDefault(), { passive: false });
 window.addEventListener("touchmove", (event) => event.preventDefault(), { passive: false });

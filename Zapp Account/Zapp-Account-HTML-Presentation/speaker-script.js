@@ -1,5 +1,5 @@
 window.ZAPP_SPEAKER_SCRIPT = {
-  totalSeconds: 1598,
+  totalSeconds: 1633,
   chapters: {
     opening: [{
       seconds: 55,
@@ -345,6 +345,15 @@ By July 2025, Zapp Account was reported as the fifth-largest digital wallet by m
 The trajectory continued after that snapshot. By February 2026, the reported figures had reached roughly 500 crore rupees in monthly spends and 600 crore rupees in monthly loads.
 
 For me, this is the clearest closing evidence that the work moved beyond a rebrand. The account earned a measurable place in the market by becoming useful to the audience we chose to prioritize.`
+    }],
+    externalise: [{
+      seconds: 35,
+      intent: "Close the results with the bank's strategic response: a marquee externalisation with a target go-live around October or November.",
+      script: `The repositioning worked really well, and the bank now has plans to externalise Zapp Account.
+
+Apart from PayZapp, it will also be available as a standalone product across various banking digital touch points for the bank, with a targeted go-live around October or November.
+
+For me, this is the strongest signal of the work's impact. The pattern we designed inside PayZapp was credible enough that the bank chose to extend it beyond a single app.`
     }],
     "future-budget": [{
       seconds: 20,
