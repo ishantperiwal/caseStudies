@@ -1,0 +1,351 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-03T21:25:11.5064444+05:30",
+  "title": "Design System: Zapp Account Portfolio Presentation",
+  "extensions": {
+    "colorMeta": {
+      "light-canvas": {
+        "role": "neutral",
+        "displayName": "Cool Canvas",
+        "canonical": "#f7f9fc",
+        "tonalRamp": ["oklch(15% 0.012 250)", "oklch(27% 0.012 250)", "oklch(39% 0.012 250)", "oklch(51% 0.012 250)", "oklch(63% 0.012 250)", "oklch(75% 0.012 250)", "oklch(87% 0.012 250)", "oklch(95% 0.012 250)"]
+      },
+      "light-surface": {
+        "role": "neutral",
+        "displayName": "Clear Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": ["oklch(15% 0 0)", "oklch(27% 0 0)", "oklch(39% 0 0)", "oklch(51% 0 0)", "oklch(63% 0 0)", "oklch(75% 0 0)", "oklch(87% 0 0)", "oklch(95% 0 0)"]
+      },
+      "light-surface-soft": {
+        "role": "neutral",
+        "displayName": "Mist Surface",
+        "canonical": "#edf2f8",
+        "tonalRamp": ["oklch(15% 0.018 250)", "oklch(27% 0.018 250)", "oklch(39% 0.018 250)", "oklch(51% 0.018 250)", "oklch(63% 0.018 250)", "oklch(75% 0.018 250)", "oklch(87% 0.018 250)", "oklch(95% 0.018 250)"]
+      },
+      "graphite-ink": {
+        "role": "neutral",
+        "displayName": "Graphite Ink",
+        "canonical": "#101318",
+        "tonalRamp": ["oklch(15% 0.012 255)", "oklch(27% 0.012 255)", "oklch(39% 0.012 255)", "oklch(51% 0.012 255)", "oklch(63% 0.012 255)", "oklch(75% 0.012 255)", "oklch(87% 0.012 255)", "oklch(95% 0.012 255)"]
+      },
+      "light-muted": {
+        "role": "neutral",
+        "displayName": "Slate Copy",
+        "canonical": "#56606d",
+        "tonalRamp": ["oklch(15% 0.03 250)", "oklch(27% 0.03 250)", "oklch(39% 0.03 250)", "oklch(51% 0.03 250)", "oklch(63% 0.03 250)", "oklch(75% 0.03 250)", "oklch(87% 0.03 250)", "oklch(95% 0.03 250)"]
+      },
+      "light-line": {
+        "role": "neutral",
+        "displayName": "Cloud Rule",
+        "canonical": "#d7dee8",
+        "tonalRamp": ["oklch(15% 0.014 250)", "oklch(27% 0.014 250)", "oklch(39% 0.014 250)", "oklch(51% 0.014 250)", "oklch(63% 0.014 250)", "oklch(75% 0.014 250)", "oklch(87% 0.014 250)", "oklch(95% 0.014 250)"]
+      },
+      "zapp-blue": {
+        "role": "primary",
+        "displayName": "Signal Zapp Blue",
+        "canonical": "#1d5bd6",
+        "tonalRamp": ["oklch(15% 0.19 255)", "oklch(27% 0.19 255)", "oklch(39% 0.19 255)", "oklch(51% 0.19 255)", "oklch(63% 0.19 255)", "oklch(75% 0.19 255)", "oklch(87% 0.19 255)", "oklch(95% 0.19 255)"]
+      },
+      "device-graphite": {
+        "role": "neutral",
+        "displayName": "Device Graphite",
+        "canonical": "#1a1b1e",
+        "tonalRamp": ["oklch(15% 0.01 260)", "oklch(27% 0.01 260)", "oklch(39% 0.01 260)", "oklch(51% 0.01 260)", "oklch(63% 0.01 260)", "oklch(75% 0.01 260)", "oklch(87% 0.01 260)", "oklch(95% 0.01 260)"]
+      },
+      "device-edge": {
+        "role": "neutral",
+        "displayName": "Device Edge",
+        "canonical": "#484b51",
+        "tonalRamp": ["oklch(15% 0.015 260)", "oklch(27% 0.015 260)", "oklch(39% 0.015 260)", "oklch(51% 0.015 260)", "oklch(63% 0.015 260)", "oklch(75% 0.015 260)", "oklch(87% 0.015 260)", "oklch(95% 0.015 260)"]
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Night Surface",
+        "canonical": "#171b21",
+        "tonalRamp": ["oklch(15% 0.012 255)", "oklch(27% 0.012 255)", "oklch(39% 0.012 255)", "oklch(51% 0.012 255)", "oklch(63% 0.012 255)", "oklch(75% 0.012 255)", "oklch(87% 0.012 255)", "oklch(95% 0.012 255)"]
+      },
+      "dark-surface-soft": {
+        "role": "neutral",
+        "displayName": "Night Soft Surface",
+        "canonical": "#202630",
+        "tonalRamp": ["oklch(15% 0.018 255)", "oklch(27% 0.018 255)", "oklch(39% 0.018 255)", "oklch(51% 0.018 255)", "oklch(63% 0.018 255)", "oklch(75% 0.018 255)", "oklch(87% 0.018 255)", "oklch(95% 0.018 255)"]
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Night Ink",
+        "canonical": "#f2f5f9",
+        "tonalRamp": ["oklch(15% 0.008 250)", "oklch(27% 0.008 250)", "oklch(39% 0.008 250)", "oklch(51% 0.008 250)", "oklch(63% 0.008 250)", "oklch(75% 0.008 250)", "oklch(87% 0.008 250)", "oklch(95% 0.008 250)"]
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Night Slate",
+        "canonical": "#aeb8c5",
+        "tonalRamp": ["oklch(15% 0.02 250)", "oklch(27% 0.02 250)", "oklch(39% 0.02 250)", "oklch(51% 0.02 250)", "oklch(63% 0.02 250)", "oklch(75% 0.02 250)", "oklch(87% 0.02 250)", "oklch(95% 0.02 250)"]
+      },
+      "dark-line": {
+        "role": "neutral",
+        "displayName": "Night Rule",
+        "canonical": "#303844",
+        "tonalRamp": ["oklch(15% 0.018 250)", "oklch(27% 0.018 250)", "oklch(39% 0.018 250)", "oklch(51% 0.018 250)", "oklch(63% 0.018 250)", "oklch(75% 0.018 250)", "oklch(87% 0.018 250)", "oklch(95% 0.018 250)"]
+      },
+      "dark-zapp-blue": {
+        "role": "primary",
+        "displayName": "Night Zapp Blue",
+        "canonical": "#78a8ff",
+        "tonalRamp": ["oklch(15% 0.14 255)", "oklch(27% 0.14 255)", "oklch(39% 0.14 255)", "oklch(51% 0.14 255)", "oklch(63% 0.14 255)", "oklch(75% 0.14 255)", "oklch(87% 0.14 255)", "oklch(95% 0.14 255)"]
+      },
+      "dark-accent-ink": {
+        "role": "neutral",
+        "displayName": "Night Accent Ink",
+        "canonical": "#0c1728",
+        "tonalRamp": ["oklch(15% 0.03 255)", "oklch(27% 0.03 255)", "oklch(39% 0.03 255)", "oklch(51% 0.03 255)", "oklch(63% 0.03 255)", "oklch(75% 0.03 255)", "oklch(87% 0.03 255)", "oklch(95% 0.03 255)"]
+      },
+      "dark-device": {
+        "role": "neutral",
+        "displayName": "Deep Device",
+        "canonical": "#090a0c",
+        "tonalRamp": ["oklch(15% 0.008 260)", "oklch(27% 0.008 260)", "oklch(39% 0.008 260)", "oklch(51% 0.008 260)", "oklch(63% 0.008 260)", "oklch(75% 0.008 260)", "oklch(87% 0.008 260)", "oklch(95% 0.008 260)"]
+      },
+      "dark-device-edge": {
+        "role": "neutral",
+        "displayName": "Night Device Edge",
+        "canonical": "#5d6169",
+        "tonalRamp": ["oklch(15% 0.015 260)", "oklch(27% 0.015 260)", "oklch(39% 0.015 260)", "oklch(51% 0.015 260)", "oklch(63% 0.015 260)", "oklch(75% 0.015 260)", "oklch(87% 0.015 260)", "oklch(95% 0.015 260)"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Opening argument and only the most important portfolio statement."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Chapter theses with compact editorial line-height."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Evidence and decision headings inside structured groups."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanatory narrative held to a comfortable reading measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Controls, navigation status, metadata, captions, and provenance."
+      }
+    },
+    "shadows": [
+      {
+        "name": "product-ambient",
+        "value": "0 28px 80px rgba(30, 57, 92, 0.16)",
+        "purpose": "Primary light-theme lift for framed product devices."
+      },
+      {
+        "name": "surface-soft",
+        "value": "0 14px 42px rgba(30, 57, 92, 0.10)",
+        "purpose": "Quiet lift for selected panels, miniature devices, and floating controls."
+      },
+      {
+        "name": "hero-object",
+        "value": "drop-shadow(0 34px 36px rgba(18, 37, 68, 0.22))",
+        "purpose": "Reserved for the opening product render."
+      },
+      {
+        "name": "product-ambient-dark",
+        "value": "0 28px 80px rgba(0, 0, 0, 0.36)",
+        "purpose": "Dark-theme product lift."
+      },
+      {
+        "name": "surface-soft-dark",
+        "value": "0 14px 42px rgba(0, 0, 0, 0.22)",
+        "purpose": "Dark-theme soft surface lift."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "180ms ease",
+        "purpose": "Button hover, active feedback, and color changes."
+      },
+      {
+        "name": "state-expressive",
+        "value": "240ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Decision-row movement and short directional state changes."
+      },
+      {
+        "name": "content-swap",
+        "value": "220ms ease / 420ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Screen fades and position resets when product states change."
+      },
+      {
+        "name": "reveal-opacity",
+        "value": "560ms ease",
+        "purpose": "Chapter content opacity reveal."
+      },
+      {
+        "name": "reveal-rise",
+        "value": "760ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Short upward chapter reveal with 90ms and 160ms child staggering."
+      },
+      {
+        "name": "hero-arrive",
+        "value": "1000ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Single opening product arrival."
+      },
+      {
+        "name": "hero-breathe",
+        "value": "6s ease-in-out",
+        "purpose": "Low-amplitude product presence after the hero arrives."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Near-instant fallback that removes reveal transforms and preserves all content."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-tighten",
+        "value": "1120px"
+      },
+      {
+        "name": "single-column",
+        "value": "900px"
+      },
+      {
+        "name": "compact-stack",
+        "value": "620px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Pill Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Use for the primary presentation action or an active pressed state.",
+      "html": "<button class=\"ds-button-primary\">Present</button>",
+      "css": ".ds-button-primary { min-height: 38px; padding: 0 16px; border: 1px solid var(--accent, #1d5bd6); border-radius: 999px; background: var(--accent, #1d5bd6); color: var(--accent-ink, #ffffff); cursor: pointer; font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; font-size: 13px; font-weight: 650; transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease; } .ds-button-primary:hover { transform: translateY(-1px); } .ds-button-primary:active { transform: scale(0.98); } .ds-button-primary:focus-visible { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Secondary Pill Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Use for theme, navigation, and secondary presentation controls.",
+      "html": "<button class=\"ds-button-secondary\">Dark theme</button>",
+      "css": ".ds-button-secondary { min-height: 38px; padding: 0 16px; border: 1px solid var(--line, #d7dee8); border-radius: 999px; background: var(--surface, #ffffff); color: var(--ink, #101318); cursor: pointer; font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; font-size: 13px; font-weight: 650; transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease; } .ds-button-secondary:hover { transform: translateY(-1px); } .ds-button-secondary:active { transform: scale(0.98); } .ds-button-secondary:focus-visible { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Active Decision Row",
+      "kind": "button",
+      "refersTo": "decision-row",
+      "description": "Use for editorial product-decision selectors that swap the visible screen state.",
+      "html": "<button class=\"ds-decision-row\" aria-pressed=\"true\">Explain the value before the effort</button>",
+      "css": ".ds-decision-row { width: 100%; padding: 18px 6px; border: 0; border-top: 1px solid var(--line, #d7dee8); border-bottom: 1px solid var(--line, #d7dee8); background: transparent; color: var(--accent, #1d5bd6); text-align: left; cursor: pointer; font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; font-size: 17px; font-weight: 620; transform: translateX(16px); transition: color 180ms ease, transform 240ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-decision-row::before { content: ''; display: inline-block; width: 18px; height: 2px; margin: 0 12px 5px -16px; background: currentColor; } .ds-decision-row:hover { color: var(--ink, #101318); } .ds-decision-row:focus-visible { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Active Prototype Tab",
+      "kind": "button",
+      "refersTo": "tab-active",
+      "description": "Use to switch between live prototype views or product states.",
+      "html": "<button class=\"ds-prototype-tab\" role=\"tab\" aria-selected=\"true\">Funding</button>",
+      "css": ".ds-prototype-tab { padding: 10px 16px; border: 1px solid var(--accent, #1d5bd6); border-radius: 999px; background: var(--accent, #1d5bd6); color: var(--accent-ink, #ffffff); cursor: pointer; font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; font-size: 14px; font-weight: 650; transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, color 180ms ease; } .ds-prototype-tab:hover { transform: translateY(-1px); } .ds-prototype-tab:active { transform: scale(0.98); } .ds-prototype-tab:focus-visible { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Presentation Top Bar",
+      "kind": "nav",
+      "refersTo": "navigation-shell",
+      "description": "Persistent brand, chapter status, and presentation action shell.",
+      "html": "<nav class=\"ds-topbar\"><span class=\"ds-topbar-brand\">Zapp Account <span class=\"ds-topbar-label\">Case study</span></span><span class=\"ds-topbar-status\">Opening <span>1 / 8</span></span><button class=\"ds-topbar-action\">Present</button></nav>",
+      "css": ".ds-topbar { height: 72px; display: grid; grid-template-columns: minmax(200px, 1fr) auto minmax(200px, 1fr); align-items: center; gap: 24px; padding: 0 32px; border-bottom: 1px solid color-mix(in srgb, var(--line, #d7dee8) 82%, transparent); background: color-mix(in srgb, var(--bg, #f7f9fc) 88%, transparent); color: var(--ink, #101318); backdrop-filter: blur(18px) saturate(130%); font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; font-size: 13px; font-weight: 650; } .ds-topbar-brand { display: inline-flex; align-items: center; gap: 12px; } .ds-topbar-label { padding-left: 12px; border-left: 1px solid var(--line, #d7dee8); } .ds-topbar-status { display: flex; gap: 14px; } .ds-topbar-status span { color: var(--muted, #56606d); } .ds-topbar-action { justify-self: end; min-height: 38px; padding: 0 16px; border: 1px solid var(--accent, #1d5bd6); border-radius: 999px; background: var(--accent, #1d5bd6); color: var(--accent-ink, #ffffff); cursor: pointer; font: inherit; transition: transform 180ms ease; } .ds-topbar-action:hover { transform: translateY(-1px); } .ds-topbar-action:focus-visible { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Accent Strategy Card",
+      "kind": "card",
+      "refersTo": "card-accent",
+      "description": "Use for the single most decisive strategy or selected-direction panel.",
+      "html": "<article class=\"ds-strategy-card\"><strong>Show</strong><p>Make the value visible from familiar product surfaces.</p></article>",
+      "css": ".ds-strategy-card { min-height: 230px; display: flex; flex-direction: column; justify-content: space-between; padding: 32px; overflow: hidden; border-radius: 24px; background: var(--accent, #1d5bd6); color: var(--accent-ink, #ffffff); font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; } .ds-strategy-card strong { font-size: clamp(54px, 7vw, 110px); line-height: 0.8; letter-spacing: -0.065em; font-weight: 760; } .ds-strategy-card p { max-width: 28ch; margin: 24px 0 0; color: color-mix(in srgb, var(--accent-ink, #ffffff) 82%, transparent); font-size: 16px; line-height: 1.5; } .ds-strategy-card:focus-within { outline: 3px solid var(--accent, #1d5bd6); outline-offset: 4px; }"
+    },
+    {
+      "name": "Framed Product Device",
+      "kind": "custom",
+      "refersTo": "device-frame",
+      "description": "Signature material frame for screenshots and live product prototypes.",
+      "html": "<div class=\"ds-device-shell\"><div class=\"ds-device-camera\"></div><div class=\"ds-device-screen\"><span class=\"ds-device-kicker\">Zapp Account</span><strong class=\"ds-device-balance\">₹12,450</strong><button class=\"ds-device-action\">Add Money</button><div class=\"ds-device-rule\"></div><span class=\"ds-device-copy\">Quick actions</span></div></div>",
+      "css": ".ds-device-shell { position: relative; width: 240px; padding: 8px; border: 1px solid var(--device-edge, #484b51); border-radius: 42px; background: linear-gradient(145deg, #4a4d53, var(--device, #1a1b1e) 26% 74%, #08090b); box-shadow: inset 1px 1px 1px rgba(255,255,255,0.2), inset -1px -1px 2px rgba(0,0,0,0.56), 0 28px 80px rgba(30,57,92,0.16); font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; } .ds-device-camera { position: absolute; top: 15px; left: 50%; z-index: 2; width: 24%; height: 18px; border-radius: 999px; background: #060708; transform: translateX(-50%); } .ds-device-screen { aspect-ratio: 9 / 19; padding: 62px 22px 24px; overflow: hidden; border-radius: 34px; background: #ffffff; color: #101318; box-shadow: inset 0 -5px 12px rgba(0,0,0,0.16), inset 0 0 0 1px rgba(255,255,255,0.2); } .ds-device-kicker, .ds-device-copy { display: block; color: #56606d; font-size: 12px; font-weight: 650; } .ds-device-balance { display: block; margin: 12px 0 20px; font-size: 30px; letter-spacing: -0.04em; } .ds-device-action { width: 100%; min-height: 42px; border: 0; border-radius: 999px; background: #1d5bd6; color: #ffffff; font: inherit; font-size: 13px; font-weight: 650; } .ds-device-action:hover { transform: translateY(-1px); } .ds-device-action:focus-visible { outline: 3px solid #1d5bd6; outline-offset: 4px; } .ds-device-rule { height: 1px; margin: 28px 0 18px; background: #d7dee8; }"
+    },
+    {
+      "name": "Metric Field",
+      "kind": "custom",
+      "refersTo": "metric-cell",
+      "description": "Border-led evidence field for reported results and their provenance.",
+      "html": "<div class=\"ds-metric-field\"><div class=\"ds-metric\"><strong>~2.1x</strong><span>Monthly spends</span><small>Apr-Sep 2025</small></div><div class=\"ds-metric\"><strong>20%</strong><span>Using Auto-Load</span><small>1 in 5</small></div></div>",
+      "css": ".ds-metric-field { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--line, #d7dee8); border-bottom: 1px solid var(--line, #d7dee8); background: var(--surface, #ffffff); color: var(--ink, #101318); font-family: 'Helvetica Neue', Helvetica, Arial, system-ui, sans-serif; } .ds-metric { min-height: 176px; padding: 28px; border-right: 1px solid var(--line, #d7dee8); } .ds-metric:last-child { border-right: 0; } .ds-metric strong, .ds-metric span, .ds-metric small { display: block; } .ds-metric strong { margin-bottom: 28px; color: var(--accent, #1d5bd6); font-size: clamp(42px, 5vw, 72px); line-height: 0.9; letter-spacing: -0.055em; font-variant-numeric: tabular-nums; } .ds-metric span { margin-bottom: 10px; font-size: 17px; font-weight: 680; } .ds-metric small { color: var(--muted, #56606d); font-size: 13px; } .ds-metric:focus-within { outline: 3px solid var(--accent, #1d5bd6); outline-offset: -3px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Live Product Storyboard",
+    "overview": "The system feels like a senior product designer walking an interviewer through a live argument: crisp editorial framing establishes the point, then large product screens prove it. It is calm, precise, and product-led, with generous space that lets one decision land before the next begins.\n\nCool white and graphite surfaces carry most of the visual weight. A restrained Zapp blue supplies the single clear signal for emphasis, action, selection, and data. Material depth is quiet everywhere except the framed phones, where realistic edges, inset shading, and ambient shadow make the product feel present rather than pasted into a slide.\n\nMotion behaves as product evidence. Short reveals establish sequence, state changes explain interaction, and genuine prototypes or inline animation are preferred when they clarify the work. Every essential idea remains visible without motion, and the reduced-motion fallback removes transforms and near-eliminates duration.",
+    "keyCharacteristics": [
+      "Generous editorial hierarchy with one dominant idea per chapter",
+      "Large framed phones as the strongest material objects",
+      "Cool white and graphite neutrals with one restrained Zapp blue accent",
+      "Clear Helvetica Neue/system sans typography with compact, confident weights",
+      "Short purposeful reveals, live product states, and reduced-motion parity",
+      "Light and dark themes that preserve the same role hierarchy"
+    ],
+    "rules": [
+      {
+        "name": "The One Accent Rule",
+        "body": "Zapp blue is reserved for action, active state, evidence, and decisive emphasis; its rarity is what gives it authority.",
+        "section": "colors"
+      },
+      {
+        "name": "The Role-Preserving Theme Rule",
+        "body": "Dark mode changes luminance and material values, not the hierarchy or meaning of a color role.",
+        "section": "colors"
+      },
+      {
+        "name": "The Senior Sans Rule",
+        "body": "Keep Helvetica Neue/system sans throughout; earn hierarchy through disciplined scale and spacing rather than introducing a display face.",
+        "section": "typography"
+      },
+      {
+        "name": "The Surface-Scope Rule",
+        "body": "Chapter compositions belong to this portfolio presentation; future product surfaces inherit the tokens, materials, and interaction behavior, not its task-local slide arrangements.",
+        "section": "layout"
+      },
+      {
+        "name": "The Product Proof Rule",
+        "body": "The strongest depth belongs to the product object; editorial containers remain tonal or softly lifted.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Nested Material Rule",
+        "body": "Device shell and screen radii must remain visibly distinct; flattening them into one card radius removes the sense of real hardware.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Purposeful State Rule",
+        "body": "Motion must reveal sequence or prove interaction: 180-420ms for controls and content swaps, 560-760ms for chapter reveals, and a single 1000ms hero arrival. Reduced motion removes transforms and reduces duration to 0.01ms.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "**Do** let large, framed product screens carry the strongest depth and visual emphasis.",
+      "**Do** use Zapp blue for primary action, selected state, evidence, and decisive data.",
+      "**Do** keep body copy near 60-68 characters per line and preserve generous chapter spacing.",
+      "**Do** use genuine product motion or live prototypes when they clarify a decision, with a complete reduced-motion fallback.",
+      "**Do** preserve color-role meaning and contrast when translating between light and dark themes."
+    ],
+    "donts": [
+      "**Don't** introduce extra accent hues, decorative gradients, or bright status colors into the presentation system.",
+      "**Don't** make every panel float; most narrative structure should come from tonal layers and one-pixel rules.",
+      "**Don't** substitute a decorative display typeface for the established Helvetica Neue/system sans voice.",
+      "**Don't** shrink multi-column desktop arrangements onto mobile; restore reading order and retain only the most useful product proof.",
+      "**Don't** promote a chapter's one-off composition into a universal layout rule for other surfaces."
+    ]
+  }
+}

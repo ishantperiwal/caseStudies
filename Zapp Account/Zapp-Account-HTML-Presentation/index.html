@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zapp Account product design case study for a Senior Interaction Designer portfolio interview.">
+  <meta name="color-scheme" content="light dark">
+  <title>Zapp Account | Senior Interaction Designer case study</title>
+  <link rel="preload" href="assets/zapp-hero-full.webp" as="image" type="image/webp">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500..800&family=Source+Sans+3:wght@400..700&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/CustomEase.min.js" defer></script>
+  <script src="speaker-script.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <!--
+  THESIS: Zapp Account is told as a live product storyboard. Large phones prove the work; the page refuses a compressed slide grid.
+  OWN-WORLD: Cool white and graphite surfaces, one confident Zapp blue accent, sharp Archivo display typography, clear Source Sans 3 body copy, soft device materials, and generous space.
+  STORY: The interviewer sees the adoption problem, the audience, the three design jobs, the core interaction decisions, the delivery constraints, and the reported impact.
+  FIRST VIEWPORT: A two-column opening with the argument at left and a real framed Zapp Account device render dominating the right.
+  FORM: Hybrid chapter scrollytelling with a pinned product object, structure candidate 3, seed 4a418da5.
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+
+  <a class="skip-link" href="#story">Skip to case study</a>
+
+  <header class="topbar" aria-label="Presentation controls">
+    <a class="brand" href="#opening" aria-label="Zapp Account case study home">
+      <img src="assets/zapp-placeholder-hero-zapp-logo.png" alt="Zapp Account">
+      <span>Case study</span>
+    </a>
+    <div class="chapter-status" aria-live="polite">
+      <span id="chapter-current">Opening</span>
+      <span class="chapter-count"><span id="chapter-number">1</span> / 15</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="text-button" id="marker-toggle" type="button" aria-pressed="false" title="Toggle presentation marker (M)">Marker</button>
+      <button class="text-button" id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+      <button class="text-button text-button--strong" id="present-button" type="button">Present</button>
+    </div>
+  </header>
+
+  <main id="story">
+    <section class="chapter chapter--hero is-visible" id="opening" data-title="Opening" tabindex="-1">
+      <div class="hero-copy">
+        <h1><span>Building</span><span>Zapp Account</span></h1>
+        <p class="hero-summary">Turning a limited wallet account into an everyday spends account</p>
+        <dl class="hero-meta" aria-label="Project details">
+          <div><dt>Role</dt><dd>Team Lead</dd></div>
+          <div><dt>Focus</dt><dd>UX and strategy</dd></div>
+          <div><dt>Duration</dt><dd>Dec 2024 - Feb 2025</dd></div>
+        </dl>
+      </div>
+      <div class="hero-stage" aria-label="Zapp Account product interface">
+        <div class="hero-field hero-field--one" aria-hidden="true"></div>
+        <div class="hero-field hero-field--two" aria-hidden="true"></div>
+        <img class="hero-phone" src="assets/zapp-hero-full.webp" alt="Complete angled Zapp Account phone showing balance, Add Money, Auto-Load, payment actions, account ID, and rewards">
+      </div>
+    </section>
+
+    <section class="chapter chapter--working reveal" id="working-model" data-title="Working model" tabindex="-1">
+      <div class="working-copy">
+        <h2><span class="title-line">Zeta built PayZapp.</span><span class="title-line"> HDFC Bank set priorities and approved changes.</span></h2>
+      </div>
+
+      <div class="working-chart" aria-label="PayZapp working model between Zeta and HDFC Bank">
+        <article class="working-party working-party--zeta">
+          <img class="working-party-logo working-party-logo--zeta" src="pasted Assets/zeta.png" alt="Zeta logo">
+          <div class="working-party-copy">
+            <h3>Zeta</h3>
+            <p>Designed and built the product</p>
+          </div>
+        </article>
+
+        <span class="working-operator" aria-hidden="true">+</span>
+
+        <article class="working-party working-party--bank">
+          <img class="working-party-logo working-party-logo--hdfc" src="pasted Assets/hdfc.png" alt="HDFC Bank logo">
+          <div class="working-party-copy">
+            <h3>HDFC Bank</h3>
+            <p>Set priorities and approved what shipped</p>
+          </div>
+        </article>
+
+        <span class="working-operator" aria-hidden="true">=</span>
+
+        <div class="working-hub">
+          <strong>PayZapp</strong>
+          <p>Co-led product</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--market reveal" id="market-opportunity" data-title="Market opportunity" tabindex="-1">
+      <div class="market-copy">
+        <h2>HDFC saw an opportunity in the prepaid payments market.</h2>
+      </div>
+      <figure class="market-stack" aria-label="Competitive prepaid wallet landscape">
+        <div class="market-orb market-orb--paytm" aria-hidden="true"><img src="pasted Assets/competitors/paytm.png" alt=""></div>
+        <div class="market-orb market-orb--phonepe" aria-hidden="true"><img src="pasted Assets/competitors/phonepe.png" alt=""></div>
+        <div class="market-orb market-orb--fampay" aria-hidden="true"><img src="pasted Assets/competitors/fampay.jpg" alt=""></div>
+        <div class="market-orb market-orb--mobikwik" aria-hidden="true"><img src="pasted Assets/competitors/mobikwik.png" alt=""></div>
+        <div class="market-screen market-screen--one"><img src="assets/zapp-placeholder-competitive-research-1.png" alt="Jupiter prepaid account interface"></div>
+        <div class="market-screen market-screen--two"><img src="assets/zapp-placeholder-competitive-research-2.png" alt="MobiKwik payments interface"></div>
+        <div class="market-screen market-screen--three"><img src="assets/zapp-placeholder-competitive-research-3.png" alt="Paytm Wallet interface"></div>
+        <div class="market-screen market-screen--four"><img src="assets/zapp-placeholder-competitive-research-4.png" alt="PhonePe Wallet interface"></div>
+      </figure>
+    </section>
+
+    <section class="chapter chapter--brief reveal" id="brief" data-title="The brief" tabindex="-1">
+      <div class="brief-copy">
+        <div class="brief-initial">
+          <h2 class="brief-context">PayZapp Wallet already existed within PayZapp.</h2>
+          <p class="brief-purpose">But it had struggled to find a clear place in the market.</p>
+        </div>
+        <div class="brief-request" data-brief-reveal>
+          <h3>So, HDFC proposed a rebrand.</h3>
+          <p>To give the wallet a clearer identity and purpose.</p>
+        </div>
+      </div>
+      <div class="brief-visual">
+        <div class="device brief-device">
+          <div class="device-shell">
+            <div class="device-screen">
+              <img src="assets/zapp-placeholder-before-payzapp-wallet.png" alt="Existing PayZapp Wallet screen showing its prepaid card, wallet balance, Add Money, Auto-Load, transactions, and payment controls">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--proposition reveal" id="proposition" data-title="Zapp Account" tabindex="-1">
+      <div class="proposition-copy">
+        <div class="proposition-initial">
+          <h2><span>They wanted to call it</span><strong>Zapp Account</strong></h2>
+          <p>A payment account for all your daily spends</p>
+        </div>
+        <div class="proposition-reveal" data-proposition-reveal>
+          <h3>HDFC saw it as a calculated experiment with strong potential.</h3>
+        </div>
+      </div>
+      <div class="proposition-anchor">
+        <div class="proposition-device" aria-label="Animated Zapp Account anchor inside a phone mockup">
+          <div class="device-shell">
+            <div class="device-screen">
+              <img src="assets/zapp-overlay-execution-entry-inline.gif" alt="Animated Zapp Account anchor icon">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--adoption-strategy reveal" id="adoption-strategy" data-title="Adoption strategy" tabindex="-1">
+      <div class="adoption-stage">
+        <div class="adoption-intro">
+          <h2>And the strategy was ours to define.</h2>
+        </div>
+        <div class="adoption-path" aria-live="polite">
+          <p class="adoption-path-line adoption-path-line--one">We looked at<br>our competitors</p>
+          <p class="adoption-path-line adoption-path-line--two">We interviewed<br>wallet users</p>
+          <p class="adoption-path-line adoption-path-line--three">But when we looked<br>at our own data</p>
+          <p class="adoption-path-line adoption-path-line--four">The most obvious issue<br>got highlighted</p>
+        </div>
+        <figure class="market-stack adoption-competitor-visual" aria-label="Competitive prepaid wallet landscape">
+          <div class="market-orb market-orb--paytm" aria-hidden="true"><img src="pasted Assets/competitors/paytm.png" alt=""></div>
+          <div class="market-orb market-orb--phonepe" aria-hidden="true"><img src="pasted Assets/competitors/phonepe.png" alt=""></div>
+          <div class="market-orb market-orb--fampay" aria-hidden="true"><img src="pasted Assets/competitors/fampay.jpg" alt=""></div>
+          <div class="market-orb market-orb--mobikwik" aria-hidden="true"><img src="pasted Assets/competitors/mobikwik.png" alt=""></div>
+          <div class="market-screen market-screen--one"><img src="assets/zapp-placeholder-competitive-research-1.png" alt="Jupiter prepaid account interface"></div>
+          <div class="market-screen market-screen--two"><img src="assets/zapp-placeholder-competitive-research-2.png" alt="MobiKwik payments interface"></div>
+          <div class="market-screen market-screen--three"><img src="assets/zapp-placeholder-competitive-research-3.png" alt="Paytm Wallet interface"></div>
+          <div class="market-screen market-screen--four"><img src="assets/zapp-placeholder-competitive-research-4.png" alt="PhonePe Wallet interface"></div>
+        </figure>
+        <aside class="adoption-interview-quotes" aria-label="Composite quotes from wallet user interviews">
+          <blockquote>I don't really use Auto-Load.</blockquote>
+          <blockquote>I'm not sure what PayZapp Wallet does.</blockquote>
+          <blockquote>I only use it to redeem Cashpoints.</blockquote>
+          <blockquote>I don't know what Swipe to Pay is.</blockquote>
+        </aside>
+        <figure class="adoption-data-chart" aria-label="Directional month-to-month comparison of PayZapp monthly active users and PayZapp Wallet users">
+          <svg viewBox="0 0 640 390" role="img" aria-hidden="true">
+            <g class="adoption-chart-grid">
+              <line x1="48" y1="70" x2="606" y2="70"></line>
+              <line x1="48" y1="145" x2="606" y2="145"></line>
+              <line x1="48" y1="220" x2="606" y2="220"></line>
+              <line x1="48" y1="295" x2="606" y2="295"></line>
+              <line x1="48" y1="340" x2="606" y2="340"></line>
+            </g>
+            <g class="adoption-chart-months">
+              <text x="48" y="372">M1</text><text x="158" y="372">M2</text><text x="268" y="372">M3</text>
+              <text x="378" y="372">M4</text><text x="488" y="372">M5</text><text x="598" y="372">M6</text>
+            </g>
+            <path class="adoption-chart-line adoption-chart-line--payzapp" pathLength="1" d="M48 184 C91 176 118 161 158 164 S226 151 268 154 S337 135 378 139 S448 119 488 124 S557 105 598 110"></path>
+            <g class="adoption-chart-label adoption-chart-label--payzapp">
+              <rect x="352" y="62" width="246" height="48" rx="14"></rect>
+              <text x="475" y="92">PayZapp monthly active users</text>
+            </g>
+            <path class="adoption-chart-line adoption-chart-line--wallet" pathLength="1" d="M48 309 C92 307 118 301 158 303 S228 297 268 299 S338 291 378 294 S448 287 488 289 S558 281 598 284"></path>
+            <g class="adoption-chart-label adoption-chart-label--wallet">
+              <rect x="388" y="292" width="210" height="48" rx="14"></rect>
+              <text x="493" y="322">PayZapp Wallet users</text>
+            </g>
+          </svg>
+          <p>Directional visualization, not plotted values</p>
+        </figure>
+        <div class="adoption-finding" aria-live="polite">
+          <div class="adoption-finding-copy">
+            <h3>The problem was <span class="adoption-emphasis">adoption</span>.</h3>
+            <p>Despite PayZapp's healthy user base, adoption of PayZapp Wallet was very low.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--context reveal" id="context" data-title="Audience and evidence" data-context-step="0" tabindex="-1">
+      <div class="section-copy context-copy">
+        <h2 class="context-heading">This meant looking at the people<br>already using PayZapp.</h2>
+      </div>
+
+      <div class="context-grid">
+        <div class="persona-panel">
+          <h3 class="persona-title" id="audience-profile-title">Our Core Persona</h3>
+          <article class="audience-profile" aria-labelledby="audience-profile-title">
+            <p class="profile-summary">Most PayZapp users were salaried, aged 25–40, and based in Tier 2 and Tier 3 cities.</p>
+            <dl class="profile-facts">
+              <div><dt>Age</dt><dd>25–40</dd></div>
+              <div><dt>Occupation</dt><dd>Salaried</dd></div>
+              <div class="profile-fact--geography"><dt>Geography</dt><dd>Tier 2 and Tier 3 cities</dd></div>
+            </dl>
+          </article>
+        </div>
+        <div class="evidence-panel">
+          <h3 class="evidence-title">What interviews revealed</h3>
+          <div class="evidence-list" aria-label="Key interview findings">
+            <article>
+              <div><h3>The wallet's value was unclear</h3></div>
+            </article>
+            <article>
+              <div><h3>Auto-Load and other capabilities went undiscovered</h3></div>
+            </article>
+            <article>
+              <div><h3>Wallet was a Cashpoints conversion tool</h3></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--alignment reveal" id="alignment" data-title="Strategic alignment" tabindex="-1">
+      <div class="alignment-copy">
+        <h2>The bank was aligned.</h2>
+        <p>For a strategic experiment, proving value with existing PayZapp users was the more credible first move.</p>
+      </div>
+
+      <div class="alignment-options" aria-label="Comparison of a wider-market launch and adoption within PayZapp">
+        <article class="alignment-option alignment-option--wider">
+          <h3>Targeting a wider market</h3>
+          <div class="alignment-terms">
+            <strong>Longer discovery cycle</strong>
+            <strong>Fierce market competition</strong>
+            <strong>Larger delivery commitment</strong>
+          </div>
+        </article>
+        <article class="alignment-option alignment-option--adoption">
+          <h3>Adoption within PayZapp</h3>
+          <div class="alignment-terms">
+            <strong>Existing audience</strong>
+            <strong>Faster validation</strong>
+            <strong>Better fit for an experiment</strong>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+    <section class="chapter chapter--adoption-equation reveal" id="adoption-equation" data-title="Measuring adoption" tabindex="-1">
+      <h2>In measurable terms, adoption meant:</h2>
+      <div class="adoption-metric-equation" aria-label="Adoption is proportional to monthly spends plus monthly loads plus frequency of loads">
+        <strong class="adoption-metric-label">Adoption</strong>
+        <span class="adoption-metric-symbol" aria-hidden="true">∝</span>
+        <span class="adoption-metric-term">Monthly spends</span>
+        <span class="adoption-metric-plus" aria-hidden="true">+</span>
+        <span class="adoption-metric-term">Monthly loads</span>
+        <span class="adoption-metric-plus" aria-hidden="true">+</span>
+        <span class="adoption-metric-term">Frequency of loads</span>
+      </div>
+    </section>
+
+    <section class="chapter chapter--strategy reveal" id="strategy" data-title="Role and strategy" tabindex="-1">
+      <div class="strategy-intro">
+        <h2>Our findings shaped these design directions</h2>
+      </div>
+
+      <div class="strategy-stage">
+        <div class="strategy-composition">
+          <div class="strategy-direction strategy-direction--value">
+            <h3>Lead with value</h3>
+            <p>Lead with the value users would feel, not the feature terminology behind it.</p>
+          </div>
+          <div class="strategy-direction strategy-direction--money">
+            <h3>Center loading money</h3>
+            <p>Make loading money the core action of the Zapp Account experience.</p>
+          </div>
+          <div class="strategy-direction strategy-direction--context">
+            <h3>Use contextual levers</h3>
+            <p>Leverage familiar PayZapp contexts to educate users even reinforce value.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--design-roadmap reveal" id="design-roadmap" data-title="Design walkthrough" tabindex="-1">
+      <div class="design-roadmap-copy">
+        <h2>Let's look at the designs</h2>
+        <p>We will follow the experience in this sequence.</p>
+      </div>
+      <ol class="design-roadmap-list" aria-label="Design walkthrough sequence">
+        <li><span>01</span><strong>Entry points &amp; onboarding</strong></li>
+        <li><span>02</span><strong>Limited capability Zapp Account</strong></li>
+        <li><span>03</span><strong>Full capability Zapp Account</strong></li>
+      </ol>
+    </section>
+
+    <section class="chapter chapter--entry-points reveal" id="entry-points" data-title="Entry points &amp; onboarding" data-entry-step="0" tabindex="-1">
+      <div class="entry-points-copy">
+        <p class="slide-section-label">Entry points &amp; onboarding</p>
+        <div class="entry-onboarding-copy-stage">
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--entry">
+            <h2>I knew what worked and what would stand out</h2>
+            <ul class="communication-principles" aria-label="Value communication principles">
+              <li>Value-led UX copy</li>
+              <li>One benefit at a time</li>
+              <li>Recognizable 3D illustrations</li>
+            </ul>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--onboarding">
+            <h2>The onboarding followed the same pattern</h2>
+            <p>A simple carousel to introduce one value proposition at a time. It began with the benefit that brought the user in, then moved through the remaining benefits.</p>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--limited-overview">
+            <h2>Most users started with limited capabilities</h2>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--limited">
+            <h2>Limited Zapp Accounts lacked key capabilities</h2>
+            <ul class="limited-capability-list limited-capability-list--missing" aria-label="Capabilities unavailable before full KYC">
+              <li>Scan and Pay for UPI transactions</li>
+              <li>Send money to other people</li>
+              <li>Transfer money to a bank account</li>
+            </ul>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--locked-focus">
+            <h2>Locked actions became upgrade opportunities</h2>
+            <ul class="limited-capability-list limited-capability-list--locked" aria-label="Locked capabilities used as upgrade opportunities">
+              <li>Scan and Pay for UPI transactions</li>
+              <li>Send money to other people</li>
+              <li>Transfer money to a bank account</li>
+            </ul>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--familiarity">
+            <h2>Familiarity by design worked in our favor</h2>
+            <p>We preserved the structure existing PayZapp users already understood.</p>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--cashpoints">
+            <h2>Cashpoints reinforced an existing behavior</h2>
+            <p>We kept redemption visible and tied directly to the balance because many users already treated the wallet as a Cashpoints conversion tool.</p>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--balance">
+            <h2>Balance became the hero</h2>
+            <p>It was the first thing users came to check, so it led the page hierarchy.</p>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--add-money">
+            <div class="entry-beat-context">
+              <h2>Add Money became the hero CTA</h2>
+              <p>Competitor patterns validated the action. Negative space and subtle motion kept it visually dominant.</p>
+            </div>
+            <div class="entry-beat-metric"><strong>~1.5×</strong><span>Monthly loads</span></div>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--autoload">
+            <div class="entry-beat-context">
+              <h2>Context made Auto-Load discoverable</h2>
+              <p>Placed directly beneath Add Money, it borrowed visibility from the same loading intent.</p>
+            </div>
+            <div class="entry-beat-metric"><strong>20%</strong><span>Auto-Load adoption</span></div>
+          </div>
+          <div class="entry-onboarding-copy-state entry-onboarding-copy-state--nudges">
+            <div class="entry-beat-context">
+              <h2>Soft nudges reinforced value in context</h2>
+              <p>Behavior-led messages pointed to relevant actions and adapted to the user’s lifecycle state.</p>
+            </div>
+            <div class="entry-beat-metric"><strong>~2.1×</strong><span>Monthly spends</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="entry-onboarding-stage">
+        <div class="entry-kyc-interlude" aria-label="Two ways to activate the full Zapp Account">
+          <figure class="entry-kyc-route">
+            <div class="device-shell">
+              <div class="device-screen">
+                <iframe title="Guided Video KYC for non-bank customers" loading="lazy" src="prototypes/video-kyc/embed.html"></iframe>
+              </div>
+            </div>
+            <figcaption><strong>Guided Video KYC</strong></figcaption>
+          </figure>
+          <figure class="entry-kyc-route">
+            <div class="device-shell">
+              <div class="device-screen">
+                <img src="pasted Assets/etb_4d.png" alt="Four-digit card verification for existing HDFC Bank customers">
+              </div>
+            </div>
+            <figcaption><strong>4-digit card verification</strong></figcaption>
+          </figure>
+        </div>
+        <div class="entry-points-visual" aria-label="Zapp Account entry point examples">
+          <figure class="entry-point-option" data-entry-screens="pasted Assets/spotlights/1.png|pasted Assets/spotlights/2.png|pasted Assets/spotlights/3.png" data-entry-alt="Zapp Account spotlight banner on the PayZapp home">
+            <div class="device-shell"><div class="device-screen">
+              <img src="pasted Assets/spotlights/1.png" alt="Zapp Account spotlight banner on the PayZapp home">
+              <img class="entry-point-screen-buffer" src="pasted Assets/spotlights/1.png" alt="">
+            </div></div>
+            <span>Spotlight banners</span>
+          </figure>
+          <figure class="entry-point-option" data-entry-screens="pasted Assets/bottomsheets/1.png|pasted Assets/bottomsheets/2.png|pasted Assets/bottomsheets/3.png" data-entry-alt="Zapp Account benefit-led bottom sheet">
+            <div class="device-shell"><div class="device-screen">
+              <img src="pasted Assets/bottomsheets/1.png" alt="Zapp Account benefit-led bottom sheet">
+              <img class="entry-point-screen-buffer" src="pasted Assets/bottomsheets/1.png" alt="">
+            </div></div>
+            <span>Benefit-led bottom sheets</span>
+          </figure>
+        </div>
+        <div class="entry-onboarding-visual" aria-label="Interactive Zapp Account onboarding carousel">
+          <p class="entry-inspiration-heading">Inspired by our own home screen</p>
+          <figure class="entry-primary-account">
+            <div class="device device--live onboarding-device">
+              <div class="device-shell">
+                <div class="device-screen">
+                  <div class="prototype-layer is-on entry-onboarding-layer">
+                    <div class="prototype-loading">Loading onboarding</div>
+                    <iframe id="onboarding-prototype" title="Interactive Zapp Account onboarding carousel" loading="lazy" src="prototypes/carousel/embed.html"></iframe>
+                  </div>
+                  <div class="prototype-layer entry-full-layer">
+                    <div class="prototype-loading">Loading Zapp Account</div>
+                    <iframe id="entry-full-prototype" title="Full capability Zapp Account home" loading="lazy" src="prototypes/zapp-home/embed.html?presentation=1"></iframe>
+                  </div>
+                  <span class="entry-cta-touch" aria-hidden="true"><span></span></span>
+                </div>
+              </div>
+            </div>
+            <figcaption class="entry-account-label">Full capability</figcaption>
+          </figure>
+          <figure class="entry-limited-comparison">
+            <div class="device">
+              <div class="device-shell">
+                <div class="device-screen">
+                  <img src="pasted Assets/zappLimited.png" alt="Limited Zapp Account with locked payment capabilities and an invitation to complete video KYC">
+                </div>
+              </div>
+            </div>
+            <figcaption class="entry-account-label">Limited capability</figcaption>
+          </figure>
+          <figure class="entry-payzapp-home">
+            <div class="device">
+              <div class="device-shell">
+                <div class="device-screen">
+                  <img src="pasted Assets/zappHome.png" alt="PayZapp home showing the Zapp Account entry point">
+                </div>
+              </div>
+            </div>
+            <figcaption class="entry-account-label">PayZapp home</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--impact reveal" id="impact" data-title="Impact" tabindex="-1">
+      <div class="impact-content">
+        <div class="impact-copy">
+          <h2><span class="title-line">The reported results show stronger</span><span class="title-line"> use, not just a new name.</span></h2>
+        </div>
+
+        <div class="impact-results">
+          <div class="metric-field" aria-label="Reported product results">
+            <div class="metric"><strong data-count="2.1" data-prefix="~" data-suffix="x">~2.1x</strong><span>Monthly spends</span><small>Apr-Sep 2025</small></div>
+            <div class="metric"><strong data-count="1.5" data-prefix="~" data-suffix="x">~1.5x</strong><span>Monthly loads</span><small>Apr-Sep 2025</small></div>
+            <div class="metric"><strong data-count="20" data-suffix="%">20%</strong><span>Auto-Load adoption</span><small>1 in 5 wallet loaders</small></div>
+            <div class="metric"><strong>Top 5</strong><span>Digital wallet ranking</span><small>As reported</small></div>
+          </div>
+          <img class="impact-hero-phone" src="assets/zapp-hero-full.webp" alt="Angled Zapp Account phone showing the full product experience">
+        </div>
+      </div>
+    </section>
+
+    <section class="chapter chapter--ranking reveal" id="ranking" data-title="Top 5 ranking" tabindex="-1">
+      <div class="ranking-copy">
+        <h2><span class="title-line">Zapp Account entered the</span><span class="title-line"> Top 5 digital wallets.</span></h2>
+      </div>
+
+      <div class="ranking-evidence">
+        <section class="ranking-board" aria-labelledby="ranking-board-title">
+          <div class="ranking-board-heading">
+            <span>As of July 2025</span>
+            <h3 id="ranking-board-title">Top digital wallets by monthly spends</h3>
+          </div>
+          <ol class="ranking-list">
+            <li>
+              <span class="ranking-position">#1</span><strong>FamPay</strong>
+              <span class="ranking-bar"><i style="--ranking-width: 100%"></i></span><span class="ranking-value">₹800 Cr</span>
+            </li>
+            <li>
+              <span class="ranking-position">#2</span><strong>PhonePe</strong>
+              <span class="ranking-bar"><i style="--ranking-width: 100%"></i></span><span class="ranking-value">₹800 Cr</span>
+            </li>
+            <li>
+              <span class="ranking-position">#3</span><strong>MobiKwik</strong>
+              <span class="ranking-bar"><i style="--ranking-width: 62.5%"></i></span><span class="ranking-value">₹500 Cr</span>
+            </li>
+            <li>
+              <span class="ranking-position">#4</span><strong>Amazon Pay</strong>
+              <span class="ranking-bar"><i style="--ranking-width: 62.5%"></i></span><span class="ranking-value">₹500 Cr</span>
+            </li>
+            <li class="ranking-list-current">
+              <span class="ranking-position">#5</span><strong>Zapp Account</strong>
+              <span class="ranking-bar"><i style="--ranking-width: 18.75%"></i></span><span class="ranking-value">₹150 Cr</span>
+            </li>
+          </ol>
+        </section>
+
+        <aside class="ranking-growth" aria-label="Reported Zapp Account performance by February 2026">
+          <span class="ranking-growth-date">As of February 2026</span>
+          <div class="ranking-growth-metric">
+            <strong>~₹500 Cr</strong>
+            <span>Monthly spends</span>
+          </div>
+          <div class="ranking-growth-metric">
+            <strong>~₹600 Cr</strong>
+            <span>Monthly loads</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <nav class="deck-controls" aria-label="Chapter navigation">
+    <button id="previous-chapter" type="button" disabled>Previous</button>
+    <button id="next-chapter" type="button">Next</button>
+  </nav>
+  <canvas id="presentation-marker" aria-hidden="true"></canvas>
+</body>
+</html>

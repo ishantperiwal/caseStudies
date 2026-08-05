@@ -1,0 +1,350 @@
+window.ZAPP_SPEAKER_SCRIPT = {
+  totalSeconds: 1533,
+  chapters: {
+    opening: [{
+      seconds: 55,
+      intent: "Establish the project, your role, and the transformation in one clear opening.",
+      script: `This case study is about building Zapp Account, and turning an underused wallet inside PayZapp into an account for everyday spending.
+
+I was the Team Lead for UX and strategy. I worked across the product strategy, the experience direction, and the key interaction decisions, in close collaboration with product, engineering, and HDFC Bank.
+
+The work ran from December 2024 to February 2025. I will focus less on documenting every screen and more on the decisions I made, why I made them, and how those decisions influenced adoption after launch.`
+    }],
+    "working-model": [{
+      seconds: 65,
+      intent: "Clarify decision ownership without implying that HDFC designed or built the product.",
+      script: `Before I get into the problem, this working model is important.
+
+Zeta designed and built PayZapp. That included product design, product experience, engineering, and delivery. HDFC Bank set the quarterly priorities, reviewed the work through its leadership, and approved what finally shipped.
+
+So this was a co-led product with distinct responsibilities. HDFC owned the banking context, governance, and final approval. We owned translating those priorities into a product people could understand and use.
+
+That meant my decisions had to work on two levels. They had to solve the customer problem, and they also had to be credible enough to take through the bank's approval process.`
+    }],
+    "market-opportunity": [{
+      seconds: 45,
+      intent: "Establish the market opportunity without explaining the wallet problem before the product is in context.",
+      script: `At the time, prepaid payment products were already a competitive category. HDFC saw a meaningful opportunity here and wanted PayZapp to participate more deliberately.
+
+Products such as Paytm, PhonePe, and MobiKwik had already established recognizable wallet experiences. HDFC saw the category as a calculated experiment with strong potential, and PayZapp gave them an existing ecosystem from which to begin.`
+    }],
+    brief: [
+      {
+        seconds: 35,
+        intent: "Bring the market opportunity into the concrete context of the existing PayZapp Wallet.",
+        script: `PayZapp already had a prepaid wallet inside the product, so HDFC was not starting from zero.
+
+The wallet already supported balance, payments, Auto-Load, and other capabilities that were competitive with the market. But it had struggled to find a clear place in that market, which made it the natural starting point for this opportunity.`
+      },
+      {
+        seconds: 40,
+        intent: "State the desired repositioning and hand directly into the proposed product name.",
+        script: `So HDFC proposed a rebrand. The request was to give this wallet a clearer identity and a clearer purpose inside the PayZapp ecosystem.
+
+They wanted to reposition it as an everyday payment account, with a name and proposition that made that purpose more explicit. And this is what they wanted to call it.`
+      }
+    ],
+    proposition: [
+      {
+        seconds: 35,
+        intent: "Reveal the proposed product name and explain its intended everyday role simply.",
+        script: `They wanted to call it Zapp Account.
+
+The proposition was intentionally straightforward: a payment account for all your daily spends. It would give customers a separate balance for routine payments, whether those spends were planned or unplanned, without treating the product like a traditional bank account.`
+      },
+      {
+        seconds: 30,
+        intent: "Position the rebrand as a serious but bounded experiment.",
+        script: `For HDFC, this was a calculated experiment with strong potential. They believed the proposition could work, but it still needed to prove itself before earning a much larger market commitment.
+
+That gave us a useful constraint. We needed a strategy that could create credible evidence without demanding the time and investment of a completely new market launch.`
+      }
+    ],
+    "adoption-strategy": [
+      {
+        seconds: 30,
+        intent: "Assert ownership of the strategy before showing the evidence that shaped it.",
+        script: `The brief defined the desired repositioning. The strategy was ours to define.
+
+My responsibility was to decide where we should focus first, what evidence should guide that decision, and what success would actually mean for this product.`
+      },
+      {
+        seconds: 25,
+        intent: "Show that competitor analysis supplied context, not the final answer.",
+        script: `We started by looking at competitors. I compared how established wallets introduced themselves, how they prioritized loading money, and how they communicated utility.
+
+That gave us useful category patterns, but it did not yet explain the specific problem inside PayZapp.`
+      },
+      {
+        seconds: 35,
+        intent: "Humanize the research with recurring interview observations.",
+        script: `We then interviewed wallet users, including regular PayZApp users and people who rarely used its wallet.
+
+These statements are condensed from recurring interview responses. People were unsure what PayZapp Wallet did. Some only used it to redeem CashPoints. Auto-Load and Swipe to Pay were unfamiliar even when the underlying problems they solved were recognizable.
+
+The product had capabilities, but those capabilities were not forming a coherent reason to adopt it.`
+      },
+      {
+        seconds: 25,
+        intent: "Build suspense by shifting from external context to first-party evidence.",
+        script: `The most useful evidence appeared when we looked at our own product data.
+
+PayZapp itself had a healthy base of active users. These were not people we first had to persuade to install or trust the app. They were already there, returning to PayZapp and making payments.`
+      },
+      {
+        seconds: 25,
+        intent: "Pause on the contrast before naming adoption as the core problem.",
+        script: `But the wallet line remained consistently small compared with PayZapp's active user base.
+
+I am keeping this visualization directional because the confidential values are not shown here. The important point is the persistent gap. A healthy PayZapp audience existed, while wallet usage stayed disproportionately low.`
+      },
+      {
+        seconds: 50,
+        intent: "Name adoption as your strategic diagnosis and connect it directly to the existing audience.",
+        script: `That made the core problem clear. It was adoption.
+
+Despite PayZapp's healthy user base, adoption of PayZapp Wallet was very low. So I recommended that we focus first on the people already using PayZapp rather than immediately trying to acquire an entirely new wallet audience.
+
+This was a strategic choice, not simply a convenient one. Existing PayZapp users already had trust, familiarity, and repeated payment behavior. If we could make the wallet relevant to them, we could test the proposition faster and with much stronger confidence.`
+      }
+    ],
+    context: [
+      {
+        seconds: 20,
+        intent: "Move from the adoption diagnosis to the existing PayZapp audience that could unlock it.",
+        script: `Once adoption became the priority, the next question was who we should design for first.
+
+The clearest opportunity was the audience already using PayZapp. So we looked more closely at who those customers were and what was preventing the wallet from becoming useful to them.`
+      },
+      {
+        seconds: 35,
+        intent: "Define the core persona derived from the existing PayZapp user base.",
+        script: `The core persona reflected the center of PayZapp's existing base: salaried users, broadly between 25 and 40, with a large presence in Tier 2 and Tier 3 cities.
+
+They already understood PayZapp's basic payment model, but they were not necessarily looking for technical novelty or another financial product to learn. This made clarity, familiarity, and immediate usefulness especially important.`
+      },
+      {
+        seconds: 45,
+        intent: "Turn the interview evidence into three clear product problems.",
+        script: `The interviews revealed three connected problems.
+
+First, the wallet's value was unclear. People could not explain what it offered or why it mattered.
+
+Second, Auto-Load and other capabilities such as Swipe to Pay and Tap and Pay were going undiscovered.
+
+Third, for many customers the wallet was primarily a CashPoints conversion tool. They redeemed rewards into wallet balance and stopped there.
+
+This told me the issue was not a lack of features. It was a failure to make the value visible, understandable, and relevant to the audience we already had.`
+      }
+    ],
+    alignment: [{
+      seconds: 85,
+      intent: "Show how you earned stakeholder alignment by framing adoption as the appropriate experiment.",
+      script: `We took the adoption strategy back to HDFC, and the bank aligned with it.
+
+The alternative was to target a much wider market immediately. That would have required a longer discovery cycle, a larger delivery commitment, and a direct fight in an already competitive category. It was possible, but it was a poor fit for a bounded strategic experiment.
+
+Starting within PayZapp gave us an existing audience, faster validation, and a much clearer way to observe whether the repositioning changed behavior.
+
+The important decision here was sequencing. We were not saying a wider market would never matter. We were saying that adoption among existing PayZapp users was the most credible first proof of value.`
+    }],
+    "adoption-equation": [{
+      seconds: 55,
+      intent: "Translate the broad word adoption into observable product behavior.",
+      script: `We then made adoption measurable.
+
+For this product, adoption could not simply mean opening the page or completing registration. It needed to show up as money moving through the account.
+
+Monthly spends and monthly loads told us how extensively the account was being used. Because this was an account for daily spends, we did not expect customers to add one large amount and leave it there. The frequency of loads told us whether they were repeatedly returning to fund the account, which was a stronger signal that it had become useful for everyday payments.
+
+So these three measures captured both volume and repeat behavior. They also gave the design a clear behavioral target: make loading and spending prominent, understandable, and easy to repeat.`
+    }],
+    strategy: [{
+      seconds: 90,
+      intent: "Present the three design directions as direct responses to the evidence.",
+      script: `The findings shaped three design directions.
+
+First, lead with value. Our audience did not need feature terminology such as pinless transactions as the opening message. They needed the outcome: faster payments, greater control, or a cleaner bank statement. The value had to lead, while the feature explained how it was delivered.
+
+Second, make loading money central. It was one of our clearest adoption measures, and competitor patterns validated that customers expected Add Money to be the primary wallet action.
+
+Third, use contextual levers. Instead of relying on separate education pages, we would explain and upsell Zapp Account inside moments users already understood. Context would reduce how much copy we needed and make each message more relevant.
+
+These directions became the filter for the detailed design decisions that follow.`
+    }],
+    "design-roadmap": [{
+      seconds: 35,
+      intent: "Orient the interviewer before the detailed product walkthrough.",
+      script: `I will now walk through the design in the same order a customer encountered it.
+
+First, the entry points and onboarding that introduced the proposition. Then the limited capability account that most users started with. Finally, the full capability account and the decisions that drove loading, spending, and repeat use.`
+    }],
+    "entry-points": [
+      {
+        seconds: 45,
+        intent: "Establish prior PayZapp experience as the basis for combining familiar reach with a distinctive Zapp Account expression.",
+        script: `I had been part of PayZapp's zero-to-one journey and several growth initiatives across the product, so I already understood this customer and the patterns that had worked with them in the past.
+
+That gave us two advantages. We knew familiar surfaces such as spotlight banners and behavior-led bottom sheets could reach existing users without asking them to learn a new promotional model. But Zapp Account still needed to stand out whenever it appeared within those surfaces.
+
+So we kept the distribution familiar and made the expression distinctive. The UX copy was value-led, we communicated one benefit at a time, and recognizable 3D illustrations helped Zapp Account break from PayZapp's existing 2D visual language while remaining immediately understandable.`
+      },
+      {
+        seconds: 35,
+        intent: "Connect onboarding to the same value-led system rather than presenting it as a separate idea.",
+        script: `The onboarding followed the same pattern.
+
+It was a simple carousel that introduced one value proposition at a time. The sequence began with the benefit that had brought the customer in, then moved through the remaining benefits.
+
+The illustrations stayed recognizable, and the language deliberately used fewer, simpler words. The goal was immediate comprehension, not a feature catalogue.`
+      },
+      {
+        seconds: 20,
+        intent: "Use the centered onboarding screen only to introduce the two activation routes.",
+        script: `Before we enter the product, there is one thing to clarify. Customers could activate a fully capable Zapp Account through one of two verification routes.`
+      },
+      {
+        seconds: 20,
+        intent: "Briefly explain the two activation routes without opening a separate KYC chapter.",
+        script: `Existing HDFC Bank customers completed a quick four-digit card verification. Everyone else completed a guided Video KYC.
+
+Both routes led to the same fully capable Zapp Account.`
+      },
+      {
+        seconds: 10,
+        intent: "Close the KYC aside and return attention to the onboarding CTA.",
+        script: `Both verification journeys sit outside the scope of this walkthrough. Okay, let's look at Zapp Account.`
+      },
+      {
+        seconds: 8,
+        intent: "Pause and let the CTA transition carry the reveal into Zapp Account.",
+        script: ``
+      },
+      {
+        seconds: 30,
+        intent: "Introduce the two capability states and establish that limited capability was the common starting point.",
+        script: `There were two possible account states: full capability and limited capability.
+
+Most users started with limited capabilities. They could receive this account through minimum KYC with PAN verification, while existing HDFC Bank customers could receive it instantly through the bank relationship.`
+      },
+      {
+        seconds: 35,
+        intent: "Make the missing capabilities explicit before explaining the design response.",
+        script: `The limited account could hold balance and support basic account use, but three important payment capabilities were unavailable.
+
+Customers could not Scan and Pay through UPI, send money to another person, or transfer money to a bank account until they completed the upgrade.
+
+The question was how to communicate those limits without making the product feel broken or hiding what the full account could become.`
+      },
+      {
+        seconds: 35,
+        intent: "Explain locked actions as embedded education and conversion opportunities.",
+        script: `Instead of removing those actions, I kept them in the positions customers would later use.
+
+The lock badges made the missing capabilities explicit. They also turned every unavailable action into an upgrade opportunity. A customer could immediately see what the limited status withheld, and selecting a locked action opened the path to full activation.
+
+This allowed the interface to educate without requiring a separate feature-explanation banner.`
+      },
+      {
+        seconds: 25,
+        intent: "Reveal the shared spatial structure across PayZapp, limited Zapp, and full Zapp.",
+        script: `This structure was inspired by our own PayZapp home screen.
+
+Placed together, you can see the shared spatial model: the primary payment anchors occupy familiar positions, while the account state changes what is available around them.`
+      },
+      {
+        seconds: 40,
+        intent: "Explain familiarity as an audience-specific design decision, not visual imitation.",
+        script: `Familiarity by design worked in our favor.
+
+We were targeting existing PayZapp users, so I preserved the structure they already understood. Using Zapp Account was not meant to feel like learning a second app inside PayZapp.
+
+This reduced the learning burden and made the account feel like a natural extension of an existing payment habit. The design was optimized for this audience's spatial memory rather than for novelty.`
+      },
+      {
+        seconds: 35,
+        intent: "Connect CashPoints placement to an existing behavior and a path into balance use.",
+        script: `At the top, CashPoints reinforced a behavior customers already had.
+
+Many users came to the wallet primarily to convert CashPoints into spendable balance. I kept that value visible as a high-contrast counter and linked redemption directly back to the balance.
+
+This respected the behavior that already worked instead of trying to replace it immediately.`
+      },
+      {
+        seconds: 30,
+        intent: "Explain why balance leads the hierarchy in an account organized around stored value.",
+        script: `The balance became the hero of the page.
+
+This account was fundamentally balance-backed, and the balance was the first thing customers came to check. So it led the hierarchy, with enough negative space to make the account state immediately legible.`
+      },
+      {
+        seconds: 40,
+        intent: "Explain the Add Money hierarchy as a research-backed decision tied to adoption.",
+        script: `Add Money became the hero CTA.
+
+This choice connected directly to our adoption model because monthly loads were a key measure of account use. It was also validated by competitor patterns, where loading money was consistently the most prominent wallet action.
+
+I used clear negative space and restrained motion around the CTA to keep attention on it without making the page feel promotional.`
+      },
+      {
+        seconds: 20,
+        intent: "Pause on the result and connect it back to the design decision.",
+        script: `Across the six months after launch, monthly loads increased to roughly one and a half times their earlier level.
+
+That result matters because it reflects the behavior the hierarchy was designed to encourage, not just visits to the page.`
+      },
+      {
+        seconds: 35,
+        intent: "Explain Auto-Load placement as contextual discoverability rather than additional promotion.",
+        script: `I placed Auto-Load directly beneath Add Money because both actions share the same customer intent: keeping money available in the account.
+
+This gave Auto-Load contextual visibility by allowing it to borrow attention from the primary loading action. The feature became self-explanatory at the moment it was most relevant, solving discoverability without another education surface.`
+      },
+      {
+        seconds: 20,
+        intent: "State the Auto-Load outcome in a presentation-friendly form.",
+        script: `That placement contributed to 20 percent Auto-Load adoption.
+
+In practical terms, one in every five wallet loaders adopted Auto-Load as a way to fund the account.`
+      },
+      {
+        seconds: 40,
+        intent: "Show how contextual nudges reinforced value after onboarding without cluttering the home.",
+        script: `Below the primary actions, soft nudges reinforced value in context.
+
+These messages could respond to lifecycle state or recent behavior and point toward the most relevant action. For example, a payment-oriented nudge could point to Scan and Pay and explain its faster, secure experience. A later nudge could reinforce how many bank-statement entries the account had helped avoid.
+
+The education was lightweight, contextual, and embedded in use rather than front-loaded.`
+      },
+      {
+        seconds: 20,
+        intent: "Close the product walkthrough with the spending outcome.",
+        script: `Monthly spends increased to roughly 2.1 times their earlier level across the reported period.
+
+Together with the loading and Auto-Load results, this suggests that the account was becoming part of repeated payment behavior, which was the adoption outcome we set out to create.`
+      }
+    ],
+    impact: [{
+      seconds: 85,
+      intent: "Synthesize the outcomes, distinguish reported correlation from causation, and close on the strategic lesson.",
+      script: `The reported results show stronger use, not just a new name.
+
+From April to September 2025, monthly spends reached roughly 2.1 times their earlier level, and monthly loads reached roughly 1.5 times. Auto-Load adoption reached 20 percent, or one in five wallet loaders. The product was also reported among the top five digital wallets.
+
+I would not claim that every result came from one isolated interface decision. This was a connected product and business effort. But the movement aligns with the behaviors we deliberately designed for: making value understandable, making loading central, and reinforcing relevant actions in context.
+
+The key lesson for me was that the rebrand only became meaningful once it was attached to an adoption strategy. We did not simply rename a wallet. We gave an existing audience a clearer reason to recognize it, fund it, and use it repeatedly.`
+    }],
+    ranking: [{
+      seconds: 45,
+      intent: "Close with market-level evidence that makes the Top 5 result concrete.",
+      script: `This is the market snapshot behind the Top 5 result.
+
+By July 2025, Zapp Account was reported as the fifth-largest digital wallet by monthly spends, at roughly 150 crore rupees. It was competing in a category led by established products such as FamPay, PhonePe, MobiKwik, and Amazon Pay.
+
+The trajectory continued after that snapshot. By February 2026, the reported figures had reached roughly 500 crore rupees in monthly spends and 600 crore rupees in monthly loads.
+
+For me, this is the clearest closing evidence that the work moved beyond a rebrand. The account earned a measurable place in the market by becoming useful to the audience we chose to prioritize.`
+    }]
+  }
+};
