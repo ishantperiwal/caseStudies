@@ -1,5 +1,5 @@
 window.ZAPP_SPEAKER_SCRIPT = {
-  totalSeconds: 1533,
+  totalSeconds: 1593,
   chapters: {
     opening: [{
       seconds: 55,
@@ -345,6 +345,27 @@ By July 2025, Zapp Account was reported as the fifth-largest digital wallet by m
 The trajectory continued after that snapshot. By February 2026, the reported figures had reached roughly 500 crore rupees in monthly spends and 600 crore rupees in monthly loads.
 
 For me, this is the clearest closing evidence that the work moved beyond a rebrand. The account earned a measurable place in the market by becoming useful to the audience we chose to prioritize.`
+    }],
+    "future-budget": [{
+      seconds: 20,
+      intent: "Introduce the first exploration and explain why a conventional budget was rejected.",
+      script: `We first explored a conventional monthly budget. It made progress visible and gave people a clear target.
+
+But in a spending account, crossing that number repeatedly turned the experience into a negative judgment. We wanted the product to assist people, not police their spending. That tension led us to the next direction.`
+    }],
+    "future-insights": [{
+      seconds: 20,
+      intent: "Show how the budget concept evolved from control into useful reflection.",
+      script: `So we removed the limit and kept the visibility.
+
+Instead of asking people to set a target, the account could show their usual monthly spend, the current month against that average, upcoming commitments, and recognizable categories. The same data became insight rather than a score.`
+    }],
+    "future-plans": [{
+      seconds: 20,
+      intent: "Close the exploratory directions with a more constructive form of commitment.",
+      script: `Plans took that thinking further. Money could move into dedicated pockets before it was spent, through recurring monthly plans or a plan for a specific goal.
+
+This kept the useful structure of a budget without the scorekeeping, because the commitment happened upfront.`
     }]
   }
 };

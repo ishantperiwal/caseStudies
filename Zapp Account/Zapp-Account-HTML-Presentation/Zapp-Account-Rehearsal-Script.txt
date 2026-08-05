@@ -1,5 +1,5 @@
 ZAPP ACCOUNT - REHEARSAL SCRIPT
-Approximate running time: 26 minutes
+Approximate running time: 27 minutes
 
 Use this as a rehearsal companion. Each beat follows the same order as the presentation.
 
@@ -17,7 +17,7 @@ I was the Team Lead for UX and strategy. I worked across the product strategy, t
 The work ran from December 2024 to February 2025. I will focus less on documenting every screen and more on the decisions I made, why I made them, and how those decisions influenced adoption after launch.
 
 ============================================================
-Working Model
+Working model
 ============================================================
 
 BEAT 1 - 65 seconds
@@ -32,7 +32,7 @@ So this was a co-led product with distinct responsibilities. HDFC owned the bank
 That meant my decisions had to work on two levels. They had to solve the customer problem, and they also had to be credible enough to take through the bank's approval process.
 
 ============================================================
-Market Opportunity
+Market opportunity
 ============================================================
 
 BEAT 1 - 45 seconds
@@ -43,7 +43,7 @@ At the time, prepaid payment products were already a competitive category. HDFC 
 Products such as Paytm, PhonePe, and MobiKwik had already established recognizable wallet experiences. HDFC saw the category as a calculated experiment with strong potential, and PayZapp gave them an existing ecosystem from which to begin.
 
 ============================================================
-Brief
+The brief
 ============================================================
 
 BEAT 1 - 35 seconds
@@ -61,7 +61,7 @@ So HDFC proposed a rebrand. The request was to give this wallet a clearer identi
 They wanted to reposition it as an everyday payment account, with a name and proposition that made that purpose more explicit. And this is what they wanted to call it.
 
 ============================================================
-Proposition
+Zapp Account
 ============================================================
 
 BEAT 1 - 35 seconds
@@ -79,7 +79,7 @@ For HDFC, this was a calculated experiment with strong potential. They believed 
 That gave us a useful constraint. We needed a strategy that could create credible evidence without demanding the time and investment of a completely new market launch.
 
 ============================================================
-Adoption Strategy
+Adoption strategy
 ============================================================
 
 BEAT 1 - 30 seconds
@@ -129,7 +129,7 @@ Despite PayZapp's healthy user base, adoption of PayZapp Wallet was very low. So
 This was a strategic choice, not simply a convenient one. Existing PayZapp users already had trust, familiarity, and repeated payment behavior. If we could make the wallet relevant to them, we could test the proposition faster and with much stronger confidence.
 
 ============================================================
-Context
+Audience and evidence
 ============================================================
 
 BEAT 1 - 20 seconds
@@ -160,7 +160,7 @@ Third, for many customers the wallet was primarily a CashPoints conversion tool.
 This told me the issue was not a lack of features. It was a failure to make the value visible, understandable, and relevant to the audience we already had.
 
 ============================================================
-Alignment
+Strategic alignment
 ============================================================
 
 BEAT 1 - 85 seconds
@@ -175,7 +175,7 @@ Starting within PayZapp gave us an existing audience, faster validation, and a m
 The important decision here was sequencing. We were not saying a wider market would never matter. We were saying that adoption among existing PayZapp users was the most credible first proof of value.
 
 ============================================================
-Adoption Equation
+Measuring adoption
 ============================================================
 
 BEAT 1 - 55 seconds
@@ -190,7 +190,7 @@ Monthly spends and monthly loads told us how extensively the account was being u
 So these three measures captured both volume and repeat behavior. They also gave the design a clear behavioral target: make loading and spending prominent, understandable, and easy to repeat.
 
 ============================================================
-Strategy
+Role and strategy
 ============================================================
 
 BEAT 1 - 90 seconds
@@ -207,7 +207,7 @@ Third, use contextual levers. Instead of relying on separate education pages, we
 These directions became the filter for the detailed design decisions that follow.
 
 ============================================================
-Design Roadmap
+Design walkthrough
 ============================================================
 
 BEAT 1 - 35 seconds
@@ -218,7 +218,7 @@ I will now walk through the design in the same order a customer encountered it.
 First, the entry points and onboarding that introduced the proposition. Then the limited capability account that most users started with. Finally, the full capability account and the decisions that drove loading, spending, and repeat use.
 
 ============================================================
-Entry Points
+Entry points &amp; onboarding
 ============================================================
 
 BEAT 1 - 45 seconds
@@ -259,7 +259,7 @@ Both verification journeys sit outside the scope of this walkthrough. Okay, let'
 BEAT 6 - 8 seconds
 Intent: Pause and let the CTA transition carry the reveal into Zapp Account.
 
-[Visual transition. Pause and let the screen carry the moment.]
+
 
 BEAT 7 - 30 seconds
 Intent: Introduce the two capability states and establish that limited capability was the common starting point.
@@ -380,7 +380,7 @@ I would not claim that every result came from one isolated interface decision. T
 The key lesson for me was that the rebrand only became meaningful once it was attached to an adoption strategy. We did not simply rename a wallet. We gave an existing audience a clearer reason to recognize it, fund it, and use it repeatedly.
 
 ============================================================
-Ranking
+Top 5 ranking
 ============================================================
 
 BEAT 1 - 45 seconds
@@ -394,3 +394,35 @@ The trajectory continued after that snapshot. By February 2026, the reported fig
 
 For me, this is the clearest closing evidence that the work moved beyond a rebrand. The account earned a measurable place in the market by becoming useful to the audience we chose to prioritize.
 
+============================================================
+Budget exploration
+============================================================
+
+BEAT 1 - 20 seconds
+Intent: Introduce the first exploration and explain why a conventional budget was rejected.
+
+We first explored a conventional monthly budget. It made progress visible and gave people a clear target.
+
+But in a spending account, crossing that number repeatedly turned the experience into a negative judgment. We wanted the product to assist people, not police their spending. That tension led us to the next direction.
+
+============================================================
+Spending insights
+============================================================
+
+BEAT 1 - 20 seconds
+Intent: Show how the budget concept evolved from control into useful reflection.
+
+So we removed the limit and kept the visibility.
+
+Instead of asking people to set a target, the account could show their usual monthly spend, the current month against that average, upcoming commitments, and recognizable categories. The same data became insight rather than a score.
+
+============================================================
+Plans
+============================================================
+
+BEAT 1 - 20 seconds
+Intent: Close the exploratory directions with a more constructive form of commitment.
+
+Plans took that thinking further. Money could move into dedicated pockets before it was spent, through recurring monthly plans or a plan for a specific goal.
+
+This kept the useful structure of a budget without the scorekeeping, because the commitment happened upfront.
