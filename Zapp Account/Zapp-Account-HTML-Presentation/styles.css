@@ -1032,7 +1032,7 @@ p { max-width: 68ch; font-size: var(--text-body); line-height: 1.56; color: var(
 .chapter--entry-points:is([data-entry-step="7"], [data-entry-step="8"], [data-entry-step="11"], [data-entry-step="12"], [data-entry-step="13"], [data-entry-step="14"], [data-entry-step="15"], [data-entry-step="16"], [data-entry-step="17"], [data-entry-step="18"]) .entry-onboarding-visual { transform: translateX(0) scale(1); }
 .chapter--entry-points:is([data-entry-step="7"], [data-entry-step="8"]) .entry-primary-account { opacity: 0.18; transform: translate(-50%, -50%) translateX(280px) scale(0.42); }
 .chapter--entry-points:is([data-entry-step="7"], [data-entry-step="8"]) .entry-limited-comparison { opacity: 1; transform: translate(-50%, -50%) translate(-78px, -60px) scale(1.38); }
-.chapter--entry-points[data-entry-step="9"] .entry-onboarding-visual { transform: translateX(-36%) scale(1); }
+.chapter--entry-points[data-entry-step="9"] .entry-onboarding-visual { transform: translateX(var(--entry-trio-shift, -36%)) scale(1); }
 .chapter--entry-points[data-entry-step="9"] .entry-primary-account { opacity: 1; transform: translate(-50%, -50%) translate(345px, 50px) scale(0.82); }
 .chapter--entry-points[data-entry-step="9"] .entry-limited-comparison { opacity: 1; transform: translate(-50%, -50%) translate(0, 50px) scale(0.82); }
 .chapter--entry-points[data-entry-step="9"] .entry-payzapp-home { opacity: 1; transform: translate(-50%, -50%) translate(-345px, 50px) scale(0.82); }

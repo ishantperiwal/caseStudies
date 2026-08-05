@@ -536,6 +536,23 @@ const entryFullFrame = document.querySelector("#entry-full-prototype");
 const entryFullLayer = entryFullFrame.closest(".prototype-layer");
 const entryFullMessageOrigin = window.location.origin === "null" ? "*" : window.location.origin;
 
+// The trio step is the only entry state with no copy beside it, so it should sit on the
+// viewport centre rather than the centre of its own grid column. The required shift depends
+// on viewport width, so it is measured instead of hard-coded.
+function measureEntryTrioShift() {
+  const stage = entryPointsChapter?.querySelector(".entry-onboarding-stage");
+  if (!stage) return null;
+  const rect = stage.getBoundingClientRect();
+  if (rect.width < 320) return null;
+  return Math.round(window.innerWidth / 2 - (rect.left + rect.width / 2));
+}
+
+function syncEntryTrioShiftVar() {
+  const shift = measureEntryTrioShift();
+  if (shift === null) return;
+  entryPointsChapter.style.setProperty("--entry-trio-shift", `${shift}px`);
+}
+
 function syncEntryFullPrototype(step) {
   if (!entryFullFrame?.contentWindow) return;
   const section = step >= 17 ? "actions" : step >= 12 ? "balance" : null;
@@ -603,6 +620,8 @@ function initEntryTimeline() {
   const fullLayer = onboardingVisual.querySelector(".entry-full-layer");
   const touch = onboardingVisual.querySelector(".entry-cta-touch");
   const touchPulse = touch.querySelector("span");
+  const trioShift = measureEntryTrioShift();
+  const trioShiftVars = trioShift === null ? { xPercent: -36 } : { xPercent: 0, x: trioShift };
 
   window.gsap.set(entryCopy, { autoAlpha: 1, y: 0 });
   window.gsap.set(entryMocks, { autoAlpha: 1, y: 0 });
@@ -672,7 +691,7 @@ function initEntryTimeline() {
     .addLabel("step8")
     .addLabel("trioEnter")
     .to(lockedFocusCopy, { autoAlpha: 0, y: -28, duration: 0.42, ease: "exitEase" }, "trioEnter")
-    .to(onboardingVisual, { xPercent: -36, duration: 0.68, ease: "repositionEase" }, "trioEnter")
+    .to(onboardingVisual, { ...trioShiftVars, duration: 0.68, ease: "repositionEase" }, "trioEnter")
     .to(primaryAccount, { autoAlpha: 1, x: 345, y: 50, scale: 0.82, duration: 0.68, ease: "repositionEase" }, "trioEnter")
     .to(limitedComparison, { autoAlpha: 1, x: 0, y: 50, scale: 0.82, duration: 0.68, ease: "repositionEase" }, "trioEnter")
     .to(payzappHome, { autoAlpha: 1, x: -345, y: 50, scale: 0.82, duration: 0.68, ease: "repositionEase" }, "trioEnter")
@@ -682,7 +701,7 @@ function initEntryTimeline() {
     .addLabel("step9")
     .addLabel("familiarityEnter")
     .to(inspirationHeading, { autoAlpha: 0, y: -14, duration: 0.36, ease: "exitEase" }, "familiarityEnter")
-    .to(onboardingVisual, { xPercent: -6, duration: 0.68, ease: "repositionEase" }, "familiarityEnter")
+    .to(onboardingVisual, { xPercent: -6, x: 0, duration: 0.68, ease: "repositionEase" }, "familiarityEnter")
     .to(limitedComparison, { autoAlpha: 0, y: 50, scale: 0.72, duration: 0.68, ease: "repositionEase" }, "familiarityEnter")
     .to(primaryAccount, { autoAlpha: 1, x: 180, y: 30, scale: 0.98, duration: 0.68, ease: "repositionEase" }, "familiarityEnter")
     .to(payzappHome, { autoAlpha: 1, x: -180, y: 30, scale: 0.98, duration: 0.68, ease: "repositionEase" }, "familiarityEnter")
@@ -722,6 +741,9 @@ function initEntryTimeline() {
     .to(nudgesMetric, { autoAlpha: 1, y: 0, duration: 0.48, ease: "entryEase" }, "<0.1")
     .addLabel("step18");
 }
+
+syncEntryTrioShiftVar();
+window.addEventListener("resize", syncEntryTrioShiftVar);
 
 initEntryTimeline();
 
