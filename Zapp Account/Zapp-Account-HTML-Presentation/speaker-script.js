@@ -4,7 +4,7 @@ window.ZAPP_SPEAKER_SCRIPT = {
     opening: [{
       seconds: 55,
       intent: "Establish the project, your role, and the transformation in one clear opening.",
-      script: `This case study is about building Zapp Account, and turning an underused wallet inside PayZapp into an account for everyday spending.
+      script: `This case study is about driving adoption through familiarity. We repositioned an underused wallet for the people already using PayZapp and developed it into Zapp Account, an account for everyday spending.
 
 I was the Team Lead for UX and strategy. I worked across the product strategy, the experience direction, and the key interaction decisions, in close collaboration with product, engineering, and HDFC Bank.
 
@@ -12,34 +12,34 @@ The work ran from December 2024 to February 2025. I will focus less on documenti
     }],
     "working-model": [{
       seconds: 65,
-      intent: "Clarify decision ownership without implying that HDFC designed or built the product.",
+      intent: "Clarify decision ownership without implying that the bank designed or built the product.",
       script: `Before I get into the problem, this working model is important.
 
-Zeta designed and built PayZapp. That included product design, product experience, engineering, and delivery. HDFC Bank set the quarterly priorities, reviewed the work through its leadership, and approved what finally shipped.
+Zeta designed and built PayZapp. That included product design, product experience, engineering, and delivery. The bank set the quarterly priorities, reviewed the work through its leadership, and approved what finally shipped.
 
-So this was a co-led product with distinct responsibilities. HDFC owned the banking context, governance, and final approval. We owned translating those priorities into a product people could understand and use.
+So this was a co-led product with distinct responsibilities. The bank owned the banking context, governance, and final approval. We owned translating those priorities into a product people could understand and use.
 
 That meant my decisions had to work on two levels. They had to solve the customer problem, and they also had to be credible enough to take through the bank's approval process.`
     }],
     "market-opportunity": [{
       seconds: 45,
       intent: "Establish the market opportunity without explaining the wallet problem before the product is in context.",
-      script: `At the time, prepaid payment products were already a competitive category. HDFC saw a meaningful opportunity here and wanted PayZapp to participate more deliberately.
+      script: `At the time, prepaid payment products were already a competitive category. The bank saw a meaningful opportunity here and wanted PayZapp to participate more deliberately.
 
-Products such as Paytm, PhonePe, and MobiKwik had already established recognizable wallet experiences. HDFC saw the category as a calculated experiment with strong potential, and PayZapp gave them an existing ecosystem from which to begin.`
+Products such as Paytm, PhonePe, and MobiKwik had already established recognizable wallet experiences. The bank saw the category as a calculated experiment with strong potential, and PayZapp gave them an existing ecosystem from which to begin.`
     }],
     brief: [
       {
         seconds: 35,
         intent: "Bring the market opportunity into the concrete context of the existing PayZapp Wallet.",
-        script: `PayZapp already had a prepaid wallet inside the product, so HDFC was not starting from zero.
+        script: `PayZapp already had a prepaid wallet inside the product, so the bank was not starting from zero.
 
 The wallet already supported balance, payments, Auto-Load, and other capabilities that were competitive with the market. But it had struggled to find a clear place in that market, which made it the natural starting point for this opportunity.`
       },
       {
         seconds: 40,
         intent: "State the desired repositioning and hand directly into the proposed product name.",
-        script: `So HDFC proposed a rebrand. The request was to give this wallet a clearer identity and a clearer purpose inside the PayZapp ecosystem.
+        script: `So the bank proposed a rebrand. The request was to give this wallet a clearer identity and a clearer purpose inside the PayZapp ecosystem.
 
 They wanted to reposition it as an everyday payment account, with a name and proposition that made that purpose more explicit. And this is what they wanted to call it.`
       }
@@ -55,7 +55,7 @@ The proposition was intentionally straightforward: a payment account for all you
       {
         seconds: 30,
         intent: "Position the rebrand as a serious but bounded experiment.",
-        script: `For HDFC, this was a calculated experiment with strong potential. They believed the proposition could work, but it still needed to prove itself before earning a much larger market commitment.
+        script: `For the bank, this was a calculated experiment with strong potential. They believed the proposition could work, but it still needed to prove itself before earning a much larger market commitment.
 
 That gave us a useful constraint. We needed a strategy that could create credible evidence without demanding the time and investment of a completely new market launch.`
       }
@@ -140,7 +140,7 @@ This told me the issue was not a lack of features. It was a failure to make the 
     alignment: [{
       seconds: 85,
       intent: "Show how you earned stakeholder alignment by framing adoption as the appropriate experiment.",
-      script: `We took the adoption strategy back to HDFC, and the bank aligned with it.
+      script: `We took the adoption strategy back to the bank, and the bank aligned with it.
 
 The alternative was to target a much wider market immediately. That would have required a longer discovery cycle, a larger delivery commitment, and a direct fight in an already competitive category. It was possible, but it was a poor fit for a bounded strategic experiment.
 
@@ -206,7 +206,7 @@ The illustrations stayed recognizable, and the language deliberately used fewer,
       {
         seconds: 20,
         intent: "Briefly explain the two activation routes without opening a separate KYC chapter.",
-        script: `Existing HDFC Bank customers completed a quick four-digit card verification. Everyone else completed a guided Video KYC.
+        script: `Existing bank customers completed a quick four-digit card verification. Everyone else completed a guided Video KYC.
 
 Both routes led to the same fully capable Zapp Account.`
       },
@@ -225,7 +225,7 @@ Both routes led to the same fully capable Zapp Account.`
         intent: "Introduce the two capability states and establish that limited capability was the common starting point.",
         script: `There were two possible account states: full capability and limited capability.
 
-Most users started with limited capabilities. They could receive this account through minimum KYC with PAN verification, while existing HDFC Bank customers could receive it instantly through the bank relationship.`
+Most users started with limited capabilities. They could receive this account through minimum KYC with PAN verification, while existing bank customers could receive it instantly through their relationship with the bank.`
       },
       {
         seconds: 35,
