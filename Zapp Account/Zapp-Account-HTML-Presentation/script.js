@@ -1,12 +1,11 @@
 document.documentElement.classList.add("js");
 
 const chapters = Array.from(document.querySelectorAll(".chapter"));
-const currentTitle = document.querySelector("#chapter-current");
 const currentNumber = document.querySelector("#chapter-number");
+const totalNumber = document.querySelector("#chapter-total");
 const previousButton = document.querySelector("#previous-chapter");
 const nextButton = document.querySelector("#next-chapter");
 const themeButton = document.querySelector("#theme-toggle");
-const presentButton = document.querySelector("#present-button");
 const markerButton = document.querySelector("#marker-toggle");
 const markerCanvas = document.querySelector("#presentation-marker");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -223,7 +222,6 @@ function updateChapter(index) {
   if (chapter === entryPointsChapter && entryPointStep === 0 && entryPointRotations.length === 0) startEntryPointRotations();
   if (chapter !== entryPointsChapter) stopEntryPointRotations();
   if (chapter === entryPointsChapter) restoreEntryTimelinePosition();
-  currentTitle.textContent = chapter.dataset.title;
   currentNumber.textContent = String(index + 1);
   previousButton.disabled = index === 0;
   nextButton.disabled = index === chapters.length - 1;
@@ -240,6 +238,7 @@ const chapterObserver = new IntersectionObserver((entries) => {
 }, { threshold: [0.34, 0.55, 0.72] });
 
 chapters.forEach((chapter) => chapterObserver.observe(chapter));
+if (totalNumber) totalNumber.textContent = String(chapters.length);
 
 const revealObserver = new IntersectionObserver((entries, observer) => {
   entries.forEach((entry) => {
@@ -342,6 +341,11 @@ document.addEventListener("keydown", (event) => {
     setMarkerMode(false);
     return;
   }
+  if (event.key.toLowerCase() === "f") {
+    event.preventDefault();
+    toggleFullscreen();
+    return;
+  }
   if (["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) return;
   if (event.key === " ") {
     event.preventDefault();
@@ -369,7 +373,7 @@ function setTheme(theme) {
   document.documentElement.dataset.theme = theme;
   const isDark = theme === "dark";
   themeButton.setAttribute("aria-pressed", String(isDark));
-  themeButton.textContent = isDark ? "Light theme" : "Dark theme";
+  themeButton.setAttribute("aria-label", isDark ? "Switch to light theme" : "Switch to dark theme");
   localStorage.setItem("zapp-presentation-theme", theme);
 }
 
@@ -380,23 +384,17 @@ themeButton.addEventListener("click", () => {
   setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark");
 });
 
-presentButton.addEventListener("click", async () => {
+async function toggleFullscreen() {
   try {
     if (!document.fullscreenElement) {
       await document.documentElement.requestFullscreen();
-      presentButton.textContent = "Exit full screen";
     } else {
       await document.exitFullscreen();
     }
   } catch {
-    presentButton.textContent = "Full screen unavailable";
-    presentButton.disabled = true;
+    // Full screen can be blocked by the browser; presenting still works windowed.
   }
-});
-
-document.addEventListener("fullscreenchange", () => {
-  if (!document.fullscreenElement) presentButton.textContent = "Present";
-});
+}
 
 const markerContext = markerCanvas.getContext("2d");
 const markerStrokes = [];
@@ -408,7 +406,7 @@ const markerFadeDuration = 1200;
 function setMarkerMode(isActive) {
   document.body.classList.toggle("is-marker-mode", isActive);
   markerButton.setAttribute("aria-pressed", String(isActive));
-  markerButton.textContent = isActive ? "Marker on" : "Marker";
+  markerButton.setAttribute("aria-label", isActive ? "Turn marker off" : "Turn marker on");
   if (!isActive && activeMarkerStroke) finishMarkerStroke();
 }
 
@@ -521,6 +519,7 @@ markerButton.addEventListener("click", () => {
   setMarkerMode(!document.body.classList.contains("is-marker-mode"));
   markerButton.blur();
 });
+setMarkerMode(true);
 markerCanvas.addEventListener("pointerdown", beginMarkerStroke);
 markerCanvas.addEventListener("pointermove", extendMarkerStroke);
 markerCanvas.addEventListener("pointerup", finishMarkerStroke);
