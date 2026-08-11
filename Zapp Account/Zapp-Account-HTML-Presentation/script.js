@@ -221,6 +221,8 @@ function setConstraintStep(step, moveFocus = false) {
     const headingIndex = Number(button.dataset.headingIndex);
     const active = headingIndex === state.headingIndex;
     button.classList.toggle("is-active", active);
+    button.classList.toggle("is-before", headingIndex < state.headingIndex);
+    button.classList.toggle("is-after", headingIndex > state.headingIndex);
     button.setAttribute("aria-selected", String(active));
     button.tabIndex = active ? 0 : -1;
     button.style.setProperty("--constraint-offset", String(headingIndex - state.headingIndex));
