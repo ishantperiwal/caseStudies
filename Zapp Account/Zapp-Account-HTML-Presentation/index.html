@@ -30,7 +30,7 @@
 
   <div class="stage-hud">
     <span class="stage-hud__count" aria-live="polite" aria-label="Slide position">
-      <span id="chapter-number">1</span>/<span id="chapter-total">19</span>
+      <span id="chapter-number">1</span>/<span id="chapter-total">20</span>
     </span>
     <div class="stage-hud__actions">
       <button class="hud-button" id="marker-toggle" type="button" aria-pressed="true" title="Toggle marker (M)" aria-label="Turn marker off">
@@ -554,6 +554,44 @@
       </div>
     </section>
 
+    <section class="chapter chapter--constraints reveal" id="constraints" data-title="Technical challenges" data-constraint-step="0" tabindex="-1">
+      <div class="constraints-layout">
+        <div class="constraints-copy">
+          <div class="constraints-intro" aria-hidden="false">
+            <h2><span>Technical Challenges</span><span>and <em>Trade-offs</em></span></h2>
+          </div>
+
+          <div class="constraint-reel" role="tablist" aria-label="Technical constraints" aria-hidden="true">
+          <button class="constraint-selector" type="button" role="tab" aria-selected="false" id="constraint-tab-1" data-constraint-index="1" data-heading-index="1" tabindex="-1">
+            The app couldn’t remember the rebrand
+          </button>
+          <button class="constraint-selector" type="button" role="tab" aria-selected="false" id="constraint-tab-2" data-constraint-index="3" data-heading-index="2" tabindex="-1">
+            Offer content came in a fixed format
+          </button>
+          <button class="constraint-selector" type="button" role="tab" aria-selected="false" id="constraint-tab-3" data-constraint-index="5" data-heading-index="3" tabindex="-1">
+            Eligible payments couldn’t be identified
+          </button>
+          </div>
+        </div>
+
+        <div class="constraint-device" aria-live="polite">
+          <div class="device device--live">
+            <div class="device-shell">
+              <div class="device-screen">
+                <div class="prototype-loading">Loading product state</div>
+                <div class="constraint-entry-screen is-active" id="constraint-entry-screen" role="img" aria-label="PayZapp home with an animated Zapp Account anchor icon">
+                  <img class="constraint-entry-base" src="assets/zapp-placeholder-execution-entry-inline.png" alt="">
+                  <img class="constraint-entry-icon" src="assets/zapp-overlay-execution-entry-inline.gif" alt="">
+                  <span class="constraint-touch-dot" aria-hidden="true"></span>
+                </div>
+                <iframe id="constraint-prototype" title="Zapp Account product state" loading="lazy" src="prototypes/intro-animation/embed.html"></iframe>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="chapter chapter--exploration reveal" id="future-budget" data-title="Budget exploration" tabindex="-1">
       <div class="exploration-copy">
         <h2>I explored a monthly budget</h2>
@@ -594,6 +632,7 @@
       <div class="closing-copy">
         <h2>Thank you</h2>
         <p>Questions?</p>
+        <a class="closing-link" href="https://www.figma.com/proto/h8CTWA0LhwsliKfX3s15Ow/Motion-Design-Guidelines--Copy-?page-id=3058%3A3295&node-id=3058-3310&viewport=1266%2C30%2C0.16&t=BFsvrTOHU8TqRitE-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=3058%3A3310">View motion design guidelines</a>
       </div>
       <div class="closing-screens" aria-label="Zapp Account account states for reference">
         <figure class="closing-screen">

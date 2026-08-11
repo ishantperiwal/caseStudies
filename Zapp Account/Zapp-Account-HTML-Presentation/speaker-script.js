@@ -355,6 +355,51 @@ Apart from PayZapp, it will also be available as a standalone product across var
 
 For me, this is the strongest signal of the work's impact. The pattern we designed inside PayZapp was credible enough that the bank chose to extend it beyond a single app.`
     }],
+    constraints: [
+      {
+        seconds: 10,
+        intent: "Introduce technical constraints as a distinct part of the delivered product story.",
+        script: `Before I move into the broader directions we explored, I want to show three technical constraints that directly shaped the experience we delivered.`
+      },
+      {
+        seconds: 35,
+        intent: "Explain why the app could not remember prior rebrand exposure and how the persistent home icon supported the transition.",
+        script: `The first challenge was that the app could not remember whether someone had already experienced the rebrand.
+
+There was no persistent source of truth in the database for whether a user had seen the transition from PayZapp Wallet to Zapp Account. If they installed the app again, the welcome animation could play again.
+
+We could not introduce that migration state within the experimental scope, so we made sure the rebrand did not depend on the animation alone. The animated Zapp Account icon remained visible on PayZapp home as a persistent cue. With more time, I would define a durable migration state with engineering so the welcome appears once while the new identity remains discoverable.`
+      },
+      {
+        seconds: 30,
+        intent: "Introduce the earlier coupon treatment and the hierarchy the design originally intended.",
+        script: `The second challenge was that offer content came in a fixed format.
+
+This was our earlier coupon treatment. We wanted each card to lead with the value someone could earn and then explain what they needed to do. That created a direct value-first hierarchy.
+
+But the rewards API only returned a title and a description, and we could not restructure that data for this release.`
+      },
+      {
+        seconds: 25,
+        intent: "Show the revised coupon treatment that worked with the API's fixed title-and-description fields.",
+        script: `So we revised the coupons to work with the content structure the API actually provided.
+
+The payment type became the heading, and the complete reward statement became the supporting description. We kept the same visual system across all four cards so the API content still felt intentional and scannable.
+
+If I revisited this, I would align earlier on separate fields for reward value, required action, eligibility, and expiry.`
+      },
+      {
+        seconds: 30,
+        intent: "Explain why the product could not reliably show what a user could pay next, then lead into the following explorations.",
+        script: `The third challenge was that eligible payments could not be identified.
+
+We wanted the home screen to surface useful opportunities such as an upcoming bill or recharge that was eligible for Zapp Account.
+
+But the API did not provide the eligibility and payment-state data needed to generate those recommendations reliably. Rather than show generic or potentially incorrect information, we limited the experience to actions the system could support.
+
+The explorations that follow look at broader ways the account could become more useful over time.`
+      }
+    ],
     "future-budget": [{
       seconds: 20,
       intent: "Briefly introduce the monthly budget direction without evaluating it.",

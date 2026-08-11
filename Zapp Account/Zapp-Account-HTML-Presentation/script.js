@@ -14,10 +14,15 @@ const propositionChapter = document.querySelector("#proposition");
 const adoptionChapter = document.querySelector("#adoption-strategy");
 const contextChapter = document.querySelector("#context");
 const entryPointsChapter = document.querySelector("#entry-points");
+const constraintsChapter = document.querySelector("#constraints");
 let activeIndex = 0;
 let adoptionStep = 0;
 let contextStep = 0;
 let entryPointStep = 0;
+let constraintStep = 0;
+let constraintTransitionTimer = 0;
+let constraintFrameSwapTimer = 0;
+let constraintWelcomeRun = 0;
 let entryPointRotations = [];
 let entryTimeline = null;
 let entryTimelineTween = null;
@@ -35,6 +40,7 @@ function getSpeakerStep(chapter) {
   if (chapter === adoptionChapter) return adoptionStep;
   if (chapter === contextChapter) return contextStep;
   if (chapter === entryPointsChapter) return entryPointStep;
+  if (chapter === constraintsChapter) return [0, 1, 1, 2, 3, 4][constraintStep] ?? 0;
   return 0;
 }
 
@@ -154,6 +160,128 @@ function setEntryPointStep(step) {
   updateSpeakerPanel();
 }
 
+const constraintStates = [
+  {
+    type: "entry",
+    headingIndex: 0,
+    src: "prototypes/intro-animation/embed.html",
+    title: "PayZapp home with animated Zapp Account icon",
+    caption: "The animated Zapp Account icon created a persistent entry point on PayZapp home."
+  },
+  {
+    type: "entry",
+    headingIndex: 1,
+    src: "prototypes/intro-animation/embed.html",
+    title: "PayZapp home with animated Zapp Account icon",
+    caption: "A persistent home-page cue supported the rebrand beyond the welcome animation."
+  },
+  {
+    type: "welcome",
+    headingIndex: 1,
+    src: "prototypes/intro-animation/embed.html",
+    title: "Zapp Account welcome animation",
+    caption: "The welcome animation introduced the transition from PayZapp Wallet."
+  },
+  {
+    type: "prototype",
+    headingIndex: 2,
+    src: "prototypes/zapp-home/embed.html?section=rewards&rewards=old",
+    title: "Earlier Zapp Account coupon treatment",
+    caption: "The earlier coupons led with the reward value."
+  },
+  {
+    type: "prototype",
+    headingIndex: 2,
+    src: "prototypes/zapp-home/embed.html?section=rewards&rewards=new",
+    title: "Revised Zapp Account coupon treatment",
+    caption: "The revised coupons use the API title and description structure."
+  },
+  {
+    type: "prototype",
+    headingIndex: 3,
+    src: "prototypes/zapp-home/embed.html?section=actions",
+    title: "Zapp Account home and payment actions",
+    caption: "The home experience showed only payment actions the system could support reliably."
+  }
+];
+
+function setConstraintStep(step, moveFocus = false) {
+  constraintStep = Math.max(0, Math.min(constraintStates.length - 1, step));
+  constraintsChapter?.setAttribute("data-constraint-step", String(constraintStep));
+  const state = constraintStates[constraintStep];
+  const frame = document.querySelector("#constraint-prototype");
+  const entryScreen = document.querySelector("#constraint-entry-screen");
+  const constraintDevice = document.querySelector(".constraint-device .device");
+  const intro = document.querySelector(".constraints-intro");
+  const reel = document.querySelector(".constraint-reel");
+  const isIntro = constraintStep === 0;
+  if (intro) intro.setAttribute("aria-hidden", String(!isIntro));
+  if (reel) reel.setAttribute("aria-hidden", String(isIntro));
+  document.querySelectorAll(".constraint-selector").forEach((button) => {
+    const headingIndex = Number(button.dataset.headingIndex);
+    const active = headingIndex === state.headingIndex;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+    button.tabIndex = active ? 0 : -1;
+    button.style.setProperty("--constraint-offset", String(headingIndex - state.headingIndex));
+    if (active && moveFocus) button.focus();
+  });
+  window.clearTimeout(constraintTransitionTimer);
+  window.clearTimeout(constraintFrameSwapTimer);
+  const isWelcomeTransition = state.type === "welcome";
+  const showEntryScreen = state.type === "entry" || isWelcomeTransition;
+  constraintDevice?.classList.toggle("is-device-focused", constraintStep === 1 || isWelcomeTransition);
+  entryScreen?.classList.toggle("is-active", showEntryScreen);
+  entryScreen?.classList.toggle("is-tapping", isWelcomeTransition);
+  const isPrototypeState = state.type === "prototype";
+  const isNewFrameSource = Boolean(frame && !isWelcomeTransition && state.src && frame.getAttribute("src") !== state.src);
+  if (frame && isNewFrameSource) {
+    frame.classList.remove("is-active");
+    const expectedSrc = state.src;
+    frame.addEventListener("load", () => {
+      if (constraintStates[constraintStep]?.src === expectedSrc && constraintStates[constraintStep]?.type === "prototype") {
+        frame.classList.add("is-active");
+      }
+    }, { once: true });
+    const swapFrameSource = () => {
+      if (constraintStates[constraintStep]?.src === expectedSrc) frame.setAttribute("src", expectedSrc);
+    };
+    if (reduceMotion.matches) swapFrameSource();
+    else constraintFrameSwapTimer = window.setTimeout(swapFrameSource, 360);
+  } else {
+    frame?.classList.toggle("is-active", isPrototypeState);
+  }
+  if (isWelcomeTransition) {
+    const revealWelcome = () => {
+      entryScreen?.classList.remove("is-active", "is-tapping");
+      constraintDevice?.classList.remove("is-device-focused");
+      if (!frame) return;
+      frame.classList.remove("is-active");
+      const welcomeSrc = `${state.src}?restart=${++constraintWelcomeRun}`;
+      frame.addEventListener("load", () => {
+        if (constraintStates[constraintStep]?.type === "welcome") frame.classList.add("is-active");
+      }, { once: true });
+      frame.setAttribute("src", welcomeSrc);
+    };
+    if (reduceMotion.matches) revealWelcome();
+    else constraintTransitionTimer = window.setTimeout(revealWelcome, 820);
+  }
+  if (frame) frame.title = state.title;
+  updateSpeakerPanel();
+}
+
+document.querySelectorAll(".constraint-selector").forEach((button) => {
+  button.addEventListener("click", () => setConstraintStep(Number(button.dataset.constraintIndex)));
+  button.addEventListener("keydown", (event) => {
+    if (!["ArrowDown", "ArrowUp", "ArrowRight", "ArrowLeft"].includes(event.key)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const direction = ["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1;
+    const nextStep = Math.max(1, Math.min(constraintStates.length - 1, constraintStep + direction));
+    setConstraintStep(nextStep, true);
+  });
+});
+
 function advancePresentation() {
   if (chapters[activeIndex] === briefChapter && !briefChapter.classList.contains("is-brief-revealed")) {
     setBriefReveal(true);
@@ -175,6 +303,10 @@ function advancePresentation() {
     setEntryPointStep(entryPointStep + 1);
     return;
   }
+  if (chapters[activeIndex] === constraintsChapter && constraintStep < constraintStates.length - 1) {
+    setConstraintStep(constraintStep + 1);
+    return;
+  }
   scrollToChapter(activeIndex + 1);
 }
 
@@ -189,6 +321,10 @@ function retreatPresentation() {
   }
   if (chapters[activeIndex] === entryPointsChapter && entryPointStep > 0) {
     setEntryPointStep(entryPointStep - 1);
+    return;
+  }
+  if (chapters[activeIndex] === constraintsChapter && constraintStep > 0) {
+    setConstraintStep(constraintStep - 1);
     return;
   }
   if (chapters[activeIndex] === briefChapter && briefChapter.classList.contains("is-brief-revealed")) {
@@ -219,6 +355,7 @@ function updateChapter(index) {
   if (chapter !== adoptionChapter) setAdoptionStep(0);
   if (chapter !== contextChapter) setContextStep(0);
   if (chapter !== entryPointsChapter) setEntryPointStep(0);
+  if (chapter !== constraintsChapter) setConstraintStep(0);
   if (chapter === entryPointsChapter && entryPointStep === 0 && entryPointRotations.length === 0) startEntryPointRotations();
   if (chapter !== entryPointsChapter) stopEntryPointRotations();
   if (chapter === entryPointsChapter) restoreEntryTimelinePosition();
