@@ -13,6 +13,9 @@ const briefChapter = document.querySelector("#brief");
 const propositionChapter = document.querySelector("#proposition");
 const adoptionChapter = document.querySelector("#adoption-strategy");
 const contextChapter = document.querySelector("#context");
+const contextCopy = contextChapter?.querySelector(".context-copy");
+const contextPersona = contextChapter?.querySelector(".persona-panel");
+const contextGrid = contextChapter?.querySelector(".context-grid");
 const entryPointsChapter = document.querySelector("#entry-points");
 const constraintsChapter = document.querySelector("#constraints");
 let activeIndex = 0;
@@ -33,6 +36,13 @@ let speakerIntent = null;
 let speakerCopy = null;
 let speakerBeat = null;
 let speakerTiming = null;
+let contextMotionEase = "power2.out";
+
+if (window.gsap && window.CustomEase) {
+  window.gsap.registerPlugin(window.CustomEase);
+  window.CustomEase.create("contextMotionEase", "M0,0 C0.5,0 0.25,1 1,1");
+  contextMotionEase = "contextMotionEase";
+}
 
 function getSpeakerStep(chapter) {
   if (chapter === briefChapter) return chapter.classList.contains("is-brief-revealed") ? 1 : 0;
@@ -129,11 +139,64 @@ function setAdoptionStep(step) {
   updateSpeakerPanel();
 }
 
+function getContextHeadingTopOffset() {
+  if (!contextChapter || !contextCopy) return 0;
+  const chapterTop = contextChapter.getBoundingClientRect().top;
+  const gridTop = contextGrid ? contextGrid.getBoundingClientRect().top - chapterTop : 0;
+  const centeredTop = (contextChapter.clientHeight - contextCopy.offsetHeight) / 2;
+  const targetTop = gridTop - contextCopy.offsetHeight - 64;
+  return targetTop - centeredTop;
+}
+
 function setContextStep(step) {
+  const previousStep = contextStep;
   contextStep = Math.max(0, Math.min(2, step));
   contextChapter?.setAttribute("data-context-step", String(contextStep));
+  if (window.gsap && contextCopy) {
+    document.documentElement.classList.add("context-gsap-ready");
+    const atCenter = contextStep === 0;
+    const position = {
+      top: "50%",
+      yPercent: -50,
+      y: atCenter ? 0 : getContextHeadingTopOffset()
+    };
+    window.gsap.killTweensOf([contextCopy, contextPersona]);
+    if (reduceMotion.matches || chapters[activeIndex] !== contextChapter) {
+      window.gsap.set(contextCopy, position);
+      if (contextPersona) {
+        window.gsap.set(contextPersona, {
+          autoAlpha: atCenter ? 0 : 1,
+          y: atCenter ? 28 : 0,
+          pointerEvents: atCenter ? "none" : "auto"
+        });
+      }
+    } else {
+      if (contextPersona && previousStep === 0 && !atCenter) {
+        window.gsap.set(contextPersona, { autoAlpha: 0, y: 28, pointerEvents: "none" });
+      }
+      const timeline = window.gsap.timeline({ defaults: { overwrite: true } });
+      timeline.to(contextCopy, {
+          ...position,
+          duration: 0.67,
+          ease: contextMotionEase
+        }, 0);
+      if (contextPersona && (atCenter || previousStep === 0)) {
+        timeline.to(contextPersona, {
+          autoAlpha: atCenter ? 0 : 1,
+          y: atCenter ? 28 : 0,
+          pointerEvents: atCenter ? "none" : "auto",
+          duration: 0.67,
+          ease: contextMotionEase
+        }, 0);
+      }
+    }
+  }
   updateSpeakerPanel();
 }
+
+// Establish GSAP's centered transform before the context chapter is shown so
+// the first beat starts from the exact rendered position without normalization.
+setContextStep(0);
 
 function setEntryPointStep(step) {
   entryPointStep = Math.max(0, Math.min(18, step));
