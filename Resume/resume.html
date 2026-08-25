@@ -371,6 +371,13 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
+            /* The desktop timeline runs vertically down the left of the stack;
+               sideways there is no stack to run down, and the horizontal rule on
+               each card replaces it. */
+            .role-history-rail::before {
+                display: none;
+            }
+
             /* The timeline is the head of the rail, so it needs clearance from the
                company name above it — otherwise the first dot crowds the heading. */
             .role-history-rail {
@@ -448,7 +455,16 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 top: 5px;
                 left: 0;
                 right: calc(-1 * var(--rail-gap));
+                /* These four undo the desktop dot that shares this pseudo-element.
+                   width: auto is the critical one — with an explicit width, an
+                   absolutely positioned box uses left + width and IGNORES right,
+                   so the inherited 6px turned this rule into a 6x1px sliver. The
+                   rest strip the dot's pill shape, knockout ring and fade. */
+                width: auto;
                 height: 1px;
+                border-radius: 0;
+                box-shadow: none;
+                opacity: 1;
                 background: var(--timeline-rule);
             }
 
