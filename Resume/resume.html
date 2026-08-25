@@ -26,6 +26,11 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --case-study-link-hover: #78351f;
             --case-study-preview-border: rgba(27, 62, 43, 0.10);
             --case-study-preview-subtext: #8b928e;
+            --timeline-rule: rgba(27, 62, 43, 0.20);
+            /* --bg at zero alpha. Gradients need an explicit transparent stop of
+               the same hue; the `transparent` keyword is rgba(0,0,0,0) and can
+               grey the midpoint. */
+            --bg-fade: rgba(250, 247, 242, 0);
         }
 
         :root.theme-v2, :root.theme-v4 {
@@ -35,6 +40,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             --text-body: #374151; /* Dark Grey */
             --text-muted: #9ca3af; /* Muted Grey */
             --case-study-preview-border: rgba(17, 24, 39, 0.09);
+            --timeline-rule: rgba(17, 24, 39, 0.16);
+            --bg-fade: rgba(255, 255, 255, 0);
         }
 
         * {
@@ -126,6 +133,25 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             text-decoration: underline;
         }
 
+        /* The website is the one contact line that navigates away from the page,
+           so it carries the same outbound arrow as the prose links. Kept in
+           --primary rather than the case-study rust: that colour is reserved for
+           links that open a case study. Matched on the protocol so both header
+           variants pick it up without an extra class, and mailto:/tel: stay plain. */
+        .contact-block-vertical a[href^="http"],
+        .contact-block-horizontal a[href^="http"] {
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.28em;
+        }
+
+        .contact-block-vertical a[href^="http"]:hover .external-link-icon,
+        .contact-block-vertical a[href^="http"]:focus-visible .external-link-icon,
+        .contact-block-horizontal a[href^="http"]:hover .external-link-icon,
+        .contact-block-horizontal a[href^="http"]:focus-visible .external-link-icon {
+            transform: translate(0.08em, -0.16em);
+        }
+
         /* Horizontal Contact Block (v1 / v2 style) */
         .contact-block-horizontal {
             display: flex;
@@ -181,6 +207,14 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .right-col-wrapper {
             flex-grow: 1;
+            /* A flex item's default min-width: auto floors it at its min-content
+               size. The mobile role carousel is a nowrap flex row, whose
+               min-content width is the SUM of its cards — so without this the
+               cards' min-width propagated up here and stretched the whole page
+               wider than the viewport, overflowing every paragraph. A scroll
+               container is precisely the thing that may be narrower than its
+               contents; this lets it be. */
+            min-width: 0;
         }
 
         @media (max-width: 800px) {
@@ -219,9 +253,24 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
+            /* Stacked, the section title is a full-width banner rather than a
+               label in a side column, so it carries more weight and sets its own
+               gap to the rows beneath. */
+            h2 {
+                font-size: 1.5rem;
+                margin-bottom: 10px;
+            }
+
             .row-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
+                /* minmax(0, 1fr), not 1fr: plain 1fr means minmax(auto, 1fr),
+                   whose auto minimum is the item's min-content size — the same
+                   floor that let the carousel widen the page. */
+                grid-template-columns: minmax(0, 1fr);
+                /* Stacked, the two columns are read in sequence rather than
+                   scanned side by side, so the metadata needs real separation
+                   from the prose beneath it — 12px let the first paragraph read
+                   as a caption to the role above. */
+                gap: 36px;
             }
         }
 
@@ -236,6 +285,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .mid-col h3 a {
             transition: opacity 0.2s;
+        }
+
+        /* Total tenure beside the company name. Muted and regular weight so it
+           reads as an annotation to the name rather than part of it. Titan Email
+           carries none — it is the current role, so any figure would be stale the
+           day after it was written. */
+        .mid-col h3 .tenure {
+            font-weight: 400;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            white-space: nowrap;
+            /* On top of the space in the markup, so the annotation sits clearly
+               apart from the name it annotates. */
+            margin-left: 5px;
         }
 
         .mid-col h3 a:hover {
@@ -257,11 +320,207 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         /* Multiple titles held at one company: stacked stints, spaced enough to
-           read as separate roles without breaking the row's baseline alignment. */
+           read as separate roles without breaking the row's baseline alignment.
+           Below 650px this same stack becomes a horizontal carousel — see the
+           media query further down. */
+        .role-history-rail {
+            position: relative;
+        }
+
         .role-history {
             display: flex;
             flex-direction: column;
             gap: 44px;
+        }
+
+        /* Desktop has nothing to scroll, so the cue is absent from the layout and
+           from the accessibility tree. */
+        .role-history-cue {
+            display: none;
+        }
+
+        @media (max-width: 650px) {
+            /* The timeline is the head of the rail, so it needs clearance from the
+               company name above it — otherwise the first dot crowds the heading. */
+            .role-history-rail {
+                /* On the rail, not the scroller: the chevron and the edge fade are
+                   siblings of the scroller and need these values as well. */
+                --rail-bleed: 40px;   /* matches the body's side padding */
+                --rail-gap: 56px;     /* space between cards, and the timeline
+                                         segment that bridges it */
+                margin-top: 14px;
+            }
+
+            /* Same reason as .right-col-wrapper: the column that holds the
+               carousel must be free to be narrower than the carousel's contents. */
+            .mid-col {
+                min-width: 0;
+            }
+
+            /* The vertical stack costs three screenfuls of height on a phone for
+               what is really one timeline, so it turns on its side: a snapping
+               horizontal scroller where the next role peeks in at the edge. */
+            .role-history {
+                /* Matches the body's 40px side padding. overflow-x clips at this
+                   element's own edge, so without bleeding out to the viewport the
+                   roles vanished 40px shy of the screen — a cut in the middle of
+                   the page rather than at its edge. Negative margin pushes the
+                   scrollport to the screen edges; equal padding puts the content
+                   back on the text column, and scroll-padding keeps the snap
+                   points there too, so a settled card still lines up with the
+                   paragraphs below it. */
+                margin-left: calc(-1 * var(--rail-bleed));
+                margin-right: calc(-1 * var(--rail-bleed));
+                padding-left: var(--rail-bleed);
+                padding-right: var(--rail-bleed);
+                scroll-padding-left: var(--rail-bleed);
+                flex-direction: row;
+                gap: var(--rail-gap);
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                scroll-snap-type: x proximity;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;   /* the clipped role and chevron are the cue */
+            }
+
+            .role-history::-webkit-scrollbar {
+                display: none;
+            }
+
+            .role-stint {
+                /* Already a share of the text column, not of the bled scrollport:
+                   a flex-basis percentage resolves against the container's content
+                   box, which the --rail-bleed padding puts back on the column. */
+                flex: 0 0 62%;
+                min-width: 178px;
+                scroll-snap-align: start;
+                position: relative;
+                padding-top: 34px;   /* clearance for the timeline above the title */
+            }
+
+            /* Dot-and-rule timeline. Turning the stack sideways lost the sense of
+               one continuous tenure — three cards in a row read as three unrelated
+               jobs. Each card draws its own segment of the rule, extended by
+               --rail-gap so it crosses the space between cards and arrives as one
+               unbroken line. */
+            .role-stint::before {
+                content: "";
+                position: absolute;
+                top: 5px;
+                left: 0;
+                right: calc(-1 * var(--rail-gap));
+                height: 1px;
+                background: var(--timeline-rule);
+            }
+
+            /* The last card is the earliest role — the line ends with it rather
+               than running off into space. */
+            .role-stint:last-child::before {
+                right: 0;
+            }
+
+            .role-stint::after {
+                content: "";
+                position: absolute;
+                top: 2px;
+                left: 0;
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                /* Uniform on purpose. Zeta is a past tenure, so no role in it is
+                   current — weighting one dot heavier would claim an active status
+                   that does not exist. These are timeline markers, not a state. */
+                /* The muted grey, not --primary: the brand green reads as an
+                   active or current state, which none of these roles are. Reusing
+                   the date colour also ties each dot to the dates it marks, and
+                   keeps the dot solid rather than a faded green. */
+                background: var(--text-muted);
+                /* Solid dot, knocked out of the rule by a thick ring in the page
+                   colour, so the line reads as passing behind each marker rather
+                   than through it. box-shadow rather than a border, so the ring
+                   grows outward instead of eating into the 7px dot. Both tokens
+                   already flip with .theme-v2 / .theme-v4, so the knockout tracks
+                   whichever palette is active. */
+                box-shadow: 0 0 0 4px var(--bg);
+            }
+
+            /* Fade in the page colour under the chevron, so the clipped card
+               dissolves into the edge instead of being guillotined by it. Sits
+               below the chevron (z-index 1 vs 2) and is inert to the pointer, so
+               it never intercepts a tap or a swipe. */
+            .role-history-rail::after {
+                content: "";
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                right: calc(-1 * var(--rail-bleed));
+                width: 104px;
+                z-index: 1;
+                pointer-events: none;
+                background: linear-gradient(90deg, var(--bg-fade) 0%, var(--bg) 62%);
+                transition: opacity 0.25s ease;
+            }
+
+            /* JS marks the rail when it is scrolled out: with nothing left beyond
+               the edge the fade would just be veiling the last card. */
+            .role-history-rail[data-rail-end]::after {
+                opacity: 0;
+            }
+
+            .role-history-cue {
+                position: absolute;
+                top: 50%;
+                /* Out into the bleed, 12px off the screen edge — at the text
+                   column edge it sat on top of the next card's title. */
+                right: calc(-1 * var(--rail-bleed) + 12px);
+                z-index: 2;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 30px;
+                height: 30px;
+                padding: 0;
+                border: 1px solid var(--case-study-preview-border);
+                border-radius: 999px;
+                background: var(--bg);
+                color: var(--primary);
+                cursor: pointer;
+                transform: translateY(-50%);
+                transition: opacity 0.25s ease, transform 0.25s ease;
+            }
+
+            .role-history-cue svg {
+                width: 15px;
+                height: 15px;
+            }
+
+            /* JS adds this once the rail is scrolled to the end — nothing left to
+               reveal, so the cue steps aside instead of lying about it. */
+            .role-history-cue[data-exhausted] {
+                opacity: 0;
+                pointer-events: none;
+                transform: translate(6px, -50%);
+            }
+
+            /* A single unprompted nudge on the chevron: enough to read as
+               "this moves", gone before it becomes decoration. */
+            .role-history-cue:not([data-exhausted]) {
+                animation: role-cue-nudge 1.9s ease-in-out 1.1s 2;
+            }
+        }
+
+        @keyframes role-cue-nudge {
+            0%, 100% { transform: translate(0, -50%); }
+            45%      { transform: translate(4px, -50%); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .role-history-cue:not([data-exhausted]) {
+                animation: none;
+            }
+            .role-history {
+                scroll-behavior: auto;
+            }
         }
 
         /* Right Column Descriptions */
@@ -432,6 +691,17 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transition: opacity 0.55s ease, transform 0.55s ease, visibility 0.55s ease;
         }
 
+        /* Phones have no hover, so the preview panels can only ever misfire there:
+           a tap either opens the case study (making the panel a flash of noise) or
+           lands on a 276px card that covers the paragraph being read. The links
+           still work — they just go straight to the case study. display:none also
+           beats the hover and intro-reveal rules without out-specifying them. */
+        @media (max-width: 650px) {
+            .case-study-popover {
+                display: none;
+            }
+        }
+
         /* ?z= scales the page for capture, print or fitting to a screen. Previews
            are switched off wholesale there: they have no business appearing in an
            exported resume, and absolutely positioned panels do not survive
@@ -589,6 +859,31 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .download-btn svg {
             flex-shrink: 0;
         }
+
+        @media (max-width: 650px) {
+            /* Icon only on phones: the pill's label eats real width on a narrow
+               screen while sitting on top of the text being read. The download
+               glyph carries the meaning on its own, and aria-label keeps the
+               button named now that the visible text is gone. 46px keeps it a
+               comfortable touch target. */
+            .download-btn {
+                justify-content: center;
+                width: 46px;
+                height: 46px;
+                padding: 0;
+                gap: 0;
+                border-radius: 50%;
+            }
+
+            .download-btn span {
+                display: none;
+            }
+
+            .download-btn svg {
+                width: 18px;
+                height: 18px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -600,7 +895,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             <div class="contact-block-horizontal">
                 <a href="mailto:ishantperiwal@gmail.com">ishantperiwal@gmail.com</a>
                 <a href="tel:+919034401875">+91 9034401875</a>
-                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com</a>
+                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>
             </div>
         </header>
 
@@ -610,7 +905,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             <div class="contact-block-vertical">
                 <a href="mailto:ishantperiwal@gmail.com">ishantperiwal@gmail.com</a>
                 <a href="tel:+919034401875">+91 9034401875</a>
-                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com</a>
+                <a href="https://www.ishantp.com/" target="_blank" rel="noopener noreferrer">www.ishantp.com<svg class="external-link-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M9 2h5v5"></path><path d="M14 2 7.5 8.5"></path><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"></path></svg></a>
             </div>
             <div class="intro-block">
                 <p>Principal Product Designer @ Titan Email, ex-Zeta. With almost 9 years of experience, including 5 years in fintech. My journey began as a motion design specialist before evolving into a multidisciplinary product designer. My passion lies in core product design, delightful interaction design, and motion systems.</p>
@@ -639,22 +934,29 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 <div class="row-grid">
                     <div class="mid-col">
-                        <h3><a href="https://zeta.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Zeta</a></h3>
+                        <h3><a href="https://zeta.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Zeta</a> <span class="tenure">4 yrs 8 mos</span></h3>
                         <!-- Role history: one block per title held during the tenure,
                              most recent first. -->
-                        <div class="role-history">
-                            <div class="role-stint">
-                                <p class="role">Principal Product Designer</p>
-                                <p class="date">Jan 2026 - Apr 2026<br>Bangalore, India</p>
+                        <div class="role-history-rail">
+                            <div class="role-history">
+                                <div class="role-stint">
+                                    <p class="role">Principal Product Designer</p>
+                                    <p class="date">Jan 2026 - Apr 2026<br>Bangalore, India</p>
+                                </div>
+                                <div class="role-stint">
+                                    <p class="role">Senior Product Designer</p>
+                                    <p class="date">Jan 2024 - Dec 2025<br>Bangalore, India</p>
+                                </div>
+                                <div class="role-stint">
+                                    <p class="role">UX Designer II</p>
+                                    <p class="date">Sep 2021 - Dec 2023<br>Bangalore, India</p>
+                                </div>
                             </div>
-                            <div class="role-stint">
-                                <p class="role">Senior Product Designer</p>
-                                <p class="date">Jan 2024 - Dec 2025<br>Bangalore, India</p>
-                            </div>
-                            <div class="role-stint">
-                                <p class="role">UX Designer II</p>
-                                <p class="date">Sep 2021 - Dec 2023<br>Bangalore, India</p>
-                            </div>
+                            <!-- Scroll affordance for the mobile carousel: display:none on
+                                 wider screens, so it leaves the a11y tree there too. -->
+                            <button class="role-history-cue" type="button" aria-label="Show earlier roles">
+                                <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3.5 10.5 8 6 12.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </button>
                         </div>
                     </div>
                     <div class="right-col">
@@ -667,9 +969,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 <div class="row-grid">
                     <div class="mid-col">
-                        <h3><a href="https://geeksforgeeks.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">GeeksforGeeks</a></h3>
+                        <h3><a href="https://geeksforgeeks.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">GeeksforGeeks</a> <span class="tenure">3 yrs</span></h3>
                         <p class="role">Senior Motion Graphic Designer</p>
-                        <p class="date">2018 - 2021 (3 yrs)<br>Noida, India</p>
+                        <p class="date">2018 - 2021<br>Noida, India</p>
                     </div>
                     <div class="right-col">
                         <p>Handled motion and product design for GeeksforGeeks Courses and Portal.</p>
@@ -731,7 +1033,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     </div>
 
     <!-- Download button -->
-    <a href="https://ishantp.com/OS/openAssets/pdfs/Ishant_ProductDesigner_Resume.pdf" download target="_blank" rel="noopener noreferrer" class="download-btn" title="Download PDF">
+    <a href="https://ishantp.com/OS/openAssets/pdfs/Ishant_ProductDesigner_Resume.pdf" download target="_blank" rel="noopener noreferrer" class="download-btn" title="Download PDF" aria-label="Download resume PDF">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         <span>Download</span>
     </a>
@@ -807,6 +1109,52 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 window.setTimeout(dismiss, HOLD_MS);
             }, START_MS);
+        })();
+
+        /* Mobile role carousel.
+           The CSS turns the role history into a horizontal scroller below 650px;
+           this drives the chevron, which scrolls one role per tap and retires once
+           there is nothing left to reveal. On wider screens the scroller does not
+           overflow, so it settles on "exhausted" without needing to know the
+           breakpoint. */
+        (function roleHistoryCarousel() {
+            const EDGE = 2; // px of slack, since scrollLeft can land fractional
+
+            document.querySelectorAll('.role-history-rail').forEach((rail) => {
+                const scroller = rail.querySelector('.role-history');
+                const cue = rail.querySelector('.role-history-cue');
+                if (!scroller || !cue) return;
+
+                function maxScroll() {
+                    return scroller.scrollWidth - scroller.clientWidth;
+                }
+
+                function sync() {
+                    const max = maxScroll();
+                    const atEnd = max <= EDGE || scroller.scrollLeft >= max - EDGE;
+                    // Chevron and edge fade retire together: both exist only to say
+                    // "there is more this way".
+                    cue.toggleAttribute('data-exhausted', atEnd);
+                    rail.toggleAttribute('data-rail-end', atEnd);
+                }
+
+                // One role per tap, measured off the real slide so it stays in
+                // step with the snap points if the widths ever change.
+                function step() {
+                    const slide = scroller.querySelector('.role-stint');
+                    const gap = parseFloat(getComputedStyle(scroller).columnGap) || 0;
+                    return slide ? slide.offsetWidth + gap : scroller.clientWidth * 0.8;
+                }
+
+                cue.addEventListener('click', () => {
+                    scroller.scrollBy({ left: step(), behavior: 'smooth' });
+                });
+
+                scroller.addEventListener('scroll', sync, { passive: true });
+                window.addEventListener('resize', sync);
+                if (window.ResizeObserver) new ResizeObserver(sync).observe(scroller);
+                sync();
+            });
         })();
     </script>
 
