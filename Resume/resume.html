@@ -987,11 +987,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
         .download-btn {
             position: fixed;
-            bottom: 28px;
-            /* Bottom centre on desktop: at the right edge it sits outside the
-               reading column and gets missed entirely. */
-            left: 50%;
-            transform: translateX(-50%);
+            /* Desktop: pinned top-right and left there. It stays one fixed target
+               rather than something that moves while you read. */
+            top: 28px;
+            right: 28px;
             z-index: 100;
             display: inline-flex;
             align-items: center;
@@ -1010,9 +1009,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             text-decoration: none;
             border-radius: 999px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            transition: opacity 0.2s, box-shadow 0.2s,
-                        left 0.45s cubic-bezier(0.4, 0, 0.2, 1),
-                        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s, box-shadow 0.2s;
         }
 
         /* One label per state, all present in the markup, only one open at a time.
@@ -1023,38 +1020,40 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .dl-label {
             display: inline-block;
             max-width: 0;
+            /* Per-label target width, set just above each one's measured natural
+               width. A single shared value made the easing feel like a snap: the
+               label stops growing the moment max-width passes its text, so most of
+               the curve, including its slow tail, ran after the motion had already
+               finished. "Download" was the worst, done at 29% of the transition.
+               The small headroom is for a font fallback rendering wider than Inter. */
             margin-left: 0;
             opacity: 0;
             overflow: hidden;
             white-space: nowrap;
-            transition: max-width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                        margin-left 0.42s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.26s ease;
+            transition: max-width 0.42s cubic-bezier(0.5, 0, 0.2, 1),
+                        margin-left 0.42s cubic-bezier(0.5, 0, 0.2, 1),
+                        opacity 0.3s cubic-bezier(0.5, 0, 0.2, 1);
         }
 
-        /* Desktop: the full sentence while centred, the short word once parked. */
+        .dl-label--full   { --dl-width: 144px; }   /* "Download as PDF", measured 133.5px */
+
+        /* Desktop: the label is simply always open. Nothing about the button
+           responds to scrolling there any more. */
         @media (min-width: 651px) {
-            .download-btn:not(.is-parked) .dl-label--full,
-            .download-btn.is-parked .dl-label--short {
-                max-width: 260px;
+            .dl-label--full {
+                max-width: var(--dl-width);
                 margin-left: 8px;
                 opacity: 1;
             }
         }
 
-        /* Parked state: JS adds this once the page is scrolled off the top, so the
-           button greets you centred and then gets out of the way. Desktop only —
-           on phones it lives in the corner already.
-
-           Both `left` and `transform` animate, rather than transform alone. A
-           transform using 50vw would be simpler, but vw includes the scrollbar
-           while a fixed element's percentages resolve against the scrollbar-less
-           containing block, so the centred position would sit a few px right of
-           true centre. */
-        @media (min-width: 651px) {
-            .download-btn.is-parked {
-                left: calc(100% - 28px);
-                transform: translateX(-100%);
+        /* Phones: open at the top of the page, collapsed to a circle once you
+           scroll, since a pill in the corner covers the text being read. */
+        @media (max-width: 650px) {
+            .download-btn:not(.is-parked) .dl-label--full {
+                max-width: var(--dl-width);
+                margin-left: 8px;
+                opacity: 1;
             }
         }
 
@@ -1076,29 +1075,25 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
-            /* On phones the button introduces itself as a pill and then squeezes
-               to an icon, so the label is read once and the circle stops covering
-               the text afterwards. No explicit width: 14px of padding either side
+            /* On phones the button is a pill while you are at the top of the page
+               and squeezes to an icon once you scroll, expanding again when you
+               return. Same scroll state as the desktop behaviour, so there is one
+               rule for when the button is being helpful and when it is getting out
+               of the way. No explicit width: 14px of padding either side
                of the 18px icon is exactly the 46px touch target when the label is
                collapsed, and border-radius: 999px reads as a circle at that size
                without needing to animate the radius. aria-label keeps the button
                named once the visible text is gone. */
             .download-btn {
-                /* Back to the corner on phones: centred, a floating circle sits
-                   over the text being read. */
-                left: auto;
+                /* Bottom corner on phones, where it is in thumb reach and clear of
+                   the header. */
+                top: auto;
+                bottom: 28px;
                 right: 24px;
-                transform: none;
                 justify-content: center;
                 height: 46px;
                 padding: 0 14px;
                 border-radius: 999px;
-            }
-
-            .download-btn.is-expanded .dl-label--mobile {
-                max-width: 200px;
-                margin-left: 8px;
-                opacity: 1;
             }
 
             .download-btn svg {
@@ -1257,9 +1252,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Download button -->
     <a href="https://ishantp.com/OS/openAssets/pdfs/Ishant_ProductDesigner_Resume.pdf" download target="_blank" rel="noopener noreferrer" class="download-btn" title="Download PDF" aria-label="Download resume PDF">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span class="dl-label dl-label--full">Download Resume as PDF</span>
-        <span class="dl-label dl-label--short">Download</span>
-        <span class="dl-label dl-label--mobile">Download as PDF</span>
+        <span class="dl-label dl-label--full">Download as PDF</span>
     </a>
 
     <!-- Script to toggle themes and headers based on the URL query parameter ?v=1, ?v=2, ?v=3, ?v=4 -->
@@ -1335,48 +1328,31 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             }, START_MS);
         })();
 
-        /* Download button, two behaviours off one scroll listener.
+        /* Download button. One piece of state, "are we at the top of the page",
+           which the CSS reads differently per breakpoint:
 
-           Desktop: starts centred where it cannot be missed and reads "Download
-           Resume as PDF", then slides to the bottom-right corner and shortens to
-           "Download" once you scroll. Returns to centre at the top, so it is a
-           state of the page rather than a one-time animation.
+           Desktop: centred and reading "Download Resume as PDF" at the top, then
+           slides to the bottom-right corner and shortens to "Download".
 
-           Phones: greets you as a pill reading "Download as PDF", then squeezes to
-           the circular icon after a beat, or immediately if you start scrolling —
-           whichever comes first. That collapse is one-way; re-expanding on every
-           scroll-to-top would put a wide pill back over the text.
+           Phones: a pill reading "Download as PDF" at the top, squeezing to the
+           circular icon once you scroll.
 
-           The CSS decides which of these applies at which width; this only sets
-           the classes. */
+           Both are reversible, so the button is a state of the page rather than a
+           one-time animation, and there is no timer deciding things behind your
+           back. The small threshold keeps a one-pixel scroll from making it
+           twitch. */
         (function downloadButton() {
             const btn = document.querySelector('.download-btn');
             if (!btn) return;
 
-            const PARK_AFTER = 40;      // px of scroll before it parks
-            const GREET_MS = 2800;      // how long the phone pill stays open
+            const PARK_AFTER = 40; // px of scroll before it gets out of the way
 
-            let squeezed = false;
-
-            function syncPark() {
+            function sync() {
                 btn.classList.toggle('is-parked', window.scrollY > PARK_AFTER);
             }
 
-            function squeeze() {
-                if (squeezed) return;
-                squeezed = true;
-                btn.classList.remove('is-expanded');
-            }
-
-            btn.classList.add('is-expanded');
-            window.setTimeout(squeeze, GREET_MS);
-
-            window.addEventListener('scroll', function () {
-                syncPark();
-                squeeze();
-            }, { passive: true });
-
-            syncPark();
+            window.addEventListener('scroll', sync, { passive: true });
+            sync();
         })();
 
         /* Mobile role carousel.
