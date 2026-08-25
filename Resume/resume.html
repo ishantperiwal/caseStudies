@@ -287,14 +287,15 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             transition: opacity 0.2s;
         }
 
-        /* Total tenure beside the company name. Muted and regular weight so it
-           reads as an annotation to the name rather than part of it. Titan Email
-           carries none — it is the current role, so any figure would be stale the
-           day after it was written. */
+        /* Total tenure beside the company name. Kept in --primary like the name,
+           with regular weight and a smaller size doing the work of separating the
+           two — so it reads as an annotation without receding to the date grey.
+           Titan Email carries none: it is the current role, so any figure would be
+           stale the day after it was written. */
         .mid-col h3 .tenure {
             font-weight: 400;
             font-size: 0.85rem;
-            color: var(--text-muted);
+            color: var(--primary);
             white-space: nowrap;
             /* On top of the space in the markup, so the annotation sits clearly
                apart from the name it annotates. */
