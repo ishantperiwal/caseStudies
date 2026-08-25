@@ -253,6 +253,10 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
+            body {
+                padding-top: 60px;
+            }
+
             /* Stacked, the section title is a full-width banner rather than a
                label in a side column, so it carries more weight and sets its own
                gap to the rows beneath. */
@@ -1018,24 +1022,27 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
            auto width follows a label that is, so the whole thing grows and shrinks
            with the text. */
         .dl-label {
+            --dl-size-duration: 0.5s;
             display: inline-block;
             max-width: 0;
-            /* Per-label target width, set just above each one's measured natural
-               width. A single shared value made the easing feel like a snap: the
-               label stops growing the moment max-width passes its text, so most of
-               the curve, including its slow tail, ran after the motion had already
-               finished. "Download" was the worst, done at 29% of the transition.
-               The small headroom is for a font fallback rendering wider than Inter. */
+            /* Keep the animated maximum close to the label's natural width. If it
+               overshoots, the visible pill reaches full size before the transition
+               does, which makes the end feel like a hard stop. */
             margin-left: 0;
             opacity: 0;
             overflow: hidden;
             white-space: nowrap;
-            transition: max-width 0.42s cubic-bezier(0.5, 0, 0.2, 1),
-                        margin-left 0.42s cubic-bezier(0.5, 0, 0.2, 1),
+            transition: max-width var(--dl-size-duration) cubic-bezier(0.5, 0, 0.2, 1),
+                        margin-left var(--dl-size-duration) cubic-bezier(0.5, 0, 0.2, 1),
                         opacity 0.3s cubic-bezier(0.5, 0, 0.2, 1);
         }
 
-        .dl-label--full   { --dl-width: 144px; }   /* "Download as PDF", measured 133.5px */
+        /* Safe no-JS cap. The download-button script replaces this with the
+           label's measured width so the pill has no dead space and the animated
+           endpoint still matches the rendered endpoint exactly. */
+        .dl-label--full {
+            --dl-width: 144px;
+        }
 
         /* Desktop: the label is simply always open. Nothing about the button
            responds to scrolling there any more. */
@@ -1051,6 +1058,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
            scroll, since a pill in the corner covers the text being read. */
         @media (max-width: 650px) {
             .download-btn:not(.is-parked) .dl-label--full {
+                --dl-size-duration: 550ms;
                 max-width: var(--dl-width);
                 margin-left: 8px;
                 opacity: 1;
@@ -1346,11 +1354,48 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             if (!btn) return;
 
             const PARK_AFTER = 40; // px of scroll before it gets out of the way
+            const label = btn.querySelector('.dl-label--full');
+
+            function syncLabelWidth() {
+                if (!label) return;
+
+                // Measure the text at its real intrinsic width. A temporary clone
+                // inherits the button's font without affecting its layout.
+                const probe = label.cloneNode(true);
+                probe.setAttribute('aria-hidden', 'true');
+                Object.assign(probe.style, {
+                    position: 'absolute',
+                    visibility: 'hidden',
+                    width: 'max-content',
+                    maxWidth: 'none',
+                    marginLeft: '0',
+                    transition: 'none',
+                    pointerEvents: 'none'
+                });
+                btn.appendChild(probe);
+
+                const pageZoom = parseFloat(getComputedStyle(document.body).zoom) || 1;
+                const measuredWidth = probe.getBoundingClientRect().width / pageZoom;
+                probe.remove();
+                if (!measuredWidth) return;
+
+                // Commit the exact same value as both rendered width and animated
+                // cap, without animating a late web-font measurement correction.
+                const inlineTransition = label.style.transition;
+                label.style.transition = 'none';
+                label.style.setProperty('--dl-width', `${measuredWidth}px`);
+                label.style.width = `${measuredWidth}px`;
+                void label.offsetWidth;
+                label.style.transition = inlineTransition;
+            }
 
             function sync() {
+                // Scroll only toggles the state; CSS owns the animation timeline.
                 btn.classList.toggle('is-parked', window.scrollY > PARK_AFTER);
             }
 
+            syncLabelWidth();
+            if (document.fonts?.ready) document.fonts.ready.then(syncLabelWidth);
             window.addEventListener('scroll', sync, { passive: true });
             sync();
         })();
