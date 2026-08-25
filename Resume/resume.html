@@ -270,7 +270,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                    scanned side by side, so the metadata needs real separation
                    from the prose beneath it — 12px let the first paragraph read
                    as a caption to the role above. */
-                gap: 36px;
+                gap: 32px;
             }
         }
 
@@ -281,6 +281,66 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             font-weight: 700;
             color: var(--primary);
             margin: 0 0 4px 0;
+        }
+
+        .mid-col h3 {
+            /* Containing block for the absolutely positioned logo. */
+            position: relative;
+        }
+
+        /* Company logo, in the gutter left of the name. --logo-axis is the same
+           x the desktop trail line and its dots sit on, so the squares stack into
+           one column with the timeline rather than beside it. Placeholder for now:
+           the company initial. Dropping in <img src="..." alt=""> later needs no
+           other change — see the img rule below. */
+        .company-logo {
+            --logo-size: 24px;
+            --logo-axis: -24px;   /* matches .role-history-rail::before / the dots */
+            position: absolute;
+            /* Centred on the heading's line box rather than pinned to its top, so
+               the square stays optically level with the company name if either
+               --logo-size or the heading's type size changes. */
+            top: 50%;
+            /* The -1.5px is optical, not geometric: the line box carries descender
+               space the capital-height company name does not fill, so a true
+               centre reads as sitting low against it. */
+            transform: translateY(calc(-50% - 1.5px));
+            left: calc(var(--logo-axis) - var(--logo-size) / 2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--logo-size);
+            height: var(--logo-size);
+            /* No border: with box-sizing: border-box a ring would eat into
+               --logo-size, leaving the mark smaller than the tile. */
+            border-radius: 6px;
+            background: var(--bg);
+            overflow: hidden;
+        }
+
+        /* The Titan mark sits a touch high inside its own tile, so it is nudged
+           down. Shifting the image inside an overflow: hidden box would expose a
+           1px sliver of the container along the top edge, so the container takes
+           the tile's own black — the sliver lands on black-against-black and the
+           nudge is invisible as an edge. */
+        .company-logo--titan {
+            background: #000000;
+        }
+
+        .company-logo--titan img {
+            transform: translateY(1px);
+        }
+
+        .company-logo img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            /* cover, not contain: these are full-bleed square tiles whose own
+               background is part of the mark, so they should fill the square
+               edge to edge. Square art in a square box makes the two identical
+               anyway — cover just keeps a non-square logo from letterboxing. */
+            object-fit: cover;
+            border-radius: inherit;
         }
 
         .mid-col h3 a {
@@ -371,6 +431,24 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
+            /* Sideways the trail is horizontal and starts at the text edge, so
+               there is no vertical axis to hang the logo on, and the gutter is
+               only the body's 40px — nowhere near enough for a square out to one
+               side. The logo sits above the name instead, both flush left.
+               display: block on the heading so the tile takes its own line while
+               the name and its tenure stay inline together on the next; a flex row
+               would have stacked those two as separate items. */
+            .mid-col h3 {
+                display: block;
+            }
+
+            .company-logo {
+                --logo-size: 28px;
+                position: static;
+                transform: none;   /* the desktop centring transform still applies otherwise */
+                margin-bottom: 9px;
+            }
+
             /* The desktop timeline runs vertically down the left of the stack;
                sideways there is no stack to run down, and the horizontal rule on
                each card replaces it. */
@@ -976,7 +1054,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                 
                 <div class="row-grid">
                     <div class="mid-col">
-                        <h3><a href="https://titan.email/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Titan Email</a></h3>
+                        <h3><span class="company-logo company-logo--titan" aria-hidden="true"><img src="resume_files/titan.webp" alt=""></span><a href="https://titan.email/" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Titan Email</a></h3>
                         <p class="role">Principal Product Designer</p>
                         <p class="date">April 2026 - Now<br>Bangalore, India</p>
                     </div>
@@ -989,7 +1067,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 <div class="row-grid">
                     <div class="mid-col">
-                        <h3><a href="https://zeta.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Zeta</a> <span class="tenure">4 yrs 8 mos</span></h3>
+                        <h3><span class="company-logo" aria-hidden="true"><img src="resume_files/zeta.png" alt=""></span><a href="https://zeta.tech" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">Zeta</a> <span class="tenure">4 yrs 8 mos</span></h3>
                         <!-- Role history: one block per title held during the tenure,
                              most recent first. -->
                         <div class="role-history-rail">
@@ -1024,7 +1102,7 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 <div class="row-grid">
                     <div class="mid-col">
-                        <h3><a href="https://geeksforgeeks.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">GeeksforGeeks</a> <span class="tenure">3 yrs</span></h3>
+                        <h3><span class="company-logo" aria-hidden="true"><img src="resume_files/gfg.png" alt=""></span><a href="https://geeksforgeeks.org" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;">GeeksforGeeks</a> <span class="tenure">3 yrs</span></h3>
                         <p class="role">Senior Motion Graphic Designer</p>
                         <p class="date">2018 - 2021<br>Noida, India</p>
                     </div>
