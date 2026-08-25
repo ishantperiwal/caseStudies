@@ -288,6 +288,17 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             position: relative;
         }
 
+        /* Only the company that has a role history under it, currently Zeta, needs
+           more room below its name: a stack of roles reads better set apart from
+           the heading than a single role line does. Selected by :has() rather than
+           a class, so any future multi-role company inherits it. Desktop only, so
+           the mobile spacing already tuned on the rail is left alone. */
+        @media (min-width: 651px) {
+            .mid-col:has(.role-history-rail) h3 {
+                margin-bottom: 10px;
+            }
+        }
+
         /* Company logo, in the gutter left of the name. --logo-axis is the same
            x the desktop trail line and its dots sit on, so the squares stack into
            one column with the timeline rather than beside it. Placeholder for now:
@@ -769,8 +780,8 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             z-index: -1;
         }
 
-        /* Per-link placement. Zapp opens upward; the other two are nudged sideways
-           so three panels in consecutive lines do not stack in one vertical column. */
+        /* Per-link placement. Zapp and IPL open upward; all three are nudged
+           sideways so panels on consecutive lines do not stack in one column. */
         #case-study-preview-zapp {
             top: auto;
             bottom: calc(100% + var(--popover-gap));
@@ -779,11 +790,19 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
                its resting position, rising into place. A negative offset here
                would start it high and drop it down, which reads as falling in. */
             transform-origin: calc(-1 * var(--popover-shift-x)) bottom;
+            --popover-shift-x: 26px;
             --popover-lift-y: 8px;
         }
 
         #case-study-preview-ipl {
-            --popover-shift-x: -148px;
+            /* Opens upward and further left. Same upward geometry as Zapp: pivot on
+               the bottom edge, the one nearest the link, and a positive lift so it
+               rises out of the trigger rather than dropping onto it. */
+            top: auto;
+            bottom: calc(100% + var(--popover-gap));
+            transform-origin: calc(-1 * var(--popover-shift-x)) bottom;
+            --popover-shift-x: -156px;
+            --popover-lift-y: 8px;
         }
 
         #case-study-preview-lottiemon {
@@ -969,12 +988,20 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .download-btn {
             position: fixed;
             bottom: 28px;
-            right: 28px;
+            /* Bottom centre on desktop: at the right edge it sits outside the
+               reading column and gets missed entirely. */
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 100;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            /* gap: 0 deliberately. Flex gap applies between every item including
+               zero-width ones, so with three label spans a gap would leave dead
+               space around whichever two are collapsed. The active label supplies
+               its own margin instead. */
+            gap: 0;
             padding: 10px 18px;
+            overflow: hidden;   /* clips each label while it narrows */
             background: var(--primary);
             color: var(--bg);
             font-family: var(--font-body);
@@ -983,8 +1010,63 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
             text-decoration: none;
             border-radius: 999px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            transition: opacity 0.2s, box-shadow 0.2s;
+            transition: opacity 0.2s, box-shadow 0.2s,
+                        left 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
+        /* One label per state, all present in the markup, only one open at a time.
+           Animating max-width rather than the button's width is what makes the
+           pill resize smoothly: width: auto is not animatable, but the button's
+           auto width follows a label that is, so the whole thing grows and shrinks
+           with the text. */
+        .dl-label {
+            display: inline-block;
+            max-width: 0;
+            margin-left: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: max-width 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                        margin-left 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                        opacity 0.26s ease;
+        }
+
+        /* Desktop: the full sentence while centred, the short word once parked. */
+        @media (min-width: 651px) {
+            .download-btn:not(.is-parked) .dl-label--full,
+            .download-btn.is-parked .dl-label--short {
+                max-width: 260px;
+                margin-left: 8px;
+                opacity: 1;
+            }
+        }
+
+        /* Parked state: JS adds this once the page is scrolled off the top, so the
+           button greets you centred and then gets out of the way. Desktop only —
+           on phones it lives in the corner already.
+
+           Both `left` and `transform` animate, rather than transform alone. A
+           transform using 50vw would be simpler, but vw includes the scrollbar
+           while a fixed element's percentages resolve against the scrollbar-less
+           containing block, so the centred position would sit a few px right of
+           true centre. */
+        @media (min-width: 651px) {
+            .download-btn.is-parked {
+                left: calc(100% - 28px);
+                transform: translateX(-100%);
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .download-btn {
+                transition: opacity 0.2s, box-shadow 0.2s;
+            }
+            .dl-label {
+                transition: none;
+            }
+        }
+
         .download-btn:hover {
             opacity: 0.85;
             box-shadow: 0 4px 18px rgba(0,0,0,0.14);
@@ -994,22 +1076,29 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         }
 
         @media (max-width: 650px) {
-            /* Icon only on phones: the pill's label eats real width on a narrow
-               screen while sitting on top of the text being read. The download
-               glyph carries the meaning on its own, and aria-label keeps the
-               button named now that the visible text is gone. 46px keeps it a
-               comfortable touch target. */
+            /* On phones the button introduces itself as a pill and then squeezes
+               to an icon, so the label is read once and the circle stops covering
+               the text afterwards. No explicit width: 14px of padding either side
+               of the 18px icon is exactly the 46px touch target when the label is
+               collapsed, and border-radius: 999px reads as a circle at that size
+               without needing to animate the radius. aria-label keeps the button
+               named once the visible text is gone. */
             .download-btn {
+                /* Back to the corner on phones: centred, a floating circle sits
+                   over the text being read. */
+                left: auto;
+                right: 24px;
+                transform: none;
                 justify-content: center;
-                width: 46px;
                 height: 46px;
-                padding: 0;
-                gap: 0;
-                border-radius: 50%;
+                padding: 0 14px;
+                border-radius: 999px;
             }
 
-            .download-btn span {
-                display: none;
+            .download-btn.is-expanded .dl-label--mobile {
+                max-width: 200px;
+                margin-left: 8px;
+                opacity: 1;
             }
 
             .download-btn svg {
@@ -1168,7 +1257,9 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
     <!-- Download button -->
     <a href="https://ishantp.com/OS/openAssets/pdfs/Ishant_ProductDesigner_Resume.pdf" download target="_blank" rel="noopener noreferrer" class="download-btn" title="Download PDF" aria-label="Download resume PDF">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span>Download</span>
+        <span class="dl-label dl-label--full">Download Resume as PDF</span>
+        <span class="dl-label dl-label--short">Download</span>
+        <span class="dl-label dl-label--mobile">Download as PDF</span>
     </a>
 
     <!-- Script to toggle themes and headers based on the URL query parameter ?v=1, ?v=2, ?v=3, ?v=4 -->
@@ -1242,6 +1333,50 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
 
                 window.setTimeout(dismiss, HOLD_MS);
             }, START_MS);
+        })();
+
+        /* Download button, two behaviours off one scroll listener.
+
+           Desktop: starts centred where it cannot be missed and reads "Download
+           Resume as PDF", then slides to the bottom-right corner and shortens to
+           "Download" once you scroll. Returns to centre at the top, so it is a
+           state of the page rather than a one-time animation.
+
+           Phones: greets you as a pill reading "Download as PDF", then squeezes to
+           the circular icon after a beat, or immediately if you start scrolling —
+           whichever comes first. That collapse is one-way; re-expanding on every
+           scroll-to-top would put a wide pill back over the text.
+
+           The CSS decides which of these applies at which width; this only sets
+           the classes. */
+        (function downloadButton() {
+            const btn = document.querySelector('.download-btn');
+            if (!btn) return;
+
+            const PARK_AFTER = 40;      // px of scroll before it parks
+            const GREET_MS = 2800;      // how long the phone pill stays open
+
+            let squeezed = false;
+
+            function syncPark() {
+                btn.classList.toggle('is-parked', window.scrollY > PARK_AFTER);
+            }
+
+            function squeeze() {
+                if (squeezed) return;
+                squeezed = true;
+                btn.classList.remove('is-expanded');
+            }
+
+            btn.classList.add('is-expanded');
+            window.setTimeout(squeeze, GREET_MS);
+
+            window.addEventListener('scroll', function () {
+                syncPark();
+                squeeze();
+            }, { passive: true });
+
+            syncPark();
         })();
 
         /* Mobile role carousel.
