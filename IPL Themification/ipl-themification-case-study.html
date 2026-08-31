@@ -429,6 +429,97 @@
         .touch-dot.active {
             animation: touch-dot-move 2.2s ease-in-out forwards;
         }
+
+        /* ══ Mobile (≤767px) ═══════════════════════════════════════════════
+           This page already survives a phone: .two-col and .two-col-aside
+           collapse above, single phone mocks centre themselves, and nothing
+           overflows the document. Two things do not.
+
+           See ../mobile-port-playbook.md — §4.6 for the carousel, §4.1 for the
+           gutter. Everything here is presentation only; no copy is affected. */
+        @media (max-width: 767px) {
+
+            /* ── The two-up phone showcase rows ──────────────────────────────
+               Inline-styled `width: max-content` with `left: 50%` +
+               `translateX(-50%)`, so at 375px a 536px row is centred on the
+               viewport and clipped on BOTH edges — roughly 80px off each phone.
+               And because the row itself is `overflow-x: visible` (an ancestor
+               does the clipping) none of it is reachable: it is not a scroll,
+               it is just gone.
+
+               Same fix as everywhere else — one phone at a time, the next
+               peeking, scrolled horizontally. `!important` is unavoidable here:
+               the offending values are inline styles on the element.
+
+               Matched with :has(> .phone-col ~ .phone-col) — a phone column that
+               follows another one, i.e. two or more. The row carries no class of
+               its own and adding one would mean editing the markup.
+
+               The sibling combinator matters: a plain :has(> .phone-col) also
+               matches .two-col-aside, which is copy beside a SINGLE phone. That
+               turned those blocks into one-item scroll tracks and left-aligned
+               the phone. A lone screen belongs in the centre. */
+            main section div:has(> .phone-col ~ .phone-col) {
+                left: auto !important;
+                transform: none !important;
+                width: auto !important;
+                max-width: none !important;
+                justify-content: flex-start !important;
+                gap: 1.75rem !important;
+                margin-left: -1.75rem !important;
+                margin-right: -1.75rem !important;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                padding-inline: 1.75rem;
+                scroll-padding-inline: 1.75rem;
+                scrollbar-width: none;
+            }
+
+            main section div:has(> .phone-col ~ .phone-col)::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* The columns are inline-styled `flex: 0 0 19rem` (304px), wider than
+               the screen once the gutter is taken off. */
+            main section div:has(> .phone-col ~ .phone-col) > .phone-col {
+                flex: 0 0 auto !important;
+                /* Bigger than it was (17rem), still leaving ~34px of the next slide
+                   showing at 375px so the track still reads as scrollable. */
+                width: min(80vw, 18rem);
+                scroll-snap-align: center;
+            }
+
+            /* A lone phone — .two-col-aside, or any block holding exactly one —
+               sits in the middle rather than hugging the left gutter, and gets to be
+               the size of a phone.
+
+               The explicit width matters: auto margins alone make .phone-col
+               shrink-to-fit, which turns the device's own `width: 100%` circular so
+               it falls back to the artwork's intrinsic size. That left these phones
+               between 135px and 211px — inconsistent with each other and far too
+               small for the one screen a section is built around. */
+            .two-col-aside > .phone-col,
+            .phone-col:only-child {
+                width: min(84vw, 19rem);
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* ── Gutter ──────────────────────────────────────────────────────
+               pl-10/pr-10 spends 80px of a 375px screen on margin. 1.75rem is
+               the value the other ported documents use. */
+            main .px-10,
+            main .pl-10 {
+                padding-left: 1.75rem;
+            }
+
+            main .px-10,
+            main .pr-10 {
+                padding-right: 1.75rem;
+            }
+        }
     </style>
 </head>
 <body unresolved>

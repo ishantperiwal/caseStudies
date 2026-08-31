@@ -1,0 +1,1407 @@
+<html lang="en" style="--accent-h: 218; --accent-s: 54; --accent-l: 29; --accent2-h: 165; --accent2-s: 46; --accent2-l: 34; --color-bg: hsl(var(--accent-h), 22%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head><script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scaling motion beyond individual expertise | Motion Ops at PayZapp</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Playpen+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Instrument Sans"', 'sans-serif'],
+                        display: ['Fraunces', 'serif'],
+                    },
+                    fontSize: {
+                        base: ['1rem', { lineHeight: '1.65rem' }]
+                    },
+                    colors: {
+                        canvas: 'var(--color-bg)',
+                        ink: '#2C2621',
+                        deep: '#5C5146',
+                        medium: '#A89B8F',
+                        muted: '#7A6F64',
+                        outline: '#433A31',
+                        accent: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                        warm: {
+                            50: 'var(--color-bg)',
+                            100: '#F4EFEA',
+                            200: '#EBE5DC',
+                            300: '#D5C9BA',
+                            400: '#A89B8F',
+                            500: '#7A6F64',
+                            600: '#5C5146',
+                            700: '#433A31',
+                            800: '#2C2621',
+                            900: '#1C1815',
+                            950: '#13110F',
+                        },
+                        brand: {
+                            50:  'hsl(var(--accent-h) calc((var(--accent-s) + 16) * 1%) calc((var(--accent-l) + 42) * 1%) / <alpha-value>)',
+                            100: 'hsl(var(--accent-h) calc((var(--accent-s) + 20) * 1%) calc((var(--accent-l) + 38) * 1%) / <alpha-value>)',
+                            200: 'hsl(var(--accent-h) calc((var(--accent-s) + 15) * 1%) calc((var(--accent-l) + 31) * 1%) / <alpha-value>)',
+                            500: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                            600: 'hsl(var(--accent-h) calc((var(--accent-s) - 1) * 1%) calc((var(--accent-l) - 8) * 1%) / <alpha-value>)',
+                            700: 'hsl(var(--accent-h) calc((var(--accent-s) + 4) * 1%) calc((var(--accent-l) - 19) * 1%) / <alpha-value>)',
+                            accent: 'hsl(var(--accent-h) calc(var(--accent-s) * 1%) calc(var(--accent-l) * 1%) / <alpha-value>)',
+                        },
+                        mint: {
+                            500: 'hsl(var(--accent2-h) calc(var(--accent2-s) * 1%) calc(var(--accent2-l) * 1%) / <alpha-value>)',
+                            700: 'hsl(var(--accent2-h) calc((var(--accent2-s) + 6) * 1%) calc((var(--accent2-l) - 14) * 1%) / <alpha-value>)',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html {
+            font-size: 99%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scrollbar-gutter: stable;
+            overflow-anchor: none;
+        }
+        html::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            /* Gently scales with viewport: fixed base + small vw component, so density
+               shrinks only slightly on smaller screens instead of fully proportionally.
+               Calibrated so a 2560px (2K) screen ≈ 22px tile; a ~1440px laptop ≈ 18px.
+               clamp() bounds keep it sane on very small or ultrawide displays. */
+            background-image: radial-gradient(circle, rgba(120, 120, 120, 0.28) clamp(1.1px, 0.05vw, 1.4px), transparent clamp(1.1px, 0.05vw, 1.4px));
+            background-size: clamp(16px, calc(13px + 0.35vw), 24px) clamp(16px, calc(13px + 0.35vw), 24px);
+        }
+        /* Edge fades: soft strips bonded to the content column's left/right edges */
+        main::before, main::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 160px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        main::before { right: 100%; background: linear-gradient(to left,  var(--color-bg), transparent); }
+        main::after  { left: 100%;  background: linear-gradient(to right, var(--color-bg), transparent); }
+        body {
+            position: relative;
+            z-index: 2;
+            background-color: var(--color-bg);
+            color: var(--color-deep);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.65rem;
+            font-size: 17px;
+            letter-spacing: 0.012em;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --font-display: 'Fraunces', serif;
+            --font-body:    'Instrument Sans', sans-serif;
+            --font-sticky:  'Playpen Sans', cursive;
+            --font-mono:    'DM Mono', monospace;
+            --color-ink:    #2C2621;   /* off-black — never #000 */
+            --color-deep:   #4A4038;
+            --color-medium: #A89B8F;
+            --color-muted:  #7A6F64;
+            --color-label:  hsl(var(--accent-h), 12%, 45%);  /* cool grey for mono labels */
+            --gap-point:     2.9rem;
+            --gap-paragraph: 1rem;
+        }
+
+        h1, h2, h3, h4, .font-display {
+            font-family: var(--font-display);
+            color: var(--color-ink);
+            letter-spacing: -0.02em;
+        }
+
+        .read-section {
+            position: relative;
+            padding-top: 2.6rem;
+            padding-bottom: 2.6rem;
+        }
+        /* The section padding owns the gap between sections — a trailing image
+           or caption margin should not stack on top of it. */
+        .read-section > *:last-child { margin-bottom: 0; }
+        .section-kicker {
+            font-family: var(--font-display);
+            font-weight: 600;
+            color: var(--color-ink);
+            font-size: 1.55rem;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+        }
+        .read-section .section-summary {
+            font-family: var(--font-body);
+            font-weight: 400;
+            color: var(--color-deep);
+            font-size: 17px;
+            line-height: 1.65;
+            max-width: none;
+            margin-bottom: var(--gap-paragraph) !important;
+        }
+
+        .read-section .prose-block { max-width: none !important; }
+
+        .prose-block p {
+            font-size: 17px;
+            line-height: 1.65;
+            margin-bottom: var(--gap-paragraph);
+            color: var(--color-deep);
+        }
+        .prose-block p:last-child { margin-bottom: 0; }
+        .prose-block b { color: var(--color-ink); font-weight: 600; }
+
+        .mono {
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        /* Only used where the copy states the count first, so the numbers
+           label an established pair rather than implying an order. */
+        .slash-num {
+            display: inline-block;
+            width: 2rem;
+            margin-left: -2rem;
+            font-weight: 500;
+            font-size: 0.8em;
+            letter-spacing: 0.02em;
+        }
+        .read-section .slash-num { color: hsl(var(--sec-h), 14%, 38%); }
+        /* The gutter the numeral hangs in. Only the numbered points get it, so
+           the unnumbered ones elsewhere stay flush. */
+        .numbered-point:has(.slash-num) .section-mini-heading,
+        .numbered-point:has(.slash-num) .prose-block { padding-left: 2rem; }
+        .section-mini-heading {
+            font-weight: 600;
+            font-size: 1.15rem;
+            line-height: 1.35;
+            color: var(--color-ink);
+            margin-top: 1.25rem;
+        }
+        /* Two-class selector so it outranks the inline mb-2 utility. */
+        .numbered-point .section-mini-heading { margin-bottom: 0.95rem; }
+        /* This margin collapses out through .numbered-point, so whatever precedes a
+           point — prose, an image, a demo block — the gap before it is the same. */
+        .numbered-point .section-mini-heading { margin-top: 3.4rem; }
+        .numbered-point { margin-bottom: var(--gap-point); }
+
+        .metric-card {
+            border: 1px solid rgba(207, 207, 202, 0.7);
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .opt {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            padding: 1.2rem 1.3rem 1.25rem;
+            border: 1px solid rgba(153, 27, 27, 0.15);
+            background: #fdf7f6;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .opt-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-top: 0.1rem; }
+        .opt-kicker {
+            font-family: var(--font-mono);
+            font-size: 10px; letter-spacing: 0.09em; text-transform: uppercase; font-weight: 500;
+            color: var(--color-muted);
+        }
+        .opt-no {
+            display: inline-flex; align-items: center; gap: 5px;
+            font-family: var(--font-mono);
+            font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500;
+            color: #a25656; background: rgba(153, 27, 27, 0.06); border: 1px solid rgba(153, 27, 27, 0.16);
+            padding: 3px 8px; border-radius: 999px;
+        }
+        .opt-title {
+            display: flex; align-items: center; gap: 0.55rem;
+            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+            color: var(--color-ink);
+        }
+        .opt-title svg { width: 18px; height: 18px; color: var(--color-medium); flex: none; }
+        .opt-body { font-size: 14px; line-height: 1.55; color: var(--color-deep); }
+        .opt-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
+        .opt-tag {
+            font-family: var(--font-mono);
+            font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
+            color: var(--color-muted); background: rgba(71, 71, 71, 0.035);
+            border: 1px solid rgba(71, 71, 71, 0.14);
+            padding: 3px 7px; border-radius: 6px;
+        }
+
+        .impact-equation {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 600;
+            color: hsl(var(--accent-h), 20%, 15%);
+            margin: 0.5rem 0 1.75rem;
+        }
+        .eq-term {
+            border: 1px solid rgba(6, 78, 59, 0.18);
+            background: #edf8f1;
+            color: #064e3b;
+            padding: 0.4rem 0.7rem;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .eq-term small { display: block; font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(6,78,59,0.7); font-weight: 600; margin-top: 2px; }
+        .eq-sym { font-weight: 700; color: hsl(var(--accent-h), 20%, 15%); }
+        .eq-total {
+            border: 1px solid rgba(71,71,71,0.2);
+            background: rgba(255,255,255,0.6);
+            color: var(--color-ink);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+        }
+
+        .impact-bento {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+        @media (max-width: 640px) { .impact-bento { grid-template-columns: 1fr; } }
+        .bento-cell {
+            border: 1px solid rgba(71, 71, 71, 0.14);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.55);
+            padding: 1rem 1.1rem;
+        }
+        .bento-num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: #1a5f67; line-height: 1.1; }
+        .bento-sub { font-size: 11px; color: var(--color-muted); margin-top: 0.25rem; }
+        .bento-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.35rem; }
+
+        .twoway {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+        @media (max-width: 760px) { .twoway { grid-template-columns: 1fr; } }
+        .way-card { border: 1px solid rgba(71,71,71,0.16); border-radius: 10px; padding: 1.25rem 1.35rem; }
+        .way-old { background: rgba(254, 226, 226, 0.24); border-color: rgba(153, 27, 27, 0.18); }
+        .way-new { background: #edf8f1; border-color: rgba(6, 78, 59, 0.2); }
+        .way-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 500; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.75rem; }
+        .way-old .way-tag { background: #fee2e2; color: #991b1b; }
+        .way-new .way-tag { background: #c2e8d0; color: #064e3b; }
+        .step { display: flex; gap: 0.7rem; margin-bottom: 0.7rem; font-size: 14px; line-height: 1.5; }
+        .step b { font-family: var(--font-display); color: var(--color-ink); }
+
+        .sticky-note {
+            position: absolute;
+            width: 210px;
+            background-color: #fff1a8;
+            padding: 1.1rem 1.2rem;
+            font-family: var(--font-sticky);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+            color: #1a1a1a;
+            border: 1px solid rgba(96, 72, 8, 0.16);
+            box-shadow: 2px 7px 16px rgba(0,0,0,0.075);
+            transform: rotate(var(--rot, 0deg));
+            z-index: 50;
+            display: none;
+        }
+        @media (min-width: 1380px) { .sticky-note { display: block; } }
+
+        /* ?sticky=false — forcibly hide all sticky notes regardless of other rules */
+        html.hide-sticky-notes .sticky-note {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
+        .lead { font-size: 1.12rem; line-height: 1.65; color: var(--color-deep); }
+
+        /* ══════ Motion Ops additions ══════ */
+
+        /* Bare image. No frame, no chrome — the assets carry their own dark
+           ground, so all they need is a rounded corner. Intrinsic width and
+           height attributes reserve the box up front, so nothing reflows. */
+        .pic {
+            display: block;
+            max-width: 42rem;
+            margin: 2.1rem auto 2.4rem;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .pic img, .pic video {
+            display: block;
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+        }
+        .pic.is-narrow { max-width: 33rem; }
+        .pic.is-clip   { max-width: 21rem; }   /* a single tall UI clip */
+        .pic.is-tall   { max-width: 22rem; }
+        .pic.is-media  { max-width: 24rem; }   /* square-ish screen recordings */
+        /* Light-UI screenshot on a light page: without an edge it dissolves into
+           the background. Its own corners are transparent, so the white fill
+           closes them behind the border rather than showing the page through. */
+        .pic.is-framed {
+            max-width: 48rem;
+            border: 1px solid hsl(var(--accent-h), 14%, 85%);
+            background: #ffffff;
+        }
+        /* Detail-dense image: same viewport-centred breakout as .demo. The
+           100vw - 5rem term keeps a 2.5rem gutter so it can never be clipped. */
+        @media (min-width: 960px) {
+            .pic.is-bleed {
+                --pic-w: min(56rem, 100vw - 5rem);
+                width: var(--pic-w);
+                max-width: none;
+                margin-left: calc(50% - var(--pic-w) / 2);
+                margin-right: 0;
+            }
+        }
+        /* The wrapper carries the edge now: .pic clips at 16px, and an img
+           rounded at 14px reaches further into the corner, so the clip was
+           slicing the border off at all four. One curve, not two. */
+        .pic.is-framed img { border-radius: 0; }
+
+        /* The plugin explanation and its live preview are one story: keep the
+           copy as the reading anchor and place the recording alongside it. */
+        .plugin-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(15rem, 21rem);
+            align-items: center;
+            gap: clamp(2rem, 5vw, 4rem);
+            max-width: 52rem;
+            margin: 3.4rem auto 2.4rem;
+            padding: 1.5rem 1.35rem 1.5rem 2rem;
+            border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.16);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .plugin-layout-copy { min-width: 0; }
+        .plugin-layout-copy .section-mini-heading {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-top: 0;
+            margin-bottom: 1.1rem;
+        }
+        .plugin-layout-copy .prose-block p { font-size: 16px; }
+        .plugin-icon {
+            width: 2.1rem;
+            height: 2.1rem;
+            flex: none;
+            object-fit: contain;
+            border-radius: 0.45rem;
+        }
+        .plugin-layout-media { min-width: 0; width: 100%; }
+        .plugin-layout-media .pic { max-width: none; margin: 0 auto; }
+        @media (max-width: 700px) {
+            .plugin-layout {
+                grid-template-columns: 1fr;
+                align-items: stretch;
+                gap: 1.25rem;
+                margin-top: 2.8rem;
+                padding: 1.35rem;
+            }
+            .plugin-layout-media { max-width: 21rem; margin-inline: auto; }
+        }
+
+                .duo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1.75rem;
+            max-width: 48rem;
+            margin: 2.1rem auto 2.4rem;
+        }
+        .duo-card { flex: 0 0 auto; width: 15rem; }
+        .captures {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.9rem;
+            max-width: 34rem;
+            margin: 1.4rem auto 0;
+        }
+        .capture {
+            border: 1px solid hsl(var(--sec-h), 24%, 40%, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem 1.35rem 1.35rem;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .cap-title {
+            font-family: var(--font-display);
+            font-size: 1rem; font-weight: 600; line-height: 1.25;
+            letter-spacing: -0.01em;
+            color: var(--color-ink);
+        }
+        .cap-sub {
+            margin-top: 0.5rem;
+            font-size: 14.5px; line-height: 1.55;
+            color: var(--color-deep);
+        }
+        .cap-opt {
+            display: inline-block;
+            vertical-align: middle;
+            font-family: var(--font-mono);
+            font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
+            color: var(--color-label);
+            background: hsl(var(--sec-h), 8%, 93%);
+            border: 1px solid hsl(var(--sec-h), 10%, 85%);
+            border-radius: 6px;
+            padding: 0.12rem 0.4rem 0.1rem;
+            margin-left: 0.5rem;
+        }
+        @media (max-width: 480px) { .captures { grid-template-columns: 1fr; } }
+        .duo-wide { flex: 0 1 auto; min-width: 0; }
+        .duo .captures { grid-template-columns: 1fr; gap: 0.7rem; max-width: 24rem; margin: 0; }
+        /* label above an image, on the light page */
+        .figure { max-width: 45rem; margin: 2.1rem auto 2.4rem; text-align: center; }
+        .figure > .pic { margin: 0; max-width: none; }
+        /* A label out in the open: centred, in its own small container. Inside a
+           dark demo container the label stays top-left (see .demo-label). */
+        .figure-label {
+            display: inline-block;
+            margin-top: 0.9rem;
+            font-family: var(--font-mono);
+            font-size: 11px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 500;
+            color: var(--color-label);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid hsl(var(--sec-h), 14%, 84%);
+            border-radius: 8px;
+            padding: 0.4rem 0.75rem 0.35rem;
+        }
+        .duo img, .duo video { display: block; width: 100%; height: auto; border-radius: 16px; }
+        /* Same viewport-centred breakout as .demo, so neither image is squeezed. */
+        @media (min-width: 960px) {
+            .duo {
+                --duo-w: min(56rem, 100vw - 5rem);
+                width: var(--duo-w);
+                max-width: none;
+                margin-left: calc(50% - var(--duo-w) / 2);
+                margin-right: 0;
+            }
+        }
+        @media (max-width: 700px) {
+            .duo { flex-direction: column; gap: 1.25rem; }
+            .duo-card { width: min(100%, 15rem); align-self: center; }
+        }
+        /* An image opening a section sits tighter to the summary above it */
+        .pic.is-opener { margin-top: 1.3rem; }
+        /* The Lottiemon opener is intentionally quieter than the shared hero
+           image size while staying full-width on narrow screens. */
+        .pic.is-lottiemon-hero { max-width: 33.6rem; }
+        /* Keep the initiative lead attached to its opening image instead of
+           making it compete with the section heading above. */
+        .guidelines-opener {
+            max-width: 42rem;
+            margin: 0 auto 3.4rem;
+        }
+        .guidelines-opener .pic {
+            max-width: none;
+            margin: 0;
+        }
+        .guidelines-opener .section-summary { margin: 1.1rem 0 0 !important; }
+        @media (max-width: 700px) {
+            .guidelines-opener {
+                margin-bottom: 2.8rem;
+            }
+        }
+        /* Caption follows its image directly; drop the image gap instead of
+           clawing it back with a negative margin. */
+
+        /* Two portrait media side by side. Matched heights with natural widths,
+           so neither the photo (3:4) nor the clip (9:16) has to be cropped. */
+        .pair {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+            margin: 2.1rem auto 2.4rem;
+        }
+        .pair img, .pair video {
+            display: block;
+            width: 19.5rem;
+            height: 26rem;
+            object-fit: cover;
+            border-radius: 16px;
+            background: hsl(var(--accent-h), 20%, 93%);
+        }
+        @media (max-width: 640px) {
+            .pair {
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                margin: 2.1rem -2.5rem 2.4rem;
+                padding-inline: 2.5rem;
+                scroll-padding-inline: 2.5rem;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                scroll-snap-type: x mandatory;
+                scrollbar-width: none;
+            }
+            .pair::-webkit-scrollbar { display: none; }
+            .pair img, .pair video {
+                flex: 0 0 auto;
+                width: min(82vw, 20rem);
+                height: min(109vw, 26.5rem);
+                max-width: none;
+                scroll-snap-align: center;
+            }
+        }
+
+        /* A shipped example, boxed. Loose two-column blocks read as a break in
+           the reading rhythm; a card reads as a deliberate aside. */
+        .example-box {
+            display: flex;
+            align-items: stretch;
+            gap: 1.1rem;
+            justify-content: space-between;
+            width: 100%;
+            max-width: none;
+            margin-inline: auto;
+            margin: 2.6rem 0 2.4rem;
+            padding: 0 0.95rem 0 2rem;
+            border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.16);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.6);
+        }
+        .eb-body {
+            display: flex;
+            flex: 1 1 auto;
+            flex-direction: column;
+            min-width: 0;
+            max-width: 30rem;
+            padding-block: 0.5rem;
+        }
+        @media (min-width: 701px) {
+            .example-box { padding-block: 0; }
+            .eb-body { padding-block: 1.5rem; }
+            .eb-media { margin-block: 0.95rem; }
+        }
+        .eb-kicker {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+            color: var(--color-label);
+            padding: 0;
+            border: 0;
+            border-radius: 0;
+            background: none;
+            margin-bottom: 0.5rem;
+        }
+        .eb-title {
+            font-family: var(--font-display); font-size: 1.3rem; font-weight: 600;
+            letter-spacing: -0.02em; line-height: 1.2;
+            color: var(--color-ink);
+            margin-bottom: 0.65rem;
+        }
+        .eb-body p { font-size: 16px; line-height: 1.6; color: var(--color-deep); margin-bottom: 0.7rem; }
+        .eb-body p:last-child { margin-bottom: 0; }
+        .eb-link {
+            display: inline-flex; align-items: center; gap: 0.55rem;
+            align-self: flex-start;
+            margin-top: auto;
+            padding: 0.62rem 0.95rem 0.62rem 1.05rem;
+            border-radius: 10px;
+            background: hsl(var(--accent-h), 26%, 95.5%);
+            border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.18);
+            font-family: var(--font-display); font-size: 0.98rem; font-weight: 600;
+            letter-spacing: -0.01em; color: var(--color-ink);
+            text-decoration: none;
+            transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+        }
+        .eb-link svg {
+            width: 13px; height: 13px; flex: none;
+            color: var(--color-label);
+            transition: transform 0.18s ease, color 0.18s ease;
+        }
+        .eb-link:hover {
+            background: hsl(var(--sec-h), 30%, 93%);
+            border-color: hsl(var(--sec-h), 30%, 38%, 0.34);
+            color: hsl(var(--sec-h), 46%, 28%);
+            transform: translateY(-1px);
+        }
+        .eb-link:hover svg {
+            transform: translate(2px, -2px);
+            color: hsl(var(--sec-h), 46%, 32%);
+        }
+        .eb-media {
+            flex: 0 0 auto;
+            width: 15.5rem;
+            height: 26rem;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        .eb-media video {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center bottom;
+            border-radius: 12px;
+        }
+        @media (max-width: 700px) {
+            .example-box { flex-direction: column; align-items: stretch; gap: 1.3rem; padding: 1.35rem 1.35rem 1.45rem; }
+            .eb-media { width: min(100%, 13rem); height: auto; align-self: center; overflow: visible; }
+            .eb-media video { height: auto; object-fit: contain; object-position: center; }
+            .eb-link { margin-top: 1.15rem; }
+        }
+
+        /* Tool recording and the code that consumes it, side by side on one
+           dark ground so the pair reads as a single artifact. */
+        .demo {
+            display: grid;
+            grid-template-columns: 48% 1fr;
+            align-items: center;
+            gap: 1.5rem;
+            margin: 2.4rem auto 2.6rem;
+            padding: 1.4rem 1.45rem 1.5rem;
+            border-radius: 18px;
+            background: hsl(var(--accent-h), 14%, 20%);
+        }
+        /* These two panels carry the detail the section is actually about, so on a
+           wide screen let the block break out past the reading column. Gated on
+           viewport width: below this the breakout would exceed the screen and get
+           clipped by body's overflow-x, cutting content off with no way to scroll. */
+        @media (min-width: 960px) {
+            .demo {
+                /* Centre on the viewport, not the reading column. Capped at 56rem —
+                   about 10% past the 51rem reading column, so it reads as a slight
+                   spill rather than a full-bleed band. The 100vw - 5rem term keeps
+                   at least 2.5rem of gutter, so it can never be clipped by
+                   body's overflow-x. */
+                --demo-w: min(56rem, 100vw - 5rem);
+                width: var(--demo-w);
+                margin-left: calc(50% - var(--demo-w) / 2);
+                margin-right: 0;
+                gap: 1.7rem;
+                padding: 1.6rem 1.7rem 1.7rem;
+            }
+        }
+        .demo.is-solo { grid-template-columns: 1fr; }
+        .demo-col { min-width: 0; }
+        .demo-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 11px; letter-spacing: 0.11em; text-transform: uppercase; font-weight: 500;
+            color: rgba(255, 255, 255, 0.62);
+            margin-bottom: 1rem;
+        }
+        .demo img, .demo video {
+            display: block; width: 100%; height: auto; border-radius: 12px;
+        }
+        /* Detail-dense shots: hover magnifies at the cursor. Square corners on
+           purpose, since a rounded frame reads oddly once the zoom crops the edges. */
+        .zoom {
+            overflow: hidden;
+            border-radius: 0;
+        }
+        /* Zoom is a desktop enhancement only. Touch devices keep the image
+           static so scrolling never triggers an accidental crop. */
+        @media (hover: hover) and (pointer: fine) {
+            .zoom { cursor: zoom-in; }
+            .demo .zoom img, .demo .zoom video {
+                border-radius: 0;
+                transition: transform 0.32s cubic-bezier(0.2, 0, 0.2, 1);
+                will-change: transform;
+            }
+            .zoom:hover img, .zoom:hover video { transform: scale(1.35); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .demo .zoom img, .demo .zoom video { transition: none; }
+        }
+        .demo-stack { display: grid; gap: 1.15rem; justify-items: center; }
+        /* Each item carries its own label. Capped below the 340px native width,
+           so they stay crisp and read as a compact pair. */
+        .demo-item { width: min(100%, 16rem); }
+        @media (max-width: 700px) {
+            .demo { grid-template-columns: 1fr; gap: 1.25rem; padding: 1.15rem 1.2rem 1.25rem; }
+            .zoom { cursor: default; }
+            .demo .zoom img, .demo .zoom video { transform: none; transition: none; will-change: auto; }
+        }
+
+        /* Bare placeholder — same geometry as .pic, for slots still to be filled */
+        .ph {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 0.4rem; text-align: center;
+            margin: 2.1rem auto 2.4rem;
+            padding: 2rem 1.5rem;
+            min-height: 14rem;
+            border-radius: 16px;
+            background: hsl(var(--accent-h), 20%, 95%);
+            border: 1px dashed hsl(var(--accent-h), 20%, 78%);
+        }
+        .ph .ph-name { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.04em; color: hsl(var(--accent-h), 24%, 38%); }
+        .ph .ph-note { font-size: 12px; color: var(--color-muted); max-width: 26rem; line-height: 1.5; }
+
+        /* Two-up neutral cards — the two initiatives, and the closing recap */
+        .init-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.75rem; }
+        @media (max-width: 760px) { .init-grid { grid-template-columns: 1fr; } }
+        .init-card {
+            --card-h: 218;
+            position: relative;
+            overflow: hidden;
+            min-height: 9.5rem;
+            border: 1px solid hsl(var(--card-h), 34%, 42%, 0.28);
+            border-radius: 16px;
+            padding: 1.35rem 1.45rem 2.75rem;
+            background:
+                radial-gradient(62% 48% at 6% -2%,
+                    hsl(var(--card-h), 72%, 97%, 0.5) 0%,
+                    transparent 62%),
+                radial-gradient(70% 60% at 100% 100%,
+                    hsl(var(--card-h), 42%, 68%, 0.45) 0%,
+                    transparent 66%),
+                linear-gradient(158deg,
+                    hsl(var(--card-h), 52%, 89%) 0%,
+                    hsl(var(--card-h), 45%, 81%) 100%);
+            box-shadow: inset 0 1px 0 hsl(var(--card-h), 70%, 98%, 0.75);
+        }
+        /* Text sits top-left. Cap every text child (not just the body) so nothing
+           runs under the accent art on the right. */
+        .init-card > :not(.init-accent) { max-width: 12.25rem; }
+        .init-accent {
+            position: absolute;
+            right: -0.4rem; bottom: -1.6rem;
+            width: 7.5rem; height: auto;
+            pointer-events: none;
+            /* For the vertically-centred variant instead, swap the two lines above for:
+               right: 1rem; top: 50%; transform: translateY(-50%); */
+        }
+        /* Optical correction: the laptop needs more width to read as the
+           same size as the flat motion card. Scaled from its top-left corner, so
+           the growth pushes into the crop instead of moving the artwork up-left.
+           A transform keeps that true at any card size, unlike offset maths. */
+        /* Card 1's accent sits further right and lower than card 2's, because
+           .is-lg scales out from its top-left. Nudge this one up and in. */
+        .init-accent:not(.is-lg) { width: 8.25rem; right: 0.15rem; bottom: -0.8rem; }
+        .init-accent.is-lg {
+            width: 9rem;
+            transform: scale(1.12);
+            transform-origin: top left;
+        }
+        @media (max-width: 760px) {
+            .init-card { min-height: 0; padding-bottom: 2.5rem; }
+            .init-card > :not(.init-accent) { max-width: none; }
+            .init-accent { width: 6rem; right: -0.3rem; bottom: -1.2rem; }
+            .init-accent.is-lg { width: 7.2rem; }
+        }
+        .init-card .init-title {
+            font-family: var(--font-display); font-size: 1.28rem; font-weight: 600;
+            letter-spacing: -0.02em; line-height: 1.22;
+            color: hsl(var(--card-h), 46%, 24%); margin: 0 0 0.55rem;
+        }
+        .init-card .init-body { font-size: 14.5px; line-height: 1.55; color: var(--color-deep); }
+        /* ══════ Per-initiative section colour ══════
+           --sec-h defaults to the page hue and is overridden on the sections
+           belonging to each initiative. Anything below that reads --sec-h picks
+           up its section's colour automatically. */
+        :root, .read-section { --sec-h: var(--accent-h); --sec-s: 46%; }
+        section[data-init="1"] { --sec-h: 218; --sec-s: 48%; }   /* Guidelines: blue */
+        section[data-init="2"] { --sec-h: 168; --sec-s: 44%; }   /* Lottiemon: teal-green */
+        section[data-tone="positive"] { --sec-h: 152; --sec-s: 42%; }  /* outcomes: green */
+
+        .read-section .section-kicker { color: hsl(var(--sec-h), var(--sec-s), 26%); }
+        .purpose-card svg            { color: hsl(var(--sec-h), var(--sec-s), 40%); }
+        /* Compact initiative label that sits in the section heading row. 11px,
+           not the 9.5px of the other mono labels — it has to read at a glance. */
+        .section-heading-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            margin-bottom: 1.4rem;
+        }
+        .section-heading-row .section-kicker { margin-bottom: 0; }
+        .section-heading-rule {
+            flex: 1 1 auto;
+            min-width: 2rem;
+            height: 1px;
+            background: hsl(var(--sec-h), 40%, 35%, 0.42);
+        }
+        .section-eyebrow {
+            flex: none;
+            font-family: var(--font-mono);
+            font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+            color: hsl(var(--sec-h), 40%, 35%);
+            margin: 0;
+            padding: 0.42rem 0.68rem 0.36rem;
+            border: 1px solid hsl(var(--sec-h), 40%, 35%, 0.28);
+            border-radius: 7px;
+            background: hsl(var(--sec-h), 42%, 94%);
+        }
+        @media (max-width: 640px) {
+            .section-heading-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.65rem;
+            }
+            .section-heading-rule { width: 100%; min-width: 0; margin: 0.1rem 0 0; }
+            .section-heading-row .section-eyebrow { align-self: flex-end; }
+        }
+
+        /* Purpose of motion — four small cards */
+        .purpose-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; max-width: 42rem; margin: 1.5rem auto 0.5rem; }
+        @media (max-width: 860px) { .purpose-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 460px) { .purpose-grid { grid-template-columns: 1fr; } }
+        .purpose-card {
+            border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.16);
+            border-radius: 12px; padding: 1.15rem 1.15rem 1.25rem;
+            background: rgba(255, 255, 255, 0.5);
+        }
+        .purpose-card svg { width: 21px; height: 21px; color: hsl(var(--accent-h), 46%, 40%); margin-bottom: 0.7rem; }
+        .purpose-card .p-title { font-family: var(--font-display); font-size: 0.98rem; font-weight: 600; color: var(--color-ink); line-height: 1.25; }
+
+        /* Framework chips — the surfaces the tokens had to survive */
+        .chip-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; margin: 1.9rem 0 0.5rem; }
+        .chip {
+            font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.055em; text-transform: uppercase; font-weight: 500;
+            color: hsl(var(--accent-h), 24%, 32%); background: rgba(255, 255, 255, 0.6);
+            border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.2);
+            padding: 0.45rem 0.8rem; border-radius: 8px;
+        }
+        .chip-arrow { font-size: 15px; color: var(--color-label); padding: 0 0.15rem; }
+        .chip.is-target {
+            color: #fff; background: hsl(var(--sec-h), var(--sec-s), 30%);
+            border-color: hsl(var(--sec-h), var(--sec-s), 30%);
+        }
+        .chip-caption { font-size: 12.5px; text-align: center; color: var(--color-label); margin-top: 0.7rem; }
+
+        /* What changed, stated as before -> after. No invented percentages. */
+        .outcomes {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.8rem;
+            margin: 1.7rem 0 0;
+        }
+        @media (max-width: 760px) { .outcomes { grid-template-columns: 1fr; } }
+        .outcome {
+            border: 1px solid hsl(var(--sec-h), 32%, 38%, 0.24);
+            border-radius: 14px;
+            padding: 1.7rem 1.75rem 1.8rem;
+            background: linear-gradient(160deg,
+                hsl(var(--sec-h), 46%, 96.5%) 0%,
+                hsl(var(--sec-h), 38%, 93%) 100%);
+        }
+        .outcome .o-stat {
+            font-family: var(--font-display);
+            font-size: 1.22rem; font-weight: 600; line-height: 1.25;
+            letter-spacing: -0.015em;
+            color: hsl(var(--sec-h), 46%, 24%);
+        }
+        .outcome .o-sub {
+            margin-top: 0.7rem;
+            font-size: 14.5px; line-height: 1.55;
+            color: var(--color-deep);
+        }
+
+    </style>
+</head>
+<body>
+
+    <main class="relative z-[1] max-w-4xl mx-auto bg-[var(--color-bg)]">
+
+        <!-- ───────── Hero ───────── -->
+        <section class="pt-[5.5rem] px-10">
+            <div class="pt-14 pb-10">
+                <h1 class="font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
+                    Scaling motion beyond<br><span class="italic font-normal text-brand-500" style="font-variation-settings: 'opsz' 72;">individual expertise</span>
+                </h1>
+                <p class="lead max-w-2xl mb-3">
+                    As PayZapp grew, motion became harder to manage consistently and reliably across the team.
+                </p>
+            </div>
+
+        </section>
+
+        <!-- ───────── Two Initiatives ───────── -->
+        <section class="read-section px-10">
+            <h2 class="section-kicker">Two Initiatives</h2>
+            <p class="section-summary mb-2">Over time, I took on two separate initiatives to address different parts of that problem.</p>
+
+            <div class="prose-block max-w-2xl">
+                <p>Motion Design Guidelines lived inside <b>Unicorn</b>, the product&rsquo;s design system. Lottiemon did not; it was an internal tool. I was the only designer on both, though very little was settled alone: the tokens, the cards and the interactions were all shaped through review with design and engineering.</p>
+            </div>
+
+            <div class="init-grid max-w-3xl">
+                <div class="init-card">
+                    <img class="init-accent" src="assets/motionAccent.png" width="393" height="368" alt="">
+                    <div class="init-title">A shared language for motion</div>
+                    <div class="init-body">Making motion more consistent, easier to communicate, and less ambiguous to implement.</div>
+                </div>
+                <div class="init-card" style="--card-h: 168;">
+                    <img class="init-accent is-lg" src="assets/lottiemonAccent.png" width="390" height="460" alt="">
+                    <div class="init-title">Motion asset handoff</div>
+                    <div class="init-body">Improving how motion assets were handed off and maintained, with faster handoff loops to engineering.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ───────── Motion Design Guidelines ───────── -->
+        <section class="read-section px-10" data-init="1">
+            <div class="section-heading-row">
+                <h2 class="section-kicker">Motion Design Guidelines</h2>
+                <span class="section-heading-rule" aria-hidden="true"></span>
+                <span class="section-eyebrow">Initiative 01</span>
+            </div>
+            <div class="guidelines-opener">
+                <div class="pic is-opener">
+                    <img src="assets/mdg%20main.png" width="1694" height="864" alt="Motion Design Guidelines title card: an easing curve with a Bézier handle being dragged">
+                </div>
+                <p class="section-summary mb-2">The first initiative was Motion Design Guidelines.</p>
+            </div>
+
+            <div class="prose-block max-w-2xl">
+                <p>Motion Design Guidelines documented the purpose of motion design across the product and standardized the fundamentals so they could work consistently across different UI frameworks.</p>
+                <p>At the time, the product was being built across React Native, Jetpack Compose and SwiftUI, with an eventual goal of migrating to Flutter. The fundamental motion tokens were framework-agnostic, so the guidelines could travel across implementations without belonging to a single framework.</p>
+            </div>
+
+            <!-- 1 -->
+            <div class="numbered-point !mt-10">
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">1 /</span>The purpose of motion</h3>
+                <div class="prose-block max-w-2xl mb-1">
+                    <p>It documented the purpose of motion design across the product.</p>
+                </div>
+                <div class="purpose-grid" style="margin-left: 2rem;">
+                    <div class="purpose-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.2"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></svg>
+                        <div class="p-title">Guide<br>focus</div>
+                    </div>
+                    <div class="purpose-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2.1 5-5 2.1 2.1-5z"/></svg>
+                        <div class="p-title">Improve<br>intuitiveness</div>
+                    </div>
+                    <div class="purpose-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-6 4 3.5L21 5"/><path d="M15 5h6v6"/></svg>
+                        <div class="p-title">Increase<br>retention</div>
+                    </div>
+                    <div class="purpose-card">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l1.9 4.9 4.9 1.9-4.9 1.9L12 16.1l-1.9-4.9L5.2 9.3l4.9-1.9z"/><path d="M18.5 15.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg>
+                        <div class="p-title">Create<br>delight</div>
+                    </div>
+                </div>
+                <div class="prose-block max-w-2xl mt-5">
+                    <p>This gave teams a common foundation for evaluating motion based on its purpose rather than personal preference.</p>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">2 /</span>Standardising only the fundamentals</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>The guidelines standardized only the fundamental motion tokens—easing and duration—so they could create consistency without prescribing implementation details.</p>
+                    <p>Because the tokens were framework-agnostic, they could be used across React Native, Jetpack Compose and SwiftUI, with the eventual migration to Flutter in mind.</p>
+                </div>
+                <div class="chip-row">
+                    <span class="chip">React Native</span>
+                    <span class="chip">Jetpack Compose</span>
+                    <span class="chip">SwiftUI</span>
+                    <span class="chip-arrow">→</span>
+                    <span class="chip is-target">Flutter</span>
+                </div>
+                    <div class="prose-block max-w-2xl mt-4">
+                    <p>The framework-agnostic tokens streamlined implementation across teams while keeping motion behaviour consistent.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ───────── Motion Cards ───────── -->
+        <section class="read-section px-10" data-init="1">
+            <h2 class="section-kicker">Motion Cards</h2>
+            <p class="section-summary mb-2">To make motion specifications easier to communicate, I introduced a new artifact, and we called it a Motion Card.</p>
+
+            <!-- 1 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">What a motion card captures and how we used it</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>A motion card captured the key details of the motion: the component it was for, the type of motion, and the two standardized parameters: easing and duration.</p>
+                </div>
+                <div class="duo">
+                    <div class="duo-wide">
+                        <div class="captures">
+                            <div class="capture">
+                                <div class="cap-title">Motion</div>
+                                <div class="cap-sub">Whether it slid, scaled or faded, and in which direction.</div>
+                            </div>
+                            <div class="capture">
+                                <div class="cap-title">Component<span class="cap-opt">optional</span></div>
+                                <div class="cap-sub">Which UI component the motion was applied to.</div>
+                            </div>
+                            <div class="capture">
+                                <div class="cap-title">Easing</div>
+                                <div class="cap-sub">A cubic B&eacute;zier from the shared presets, plotted as a curve.</div>
+                            </div>
+                            <div class="capture">
+                                <div class="cap-title">Duration</div>
+                                <div class="cap-sub">How long it ran, taken from the named scale.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="duo-card">
+                        <img src="assets/motionCard.png" width="399" height="727" alt="A single motion card: the component label, an easing curve plotted on a grid, its cubic Bézier values of 0.8, 0, 0.4, 1 and a duration of 350 ms, with a Tokens panel below naming verySlow_slow and short2">
+                    </div>
+                </div>
+            </div>
+
+            <div class="prose-block max-w-2xl">
+                <p>I turned the Motion Cards into published Figma components, so designers could find them directly in the Assets panel, drag one onto the canvas, customize the specification, and place it alongside the interaction they were describing.</p>
+            </div>
+
+            <div class="figure">
+                <div class="pic">
+                    <img src="assets/motionCards%20dnd.png" width="1506" height="968" alt="Figma Assets panel with Motion Card (Full) being dragged onto the canvas beside two artboards">
+                </div>
+                <span class="figure-label">Drag and drop from the Assets panel</span>
+            </div>
+
+            <div class="prose-block max-w-2xl">
+                <p>We placed the card right next to, or in between, the two frames where the interaction happened. The example below is for dismissing an attention nudge on the home page.</p>
+                <p>That meant any of us, designer or developer, could look at the frames and read exactly what the interaction was asking for. And the prototype was always there to play if you wanted to watch it happen.</p>
+            </div>
+
+            <div class="demo is-solo">
+                <div class="demo-col">
+                    <span class="demo-label">Motion cards in use</span>
+                    <div class="zoom">
+                        <img src="assets/usingMotionCards.png" width="2006" height="920" alt="Three PayZapp home screens with motion cards placed between them: a Fade Off at 250 ms dismissing the credit card nudge, and a Slide at 550 ms bringing in the next one, each with its easing and duration tokens">
+                    </div>
+                </div>
+            </div>
+
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">A fixed set to choose from</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>Neither easing nor duration was open-ended. Easing came from <b>13 presets</b>, each named for the speed it starts at and the speed it settles into, and duration came from a short scale of named steps. Enough range to cover what the product actually needed, small enough to stay memorable.</p>
+                    <p>The curve took the most prominent place on the card because it is also how easing is written in most frameworks, so reading one became a habit rather than a lookup.</p>
+                </div>
+            </div>
+
+            <div class="pic">
+                <img src="assets/motionCards%20easings.png" width="1385" height="822" alt="The easing preset list: moving_superSlow, moving_verySlow, moving_slow, slow_superSlow and more, with 13 easing presets called out">
+            </div>
+
+            <!-- 5 -->
+            <div class="plugin-layout">
+                <div class="plugin-layout-copy">
+                    <h3 class="section-mini-heading mb-2"><img class="plugin-icon" src="assets/icon.png" width="64" height="64" alt="">Motion Card Plugin</h3>
+                    <div class="prose-block max-w-2xl">
+                        <p>The Figma API did not allow prototype connections with preset easings, so I built a plugin that acted as a floating library, exposing all the existing easing and duration presets while you created interactions in Figma&rsquo;s prototype mode.</p>
+                        <p>You could scroll through the presets and instantly copy the cubic-bezier coordinates to apply directly to a prototype. It was a non-invasive layer of guidance: always available while designing, but never in the way, helping interactions stay within the shared guidelines.</p>
+                    </div>
+                </div>
+
+                <div class="plugin-layout-media">
+                    <div class="pic is-clip">
+                        <video src="assets/motioncard.mp4" width="322" height="472" autoplay muted loop playsinline preload="metadata" aria-label="The plugin's easing picker: acceleration presets listed by name, with slow_moving selected and described"></video>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ───────── Interactions ───────── -->
+        <section class="read-section px-10" data-init="1">
+            <h2 class="section-kicker">Interactions - Applied &amp; Documented Motion Cards</h2>
+            <p class="section-summary mb-2">An interaction card was a Motion Card with four values pre-filled for a specific component: the component, type of motion, easing, and duration.</p>
+
+            
+
+            <div class="prose-block max-w-2xl">
+               <p>That gave us a consistent way to describe an interaction across the product without asking engineering to infer the behavior from the screens alone.</p>
+            </div>
+
+            <div class="chip-row mb-8 mt-8">
+                <span class="chip">Component</span>
+                <span class="chip">Motion type</span>
+                <span class="chip">Easing</span>
+                <span class="chip">Duration</span>
+                <span class="chip-arrow">&rarr;</span>
+                <span class="chip is-target">Documented interaction</span>
+            </div>
+
+            <div class="pic is-opener">
+                <img src="assets/interactions.png" width="1613" height="822" alt="Interaction cards: Slides Up/Down for a list, Slides Left for a page transition, Slides Up for a toast">
+            </div>
+
+              <div class="prose-block max-w-2xl mt-8">
+                <p>Once filled in, the card could sit next to the frames it described, giving designers and developers the intended behavior in context.</p>
+            </div>
+            
+            <div class="demo is-solo">
+                <div class="demo-col">
+                    <span class="demo-label">Interaction cards in use</span>
+                    <div class="zoom">
+                        <img src="assets/usingInteractionCards.png" width="1986" height="895" alt="PayZapp UPI setup screens with interaction cards between them, specifying Scale Down for the UPI card and Slide Up for the setup screen, each with its easing and duration tokens">
+                    </div>
+                </div>
+            </div>
+
+          
+
+            <!-- 1 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">Embedded explanations</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>We documented the fundamental interactions that covered roughly <b>80%</b> of the interaction cases for the existing components in our design systems.</p>
+                    <p>Each interaction card also had an <b>Explained</b> variant: a lo-fi visual demonstration of how the interaction should behave, plus a plain-language explanation of what moves and how to communicate it to engineering.</p>
+                </div>
+            </div>
+
+            <div class="pic">
+                <img src="assets/interactions%20embedded%20explanations.png" width="1385" height="827" alt="The Explained variant of MDG Page Transition: a written description of the motion beside an interactive prototype, the card and its tokens">
+            </div>
+
+            <!-- 2 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">Off the screen entirely</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>We also printed the interaction cards. And I documented every interaction in one place inside Figma, so the whole set stayed easy to reach, even from a phone, via the QR code on the back of each card.</p>
+                </div>
+            </div>
+
+            <div class="pic is-bleed">
+                <img src="assets/interactions%20printed.png" width="1921" height="961" alt="The printed interaction card deck: Toast, Bottom Sheet, Page Transition, Button Tap, Pop-Up and Pop-Up Elastic, with Motion Design Guidelines card backs below">
+            </div>
+
+            <div class="pair">
+                <img src="assets/motioncards%20real.png" width="430" height="573" alt="The printed Motion Design Guidelines cards, fanned out on a ring and held in one hand">
+                <video src="assets/workshop.mp4" width="720" height="1280" autoplay muted loop playsinline preload="metadata" aria-label="Workshop recording"></video>
+            </div>
+        </section>
+
+        <!-- ───────── Motion Asset Handoff ───────── -->
+        <section class="read-section px-10" data-init="2">
+            <div class="section-heading-row">
+                <h2 class="section-kicker">Motion Asset Handoff: Lottiemon</h2>
+                <span class="section-heading-rule" aria-hidden="true"></span>
+                <span class="section-eyebrow">Initiative 02</span>
+            </div>
+            <p class="section-summary mb-7">The second initiative focused on how motion assets were handed off and maintained. For that I built <b>Lottiemon</b>, an internal tool to make working with Lottie animations more self-serve and reduce the handoff loops with engineering.</p>
+
+            <div class="pic is-opener is-lottiemon-hero">
+                <img src="assets/lottiemon%20main.png" width="1163" height="868" alt="Lottiemon shown on a laptop with controls for changing colours, replacing assets, editing segments, cropping animation, and exporting GIF or video">
+            </div>
+
+            <div class="prose-block max-w-2xl">
+                <p>Almost all the motion we shipped was delivered as Lottie animations: loaders and spinners, success and failure states, empty states, hero illustrations. That made the Lottie file the real unit of handoff between design and engineering, so anything that made a Lottie awkward to work with slowed down everything downstream.</p>
+                <p>Lottiemon does not create animations. You still build them in After Effects, or a tool like LottieLab, or get them from a motion designer. Lottiemon is where you edit that file afterwards and turn it into something deliverable, and that is the part it makes faster.</p>
+            </div>
+
+            <div class="prose-block max-w-2xl">
+                <p>To standardize the motion asset handoff, Lottiemon handled three main things for us:</p>
+            </div>
+
+            <!-- 1 -->
+            <div class="numbered-point !mt-10">
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">1 /</span>Making colours and text addressable</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>A Lottie is just JSON, and a fairly readable one. Lottie already lets you target parts of an animation by layer name. What was missing was a way for designers to use that without hand-editing the file.</p>
+                    <p>So Lottiemon lets you rename the layers behind solid colours, gradients and text. Once a layer has a name, a designer can change it in the tool, and engineering can reach the same layer from code.</p>
+                    <p>That took the rework out of small changes, and cut the files we handed over. A loader that needed a light and a dark version used to ship as two; now it is one file, with the theme applied at runtime.</p>
+                </div>
+            </div>
+
+            <div class="demo">
+                <div class="demo-col">
+                    <span class="demo-label">In Lottiemon</span>
+                    <video src="assets/colorandlayerNames.mp4" width="1334" height="1200" autoplay muted loop playsinline preload="metadata" aria-label="Editing a Lottie's colours and layer names in Lottiemon"></video>
+                </div>
+                <div class="demo-col">
+                    <span class="demo-label">In code</span>
+                    <img src="assets/propertiesSnippet.png" width="732" height="338" alt="Dart snippet: ValueDelegate.color targets the layer named loaderRing and sets it to white or black depending on isDarkMode">
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">2 /</span>Named segments instead of frame ranges</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>The other problem was stateful animations. An intro, a processing loop and a success state usually went out as three separate files, swapped in code as the process moved along.</p>
+                    <p>Lottie supports markers for exactly this. Lottiemon put a visual editor on top of them, so a designer could set each range by eye and name it, instead of counting frames.</p>
+                    <p>The developer then asks for the state they want, <b>processing</b> or <b>success</b>, and never touches a frame range.</p>
+                    <p>One file instead of three also meant one export, artwork shared across the states, and less to load at runtime.</p>
+                </div>
+            </div>
+
+            <div class="demo">
+                <div class="demo-col">
+                    <span class="demo-label">In Lottiemon</span>
+                    <video src="assets/segments.mp4" width="1036" height="1166" autoplay muted loop playsinline preload="metadata" aria-label="Defining named segments over a Lottie timeline in Lottiemon"></video>
+                </div>
+                <div class="demo-col">
+                    <span class="demo-label">In code</span>
+                    <img src="assets/segments%20snippet.png" width="719" height="484" alt="Dart snippet: playMarker looks up a named marker on the composition and animates that range, called as playMarker('processing')">
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">3 /</span>Handing off before the art is final</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>The other problem was that motion often had to move into development before the final assets were ready. I added asset replacement so we could hand off the animation with placeholders and swap in the final assets later without rebuilding the animation.</p>
+                    <p>That was particularly useful for marketing and feature-specific animations, where the structure stayed the same but the artwork changed.</p>
+                </div>
+            </div>
+
+            <div class="demo">
+                <div class="demo-col">
+                    <span class="demo-label">In Lottiemon</span>
+                    <video src="assets/assetreplacement.mp4" width="1192" height="1200" autoplay muted loop playsinline preload="metadata" aria-label="Swapping an embedded asset inside a Lottie file in Lottiemon"></video>
+                </div>
+                <div class="demo-col">
+                    <div class="demo-stack">
+                        <div class="demo-item">
+                            <span class="demo-label">Early handoff</span>
+                            <img src="assets/handoverAssets.png" width="340" height="198" alt="The animation with generic placeholder avatars in place of the artwork">
+                        </div>
+                        <div class="demo-item">
+                            <span class="demo-label">Final handoff</span>
+                            <img src="assets/handoverAssetsfinal.png" width="340" height="198" alt="The same animation with the final illustrated characters swapped in">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">Two smaller utilities</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>Two smaller things came out of recurring friction. A <b>Flutter preview</b>, since the product was moving to Flutter and Lottie sometimes behaved differently there. Better caught before handoff than after.</p>
+                    <p>And a <b>DotLottie</b> export, so moving to the more efficient open format didn&rsquo;t mean adopting a second workflow.</p>
+                </div>
+            </div>
+
+            <!-- 5 -->
+            <div class="numbered-point">
+                <h3 class="section-mini-heading mb-2">Experimenting with State Machines</h3>
+                <div class="prose-block max-w-2xl">
+                    <p>dotLottie also added state machines, letting the animation carry its own transitions. I built an editor for it in Lottiemon, because it would hand designers more control without a trip back to engineering.</p>
+                    <p>We did not adopt it in the app, since behaviour was inconsistent across platforms. It still holds up on the web though, where hover and click states can drive an animation directly, which suits marketing pieces well.</p>
+                </div>
+            </div>
+
+            <div class="pic is-framed">
+                <img src="assets/statemachine.png" width="1399" height="778" alt="A state machine editor in Lottiemon: named segments in a sidebar, wired into a graph of states joined by On Complete transitions, with loop and reverse settings for the selected state">
+            </div>
+
+        </section>
+
+        <!-- ───────── Impact ───────── -->
+        <section class="read-section px-10" data-tone="positive">
+            <h2 class="section-kicker">Impact</h2>
+            <div class="outcomes">
+                <div class="outcome">
+                    <div class="o-stat">Asset handoff</div>
+                    <div class="o-sub">A change that could take days became self-serve and took minutes. With no one to route it through, people started making their own assets.</div>
+                </div>
+                <div class="outcome">
+                    <div class="o-stat">Consistency</div>
+                    <div class="o-sub">Shared tokens and a defined set of interactions held motion together, while leaving designers free to define new ones.</div>
+                </div>
+                <div class="outcome">
+                    <div class="o-stat">Implementation</div>
+                    <div class="o-sub">An assured motion language gave designers and developers more agency, tightened handoff loops, and kept implementation close to intent.</div>
+                </div>
+            </div>
+
+            <div class="prose-block max-w-2xl mt-7">
+                <p>From the start, one of my core aims was to make motion easier to understand and more approachable: how we wanted to use it, what it stood for, and how to begin working with motion design.</p>
+                <p>Within a few months, Motion Design Guidelines and Lottiemon had made that practical. Almost all of us were creating our own assets and interactions and handling requirements end to end, with a motion designer stepping in only when something was especially complex or niche.</p>
+            </div>
+
+            <div class="example-box">
+                <div class="eb-body">
+                    <span class="eb-kicker">Shipped Example - PayZapp Referral</span>
+                    <div class="eb-title mt-2">One file, doing all of it</div>
+                    <p>The referral animation is one Lottie file doing all three: named segments, artwork swapped in at runtime, and colours set at runtime.</p>
+                    <p>An envelope opens with the invite, and four share options sit beneath it. The tap targets are coded over the animation, so which segment plays follows whichever one you pick.</p>
+                    <a class="eb-link" href="../Lottiemon/lottiemon-case-study.html">Read more about Lottiemon<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 2h5v5"/><path d="M14 2 7.5 8.5"/><path d="M12.5 9.5v2A1.5 1.5 0 0 1 11 13H4A1.5 1.5 0 0 1 2.5 11.5v-7A1.5 1.5 0 0 1 4 3h2"/></svg></a>
+                </div>
+                <div class="eb-media">
+                    <video src="assets/example.mp4" width="1080" height="1920" autoplay muted loop playsinline preload="metadata" aria-label="The PayZapp referral animation playing on a phone"></video>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="text-center px-10 pt-8 pb-24">
+            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
+                Thank you for reading
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+        </div>
+
+        <!--
+          Sticky notes: the design language supports them (.sticky-note, and ?sticky=false
+          to hide). I left them out rather than writing asides in your voice — add them
+          wherever you want, e.g.:
+          <div class="sticky-note" style="top: 4rem; right: -16.5rem; --rot: 2deg;">your aside</div>
+        -->
+
+    </main>
+
+    <script>
+        (function () {
+            var loops = document.querySelectorAll('video[autoplay]');
+
+            /* An autoplaying loop is motion the viewer did not ask for. Hand control
+               back to anyone who has asked their OS to reduce motion. */
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                loops.forEach(function (v) {
+                    v.removeAttribute('autoplay');
+                    v.setAttribute('controls', '');
+                    v.pause();
+                });
+                return;
+            }
+
+            /* Otherwise play only what is on screen — several looping clips
+               decoding at once is wasted battery on a phone. */
+            if (!('IntersectionObserver' in window)) return;
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.play().catch(function () {}); }
+                    else { e.target.pause(); }
+                });
+            }, { rootMargin: '100px' });
+            loops.forEach(function (v) { io.observe(v); });
+        })();
+
+        /* Zoom origin follows the pointer, so the magnified area is whatever the
+           cursor is over rather than always the centre. */
+        (function () {
+            document.querySelectorAll('.zoom').forEach(function (box) {
+                var media = box.querySelector('img, video');
+                if (!media) return;
+                box.addEventListener('mousemove', function (e) {
+                    var r = box.getBoundingClientRect();
+                    var x = ((e.clientX - r.left) / r.width) * 100;
+                    var y = ((e.clientY - r.top) / r.height) * 100;
+                    media.style.transformOrigin = x.toFixed(2) + '% ' + y.toFixed(2) + '%';
+                });
+                box.addEventListener('mouseleave', function () {
+                    media.style.transformOrigin = '';
+                });
+            });
+        })();
+    </script>
+
+</body></html>

@@ -1,0 +1,8 @@
+{
+  "name": "case-study-mobile-tools",
+  "private": true,
+  "description": "Audit tooling for mobile-port-playbook.md",
+  "dependencies": {
+    "puppeteer-core": "^24.0.0"
+  }
+}
