@@ -548,6 +548,95 @@
             border-radius: 16px;
             background: hsl(var(--accent-h), 20%, 93%);
         }
+        .pair.has-motion-card {
+            width: min(56rem, calc(100vw - 5rem));
+            max-width: none;
+            margin-left: 50%;
+            transform: translateX(-50%);
+            flex-wrap: nowrap;
+            align-items: center;
+            /* Wider than the row's default 1rem so the photo and the video sit
+               further apart, giving the card between them room to breathe. The
+               card's negative margins below are raised by the same amount, so
+               how far it laps over each neighbour is unchanged. */
+            gap: 2.2rem;
+        }
+        .pair.has-motion-card .mcard-stage {
+            flex: 0 0 auto;
+            /* Smaller than the 18rem photo and video either side, and pulled
+               over both of them so it reads as an object laid on top of the row
+               rather than a third panel in it. */
+            width: 11.4rem;
+            height: 17.1rem;
+            /* Visible by default, and hidden by the script only while it waits
+               for every face to decode — so a card that appears mid-load cannot
+               flash its background on the first turn, and a script that never
+               runs still leaves the card on screen. */
+            transition: opacity 0.45s ease;
+            margin: 0 -3.8rem;
+            position: relative;
+            z-index: 2;
+            perspective: 900px;
+        }
+        .pair.has-motion-card .mcard-stage.is-loading { opacity: 0; }
+        @media (prefers-reduced-motion: reduce) {
+            .pair.has-motion-card .mcard-stage { transition: none; }
+        }
+        /* The card sits rotated in the plane of the screen — rotateZ only, so it
+           reads as a card laid down at an angle rather than one leaning away in
+           depth. Both poses are anticlockwise; the angle changes a little on each
+           turn so the card re-settles instead of returning to an identical pose.
+           The flip itself is the only rotation that leaves the plane. */
+        .pair.has-motion-card .mcard {
+            width: 100%;
+            height: 100%;
+            /* Three rotations composed through variables: the standing lean in
+               the plane of the screen, plus the two the pointer drives. Writing
+               a whole transform from script would clobber the lean, and writing
+               the lean from CSS would clobber the tilt. */
+            transform: rotate(var(--lean, -7deg))
+                       rotateX(var(--tilt-x, 0deg))
+                       rotateY(var(--tilt-y, 0deg));
+            transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.2, 1);
+        }
+        .pair.has-motion-card .mcard.tilt-alt {
+            --lean: -3.5deg;
+        }
+        /* Under the pointer it has to answer immediately; the 0.9s ease is there
+           for the turn and for settling back once the pointer leaves. */
+        .pair.has-motion-card .mcard.is-tracking {
+            transition: transform 0.12s linear;
+        }
+        /* Floating over a photo and a video, the card's own edge competed with
+           whatever happened to be behind it. A zero-blur spread shadow lays a
+           ring of the page background around it — the same result as a border,
+           but drawn outside the box so the artwork keeps its full size and the
+           corner radius is followed exactly. The gap alone does the separating;
+           no blur behind it. */
+        .pair.has-motion-card .mcard-face {
+            /* Offset rather than concentric, but only slightly: a 5px spread
+               pushed 1px right and 2px down puts the gap near 4px on the top-left
+               and 6-7px on the bottom-right. Enough to read as hand-placed, not
+               enough to look like it is sliding off. Blur stays 0 — this is a
+               gap, not a shadow.
+               Both faces land the same way on screen: the back face's own
+               rotateY(180deg) cancels against the flipper's, so its shadow is
+               not mirrored and the heavy edge does not swap sides on a flip. */
+            box-shadow: 1px 2px 0 5px var(--color-bg);
+        }
+        .pair.has-motion-card .mcard-flipper {
+            transition: transform 0.9s cubic-bezier(0.45, 0.05, 0.2, 1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pair.has-motion-card .mcard-flipper,
+            .pair.has-motion-card .mcard { transition: none; }
+        }
+        .pair.has-motion-card > img,
+        .pair.has-motion-card > video {
+            flex: 0 0 auto;
+            width: 18rem;
+            height: 24rem;
+        }
         @media (max-width: 640px) {
             .pair {
                 flex-wrap: nowrap;
@@ -567,6 +656,67 @@
                 height: min(109vw, 26.5rem);
                 max-width: none;
                 scroll-snap-align: center;
+            }
+            .pair.has-motion-card {
+                width: auto;
+                margin-left: -2.5rem;
+                transform: none;
+                align-items: center;
+            }
+            .pair.has-motion-card {
+                /* The row's desktop gap would leave a wide hole between slides. */
+                gap: 1rem;
+            }
+            /* The generic `.pair img` slide sizing above is a weaker selector than
+               the desktop `.pair.has-motion-card > img` rule, so without this the
+               photo and video kept their 18x24rem desktop size on phones. */
+            .pair.has-motion-card > img,
+            .pair.has-motion-card > video {
+                width: min(82vw, 20rem);
+                height: min(109vw, 26.5rem);
+            }
+            .pair.has-motion-card .mcard-stage {
+                flex: 0 0 auto;
+                /* Height matched to the neighbouring slides, width derived from
+                   the card artwork's own 912x1350 ratio. Setting both to the
+                   slide's dimensions made the box wider than the art, and
+                   object-fit: cover then cropped the top and bottom off the
+                   card — the title was being cut in half. */
+                height: min(109vw, 26.5rem);
+                width: auto;
+                aspect-ratio: 912 / 1350;
+                /* Nothing overlaps once the row scrolls: each item is its own
+                   slide, so the card needs neither the pull-in nor the ring of
+                   page colour that separated it from what sat behind it. */
+                margin: 0;
+                scroll-snap-align: center;
+                /* Last slide, so it is what you arrive at scrolling right. */
+                order: 1;
+                /* Mid-flip, perspective pushes the near edge toward the viewer
+                   and the card draws TALLER than it rests — 420px became 498px
+                   here. The row is a horizontal scroller, and overflow-x: auto
+                   makes overflow-y: auto too, so those extra pixels were being
+                   clipped off. A weaker perspective plus a card inset inside the
+                   slide keeps the whole turn inside the box. */
+                perspective: 1800px;
+                align-items: center;
+            }
+            .pair.has-motion-card .mcard {
+                width: 90%;
+                height: 90%;
+                /* The card renders larger here than on desktop, so the same
+                   11px reads tighter. */
+                --radius: 15px;
+            }
+            .pair.has-motion-card .mcard-face {
+                box-shadow: none;
+            }
+            /* Upright here: the standing tilt was there to lift the card off the
+               images behind it, and on its own slide there is nothing to lift
+               off. Only the flip itself still turns. */
+            .pair.has-motion-card .mcard,
+            .pair.has-motion-card .mcard.tilt-alt {
+                transform: none;
             }
         }
 
@@ -919,6 +1069,119 @@
             color: var(--color-deep);
         }
 
+
+        /* ── Motion Card, as a tiltable object ──────────────────────────────
+           Extracted from motionCard.html, the sandbox its look was tuned in.
+           The sliders are gone; the values they landed on are the defaults
+           below. Two stacked layers do the plastic: .mcard-sheen is a light
+           band on soft-light, so it reads as light travelling over a glossy
+           surface rather than white paint, and .mcard-bevel lights the top
+           edge and shadows the bottom to imply a rounded rim. */
+        .mcard-stage {
+            perspective: 1200px;
+            display: flex;
+            justify-content: center;
+            margin: 2.4rem auto 0.5rem;
+        }
+        /* Shared surface tokens. The sheen, bevel and radius all read these, so
+           any card that uses .mcard-face/.mcard-sheen/.mcard-bevel has to declare
+           them — an undefined var makes the whole declaration invalid, which
+           silently drops the rounding and the gloss rather than erroring. */
+        .mcard {
+            --sheen-angle: 125deg;
+            --sheen-opacity: 0.35;
+            --sheen-width: 50%;
+            --bevel: 4.5px;
+            --radius: 11px;
+        }
+        .mcard {
+            width: min(300px, 74vw);
+            aspect-ratio: 2 / 3;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+            border: 0; padding: 0; background: none;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .mcard:focus-visible {
+            outline: 2px solid hsl(var(--accent-h), 54%, 40%);
+            outline-offset: 6px;
+            border-radius: var(--radius);
+        }
+        .mcard-flipper {
+            position: absolute; inset: 0;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        .mcard.is-flipped .mcard-flipper { transform: rotateY(180deg); }
+        .mcard-face {
+            position: absolute; inset: 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            background-color: #11141a;
+        }
+        .mcard-face.is-back { transform: rotateY(180deg); }
+        /* The changing side holds every card at once and shows one of them, so a
+           turn is a visibility change rather than a new image being fetched and
+           decoded. Swapping an img's src mid-flip let the face's dark background
+           show through for a frame or two, which read as a black flash. */
+        .mcard-face.is-stack img {
+            /* All six occupy the same box. Without this they sat in normal flow,
+               one under the next, so anything past the first was laid out below
+               the face and clipped — the card showed its dark background instead
+               of a card. */
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+        }
+        .mcard-face.is-stack img.is-current { opacity: 1; }
+        .mcard-face img {
+            border-radius: inherit;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+        }
+        .mcard-sheen {
+            /* No border-radius here or on .mcard-bevel: .mcard-face already
+               clips them. Rounding each overlay too stacked three antialiased
+               corner edges and left a light fringe pixel on the arc. */
+            position: absolute; inset: 0;
+            pointer-events: none;
+            mix-blend-mode: soft-light;
+            background: linear-gradient(
+                var(--sheen-angle),
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0) calc(50% - var(--sheen-width)),
+                rgba(255, 255, 255, calc(var(--sheen-opacity) * 0.45)) calc(50% - (var(--sheen-width) * 0.4)),
+                rgba(255, 255, 255, var(--sheen-opacity)) 50%,
+                rgba(255, 255, 255, calc(var(--sheen-opacity) * 0.45)) calc(50% + (var(--sheen-width) * 0.4)),
+                rgba(255, 255, 255, 0) calc(50% + var(--sheen-width)),
+                rgba(255, 255, 255, 0) 100%
+            );
+        }
+        .mcard-bevel {
+            position: absolute; inset: 0;
+            pointer-events: none;
+            background: linear-gradient(180deg,
+                rgba(255, 255, 255, 0.14) 0%,
+                rgba(255, 255, 255, 0.01) 45%,
+                rgba(0, 0, 0, 0.12) 100%);
+            box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
+                        inset 0 0 0 var(--bevel) rgba(255, 255, 255, 0.03);
+        }
+        /* Touch has no hover to tilt with, so it is flip-only there. */
+        @media (hover: none) {
+            .mcard { cursor: default; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .mcard, .mcard-flipper { transition: none; }
+        }
+
     </style>
 </head>
 <body>
@@ -1186,8 +1449,30 @@
                 <img src="assets/interactions%20printed.png" width="1921" height="961" alt="The printed interaction card deck: Toast, Bottom Sheet, Page Transition, Button Tap, Pop-Up and Pop-Up Elastic, with Motion Design Guidelines card backs below">
             </div>
 
-            <div class="pair">
+            </div>
+            <div class="pair has-motion-card">
                 <img src="assets/motioncards%20real.png" width="430" height="573" alt="The printed Motion Design Guidelines cards, fanned out on a ring and held in one hand">
+                <div class="mcard-stage">
+                    <button class="mcard" type="button" aria-pressed="false" aria-label="Motion Card, front. Activate to flip.">
+                            <span class="mcard-flipper">
+                                <span class="mcard-face is-stack">
+                                    <img class="mcard-swap is-current" src="motion%20cards/all%20cards/Toast.png" width="912" height="1350" alt="Motion Card for Toast" loading="lazy">
+                                    <img class="mcard-swap" src="motion%20cards/all%20cards/Bottom%20Sheet.png" width="912" height="1350" alt="Motion Card for Bottom Sheet" loading="lazy" aria-hidden="true">
+                                    <img class="mcard-swap" src="motion%20cards/all%20cards/Pop-Up.png" width="912" height="1350" alt="Motion Card for Pop-Up" loading="lazy" aria-hidden="true">
+                                    <img class="mcard-swap" src="motion%20cards/all%20cards/Pop-Up%20%28Elastic%29.png" width="912" height="1350" alt="Motion Card for Pop-Up (Elastic)" loading="lazy" aria-hidden="true">
+                                    <img class="mcard-swap" src="motion%20cards/all%20cards/Page%20Transition.png" width="912" height="1350" alt="Motion Card for Page Transition" loading="lazy" aria-hidden="true">
+                                    <img class="mcard-swap" src="motion%20cards/all%20cards/Button%20Tap.png" width="912" height="1350" alt="Motion Card for Button Tap" loading="lazy" aria-hidden="true">
+                                    <span class="mcard-sheen"></span>
+                                    <span class="mcard-bevel"></span>
+                                </span>
+                                <span class="mcard-face is-back">
+                                    <img src="motion%20cards/back.png" width="1368" height="2025" alt="The standard Motion Card back" loading="lazy">
+                                    <span class="mcard-sheen"></span>
+                                    <span class="mcard-bevel"></span>
+                                </span>
+                            </span>
+                        </button>
+                </div>
                 <video src="assets/workshop.mp4" width="720" height="1280" autoplay muted loop playsinline preload="metadata" aria-label="Workshop recording"></video>
             </div>
         </section>
@@ -1406,6 +1691,132 @@
                     media.style.transformOrigin = '';
                 });
             });
+        })();
+
+        /* Motion Card: it turns on a fixed cadence rather than on hover.
+
+           One side is always the standard card back. The other side holds all six
+           cards stacked, and a turn just changes which one is visible — no image
+           is fetched or decoded while the card is moving.
+
+           Nothing is shown or started until every face has finished decoding.
+           The card used to appear immediately and begin turning while images were
+           still arriving, which showed the face's dark background for a frame. */
+        (function () {
+            var stage = document.querySelector('.pair.has-motion-card .mcard-stage');
+            if (!stage) return;
+            var card = stage.querySelector('.mcard');
+            var flipper = card.querySelector('.mcard-flipper');
+            var faces = [].slice.call(card.querySelectorAll('.mcard-face.is-stack img'));
+            var images = [].slice.call(card.querySelectorAll('img'));
+
+            var FACE_HOLD = 5400;   /* a card face is there to be read */
+            var BACK_HOLD = 1500;   /* the back is just a beat between cards */
+            var FLIP_MS   = 900;    /* matches the flipper transition */
+
+            var i = 0, turns = 0, timer = null, ready = false;
+            stage.classList.add('is-loading');
+
+            function showFace(n) {
+                faces.forEach(function (im, k) {
+                    im.classList.toggle('is-current', k === n);
+                    if (k === n) { im.removeAttribute('aria-hidden'); }
+                    else { im.setAttribute('aria-hidden', 'true'); }
+                });
+                card.setAttribute('aria-label',
+                    'Motion Card: ' + (faces[n].alt || '').replace('Motion Card for ', '') +
+                    '. Activate to turn it over.');
+            }
+            function tick() {
+                if (!ready) return;
+                turns++;
+                var onBack = turns % 2 === 1;
+                /* Each turn adds another half rotation the same way rather than
+                   toggling 0/180deg, so the card keeps going in one direction and
+                   lands back where it started after two turns. */
+                flipper.style.transform = 'rotateY(' + (turns * 180) + 'deg)';
+                card.classList.toggle('is-flipped', onBack);
+                card.classList.toggle('tilt-alt', onBack);
+                card.setAttribute('aria-pressed', onBack ? 'true' : 'false');
+                if (onBack) {
+                    /* Resting on the back, so the stack is hidden: bring the next
+                       card forward behind it once the turn has finished. */
+                    setTimeout(function () {
+                        i = (i + 1) % faces.length;
+                        showFace(i);
+                    }, FLIP_MS);
+                }
+                schedule(onBack ? BACK_HOLD : FACE_HOLD);
+            }
+            function schedule(ms) { clearTimeout(timer); timer = setTimeout(tick, ms); }
+            function stop() { clearTimeout(timer); timer = null; }
+            function start() { if (ready && !timer) schedule(FACE_HOLD); }
+
+            /* A click turns it by hand and restarts the clock from there. */
+            card.addEventListener('click', tick);
+
+            /* The card also leans toward the pointer, on top of whatever the
+               cadence is doing. The pointer position is measured against the
+               stage, not the card: the card is rotating in 3D, so its own
+               bounding box changes shape mid-turn and would make this jitter. */
+            var TILT = 9;
+            if (window.matchMedia('(hover: hover)').matches &&
+                !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                var box = null;
+                card.addEventListener('mouseenter', function () {
+                    box = stage.getBoundingClientRect();
+                    card.classList.add('is-tracking');
+                });
+                card.addEventListener('mousemove', function (e) {
+                    if (!box) box = stage.getBoundingClientRect();
+                    var x = (e.clientX - box.left) / box.width - 0.5;
+                    var y = (e.clientY - box.top) / box.height - 0.5;
+                    card.style.setProperty('--tilt-x', (-y * TILT).toFixed(2) + 'deg');
+                    card.style.setProperty('--tilt-y', (x * TILT).toFixed(2) + 'deg');
+                });
+                card.addEventListener('mouseleave', function () {
+                    box = null;
+                    card.classList.remove('is-tracking');
+                    card.style.removeProperty('--tilt-x');
+                    card.style.removeProperty('--tilt-y');
+                });
+            }
+
+            function settled(im) {
+                /* decode() resolves only once the bitmap is ready to paint, which
+                   is the guarantee we want; load alone can still leave a decode to
+                   do on the first paint. Failures resolve too — a missing image
+                   should not keep the card hidden forever. */
+                if (im.decode) { return im.decode().catch(function () {}); }
+                if (im.complete) { return Promise.resolve(); }
+                return new Promise(function (res) {
+                    im.addEventListener('load', res, { once: true });
+                    im.addEventListener('error', res, { once: true });
+                });
+            }
+            function prepare() {
+                /* Take the images off lazy loading so they all actually start,
+                   then wait for the slowest one. */
+                images.forEach(function (im) { im.loading = 'eager'; });
+                Promise.all(images.map(settled)).then(function () {
+                    ready = true;
+                    stage.classList.remove('is-loading');
+                    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+                    start();
+                });
+            }
+
+            /* Loading begins as the row approaches, and nothing turns while it is
+               off screen. */
+            if ('IntersectionObserver' in window) {
+                var io = new IntersectionObserver(function (entries) {
+                    if (entries[0].isIntersecting) { prepare(); start(); }
+                    else { stop(); }
+                }, { rootMargin: '400px 0px', threshold: 0 });
+                io.observe(stage);
+            } else {
+                prepare();
+            }
         })();
     </script>
 
