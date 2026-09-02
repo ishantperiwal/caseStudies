@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reflective 3D Plastic Card</title>
+  <style>
+    :root {
+      --card-width: 300px;
+      --card-height: 450px;
+      --card-radius: 18px;
+      
+      --reflect-angle: 125deg;
+      --reflect-opacity: 0.35;
+      --reflect-width: 50%;
+      --edge-thickness: 4.5px;
+      --tilt-factor: 20;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at center, #1e232d, #0b0d11);
+      overflow-x: hidden;
+      perspective: 1200px;
+      gap: 50px;
+      padding: 20px;
+    }
+
+    /* --- Controls Panel --- */
+    .controls-panel {
+      position: fixed;
+      left: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 22px;
+      border-radius: 16px;
+      color: #e5e7eb;
+      width: 280px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .panel-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+
+    .upload-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .file-btn-wrapper {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+
+    .file-btn-wrapper input[type="file"] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+
+    .btn-upload {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px dashed rgba(255, 255, 255, 0.25);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #e5e7eb;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-btn-wrapper:hover .btn-upload {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #38bdf8;
+      color: #38bdf8;
+    }
+
+    .control-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .control-group label {
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .control-group input[type="range"] {
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .control-group input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-flip {
+      margin-top: 4px;
+      padding: 10px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 8px;
+      color: #0b0d11;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-flip:hover {
+      background: #7dd3fc;
+    }
+
+    .btn-flip:active {
+      transform: scale(0.98);
+    }
+
+    /* --- 3D Card Architecture --- */
+    .card-container {
+      width: var(--card-width);
+      height: var(--card-height);
+      position: relative;
+      perspective: 1000px;
+      cursor: pointer;
+    }
+
+    .card-flipper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      border-radius: var(--card-radius);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.75),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        0 0 0 var(--edge-thickness) rgba(15, 17, 21, 0.9);
+    }
+
+    .card-container.is-flipped .card-flipper {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--card-radius);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      overflow: hidden;
+      background-color: #11141a;
+    }
+
+    /* Real img tags ensure immediate render without CSS url() issues */
+    .card-face img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .card-face.front {
+      transform: rotateY(0deg) translateZ(1px);
+    }
+
+    .card-face.back {
+      transform: rotateY(180deg) translateZ(1px);
+    }
+
+    /* Environmental Specular Light */
+    .sheen {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--card-radius);
+      pointer-events: none;
+      background: linear-gradient(
+        var(--reflect-angle),
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) calc(50% - var(--reflect-width)),
+        rgba(255, 255, 255, calc(var(--reflect-opacity) * 0.45)) calc(50% - (var(--reflect-width) * 0.4)),
+        rgba(255, 255, 255, var(--reflect-opacity)) 50%,
+        rgba(255, 255, 255, calc(var(--reflect-opacity) * 0.45)) calc(50% + (var(--reflect-width) * 0.4)),
+        rgba(255, 255, 255, 0) calc(50% + var(--reflect-width)),
+        rgba(255, 255, 255, 0) 100%
+      );
+      mix-blend-mode: soft-light;
+      z-index: 2;
+    }
+
+    /* Subtle Surface Bevel & Edge Reflection */
+    .bevel {
+      position: absolute;
+      inset: 0;
+      border-radius: var(--card-radius);
+      pointer-events: none;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0.01) 45%,
+        rgba(0, 0, 0, 0.12) 100%
+      );
+      box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.35);
+      z-index: 3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="controls-panel">
+    <div class="panel-section-title">Upload Artwork</div>
+    <div class="upload-row">
+      <div class="file-btn-wrapper">
+        <div class="btn-upload" id="frontLabel">Front Image</div>
+        <input type="file" id="frontInput" accept="image/*">
+      </div>
+      <div class="file-btn-wrapper">
+        <div class="btn-upload" id="backLabel">Back Image</div>
+        <input type="file" id="backInput" accept="image/*">
+      </div>
+    </div>
+
+    <div class="panel-section-title">Lighting & Reflection</div>
+    <div class="control-group">
+      <label>Angle <span id="angleVal">125°</span></label>
+      <input type="range" id="angleSlider" min="0" max="360" value="125">
+    </div>
+
+    <div class="control-group">
+      <label>Intensity <span id="opacityVal">35%</span></label>
+      <input type="range" id="opacitySlider" min="5" max="100" value="35">
+    </div>
+
+    <div class="control-group">
+      <label>Softness / Width <span id="widthVal">50%</span></label>
+      <input type="range" id="widthSlider" min="15" max="75" value="50">
+    </div>
+
+    <div class="panel-section-title">Plastic Mechanics</div>
+    <div class="control-group">
+      <label>Rim Thickness <span id="edgeVal">4.5px</span></label>
+      <input type="range" id="edgeSlider" min="1" max="10" step="0.5" value="4.5">
+    </div>
+
+    <div class="control-group">
+      <label>Tilt Sensitivity <span id="tiltVal">20</span></label>
+      <input type="range" id="tiltSlider" min="5" max="45" value="20">
+    </div>
+
+    <button class="btn-flip" id="flipBtn">Flip Card</button>
+  </div>
+
+  <div class="card-container" id="cardContainer">
+    <div class="card-flipper">
+      <div class="card-face front">
+        <img id="frontImg" src="motion%20cards/front.png" alt="Card Front">
+        <div class="sheen"></div>
+        <div class="bevel"></div>
+      </div>
+      <div class="card-face back">
+        <img id="backImg" src="motion%20cards/back.png" alt="Card Back">
+        <div class="sheen"></div>
+        <div class="bevel"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const root = document.documentElement;
+    const container = document.getElementById('cardContainer');
+    const flipBtn = document.getElementById('flipBtn');
+
+    // Dedicated Image Tags
+    const frontImg = document.getElementById('frontImg');
+    const backImg = document.getElementById('backImg');
+
+    // Sliders
+    const angleSlider = document.getElementById('angleSlider');
+    const opacitySlider = document.getElementById('opacitySlider');
+    const widthSlider = document.getElementById('widthSlider');
+    const edgeSlider = document.getElementById('edgeSlider');
+    const tiltSlider = document.getElementById('tiltSlider');
+
+    // Upload Inputs & Labels
+    const frontInput = document.getElementById('frontInput');
+    const backInput = document.getElementById('backInput');
+    const frontLabel = document.getElementById('frontLabel');
+    const backLabel = document.getElementById('backLabel');
+
+    let bounds = null;
+    let tiltFactor = 20;
+
+    function updateBounds() {
+      bounds = container.getBoundingClientRect();
+    }
+
+    window.addEventListener('resize', updateBounds);
+    window.addEventListener('scroll', updateBounds);
+
+    // Direct ObjectURL File Loader: Instantaneous, zero memory limits
+    function bindUploader(inputEl, imgEl, labelEl) {
+      inputEl.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const objectUrl = URL.createObjectURL(file);
+          imgEl.src = objectUrl;
+          labelEl.textContent = file.name;
+          labelEl.title = file.name;
+        }
+      });
+    }
+
+    bindUploader(frontInput, frontImg, frontLabel);
+    bindUploader(backInput, backImg, backLabel);
+
+    // Sliders
+    angleSlider.addEventListener('input', (e) => {
+      root.style.setProperty('--reflect-angle', `${e.target.value}deg`);
+      document.getElementById('angleVal').textContent = `${e.target.value}°`;
+    });
+
+    opacitySlider.addEventListener('input', (e) => {
+      const val = e.target.value / 100;
+      root.style.setProperty('--reflect-opacity', val);
+      document.getElementById('opacityVal').textContent = `${e.target.value}%`;
+    });
+
+    widthSlider.addEventListener('input', (e) => {
+      root.style.setProperty('--reflect-width', `${e.target.value}%`);
+      document.getElementById('widthVal').textContent = `${e.target.value}%`;
+    });
+
+    edgeSlider.addEventListener('input', (e) => {
+      root.style.setProperty('--edge-thickness', `${e.target.value}px`);
+      document.getElementById('edgeVal').textContent = `${e.target.value}px`;
+    });
+
+    tiltSlider.addEventListener('input', (e) => {
+      tiltFactor = Number(e.target.value);
+      document.getElementById('tiltVal').textContent = e.target.value;
+    });
+
+    // Tilt Controls
+    container.addEventListener('mouseenter', () => {
+      updateBounds();
+      container.style.transition = 'none';
+    });
+
+    container.addEventListener('mousemove', (e) => {
+      if (!bounds) updateBounds();
+
+      const mouseX = e.clientX - bounds.left;
+      const mouseY = e.clientY - bounds.top;
+
+      const xPct = (mouseX / bounds.width - 0.5);
+      const yPct = (mouseY / bounds.height - 0.5);
+
+      const rotateX = -yPct * tiltFactor;
+      const rotateY = xPct * tiltFactor;
+
+      container.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+
+    container.addEventListener('mouseleave', () => {
+      container.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      container.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+
+    // Flip Controls
+    const toggleFlip = () => container.classList.toggle('is-flipped');
+    container.addEventListener('click', toggleFlip);
+    flipBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleFlip();
+    });
+  </script>
+</body>
+</html>

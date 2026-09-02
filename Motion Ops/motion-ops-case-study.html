@@ -513,13 +513,15 @@
            making it compete with the section heading above. */
         .guidelines-opener {
             max-width: 42rem;
-            margin: 0 auto 3.4rem;
+            /* 2.6rem, not a smaller top-up: this margin collapses against the
+               heading row's own 1.4rem margin-bottom, so only the larger of the
+               two shows. Anything under 1.4rem here changes nothing. */
+            margin: 2.6rem auto 3.4rem;
         }
         .guidelines-opener .pic {
             max-width: none;
             margin: 0;
         }
-        .guidelines-opener .section-summary { margin: 1.1rem 0 0 !important; }
         @media (max-width: 700px) {
             .guidelines-opener {
                 margin-bottom: 2.8rem;
@@ -850,13 +852,16 @@
             background: hsl(var(--sec-h), 42%, 94%);
         }
         @media (max-width: 640px) {
+            /* Phone: the initiative tag leads, sitting top-left above the
+               heading, and the rule that separates the two on wide screens is
+               dropped — stacked, it only adds a line across the column. */
             .section-heading-row {
                 flex-direction: column;
-                align-items: stretch;
-                gap: 0.65rem;
+                align-items: flex-start;
+                gap: 0.55rem;
             }
-            .section-heading-rule { width: 100%; min-width: 0; margin: 0.1rem 0 0; }
-            .section-heading-row .section-eyebrow { align-self: flex-end; }
+            .section-heading-rule { display: none; }
+            .section-heading-row .section-eyebrow { order: -1; align-self: flex-start; }
         }
 
         /* Purpose of motion — four small cards */
@@ -967,10 +972,10 @@
                 <div class="pic is-opener">
                     <img src="assets/mdg%20main.png" width="1694" height="864" alt="Motion Design Guidelines title card: an easing curve with a Bézier handle being dragged">
                 </div>
-                <p class="section-summary mb-2">The first initiative was Motion Design Guidelines.</p>
             </div>
 
             <div class="prose-block max-w-2xl">
+                <p class="section-summary mb-2">The first initiative was Motion Design Guidelines.</p>
                 <p>Motion Design Guidelines documented the purpose of motion design across the product and standardized the fundamentals so they could work consistently across different UI frameworks.</p>
                 <p>At the time, the product was being built across React Native, Jetpack Compose and SwiftUI, with an eventual goal of migrating to Flutter. The fundamental motion tokens were framework-agnostic, so the guidelines could travel across implementations without belonging to a single framework.</p>
             </div>
