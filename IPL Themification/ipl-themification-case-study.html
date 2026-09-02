@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" style="--accent-h: 145; --accent-s: 50; --accent-l: 28; --color-bg: hsl(var(--accent-h), 30%, 97%); --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15);">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Theming PayZapp for the IPL Season â€” Case Study</title>
+    <title>Theming PayZapp for the IPL Season — Case Study</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -170,12 +170,12 @@
         }
         .mono { font-family: var(--font-mono); letter-spacing: 0.05em; text-transform: uppercase; }
 
-        /* â”€â”€ Section dividers â”€â”€ */
+        /* ── Section dividers ── */
         .section-divider {
             border: 0; border-top: 1px solid var(--section-separator-color);
             margin: 2rem 2rem;
         }
-        /* â”€â”€ Section headings â”€â”€ */
+        /* ── Section headings ── */
         .section-kicker {
             font-size: 13px; font-weight: 500; color: var(--color-muted); margin-bottom: 0.65rem; font-family: var(--font-body); letter-spacing: 0.2px;
         }
@@ -199,7 +199,7 @@
             vertical-align: -0.1em; border-radius: 2px;
         }
 
-        /* â”€â”€ Phone mockup â”€â”€ */
+        /* ── Phone mockup ── */
         .legacy-wallet-device {
             background: linear-gradient(145deg, var(--color-device-grad-start) 0%, var(--color-device-grad-mid) 36%, var(--color-device-grad-end) 100%);
             border-radius: 2.2rem; padding: 0.55rem; position: relative; overflow: hidden;
@@ -269,7 +269,7 @@
             font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
         }
 
-        /* â”€â”€ Android status bar & nav bar â”€â”€ */
+        /* ── Android status bar & nav bar ── */
         .phone-status-bar {
             height: 2.15rem; flex-shrink: 0;
             transition: opacity 0.35s ease;
@@ -313,7 +313,7 @@
             background: rgba(255,255,255,0.45); border-radius: 999px;
         }
 
-        /* â”€â”€ Two-column layout â”€â”€ */
+        /* ── Two-column layout ── */
         .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0; }
         @media (max-width: 767px) { .two-col { grid-template-columns: 1fr; } }
         .two-col-aside { display: grid; grid-template-columns: 1.5fr 1fr; gap: 4.5rem; margin: 2rem 0; align-items: center; }
@@ -327,7 +327,51 @@
         }
         .phone-col .legacy-wallet-device { width: 100%; max-width: 21.2rem; }
 
-        /* â”€â”€ Cards / pills â”€â”€ */
+        /* Side-by-side phone rows (spotlights / bottom sheets) */
+        .phone-row {
+            display: flex; justify-content: center; gap: 6rem; flex-wrap: nowrap;
+            margin: 4rem 0; position: relative; left: 50%; transform: translateX(-50%);
+            width: max-content; max-width: 100vw;
+        }
+
+        /* ── Mobile spacing: sections stack, so the desktop breathing room doubles up ── */
+        @media (max-width: 767px) {
+            section.pt-12 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+            .two-col-aside { gap: 2.25rem; margin: 0.75rem 0; }
+            .two-col { gap: 2rem; margin: 1.25rem 0; }
+            /* Side-by-side phones become a swipeable, snapping carousel.
+               Negative margins bleed past the section's 2.5rem side padding so
+               the next phone peeks in and signals that the row scrolls. */
+            div.phone-row {
+                left: auto; transform: none; width: auto; max-width: none;
+                margin: 3rem -2.5rem 1.75rem;   /* 3rem lands the carousel at the
+                   same 48px above-gap the single-phone sections get, since their
+                   copy contributes its own 0.75rem margin-bottom on top of the gap. */
+                /* Side padding of (track - slide) / 2 puts the first slide dead
+                   centre at scroll 0, and lets the last one centre too. It has to
+                   be 50vw, not 50%: percentage padding resolves against the
+                   containing block (the section's padded content box), not the
+                   bled-out track, which left the first slide 40px off centre.
+                   The negative margins above make the track exactly viewport-wide,
+                   so 50vw is the true half. max() guards very narrow screens. */
+                padding-inline: max(1rem, calc(50vw - 9.5rem));
+                scroll-padding-inline: max(1rem, calc(50vw - 9.5rem));
+                gap: 1.75rem;
+                justify-content: flex-start;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            div.phone-row::-webkit-scrollbar { display: none; }
+            div.phone-row > .phone-col { scroll-snap-align: center; }
+        }
+
+        /* ── Cards / pills ── */
         .campaign-card {
             border: 1px solid var(--color-card-border); border-radius: 0.75rem;
             background: var(--color-card-bg); padding: 1.5rem 1.75rem; margin-bottom: 2rem;
@@ -369,7 +413,43 @@
         }
         .inline-link:hover { border-bottom-color: var(--color-link); }
 
-        /* â”€â”€ Hero â”€â”€ */
+        /* ── Hero ── */
+        .hero-title { font-size: clamp(2.4rem, 5.2vw, 3.8rem); }
+        .hero-visual-frame { display: flex; align-items: center; justify-content: center; }
+        .hero-logo { width: 50%; margin-top: -2.5rem; }
+
+        /* Selectors carry an element prefix so they outrank the Tailwind CDN
+           utilities, which are injected into <head> after this stylesheet. */
+        @media (max-width: 767px) {
+            /* Logo moves to top-left and shrinks to an app-icon size */
+            div.hero-grid { padding-top: 1.5rem; padding-right: 2.5rem; }
+            div.hero-visual { order: -1; justify-content: flex-start; }
+            div.hero-visual-frame { height: auto; justify-content: flex-start; align-items: flex-start; }
+            img.hero-logo { width: 7rem; margin-top: 0; }
+            /* Bigger than the 2.4rem clamp floor. Sized off the available width
+               (viewport minus the 2.5rem gutters) rather than raw vw, because the
+               gutter is fixed: 0.128 of that width is the largest size at which
+               the italic "Theming PayZapp" still holds one line, verified from
+               320px up. The 2.75rem cap takes over around 430px. */
+            h1.hero-title { font-size: min(calc((100vw - 5rem) * 0.128), 2.75rem); }
+            div.hero-copy { padding-top: 0.9rem; padding-bottom: 1.25rem; }
+            /* Meta facts become tinted cards: one per row so all three match in size */
+            div.hero-meta {
+                /* 2x2: role | duration on row one, focus in the first cell of
+                   row two, fourth cell left empty. grid-auto-rows keeps every
+                   box the same height even when a value wraps. */
+                grid-template-columns: 1fr 1fr; grid-auto-rows: 1fr;
+                gap: 0.55rem; padding-top: 0; padding-bottom: 0;
+                border-top: 0; border-bottom: 0; margin-bottom: 1rem !important;
+            }
+            div.hero-meta > div {
+                background: hsl(var(--accent-h) 24% 93%);
+                border: 0; border-radius: 0.75rem; padding: 1rem 1.1rem;
+            }
+            div.hero-meta > div > span:first-child { font-size: 11px; margin-bottom: 0.3rem; }
+            div.hero-meta > div > span:last-child { font-size: 1rem; line-height: 1.45; }
+        }
+
         @keyframes hero-float {
             0% { transform: translate3d(0,0,0); }
             50% { transform: translate3d(0,-10px,0); }
@@ -377,7 +457,7 @@
         }
         .hero-image-float { animation: hero-float 5s ease-in-out infinite; }
 
-        /* â”€â”€ App opening scale-up â”€â”€ */
+        /* ── App opening scale-up ── */
         @keyframes app-open {
             0%   { transform: scale(0.5); opacity: 0; border-radius: 2rem; }
             30%  { opacity: 1; }
@@ -408,7 +488,7 @@
             transform: translateY(-4%);
         }
 
-        /* â”€â”€ Touch-dot â”€â”€ */
+        /* ── Touch-dot ── */
         @keyframes touch-dot-move {
             0%   { top: 48%; left: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; }
             20%  { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
@@ -435,35 +515,35 @@
     <div id="page-loader"><div class="loader-ring"></div></div>
     <main class="relative z-[1] max-w-4xl mx-auto bg-[var(--color-bg)]">
 
-        <!-- â”€â”€ Hero â”€â”€ -->
+        <!-- ── Hero ── -->
         <section class="pt-[2.9rem] relative">
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-10 pb-0 items-stretch" style="z-index:1;">
-                <div class="md:col-span-3 flex flex-col items-start text-left justify-center relative z-10 pt-10 pb-20">
-                    <h1 class="font-light leading-[1.20] text-ink mb-5 tracking-[-0.015em]" style="font-size: clamp(2.4rem,5.2vw,3.8rem); font-family:var(--font-display);">
+            <div class="hero-grid grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-10 pb-0 items-stretch" style="z-index:1;">
+                <div class="hero-copy md:col-span-3 flex flex-col items-start text-left justify-center relative z-10 pt-10 pb-20">
+                    <h1 class="hero-title font-light leading-[1.20] text-ink mb-5 tracking-[-0.015em]" style="font-family:var(--font-display);">
                         <span class="italic text-brand-500 font-normal">Theming PayZapp</span><br><span class="font-light">for the IPL season</span>
                     </h1>
                 </div>
-                <div class="md:col-span-2 flex justify-end items-start w-full">
-                    <div class="editable-placeholder hero-image-float" style="position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-                        <img class="placeholder-image-layer critical-asset" alt="" src="case study assets/IPL themification.png" style="position:relative;inset:auto;width:50%;height:auto;display:block;object-fit:contain;margin-top:-2.5rem;">
+                <div class="hero-visual md:col-span-2 flex justify-end items-start w-full">
+                    <div class="editable-placeholder hero-image-float hero-visual-frame" style="position:relative;z-index:1;width:100%;height:100%;">
+                        <img class="placeholder-image-layer critical-asset hero-logo" alt="" src="case study assets/IPL themification.png" style="position:relative;inset:auto;height:auto;display:block;object-fit:contain;">
                     </div>
                 </div>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-[var(--section-separator-color)]" style="position:relative;z-index:1;margin-bottom:2rem;">
+            <div class="hero-meta grid grid-cols-2 md:grid-cols-3 gap-8 py-8 pl-10 pr-10 border-y border-[var(--section-separator-color)]" style="position:relative;z-index:1;margin-bottom:2rem;">
                 <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">My Role</span><span class="text-sm font-semibold text-ink">Design Co-Lead</span></div>
                 <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Duration</span><span class="text-sm font-semibold text-ink">Mar - May 2024 (IPL Season)</span></div>
                 <div><span class="block text-[10px] uppercase tracking-[0.18em] text-muted font-semibold mb-1.5 font-sans">Focus</span><span class="text-sm font-semibold text-ink">Motion Design and Execution</span></div>
             </div>
         </section>
 
-        <!-- â”€â”€ Context â”€â”€ -->
+        <!-- ── Context ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">The Brief</h2>
             <p class="section-summary max-w-3xl">A visual overhaul of PayZapp for the IPL season for growth and activation campaigns</p>
             <p class="section-body-copy max-w-3xl">The goal was twofold: drive growth through the co-branded Jio's Jeeto Dhan Dhana Dhan campaign while simultaneously running in-app initiatives focused on increasing user activation and overall engagement across the product.</p>
         </section>
 
-        <!-- â”€â”€ Campaigns â”€â”€ -->
+        <!-- ── Campaigns ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">The Campaigns</h2>
             <p class="section-summary max-w-3xl">Two growth initiatives designed to drive engagement, transactions, and new user acquisition during IPL.</p>
@@ -492,7 +572,7 @@
 
         </section>
 
-        <!-- â”€â”€ Design Scope â”€â”€ -->
+        <!-- ── Design Scope ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">Design Tasks at Hand</h2>
             <p class="section-summary max-w-3xl">Identify all the surfaces that could be revamped and themed within the existing constructs to minimize dev effort with a flavor of IPL and design artifacts to support the ongoing campaigns.</p>
@@ -500,7 +580,7 @@
             <p class="section-body-copy">To bring the energy of the IPL season directly into the app, we set out to celebrate the tournament by overhauling key user-facing surfaces. Here is what we ended up designing and implementing to transform the in-app experience.</p>
         </section>
 
-        <!-- â”€â”€ Design 01: Promo Video â”€â”€ -->
+        <!-- ── Design 01: Promo Video ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -533,7 +613,7 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Design 02: Leaderboard â”€â”€ -->
+        <!-- ── Design 02: Leaderboard ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -566,7 +646,7 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Design 02: Scan QR â”€â”€ -->
+        <!-- ── Design 02: Scan QR ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -600,7 +680,7 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Design 03: Referral Revamp â”€â”€ -->
+        <!-- ── Design 03: Referral Revamp ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -635,7 +715,7 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Design 04: Transaction Success Animation â”€â”€ -->
+        <!-- ── Design 04: Transaction Success Animation ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -673,7 +753,7 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Design 05: Splash Screen â”€â”€ -->
+        <!-- ── Design 05: Splash Screen ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
             <div class="two-col-aside">
@@ -706,14 +786,14 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Promotional Surfaces â”€â”€ -->
+        <!-- ── Promotional Surfaces ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
 
 
             <h3 class="section-mini-heading" style="font-weight: 500; color: hsl(var(--accent-h) var(--accent-s) var(--accent-l));">Spotlight Banners &amp; Bottom Sheets</h3>
-            <p class="section-body-copy mb-3">We created a set of spotlight banners that first teased the campaigns and then, once they went live, turned into entry points for users to start engaging with them. Alongside these, we designed bottom sheets that did the same job â€” sent out to segmented users to make them aware of the campaigns and nudge them into participating.</p>
+            <p class="section-body-copy mb-3">We created a set of spotlight banners that first teased the campaigns and then, once they went live, turned into entry points for users to start engaging with them. Alongside these, we designed bottom sheets that did the same job — sent out to segmented users to make them aware of the campaigns and nudge them into participating.</p>
 
-            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; margin-bottom: 4rem; flex-wrap: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
+            <div class="phone-row">
                 <div class="phone-col" style="flex: 0 0 19rem;">
                     <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
                         <div class="legacy-wallet-device">
@@ -764,13 +844,13 @@
             </div>
         </section>
 
-        <!-- â”€â”€ Conclusion â”€â”€ -->
+        <!-- ── Conclusion ── -->
         <section class="pt-12 pb-12 pl-10 pr-10">
             <h2 class="section-kicker">Conclusion</h2>
             <p class="section-summary max-w-3xl">What began with the IPL season evolved into a repeatable theming system.</p>
-            <p class="section-body-copy max-w-3xl">From this project emerged a standardized framework of feature-flagged, themifiable surfaces that could be redeployed for any celebration â€” Diwali, Holi, Christmas, and beyond â€” with minimal lift. All it took was preparing assets in the established format and handing them off to developers for a swift deployment. A new campaign could be live just like that.</p>
+            <p class="section-body-copy max-w-3xl">From this project emerged a standardized framework of feature-flagged, themifiable surfaces that could be redeployed for any celebration — Diwali, Holi, Christmas, and beyond — with minimal lift. All it took was preparing assets in the established format and handing them off to developers for a swift deployment. A new campaign could be live just like that.</p>
 
-            <div style="display: flex; justify-content: center; gap: 6rem; margin-top: 4rem; margin-bottom: 4rem; flex-wrap: nowrap; position: relative; left: 50%; transform: translateX(-50%); width: max-content; max-width: 100vw;">
+            <div class="phone-row">
                 <div class="phone-col" style="flex: 0 0 19rem;">
                     <div class="editable-placeholder has-saved-image" style="width:100%;max-width:19rem;">
                         <div class="legacy-wallet-device">
@@ -970,7 +1050,7 @@
                 }
             });
 
-            // â”€â”€ Leaderboard auto-scroll: pan down to bottom, hold, pan back to top, hold, loop â”€â”€
+            // ── Leaderboard auto-scroll: pan down to bottom, hold, pan back to top, hold, loop ──
             var lbImg = document.getElementById('leaderboard-img');
             var lbFade = document.getElementById('leaderboard-top-fade');
             if (lbImg) {
@@ -997,7 +1077,7 @@
                 else lbImg.addEventListener('load', startLeaderboardScroll);
             }
 
-            // â”€â”€ Splash screen: app-open sequence â”€â”€
+            // ── Splash screen: app-open sequence ──
             var splashOverlay = document.getElementById('splash-overlay');
             var splashStatusBar = document.getElementById('splash-status-bar');
             var splashTime = splashStatusBar ? splashStatusBar.querySelector('time') : null;
@@ -1084,7 +1164,7 @@
 
             splashStart();
 
-            // â”€â”€ Spotlight banners: crossfade through the set, holding each â”€â”€
+            // ── Spotlight banners: crossfade through the set, holding each ──
             var spotlightImgs = document.querySelectorAll('.spotlight-banner');
             if (spotlightImgs.length > 1) {
                 var SPOTLIGHT_HOLD = 4000; // time each banner stays
@@ -1100,7 +1180,7 @@
                 }, SPOTLIGHT_HOLD);
             }
 
-            // â”€â”€ Conclusion examples: crossfade between pairs â”€â”€
+            // ── Conclusion examples: crossfade between pairs ──
             function crossfadeSet(selector, holdMs, fadeMs) {
                 var imgs = document.querySelectorAll(selector);
                 if (imgs.length < 2) return;
