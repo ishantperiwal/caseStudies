@@ -952,10 +952,40 @@
             transform-origin: top left;
         }
         @media (max-width: 760px) {
-            .init-card { min-height: 0; padding-bottom: 2.5rem; }
+            /* On a phone the artwork stops being a corner accent and becomes a
+               hero image: dropped back into normal flow, centred under the copy.
+               In flow it adds its own height to the card, so the card grows to
+               fit it and the text can keep the full width — no overlap to solve
+               and no padding to keep in sync with the image size. */
+            .init-card {
+                min-height: 0;
+                /* No padding under the artwork: card one's art runs to the
+                   bottom edge, card two's is pulled past it. */
+                padding-bottom: 0;
+                /* Column flex only so the artwork can be ordered last: it is the
+                   card's first child in the markup, and it belongs under the copy
+                   here. */
+                display: flex;
+                flex-direction: column;
+            }
             .init-card > :not(.init-accent) { max-width: none; }
-            .init-accent { width: 6rem; right: -0.3rem; bottom: -1.2rem; }
-            .init-accent.is-lg { width: 7.2rem; }
+            .init-accent {
+                position: static;
+                display: block;
+                width: 9rem;
+                order: 1;
+                align-self: center;
+                margin: 1.25rem 0 0;
+                transform: none;
+            }
+            /* The laptop is the taller of the two, so it takes a crop at the
+               bottom rather than making the card taller still. .init-card already
+               has overflow: hidden, which does the cutting. */
+            .init-accent.is-lg {
+                width: 9.5rem;
+                margin-bottom: -1.5rem;
+                transform: none;
+            }
         }
         .init-card .init-title {
             font-family: var(--font-display); font-size: 1.28rem; font-weight: 600;
