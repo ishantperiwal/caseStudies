@@ -4449,6 +4449,544 @@ body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relati
         .hi-panel .hi-panel-done { background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%)); }
         .hi-panel .hi-panel-done:hover { background: #1c37b5; }
 
+        /* ══ Mobile static mode (≤767px) ═══════════════════════════════════
+           The page is authored for a wide desktop column: floating phone
+           previews parked in the margin, scroll-driven screen swaps, hover
+           highlights, dashed edge guides. None of that survives a 375px
+           touch viewport, so below 767px the page degrades to a plain
+           vertical read:
+
+             · the content column goes full-bleed with tighter padding
+             · margin-floating previews are dropped
+             · each journey step carries its OWN screen inline, built at
+               runtime by setupMobileStaticMode() using the framework's
+               data-placeholder-clone mirror, so edit-mode image swaps still
+               propagate and no data-placeholder-id is duplicated
+             · hover-only highlight labels become static captions
+
+           Presentation only — no authored copy is changed here. */
+        @media (max-width: 767px) {
+            :root {
+                --content-w:   100vw;
+                --content-pad: 1.25rem;
+                --block-gap:   2.25rem;
+            }
+
+            /* One gutter for the whole page. Section headers are marked up with
+               `pl-10 pr-10` while card bodies use the shorthand `px-10`, so an
+               earlier rule that only caught .px-10 left headers indented 2.5rem
+               against bodies at 1.25rem — visibly misaligned down the page. Both
+               now land on 1.75rem: bodies gain a little breathing room, headers
+               give some back. The `main` prefix outranks Tailwind's own utilities
+               regardless of where the CDN injects its stylesheet. */
+            main .px-10,
+            main .pl-10 {
+                padding-left: 1.75rem;
+            }
+
+            main .px-10,
+            main .pr-10 {
+                padding-right: 1.75rem;
+            }
+
+            /* ── Hero ────────────────────────────────────────────────────────
+               5.9rem of section padding plus two nested pt-10s puts the H1 175px
+               down an 812px screen. Roughly halved. Scoped to the hero, since
+               pt-10 is used throughout the page. */
+            main .pt-\[5\.9rem\] {
+                padding-top: 2.25rem;
+            }
+
+            main .pt-\[5\.9rem\] .pt-10 {
+                padding-top: 1.25rem;
+            }
+
+            /* The hero grid is `pl-10 pr-0`: on desktop the right column holds the
+               image, which is meant to bleed off the edge, so the grid carries no
+               right padding. Collapsed to one column that becomes a visible
+               asymmetry — headline, subtitle and stat row all run flush to x=375
+               while every other block on the page stops 1.75rem short.
+
+               Padded on the COPY column only. Putting it on the grid also inset the
+               image column and killed the bleed, which is the one thing the pr-0
+               was there to allow. */
+            main .pt-\[5\.9rem\] .md\:col-span-3 {
+                padding-right: 1.75rem;
+            }
+
+            /* The three hero stats sit in columns padded pr-11 / px-11 / pl-11 —
+               176px of gutter around three 2.5rem numbers, which pushes the third
+               ("#5" and its arrow) past the right edge. Smaller numbers, tighter
+               columns. Matched on data-text-key rather than the utility classes,
+               so the markup is left alone. */
+            /* Sized against the track, not by eye: with the new right gutter and the
+               separator padding, each of the three tracks is ~106px wide and ~93px of
+               that is usable. "2.1x" is the widest thing in the row - wider than any
+               label - and at 1.85rem it measured 94px, i.e. 1px over. */
+            main [data-text-key^="hero-stat"][data-text-key$="-value"] {
+                font-size: 1.7rem;
+            }
+
+            /* The row is a shrink-to-fit flex child of a column with
+               align-items:flex-start, so it only ever spanned its content — 313px of
+               a 347px column, with the three stats unequal (118 / 123 / 70). Stretch
+               the row and let the columns share it in equal thirds. */
+            main div:has(> div > [data-text-key="hero-stat1-value"]) {
+                display: grid;
+                grid-template-columns: 1fr auto 1fr auto 1fr;
+                width: 100%;
+                align-self: stretch;
+            }
+
+            /* Grid, not flex. With `flex: 1 1 0` the free space is shared between the
+               columns' CONTENT boxes and each column's own padding is then added on
+               top, so the middle one (padded both sides) came out 11px wider than its
+               neighbours — 111 / 122 / 111. Equal `1fr` tracks size the border boxes
+               instead, so the three stats and the two rules between them are evenly
+               spaced while the outer edges stay flush with the page gutter. */
+            /* Breathing room either side of the vertical rules. At 0.5rem the text
+               sat 8px off the separator and read as if it were touching it. */
+            main div:has(> [data-text-key^="hero-stat"][data-text-key$="-label"]) {
+                min-width: 0;
+                padding-left: 0.8rem;
+                padding-right: 0.8rem;
+            }
+
+            /* The row lost 1.75rem to the new right gutter and another ~1.2rem to the
+               separator padding above, so the labels have to give some back to stay on
+               two lines. tracking-widest (0.1em) alone costs ~14px on "MONTHLY SPENDS". */
+            main [data-text-key^="hero-stat"][data-text-key$="-label"] {
+                font-size: 8.5px;
+                letter-spacing: 0.04em;
+            }
+
+            main div:has(> [data-text-key^="hero-stat"][data-text-key$="-label"]):first-child {
+                padding-left: 0;
+            }
+
+            main div:has(> [data-text-key^="hero-stat"][data-text-key$="-label"]):last-child {
+                padding-right: 0;
+            }
+
+            /* Section subtext is capped at 78% / 112.3% of the column for
+               desktop measure; both are wrong at phone width — the second
+               actually overflows. */
+            .stack-section .section-header p.font-display,
+            .stack-section.static-section p.font-display,
+            body.is-animating-motion .stack-section:not(.static-section) .section-header p.font-display {
+                max-width: 100%;
+            }
+
+            .stack-section.static-section p.font-display {
+                width: 100%;
+            }
+
+            /* ── Everything that shows a screen is centred ───────────────────
+               Desktop floats these into the margin or hangs them off one edge of
+               the column. With the column gone the leftovers sit off-centre —
+               .legacy-wallet-preview ends up 99px off the left of the screen —
+               and centring is the only sensible resting position once the page is
+               a single column. These rules come later in the sheet than the
+               existing mobile margin shorthands, so they win on order alone; no
+               !important needed.
+
+               Deliberately excluded: .rebrand-phone-placeholder, whose standalone
+               instances already centre themselves and whose remaining instances
+               are competitive-carousel slides positioned by transform, whose own
+               full-bleed negative margins must survive. */
+            .legacy-wallet-preview,
+            .persona-card-stack,
+            .execution-inline-image,
+            .img-placeholder {
+                margin-left: auto;
+                margin-right: auto;
+                float: none;
+            }
+
+            /* The preview slides in from translateX(-7.5rem) when its section
+               expands. Collapsed, that parks it 119px off the left of the screen —
+               on desktop it is sliding in from the margin, but here there is no
+               margin to slide from. It just sits where it belongs. */
+            .legacy-wallet-preview,
+            .stack-section.is-expanded .legacy-wallet-preview {
+                transform: none;
+            }
+
+            /* Media inside a numbered point picks up the point's text indent from
+               `.numbered-point > :not(h3):not(.sticky-note)`, which out-specifies a
+               bare class selector — hence the `main` prefix, which takes this to
+               three classes and wins. Text stays indented; screens centre. */
+            main .numbered-point > .img-placeholder,
+            main .numbered-point > .execution-inline-image,
+            main .numbered-point > .legacy-wallet-preview {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            /* The persona stack is position:absolute with a translate, centred on
+               the left text block of a two-column desktop layout. The existing
+               mobile rule re-slots it to grid row 3 but never took it out of
+               absolute positioning, so it stayed out of flow and 12px off-centre. */
+            .persona-card-stack {
+                position: static;
+                width: auto;
+                transform: none;
+                /* Rhythm. The row was 19px under the heading, then 0 to the card
+                   stack, then 74px to the next persona — the card welded to the
+                   paragraph it belongs beside, with a void underneath. The shell's
+                   grid has row-gap: 0 because on desktop the stack sits in its own
+                   column, so only the 5rem column-gap ever mattered. Collapsed to
+                   one column that leaves nothing between the rows.
+                   Reads 19 / 32 / 74 now: tight, medium, generous. */
+                margin-top: 2rem;
+                margin-bottom: 0;
+            }
+
+            /* The stack fans LEFT on desktop because it is right-anchored in its own
+               narrow track, receding into the 5rem column gap beside the copy. In one
+               column there is no gap on that side, so the tail slid out past the text
+               and into the page gutter — cards landing at 18, 10 and 2 against a 28px
+               margin. Fanned the other way instead: the front card stays flush with
+               the copy it belongs to, and the tail recedes into the empty right
+               gutter. Shorter offsets, because a phone has less room to recede into. */
+            .persona-id-card[data-stack-position="1"] {
+                transform: translate3d(0.6rem, 0, 0) scale(0.97);
+            }
+
+            .persona-id-card[data-stack-position="2"] {
+                transform: translate3d(1.15rem, 0, 0) scale(0.95);
+            }
+
+            .persona-id-card[data-stack-position="3"] {
+                transform: translate3d(1.7rem, 0, 0) scale(0.93);
+            }
+
+            /* ── Multi-image groups scroll sideways ──────────────────────────
+               Two containers hold more than one screen: .rebrand-phone-grid (2)
+               and .direction-screens (3 each, four of them). Both are already
+               flex rows that simply wrap on a narrow screen, which turns roughly
+               10,900px of images into a vertical slog. Same flex row, no wrap,
+               scrolled horizontally instead — one screen at a time with the next
+               one peeking, so the affordance is visible without a control.
+
+               The track runs full-bleed so a slide can use the whole width, and
+               overscroll-behavior stops the swipe chaining into the page scroll
+               or the browser's back gesture. */
+            /* Specificity note: the desktop rules that own these containers are
+               `.numbered-point > .rebrand-phone-grid` (2 classes, sets flex-wrap)
+               and `.numbered-point > .direction-screens.direction-screens`
+               (3 classes, sets the bleed margins). A class always outranks a type
+               selector, so `main .direction-screens` loses to both. Each selector
+               below is doubled and, where the container is a direct child of a
+               numbered point, scoped through it — enough to win in every case. */
+            main .rebrand-phone-grid.rebrand-phone-grid,
+            main .direction-screens.direction-screens,
+            main .numbered-point > .rebrand-phone-grid.rebrand-phone-grid,
+            main .numbered-point > .direction-screens.direction-screens {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 1.75rem;
+                overflow-x: auto;
+                overscroll-behavior-x: contain;
+                -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
+                scroll-padding-inline: 1.75rem;
+                padding-inline: 1.75rem;
+                scrollbar-width: none;
+                margin-left: -1.75rem;
+                margin-right: -1.75rem;
+            }
+
+            main .rebrand-phone-grid::-webkit-scrollbar,
+            main .direction-screens::-webkit-scrollbar {
+                display: none;
+            }
+
+            /* A track holding a single slide has nothing to scroll to, so starting
+               it at the left edge just looks misaligned. Centre it instead. */
+            main .rebrand-phone-grid:has(> :only-child),
+            main .direction-screens:has(> :only-child) {
+                justify-content: center;
+            }
+
+            /* Fixed-width slides: without this they either stretch to the track or
+               collapse to content. min() keeps the authored 17rem cap on a larger
+               phone while leaving a peek of the next slide on a small one. */
+            main .rebrand-phone-grid > *,
+            main .direction-screens > * {
+                flex: 0 0 auto;
+                /* Matches the IPL tracks. Still leaves ~34px of the next slide
+                   visible at 375px, which is the only affordance these carry. */
+                width: min(80vw, 18rem);
+                max-width: none;
+                scroll-snap-align: center;
+            }
+
+            /* ── Competitive carousel arrows ─────────────────────────────────
+               The carousel is pulled 3rem wider than the column on each side so
+               its stage can overflow, then pads the same 3rem back. The controls
+               are absolutely positioned to `left: 0` / `right: 0`, which is the
+               MARGIN edge — at 375px that puts them at -19.5 and 394.5, i.e. off
+               the screen on both sides. Inset them by the padding so they land on
+               the column edge instead, clear of the 14rem centre slide. */
+            .competitive-carousel-control[data-carousel-control="prev"] {
+                left: 3rem;
+            }
+
+            .competitive-carousel-control[data-carousel-control="next"] {
+                right: 3rem;
+            }
+
+            /* ── KYC steps: stacked → one line each ──────────────────────────
+               Five cards, each a badge stacked over a label capped at 7.5rem.
+               In a single column that is a tall list with the text hugging the
+               left third and a wide empty margin to its right. As a row instead:
+               badge pinned left and out of flow, label centred across the whole
+               card, so the numbers line up down the left and the labels form a
+               centred column. The symmetric inline padding keeps a long label
+               off the badge, so the centring stays true rather than optical. */
+            .kyc-step-card {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 3.6rem;
+                padding: 0.95rem 1.1rem;
+            }
+
+            .kyc-step-number {
+                position: absolute;
+                left: 1.1rem;
+                top: 50%;
+                transform: translateY(-50%);
+                margin-bottom: 0;
+            }
+
+            .kyc-step-card h4 {
+                max-width: none;
+                text-align: center;
+                padding-inline: 2.6rem;
+            }
+
+            /* Shorter cards want a tighter interval than the 1.5rem the desktop
+               grid uses between columns. */
+            .kyc-step-grid {
+                gap: 0.75rem;
+            }
+
+            /* ── Flow comparison as a single column ──────────────────────────
+               See renderScopeFlowLinear. With no wide SVG left there is nothing to
+               scroll, so the full-bleed scroll track above is stood down. */
+            .scope-flowchart:has(.scope-flow-linear) {
+                overflow-x: visible;
+                margin-inline: 0;
+                padding-inline: 0;
+            }
+
+            .scope-flow-linear {
+                display: grid;
+                justify-items: stretch;
+            }
+
+            .scope-linear-step > .scope-node-card {
+                width: 100%;
+                height: auto;
+            }
+
+            /* The connector. A hairline with a small chevron, sized so the rhythm
+               between cards stays tighter than the gap between the fork legs. */
+            .scope-linear-arrow {
+                position: relative;
+                width: 1px;
+                height: 1.5rem;
+                margin: 0.4rem auto;
+                background: rgba(71, 71, 71, 0.28);
+            }
+
+            .scope-linear-arrow::after {
+                content: "";
+                position: absolute;
+                left: 50%;
+                bottom: 0;
+                width: 6px;
+                height: 6px;
+                border-right: 1px solid rgba(71, 71, 71, 0.45);
+                border-bottom: 1px solid rgba(71, 71, 71, 0.45);
+                transform: translateX(-50%) rotate(45deg);
+            }
+
+            /* Legs are indented under the decision they belong to. Their own first
+               card names the branch, so no label is invented here. */
+            .scope-linear-fork {
+                display: grid;
+                gap: 1.75rem;
+                margin: 0.4rem 0 0;
+            }
+
+            /* When the legs converge, the rule runs on past the last leg into the
+               shared node below; when they do not, it stops with them. */
+            .scope-linear-fork.has-join {
+                margin-bottom: 0.4rem;
+            }
+
+            /* One rule per leg, not one around the pair: two parallel tracks read as
+               a branch, a single enclosing rule reads as one continuous sequence. */
+            .scope-linear-leg {
+                display: grid;
+                padding-left: 0.9rem;
+                border-left: 1px solid rgba(71, 71, 71, 0.18);
+            }
+
+            /* Dashed vertical guides track the content column's edges, which
+               on a phone land at or past the screen edge. */
+            #left-vertical-guide,
+            #vertical-guides {
+                display: none;
+            }
+
+            /* Scope flowcharts carry an authored min-width of 640px (see
+               .scope-flowchart svg) which no width:100% can beat. Forcing them
+               to fit anyway would scale a 522-unit viewBox into ~295px and take
+               their label text down to roughly 7px — technically "fits", in
+               practice unreadable, which is the opposite of the point.
+
+               So the horizontal scroll stays and the container goes full-bleed
+               instead: the drag gets the whole screen width rather than the
+               padded column, and overscroll-behavior stops it from chaining
+               into the page scroll or the browser's back gesture. */
+            .scope-flowchart {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                overscroll-behavior-x: contain;
+                margin-inline: -1.25rem;
+                padding-inline: 1.25rem;
+            }
+
+            /* ── Execution journey: floating phone → inline per-step screens ──
+               The floating aside is dropped entirely (the earlier mobile rule
+               reflowed it to the top of the section, where it sat far above
+               the steps it was meant to illustrate). */
+            .execution-phone-floating {
+                display: none !important;
+            }
+
+            /* The phone body is the page's own .legacy-wallet-device — dark bezel
+               gradient, 1.75rem screen radius, inner shadow. Do NOT restyle it
+               here: the shell carries .has-saved-image, which is what lights up
+               .placeholder-image-layer (absolute, inset -4px) and the dark screen
+               background. Overriding those turns the casing white and drops the
+               image into the screen's 2.4rem padding instead of filling it.
+               Width + centering are the only things this needs to say, exactly
+               like .execution-journey-phone does on desktop. */
+            .execution-journey-inline-screen {
+                display: block;
+                width: 100%;
+                /* The option card's content box is ~279px at 375px, so 16.5rem sits
+                   inside it with room to spare. Was 13.5rem, which left the screen
+                   looking undersized against the copy it illustrates. */
+                max-width: min(74vw, 16.5rem);
+                margin: 1.15rem auto 0.25rem;
+            }
+
+            .execution-journey-inline-screen .legacy-wallet-device {
+                width: 100%;
+            }
+
+            /* `.legacy-wallet-screen > *:not(.placeholder-image-layer):not(...)` forces
+               position:relative on every screen child at three classes, which beats the
+               embed's own two-class sizing rule. The page works around that with a
+               four-class rule scoped to .execution-phone-state.has-live-embed — and the
+               inline shell is deliberately not one of those, so it was inheriting the
+               override and laying the iframe out in flow inside the screen's
+               2.4rem/0.85rem padding: a small prototype floating in a white margin
+               instead of filling the casing. This restores the full sizing, not just
+               visibility, at matching specificity. */
+            .execution-journey-inline-screen.has-live-embed .legacy-wallet-screen > .execution-phone-embed {
+                display: block;
+                position: absolute;
+                inset: -4px;
+                width: calc(100% + 8px);
+                height: calc(100% + 8px);
+                z-index: 2;
+                opacity: 1;
+            }
+
+            /* Highlight callouts are hover-driven and their labels sit at
+               127–142% of the frame width, so on touch they never appear and
+               would not fit if they did. The authored highlight text is
+               surfaced as a caption instead. */
+            .execution-journey-inline-caption {
+                display: block;
+                max-width: min(74vw, 16.5rem);
+                margin: 0.6rem auto 0;
+                text-align: center;
+                font-family: var(--font-mono);
+                font-size: 0.62rem;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                line-height: 1.45;
+                color: #6c6c6c;
+            }
+
+            /* ── No active state on mobile ──────────────────────────────────
+               The accent fill, white text, sideways nudge and the triangle
+               pointing into the margin all belong to the desktop state machine,
+               which is off here: every step is shown in full, so singling one out
+               says nothing. Reset to the resting card values rather than stripping
+               the class, so a stray tap — the option click handlers are still
+               live — cannot light one up either. Values mirror the base rules for
+               .execution-journey-option and .execution-option-{kicker,title,body}. */
+            .execution-journey-option.is-active {
+                border-color: rgba(71, 71, 71, 0.14);
+                background: rgba(255, 255, 255, 0.52);
+                transform: none;
+            }
+
+            .execution-journey-option.is-active .execution-option-kicker {
+                color: rgba(71, 71, 71, 0.6);
+            }
+
+            .execution-journey-option.is-active .execution-option-title {
+                color: hsl(var(--accent-h), 20%, 15%);
+            }
+
+            .execution-journey-option.is-active .execution-option-body {
+                color: hsl(var(--accent-h), 14%, 27%);
+            }
+
+            .execution-journey-option.is-active::after {
+                display: none;
+            }
+
+            /* ── Transition steps dropped ───────────────────────────────────
+               Each is a desktop scroll device: a lone heading in ~114px of
+               reserved space that hands the phone from one section to the next.
+               With no floating phone to hand over, they are a gap with a title in
+               it. Taken out of the flow so the sections simply follow on.
+               Hidden on mobile only — the source copy is untouched. */
+            .execution-journey-section[data-transition-step] {
+                display: none;
+            }
+
+            /* --timeline-gap is 9rem so the transition tap animation has scroll
+               distance to play out in. There is no transition and no animation
+               here, so that 9rem is just a void between sections — ~200px of it
+               once the section padding is added. The timeline connector length is
+               derived from the same variable, so changing it here keeps the line
+               and the dots in step. */
+            .execution-journey-section {
+                --timeline-gap: 3rem;
+            }
+
+            /* Options are cards on desktop; on mobile they carry a screen, so
+               give them room and stop them reading as tap targets that do
+               nothing (the state machine they drove is off). */
+            .execution-journey-option {
+                cursor: default;
+            }
+        }
+
     </style>
 <script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
 <body class="">
@@ -6609,8 +7147,100 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             `;
         }
 
+        /* Mobile flow: the same graph as one column.
+
+           Nodes are 220-280px wide and the phone content column is 319px, so a
+           branch rank (220 + 230 + a gap) cannot fit side by side at any legible
+           type size. Rather than scroll a 2D diagram through a 375px window --
+           where the fork, the one thing the chart exists to show, is never visible
+           at once -- the graph is walked and emitted as a single column: spine,
+           then the fork as indented legs, then the join.
+
+           Divergence vs convergence is the whole argument of these two charts:
+           `before` splits to two unequal outcomes and never rejoins, `after`
+           brings both paths back to the same node. So the join is detected from
+           the edges rather than assumed, and the legs are only closed back into a
+           single spine when they genuinely converge.
+
+           Adds no words. The branch nodes ("Bank Customer" / "Non-Bank Customer")
+           already label their own legs, and the merge is drawn, not captioned. */
+        function renderScopeFlowLinear(container, flow) {
+            const byId = new Map(flow.nodes.map((n) => [n.id, n]));
+            const outs = new Map(), ins = new Map();
+            flow.nodes.forEach((n) => { outs.set(n.id, []); ins.set(n.id, []); });
+            flow.edges.forEach(([a, b]) => {
+                if (outs.has(a)) outs.get(a).push(b);
+                if (ins.has(b)) ins.get(b).push(a);
+            });
+
+            const start = flow.nodes.find((n) => (ins.get(n.id) || []).length === 0);
+            if (!start) return false;
+
+            const card = (id) => byId.has(id)
+                ? '<div class="scope-linear-step">' + getScopeNodeHtml(byId.get(id)) + "</div>" : "";
+            const arrow = () => '<div class="scope-linear-arrow" aria-hidden="true"></div>';
+
+            // Follow a leg until it reaches the join (which the spine emits) or ends.
+            const walkLeg = (from, stopAt) => {
+                const parts = [];
+                const seen = new Set();
+                let cur = from;
+                while (cur && cur !== stopAt && !seen.has(cur)) {
+                    seen.add(cur);
+                    if (parts.length) parts.push(arrow());
+                    parts.push(card(cur));
+                    const next = outs.get(cur) || [];
+                    cur = next.length === 1 ? next[0] : null;
+                }
+                return parts.join("");
+            };
+
+            // Where does a leg first meet a node more than one path feeds into?
+            const legJoin = (from) => {
+                const seen = new Set();
+                let cur = from;
+                while (cur && !seen.has(cur)) {
+                    seen.add(cur);
+                    const next = outs.get(cur) || [];
+                    cur = next.length === 1 ? next[0] : null;
+                    if (cur && (ins.get(cur) || []).length > 1) return cur;
+                }
+                return null;
+            };
+
+            const html = [];
+            const visited = new Set();
+            let cur = start.id;
+
+            while (cur && !visited.has(cur)) {
+                visited.add(cur);
+                if (html.length) html.push(arrow());
+                html.push(card(cur));
+
+                const children = outs.get(cur) || [];
+                if (children.length <= 1) { cur = children[0] || null; continue; }
+
+                const joins = [...new Set(children.map(legJoin).filter(Boolean))];
+                const join = joins.length === 1 ? joins[0] : null;
+
+                html.push(
+                    '<div class="scope-linear-fork' + (join ? " has-join" : "") + '">'
+                    + children.map((c) => '<div class="scope-linear-leg">' + walkLeg(c, join) + "</div>").join("")
+                    + "</div>"
+                );
+                cur = join;
+            }
+
+            container.innerHTML = '<div class="scope-flow-linear">' + html.join("") + "</div>";
+            return true;
+        }
+
         function renderScopeFlowchart(container, flow) {
             if (!container) return;
+            if (window.matchMedia("(max-width: 767px)").matches
+                && renderScopeFlowLinear(container, flow)) {
+                return;
+            }
             if (!window.dagre) {
                 renderScopeFallback(container, flow.nodes);
                 return;
@@ -8543,11 +9173,19 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             // wheel/touch scroll-lock is intentionally no longer registered so the page
             // scrolls freely (keyboard stays capture-phase so it wins over the page's
             // smooth-scroll handler while the journey owns the viewport center).
-            if (steppingEnabled) {
+            // Below 767px the floating phone is hidden and every step carries its
+            // own screen inline (setupMobileStaticMode), so the scroll/keyboard
+            // state machine has nothing left to drive. Skip it rather than run a
+            // rAF loop against an invisible element on battery-powered devices.
+            const isMobileStatic = window.matchMedia("(max-width: 767px)").matches;
+
+            if (steppingEnabled && !isMobileStatic) {
                 window.addEventListener("keydown", handleJourneyKeyDown, { capture: true });
             }
 
             setActiveState(options[0]?.dataset.journeyState || states[0]?.dataset.journeyScreenState);
+            if (isMobileStatic) return;
+
             window.addEventListener("scroll", scheduleScrollUpdate, { passive: true });
             window.addEventListener("resize", () => {
                 syncStartupTapLayerBounds();
@@ -8559,12 +9197,123 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             scheduleScrollUpdate();
         }
 
+        /* -- Mobile static mode --------------------------------------------------
+           Below 767px the journey floating phone is hidden by CSS, so each step is
+           given its own screen inline. Screens are MIRRORED, not moved: each inline
+           node carries data-placeholder-clone pointing at the source placeholder id,
+           which is the framework existing mechanism for a second element showing the
+           same image (renderPlaceholder already pushes edit-mode swaps into every
+           clone of an id). The source phone states, their data-placeholder-id values
+           and their data-highlight-* attributes are left untouched.
+
+           Nodes are built at runtime and stripped from the saved document via
+           data-runtime-only, so none of this enters the source HTML. */
+        function setupMobileStaticMode() {
+            if (!window.matchMedia("(max-width: 767px)").matches) return;
+
+            const root = document.querySelector("[data-execution-journey]");
+            if (!root) return;
+
+            const screens = new Map();
+            root.querySelectorAll("[data-journey-screen-state]").forEach((el) => {
+                screens.set(el.dataset.journeyScreenState, el);
+            });
+
+            const DEVICE_SHELL = '<div class="legacy-wallet-device"><div class="legacy-wallet-screen">';
+
+            function buildInlineScreen(stateId) {
+                const source = screens.get(stateId);
+                if (!source) return null;
+
+                // Mirror what the source state actually holds, rather than assuming
+                // every state is a screenshot. Only 10 of the 22 carry a real PNG;
+                // has-saved-image is the marker for that and it tracks which files
+                // exist on disk. Five more exist only as live local prototypes. The
+                // transition states carry neither — on desktop their job is to
+                // animate a tap over the previous screen — so they get nothing here
+                // instead of an empty black phone.
+                const savedSrc = source.classList.contains("has-saved-image")
+                    ? source.querySelector(".placeholder-image-layer")?.getAttribute("src")
+                    : null;
+                const embedSrc = source.querySelector(".execution-phone-embed")?.dataset.embedSrc || null;
+                if (!savedSrc && !embedSrc) return null;
+
+                const frag = document.createDocumentFragment();
+
+                const shell = document.createElement("div");
+                shell.dataset.runtimeOnly = "true";
+
+                if (savedSrc) {
+                    // has-saved-image is the framework's own switch: .placeholder-image-layer
+                    // is display:none until an ancestor carries it, and it also swaps the
+                    // screen to the dark background. applyPlaceholderImage() adds/removes it
+                    // on clones in edit mode, so declaring it here matches that contract.
+                    shell.className = "execution-journey-inline-screen has-saved-image";
+                    shell.setAttribute("aria-hidden", "true");
+                    if (source.dataset.placeholderId) {
+                        shell.dataset.placeholderClone = source.dataset.placeholderId;
+                    }
+                    shell.innerHTML = DEVICE_SHELL
+                        + '<img class="placeholder-image-layer" alt="">'
+                        + '</div></div>';
+                    shell.querySelector("img").setAttribute("src", savedSrc);
+                } else {
+                    // No PNG to fall back to, so the static downgrade has nothing to
+                    // show. Embed the prototype itself, lazily — they are local files.
+                    // Not aria-hidden: the iframe is focusable content, so it keeps a
+                    // real title instead of being hidden from assistive tech.
+                    shell.className = "execution-journey-inline-screen has-live-embed";
+                    shell.innerHTML = DEVICE_SHELL
+                        + '<iframe class="execution-phone-embed" loading="lazy" scrolling="no"></iframe>'
+                        + '</div></div>';
+                    const frame = shell.querySelector("iframe");
+                    frame.setAttribute("src", embedSrc);
+                    frame.setAttribute("title", source.dataset.placeholderName || "Prototype preview");
+                }
+
+                frag.appendChild(shell);
+
+                // Highlight callouts are hover-driven and their labels sit outside the
+                // frame, so on touch they never show. Surface the authored note as a
+                // caption instead of losing it.
+                if (source.dataset.highlightActive === "true" && source.dataset.highlightText) {
+                    const caption = document.createElement("div");
+                    caption.className = "execution-journey-inline-caption";
+                    caption.dataset.runtimeOnly = "true";
+                    caption.textContent = source.dataset.highlightText;
+                    frag.appendChild(caption);
+                }
+
+                return frag;
+            }
+
+            // Step boxes: each option shows the screen it selects on desktop.
+            // Transition options are skipped - their screen belongs to the
+            // transition-step section that follows, so it is not shown twice.
+            root.querySelectorAll("[data-journey-option]").forEach((option) => {
+                if (option.hasAttribute("data-transition-option")) return;
+                const frag = buildInlineScreen(option.dataset.journeyState);
+                if (frag) option.appendChild(frag);
+            });
+
+            // Transition steps are standalone sections carrying a single screen.
+            // Inert in practice: none of them has a saved image or an embed, and the
+            // sections themselves are display:none on mobile. Kept so that hiding
+            // them stays a one-line CSS decision rather than two coupled changes.
+            root.querySelectorAll("[data-transition-step]").forEach((section) => {
+                const frag = buildInlineScreen(section.dataset.journeyState);
+                if (!frag) return;
+                (section.querySelector(".execution-journey-section-copy") || section).appendChild(frag);
+            });
+        }
+
         placeScopeFlowShell();
         renderAllScopeFlowcharts();
         setupScopeFlowTabs();
         setupKycCapabilityTabs();
         setupExecutionJourney();
         setupPersonaCardStacks();
+        setupMobileStaticMode();
         if (window.lucide) {
             lucide.createIcons();
         }
@@ -8578,6 +9327,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             });
         }
         window.addEventListener("load", () => {
+            requestAnimationFrame(() => renderAllScopeFlowcharts());
+        });
+
+        // Crossing the breakpoint swaps between the SVG graph and the linear
+        // column, so the charts have to be rebuilt on rotation.
+        window.matchMedia("(max-width: 767px)").addEventListener("change", () => {
             requestAnimationFrame(() => renderAllScopeFlowcharts());
         });
 
@@ -11029,6 +11784,10 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     el.removeAttribute("style");
                 });
                 Array.from(clone.querySelectorAll(".execution-startup-tap-control")).forEach((el) => el.remove());
+
+                // Mobile static mode builds inline journey screens + captions at runtime
+                // (see setupMobileStaticMode); they are presentation, not source.
+                Array.from(clone.querySelectorAll("[data-runtime-only]")).forEach((el) => el.remove());
 
                 // Strip sticky-note edit affordances (handle/delete buttons rebuilt at runtime;
                 // only the note markup + inline position/rotation persist).

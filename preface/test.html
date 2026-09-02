@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Ishant is a Principal Product Designer working across product, interaction, growth, motion systems, and coded prototyping." />
+    <meta name="theme-color" content="#fbfaf9" />
+    <title>Ishant</title>
+  <script>
+    try {
+      const savedTheme = localStorage.getItem('ishant-theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') document.documentElement.dataset.theme = savedTheme;
+    } catch (error) {
+      // Theme still follows the system preference when storage is unavailable.
+    }
+  </script>
+  <style>
+    :root {
+      --bg: #fbfaf9;
+      --ink: #111111;
+      --muted: rgba(17, 17, 17, .48);
+      --hairline: rgba(17, 17, 17, .08);
+      --trunk: rgba(17, 17, 17, .10);
+      --accent: #786bb0;
+      --accent-soft: rgba(120, 107, 176, .16);
+      --white: #ffffff;
+      --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      --section-gap: 2.6rem;
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    :root[data-theme="dark"] {
+      --bg: #171518;
+      --ink: #f2f0ed;
+      --muted: rgba(242, 240, 237, .56);
+      --hairline: rgba(242, 240, 237, .12);
+      --trunk: rgba(242, 240, 237, .15);
+      --accent: #b7a8e4;
+      --accent-soft: rgba(183, 168, 228, .18);
+      --white: #242126;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --bg: #171518;
+        --ink: #f2f0ed;
+        --muted: rgba(242, 240, 237, .56);
+        --hairline: rgba(242, 240, 237, .12);
+        --trunk: rgba(242, 240, 237, .15);
+        --accent: #b7a8e4;
+        --accent-soft: rgba(183, 168, 228, .18);
+        --white: #242126;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+      color: var(--ink);
+      color-scheme: light dark;
+      scrollbar-gutter: stable;
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root[data-theme="dark"] { color-scheme: dark; }
+
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: clip;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 16px;
+      line-height: 1.5;
+      letter-spacing: 0;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: #c7c1e7; color: var(--ink); }
+    button, summary { font: inherit; }
+    button { color: inherit; }
+    a { color: inherit; text-decoration: none; }
+
+    .v2 {
+      width: min(560px, 100%);
+      margin-inline: auto;
+      padding: clamp(3rem, 8vw, 6rem) 1.5rem 4rem;
+      color: var(--ink);
+      font-size: .875rem;
+      font-weight: 460;
+      line-height: 1.25rem;
+    }
+
+    .v2 > * { animation: rise .64s var(--ease) both; }
+    .v2 > :nth-child(2) { animation-delay: 70ms; }
+    .v2 > :nth-child(3) { animation-delay: 140ms; }
+    .v2 > :nth-child(4) { animation-delay: 220ms; }
+    .v2 > :nth-child(5) { animation-delay: 300ms; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .v2 h3,
+    .v2 p,
+    .v2 h2 { margin: 0; }
+
+    .v2-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 2.2rem; }
+    .v2-top h3 { font-size: .875rem; font-weight: 500; }
+
+    .theme-toggle {
+      padding: .3rem .5rem;
+      color: var(--muted);
+      font-size: .6875rem;
+      line-height: 1;
+      background: transparent;
+      border: 1px solid var(--hairline);
+      border-radius: 3px;
+      cursor: pointer;
+      transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .theme-toggle:hover,
+    .theme-toggle:focus-visible { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); outline: none; transform: translateY(-1px); }
+
+    .v2-prose p {
+      margin-bottom: 1rem;
+      text-wrap: pretty;
+    }
+
+    .product-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: .32em;
+      padding: .12em .4em;
+      color: var(--ink);
+      font-size: inherit;
+      font-weight: 500;
+      line-height: inherit;
+      white-space: nowrap;
+      background: color-mix(in srgb, var(--ink) 4%, var(--bg));
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+    }
+
+    button.product-chip {
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .product-chip::before {
+      content: "";
+      width: .68em;
+      height: .68em;
+      flex: 0 0 auto;
+      background: var(--accent);
+      border-radius: 50%;
+      opacity: .72;
+    }
+
+    .product-chip:hover,
+    .product-chip:focus-visible {
+      border-color: rgba(120, 107, 176, .42);
+      background: var(--accent-soft);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .hot {
+      display: inline;
+      padding: 0;
+      border: 0;
+      border-bottom: 1px solid rgba(17, 17, 17, .24);
+      background: transparent;
+      font: inherit;
+      cursor: pointer;
+      transition: border-color .2s var(--ease), color .2s var(--ease), opacity .2s var(--ease);
+    }
+
+    .hot:hover,
+    .hot:focus-visible {
+      border-color: var(--accent);
+      color: var(--accent);
+      outline: none;
+    }
+
+    .v2-prose:hover .hot:not(:hover) { opacity: .46; }
+
+    .v2-proof {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin-top: 2.1rem;
+      padding: .9rem 0 1rem;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .v2-proof__cell {
+      display: flex;
+      min-width: 0;
+      flex-direction: column;
+      gap: .15rem;
+      padding-left: .85rem;
+      border-left: 1px solid var(--hairline);
+      color: inherit;
+      transition: color .2s var(--ease);
+    }
+
+    .v2-proof__cell:first-child { padding-left: 0; border-left: 0; }
+    .v2-proof__cell:hover .v2-proof__label { color: var(--ink); }
+
+    .v2-proof__num {
+      display: inline-block;
+      min-width: 3ch;
+      color: var(--ink);
+      font-size: 1.25rem;
+      font-weight: 500;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .v2-proof__num--word { font-size: .9375rem; line-height: 1.6; }
+    .v2-proof__label { color: var(--muted); font-size: .6875rem; line-height: 1rem; }
+
+    .v2-section { margin-top: var(--section-gap); }
+    .v2-label { padding-bottom: .65rem; color: var(--muted); font-size: .8125rem; font-weight: 500; }
+
+    .v2-tree {
+      padding-left: 28px;
+      color: var(--ink);
+      font-size: .875rem;
+      font-weight: 500;
+    }
+
+    .v2-tree__group {
+      position: relative;
+      --folder: var(--accent);
+    }
+
+    .v2-tree__group::before,
+    .v2-tree__group:not(:last-child)::after {
+      position: absolute;
+      left: -20px;
+      content: "";
+      border-left: 1px solid var(--trunk);
+    }
+
+    .v2-tree__group::before {
+      top: 0;
+      width: 12px;
+      height: 18px;
+      border-bottom: 1px solid var(--trunk);
+      border-bottom-left-radius: 2px;
+    }
+
+    .v2-tree__group:not(:last-child)::after { top: 18px; bottom: 0; }
+
+    .v2-tree__folder {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: .5rem 0;
+      color: var(--muted);
+      font-size: .9375rem;
+      font-variant-numeric: tabular-nums;
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+      transition: color .24s var(--ease), opacity .48s var(--ease);
+    }
+
+    .v2-tree__folder::-webkit-details-marker { display: none; }
+
+    .v2-tree__folder:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    .v2-tree__group[open] .v2-tree__folder,
+    .v2-tree__folder:hover { color: var(--accent); }
+
+    .tree-icon {
+      position: relative;
+      width: 16px;
+      height: 13px;
+      flex: 0 0 auto;
+      color: var(--folder);
+      border: 1px solid currentColor;
+      border-radius: 2px;
+      background: color-mix(in srgb, currentColor 14%, transparent);
+      transition: background .24s var(--ease), transform .28s var(--ease);
+    }
+
+    .tree-icon::before {
+      position: absolute;
+      top: -4px;
+      left: 1px;
+      width: 7px;
+      height: 4px;
+      content: "";
+      border: 1px solid currentColor;
+      border-bottom: 0;
+      border-radius: 2px 2px 0 0;
+      background: inherit;
+    }
+
+    .v2-tree__group[open] .tree-icon { transform: translateY(1px) scaleY(.86); background: color-mix(in srgb, currentColor 24%, transparent); }
+
+    .v2-tree__children {
+      padding: .1rem 0 .5rem 28px;
+      animation: unfold .34s var(--ease) both;
+    }
+
+    @keyframes unfold {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .v2-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: 16px;
+      padding: .4rem 0;
+      color: inherit;
+      text-decoration: none;
+      transition: opacity .48s var(--ease), color .24s var(--ease), transform .26s var(--ease);
+    }
+
+    .v2-row::before,
+    .v2-row:not(:last-child)::after {
+      position: absolute;
+      left: -20px;
+      content: "";
+      border-left: 1px solid color-mix(in srgb, var(--folder) 20%, transparent);
+    }
+
+    .v2-row::before {
+      top: 0;
+      width: 12px;
+      height: 50%;
+      border-bottom: 1px solid color-mix(in srgb, var(--folder) 20%, transparent);
+      border-bottom-left-radius: 2px;
+    }
+
+    .v2-row:not(:last-child)::after { top: 50%; bottom: 0; }
+
+    .v2-row__title { position: relative; display: inline-flex; align-items: center; min-width: 0; color: var(--ink); font-weight: 500; transition: color .24s var(--ease), transform .26s var(--ease); }
+    .v2-row__meta { color: var(--muted); font-size: .75rem; transition: color .24s var(--ease); }
+    .v2-row__meta::before { content: "// "; }
+
+    .v2-row:hover .v2-row__title,
+    .v2-row:focus-visible .v2-row__title { color: var(--accent); transform: translateX(3px); }
+
+    .v2-row:hover .v2-row__meta,
+    .v2-row:focus-visible .v2-row__meta { color: var(--accent); }
+
+    .v2-tree:has(.v2-row:hover) .v2-row:not(:hover),
+    .v2-tree:has(.v2-row:hover) .v2-tree__folder { opacity: .38; }
+
+    .v2-row--disabled { cursor: default; opacity: .65; pointer-events: none; }
+    .v2-row--disabled .v2-row__title { color: var(--muted); font-weight: 460; }
+    .v2-row--disabled .v2-row__meta { color: rgba(17, 17, 17, .28); }
+
+    .tag {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      margin-left: .5rem;
+      padding: .08em .4em .1em;
+      color: var(--accent);
+      font-size: .765625rem;
+      font-weight: 560;
+      line-height: 1.2;
+      vertical-align: middle;
+      border-radius: .3em;
+      background: var(--accent-soft);
+    }
+
+    .tag::before {
+      width: .4em;
+      height: .4em;
+      margin-right: .32em;
+      content: "";
+      border-radius: 50%;
+      background: currentColor;
+      animation: pulse 1.8s ease-out 1.1s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); }
+      70% { box-shadow: 0 0 0 .35em color-mix(in srgb, var(--accent) 0%, transparent); }
+      100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 0%, transparent); }
+    }
+
+    .v2-focus h2,
+    .v2-connect h2,
+    .v2-shelf h2 { padding-bottom: .5rem; }
+
+    .v2-focus__strip { overflow: hidden; mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent); }
+    .v2-focus__track { display: flex; width: max-content; animation: drift 46s linear infinite; }
+    .v2-focus__strip:hover .v2-focus__track,
+    .v2-focus__strip:focus-within .v2-focus__track { animation-play-state: paused; }
+    .v2-focus__list { display: flex; gap: 8px; margin: 0; padding: 2px 8px 2px 0; list-style: none; }
+
+    @keyframes drift { to { transform: translateX(-50%); } }
+
+    .focus-chip {
+      display: inline-flex;
+      align-items: baseline;
+      gap: .5em;
+      max-width: 320px;
+      padding: .3em .6em;
+      border: 1px solid var(--hairline);
+      border-radius: 3px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: border-color .2s var(--ease), background .2s var(--ease), transform .2s var(--ease);
+    }
+
+    .focus-chip:hover,
+    .focus-chip:focus-visible { border-color: rgba(17, 17, 17, .28); background: rgba(17, 17, 17, .025); outline: none; transform: translateY(-1px); }
+    .focus-chip__text { overflow: hidden; text-overflow: ellipsis; }
+    .focus-chip__meta { flex: 0 0 auto; color: var(--muted); font-size: .6875rem; }
+
+    .v2-connect p { text-wrap: pretty; }
+    .basic-link { text-decoration: underline 1px rgba(17, 17, 17, .22); text-underline-offset: 2.5px; transition: text-decoration-color .2s var(--ease), color .2s var(--ease); }
+    .basic-link:hover,
+    .basic-link:focus-visible { color: var(--accent); text-decoration-color: var(--accent); outline: none; }
+
+    .v2-shelf h2 { margin-bottom: 1.1rem; }
+    .v2-shelf__row { display: flex; justify-content: center; padding: .75rem 0 1.25rem; overflow: visible; }
+    .v2-frame { position: relative; z-index: var(--z, 1); flex-shrink: 0; padding: 0; border: 0; background: none; cursor: pointer; transform-origin: center bottom; transform: translateY(var(--y)) rotate(var(--r)); transition: transform .42s cubic-bezier(.22, 1, .36, 1); }
+    .v2-frame + .v2-frame { margin-left: -28px; }
+    .v2-shelf__row:hover .v2-frame { transform: translate(var(--sx), var(--y)) rotate(calc(var(--r) * 1.2)) scale(1.03); }
+    .v2-frame:hover,
+    .v2-frame:focus-visible { z-index: 20; outline: none; transform: translate(var(--sx, 0), calc(var(--y) - 12px)) rotate(0) scale(1.1); }
+    .v2-frame:active { transform: translate(var(--sx, 0), calc(var(--y) - 8px)) rotate(0) scale(1.05); }
+
+    .v2-frame__paper { display: block; width: 100px; padding: 6px 6px 16px; background: var(--white); border: 1px solid var(--hairline); box-shadow: 0 2px 8px rgba(0, 0, 0, .12), 0 1px 3px rgba(0, 0, 0, .08); transition: box-shadow .3s, background .3s; }
+    .v2-frame:hover .v2-frame__paper,
+    .v2-frame:focus-visible .v2-frame__paper { box-shadow: 0 8px 20px rgba(0, 0, 0, .16), 0 2px 6px rgba(0, 0, 0, .08); }
+    .v2-frame img { display: block; width: 88px; height: 120px; object-fit: cover; outline: 1px solid rgba(0, 0, 0, .1); outline-offset: -1px; }
+
+    .note-card {
+      display: grid;
+      width: 88px;
+      height: 120px;
+      place-items: center;
+      padding: 10px;
+      color: var(--ink);
+      font-size: .72rem;
+      line-height: 1.05;
+      letter-spacing: -.04em;
+      text-align: center;
+      text-wrap: balance;
+      outline: 1px solid rgba(0, 0, 0, .1);
+      outline-offset: -1px;
+    }
+
+    .note-card--purple { background: #c6c1e6; }
+    .note-card--green { background: #c8d8d1; }
+
+    :root[data-theme="dark"] .note-card--purple { background: #5c507f; color: #f3efff; }
+    :root[data-theme="dark"] .note-card--green { background: #385a50; color: #eef8f4; }
+
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) .note-card--purple { background: #5c507f; color: #f3efff; }
+      :root:not([data-theme="light"]) .note-card--green { background: #385a50; color: #eef8f4; }
+    }
+
+    .bubble {
+      position: absolute;
+      bottom: calc(100% + 7px);
+      left: 50%;
+      padding: 4px 8px 3px;
+      color: var(--ink);
+      font-size: .6875rem;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+      background: var(--white);
+      border-radius: 8px 8px 8px 2px;
+      box-shadow: inset 0 0 0 1px var(--hairline), 0 2px 6px rgba(0, 0, 0, .06);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 3px) scale(.9);
+      transform-origin: center bottom;
+      transition: opacity .22s var(--ease), transform .26s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    .v2-frame:hover .bubble,
+    .v2-frame:focus-visible .bubble { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+    .v2-footer { margin-top: 4rem; color: var(--muted); font-size: .8125rem; line-height: 1.25rem; }
+    .v2-footer__line { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 0; }
+    .v2-clock { display: inline-block; min-width: 5.5ch; margin-right: .34em; color: var(--ink); font-variant-numeric: tabular-nums; }
+    .footer-links { display: inline-flex; gap: 1rem; margin-top: .7rem; }
+    .footer-links a { text-decoration: underline 1px rgba(17, 17, 17, .18); text-underline-offset: 2.5px; }
+    .footer-links a:hover,
+    .footer-links a:focus-visible { color: var(--accent); outline: none; }
+
+    dialog {
+      width: min(360px, calc(100vw - 2rem));
+      margin: auto;
+      padding: 0;
+      color: var(--ink);
+      border: 1px solid var(--hairline);
+      border-radius: 6px;
+      background: var(--white);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .08);
+    }
+
+    dialog::backdrop { background: rgba(17, 17, 17, .32); }
+    .dialog-body { padding: 1rem 1.1rem .9rem; }
+    .dialog-label { margin-bottom: .55rem; color: var(--muted); font-size: .6875rem; text-transform: uppercase; }
+    .dialog-body h2 { margin: 0; font-size: 1rem; font-weight: 500; }
+    .dialog-body p { margin: .55rem 0 0; font-size: .9375rem; line-height: 1.35rem; text-wrap: pretty; }
+    .dialog-actions { display: flex; justify-content: flex-end; margin-top: .9rem; }
+    .dialog-actions button { padding: 0; border: 0; background: none; color: var(--muted); cursor: pointer; }
+    .dialog-actions button:hover,
+    .dialog-actions button:focus-visible { color: var(--ink); outline: none; }
+
+    @media (max-width: 480px) {
+      .v2-proof { grid-template-columns: repeat(2, 1fr); row-gap: .9rem; }
+      .v2-proof__cell:nth-child(2n + 1) { padding-left: 0; border-left: 0; }
+      .v2-row__meta { display: none; }
+      .v2-frame + .v2-frame { margin-left: -50px; }
+      .v2-frame__paper { width: 82px; padding: 5px 5px 12px; }
+      .v2-frame img,
+      .note-card { width: 72px; height: 88px; }
+      .note-card { font-size: .64rem; }
+      .footer-links { display: flex; flex-direction: column; gap: .25rem; }
+    }
+
+    @media (max-width: 360px) {
+      .v2-frame + .v2-frame { margin-left: -56px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .v2 > *,
+      .v2-tree__children,
+      .tag::before,
+      .v2-focus__track { animation: none; }
+      .v2-focus__strip { overflow-x: auto; mask-image: none; }
+      .product-chip,
+      .hot,
+      .theme-toggle,
+      .v2-row,
+      .v2-row__title,
+      .v2-row__meta,
+      .tree-icon,
+      .focus-chip,
+      .v2-frame,
+      .v2-frame__paper,
+      .bubble { transition: none; }
+      .bubble { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <main class="v2">
+    <header class="v2-top">
+      <h3>Ishant</h3>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false" title="Switch to dark theme">
+        <span id="theme-label">Dark</span>
+      </button>
+    </header>
+
+    <div class="v2-prose">
+      <p>
+        I'm a Principal Product Designer at
+        <button class="product-chip context-trigger" type="button" data-title="Titan Email" data-detail="Currently leading end-to-end feature initiatives, systematizing interaction design standards, and exploring AI-assisted prototyping at Titan Email.">Titan Email</button>,
+        previously at
+        <button class="product-chip context-trigger" type="button" data-title="Zeta" data-detail="Led end-to-end product design for the Zapp Account and helped drive approximately 2.1x growth in monthly spends over six months.">Zeta</button>
+        and
+        <button class="product-chip context-trigger" type="button" data-title="GeeksforGeeks" data-detail="Worked across motion and product design, created motion graphics, and established the design function as the founding designer.">GeeksforGeeks</button>.
+        I started in <button class="hot context-trigger" type="button" data-title="Motion design" data-detail="Motion was my starting point. I now treat it as a system and communication tool that helps products feel clear, responsive, and alive.">motion design</button>
+        and grew into product, working across <button class="hot context-trigger" type="button" data-title="Interaction systems" data-detail="I turn interaction craft into reusable standards that make complex products easier to understand and easier for teams to build.">interaction systems</button>,
+        growth, and <button class="hot context-trigger" type="button" data-title="Coded prototyping" data-detail="I use code when higher fidelity helps explore, explain, or ship an idea faster.">coded prototyping</button>
+        to make complex products feel simple.
+      </p>
+    </div>
+
+    <aside class="v2-proof" aria-label="Selected details">
+      <div class="v2-proof__cell">
+        <span class="v2-proof__num">8+</span>
+        <span class="v2-proof__label">years in design</span>
+      </div>
+      <div class="v2-proof__cell">
+        <span class="v2-proof__num">5</span>
+        <span class="v2-proof__label">years in fintech</span>
+      </div>
+      <div class="v2-proof__cell">
+        <span class="v2-proof__num">2.1x</span>
+        <span class="v2-proof__label">Zapp monthly spends</span>
+      </div>
+      <div class="v2-proof__cell">
+        <span class="v2-proof__num v2-proof__num--word">Lottiemon</span>
+        <span class="v2-proof__label">design tooling</span>
+      </div>
+    </aside>
+
+    <section class="v2-section v2-index" aria-labelledby="work-heading">
+      <h2 class="v2-label" id="work-heading">Work</h2>
+      <div class="v2-tree">
+        <details class="v2-tree__group" style="--folder: var(--accent)" open>
+          <summary class="v2-tree__folder">
+            <span class="tree-icon" aria-hidden="true"></span>
+            <span>2026</span>
+          </summary>
+          <div class="v2-tree__children">
+            <div class="v2-row v2-row--disabled" aria-disabled="true">
+              <span class="v2-row__title">Titan Email <span class="tag">Now</span></span>
+              <span class="v2-row__meta">Principal Product Designer</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">End-to-end feature work</span>
+              <span class="v2-row__meta">Product design</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Interaction design standards</span>
+              <span class="v2-row__meta">Design systems</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">AI-assisted prototyping</span>
+              <span class="v2-row__meta">Product exploration</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="v2-tree__group" style="--folder: var(--accent)">
+          <summary class="v2-tree__folder">
+            <span class="tree-icon" aria-hidden="true"></span>
+            <span>2021 - 2026</span>
+          </summary>
+          <div class="v2-tree__children">
+            <div class="v2-row v2-row--disabled" aria-disabled="true">
+              <span class="v2-row__title">Zeta <span class="tag">Impact</span></span>
+              <span class="v2-row__meta">Principal Product Designer</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Zapp Account</span>
+              <span class="v2-row__meta">Growth</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Lottiemon</span>
+              <span class="v2-row__meta">Design tooling</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">AI-assisted design workflow</span>
+              <span class="v2-row__meta">Design systems</span>
+            </div>
+          </div>
+        </details>
+
+        <details class="v2-tree__group" style="--folder: var(--accent)">
+          <summary class="v2-tree__folder">
+            <span class="tree-icon" aria-hidden="true"></span>
+            <span>2018 - 2021</span>
+          </summary>
+          <div class="v2-tree__children">
+            <div class="v2-row v2-row--disabled" aria-disabled="true">
+              <span class="v2-row__title">GeeksforGeeks <span class="tag">Origin</span></span>
+              <span class="v2-row__meta">Founding designer</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Courses and Portal</span>
+              <span class="v2-row__meta">Product design</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Motion graphics</span>
+              <span class="v2-row__meta">Marketing</span>
+            </div>
+            <div class="v2-row">
+              <span class="v2-row__title">Design function from scratch</span>
+              <span class="v2-row__meta">Team building</span>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="v2-section v2-focus" aria-labelledby="focus-heading">
+      <h2 class="v2-label" id="focus-heading">Focus</h2>
+      <div class="v2-focus__strip">
+        <div class="v2-focus__track">
+          <ul class="v2-focus__list">
+            <li><button class="focus-chip context-trigger" type="button" data-title="Product and interaction design" data-detail="I translate complex product problems into clear journeys, practical interaction patterns, and interfaces that feel simple to use."><span class="focus-chip__text">Product and interaction design</span><span class="focus-chip__meta">core</span></button></li>
+            <li><button class="focus-chip context-trigger" type="button" data-title="Motion systems" data-detail="Motion is part of the product language: a system for communicating change, hierarchy, feedback, and state."><span class="focus-chip__text">Motion systems</span><span class="focus-chip__meta">craft</span></button></li>
+            <li><button class="focus-chip context-trigger" type="button" data-title="Growth-oriented product work" data-detail="I connect design decisions to acquisition, activation, engagement, and the moments that help products earn continued use."><span class="focus-chip__text">Growth-oriented product work</span><span class="focus-chip__meta">outcomes</span></button></li>
+            <li><button class="focus-chip context-trigger" type="button" data-title="Design systems" data-detail="I turn one-off interaction decisions into standards, tools, and implementation patterns that teams can reuse."><span class="focus-chip__text">Design systems</span><span class="focus-chip__meta">systems</span></button></li>
+            <li><button class="focus-chip context-trigger" type="button" data-title="Coded prototyping" data-detail="Code lets me test fidelity, communicate behavior, and move from idea to a more useful conversation sooner."><span class="focus-chip__text">Coded prototyping</span><span class="focus-chip__meta">build</span></button></li>
+            <li><button class="focus-chip context-trigger" type="button" data-title="AI-assisted workflows" data-detail="I look for practical, team-friendly ways to use AI in design work without losing taste, judgment, or product context."><span class="focus-chip__text">AI-assisted workflows</span><span class="focus-chip__meta">practice</span></button></li>
+          </ul>
+          <ul class="v2-focus__list" aria-hidden="true">
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">Product and interaction design</span><span class="focus-chip__meta">core</span></button></li>
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">Motion systems</span><span class="focus-chip__meta">craft</span></button></li>
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">Growth-oriented product work</span><span class="focus-chip__meta">outcomes</span></button></li>
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">Design systems</span><span class="focus-chip__meta">systems</span></button></li>
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">Coded prototyping</span><span class="focus-chip__meta">build</span></button></li>
+            <li><button class="focus-chip" type="button" tabindex="-1"><span class="focus-chip__text">AI-assisted workflows</span><span class="focus-chip__meta">practice</span></button></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="v2-section v2-connect" aria-labelledby="connect-heading">
+      <h2 class="v2-label" id="connect-heading">Connect</h2>
+      <p>
+        For product design, interaction systems, motion, and coded prototyping, get in touch by
+        <a class="basic-link" href="mailto:ishantperiwal@gmail.com">email</a>,
+        or visit
+        <a class="basic-link" href="https://www.ishantp.com" target="_blank" rel="noopener noreferrer">ishantp.com</a>.
+      </p>
+    </section>
+
+    <section class="v2-section v2-shelf" aria-labelledby="shelf-heading">
+      <h2 class="v2-label" id="shelf-heading">Off screen</h2>
+      <div class="v2-shelf__row">
+        <button class="v2-frame" style="--r: -11deg; --y: 5px; --sx: -18px; --z: 1" type="button" aria-label="Ishant">
+          <span class="bubble">that's me</span>
+          <span class="v2-frame__paper"><img src="assets/ishant-portrait.png" alt="Portrait of Ishant" width="88" height="120" loading="lazy" decoding="async" /></span>
+        </button>
+        <button class="v2-frame" style="--r: -3deg; --y: 0; --sx: -6px; --z: 2" type="button" aria-label="Motion and product">
+          <span class="bubble">motion / product</span>
+          <span class="v2-frame__paper"><span class="note-card note-card--purple">from motion<br />to product</span></span>
+        </button>
+        <button class="v2-frame" style="--r: 5deg; --y: 1px; --sx: 8px; --z: 3" type="button" aria-label="Design and code">
+          <span class="bubble">design + code</span>
+          <span class="v2-frame__paper"><span class="note-card note-card--green">make complex<br />feel simple</span></span>
+        </button>
+        <button class="v2-frame" style="--r: 12deg; --y: 6px; --sx: 20px; --z: 4" type="button" aria-label="Bangalore, India">
+          <span class="bubble">Bangalore, India</span>
+          <span class="v2-frame__paper"><span class="note-card note-card--purple">product<br />interaction<br />motion</span></span>
+        </button>
+      </div>
+    </section>
+
+    <footer class="v2-footer">
+      <div class="v2-footer__line"><span class="v2-clock" id="local-time">--:--</span>in Bangalore, India</div>
+      <div class="footer-links">
+        <a href="https://www.ishantp.com" target="_blank" rel="noopener noreferrer">ishantp.com ↗</a>
+        <a href="mailto:ishantperiwal@gmail.com">ishantperiwal@gmail.com ↗</a>
+      </div>
+    </footer>
+  </main>
+
+  <dialog id="context-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-body">
+      <div class="dialog-label">Ishant / context</div>
+      <h2 id="dialog-title"></h2>
+      <p id="dialog-detail"></p>
+      <div class="dialog-actions"><button type="button" id="dialog-close">Close</button></div>
+    </div>
+  </dialog>
+
+  <script>
+    const dialog = document.querySelector('#context-dialog');
+    const dialogTitle = document.querySelector('#dialog-title');
+    const dialogDetail = document.querySelector('#dialog-detail');
+    const dialogClose = document.querySelector('#dialog-close');
+    const themeToggle = document.querySelector('#theme-toggle');
+    const themeLabel = document.querySelector('#theme-label');
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+    function applyTheme(theme, persist) {
+      document.documentElement.dataset.theme = theme;
+      themeToggle.setAttribute('aria-pressed', String(theme === 'dark'));
+      themeLabel.textContent = theme === 'dark' ? 'Light' : 'Dark';
+      themeToggle.title = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+      themeColor.setAttribute('content', theme === 'dark' ? '#171518' : '#fbfaf9');
+      if (persist) {
+        try { localStorage.setItem('ishant-theme', theme); } catch (error) { /* Storage is optional. */ }
+      }
+    }
+
+    applyTheme(document.documentElement.dataset.theme || (systemTheme.matches ? 'dark' : 'light'), false);
+    themeToggle.addEventListener('click', () => {
+      applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true);
+    });
+
+    function openContext(trigger) {
+      dialogTitle.textContent = trigger.dataset.title || '';
+      dialogDetail.textContent = trigger.dataset.detail || '';
+      if (typeof dialog.showModal === 'function') dialog.showModal();
+    }
+
+    document.querySelectorAll('.context-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => openContext(trigger));
+    });
+
+    dialogClose.addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    const clock = document.querySelector('#local-time');
+    const timeFormatter = new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+
+    function updateClock() {
+      clock.textContent = timeFormatter.format(new Date());
+    }
+
+    updateClock();
+    window.setInterval(updateClock, 30000);
+  </script>
+</body>
+</html>
