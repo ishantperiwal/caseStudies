@@ -335,30 +335,40 @@ const mountainClip=svgNode('clipPath',{id:'mountain-contour',clipPathUnits:'user
 svgNode('polygon',{points:'0,168 18,163.8 36,155.4 54,163.8 72,152.88 90,155.4 108,159.6 126,145.74 141,142.8 150,149.1 162,147 180,163.8 204,154.14 222,149.52 240,153.3 258,149.94 276,139.86 288,130.2 298.2,128.94 307.8,126 318,128.52 328.2,134.4 336,137.76 348,142.8 366,157.5 384,160.44 402,155.4 420,168 438,172.2 456,176.4 474,168 492,163.8 516,154.14 528,150.36 546,163.8 564,168 582,184.8 600,180.6 600,420 0,420'},mountainClip);
 const glass=svgNode('linearGradient',{id:'clock-glass',x1:0,y1:0,x2:.25,y2:1,gradientUnits:'objectBoundingBox'},defs);
 for(const [offset,color,opacity] of [['0%','#fff',1],['45%','#eaf7ff',.85],['58%','#c6e0eb',.65],['73%','#fff',.95],['100%','#e1f1ff',.85]])svgNode('stop',{offset,'stop-color':color,'stop-opacity':opacity},glass);
-const blurGradients=[],blurImageNodes=[[],[],[]],screenScenes=[];
+const blurGradients=[],blurRegionRects=[],blurImageNodes=[[],[],[]],screenScenes=[];
 function gradient(id,attrs,stops){const g=svgNode('linearGradient',{id,gradientUnits:'userSpaceOnUse',...attrs},defs);for(const [offset,opacity] of stops)svgNode('stop',{offset,'stop-color':'white','stop-opacity':opacity},g);return g}
 for(let i=0;i<3;i++){
- const reach=[.985,.95,.89][i];
- blurGradients.push(gradient('blur-ramp-'+i,{x1:0,y1:210,x2:300,y2:210},[['0%',1],[`${reach*45}%`,.85],[`${reach*100}%`,0],['100%',0]]));
+ const reach=[.985,.68,.35][i];
+ blurGradients.push(gradient('blur-ramp-'+i,{x1:0,y1:210,x2:300,y2:210},[['0%',1],[`${reach*22}%`,.9],[`${reach*55}%`,.5],[`${reach*82}%`,.12],[`${reach*100}%`,0],['100%',0]]));
  const mask=svgNode('mask',{id:'blur-region-'+i,maskUnits:'userSpaceOnUse',x:0,y:0,width:600,height:420,'mask-type':'luminance'},defs);
- svgNode('rect',{width:600,height:420,fill:`url(#blur-ramp-${i})`},mask);
+ blurRegionRects.push(svgNode('rect',{width:600,height:420,fill:`url(#blur-ramp-${i})`},mask));
  // Keep the stationary top/bottom edges softly feathered toward the hinge too.
- const band=gradient('edge-band-'+i,{x1:0,y1:9,x2:0,y2:411},[['0%',.8],['16%',0],['84%',0],['100%',.8]]);
+ const band=gradient('edge-band-'+i,{x1:0,y1:9,x2:0,y2:411},[['0%',.3],['5%',0],['95%',0],['100%',.3]]);
  const side=gradient('edge-side-'+i,{x1:300,y1:0,x2:575,y2:0},[['0%',1],['100%',0]]);
  const sideMask=svgNode('mask',{id:'edge-side-mask-'+i,maskUnits:'userSpaceOnUse',x:300,y:0,width:300,height:420,'mask-type':'luminance'},defs);
  svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-side-${i})`},sideMask);
- if(i<2)svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-band-${i})`,mask:`url(#edge-side-mask-${i})`},mask);
+ if(i===0)svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-band-${i})`,mask:`url(#edge-side-mask-${i})`},mask);
 }
 // Feather the wallpaper's actual alpha boundary, rather than only its pixels.
 const contentFeather=svgNode('mask',{id:'screen-content-feather',maskUnits:'userSpaceOnUse',x:9,y:9,width:582,height:402,'mask-type':'luminance'},defs);
 svgNode('rect',{x:9,y:9,width:582,height:402,fill:'white'},contentFeather);
-const featherSide=gradient('feather-side',{x1:9,y1:0,x2:300,y2:0},[['0%',1],['65%',.95],['98.5%',0],['100%',0]]);
-const featherSideMask=svgNode('mask',{id:'feather-side-mask',maskUnits:'userSpaceOnUse',x:9,y:9,width:582,height:402,'mask-type':'luminance'},defs);
-svgNode('rect',{x:9,y:9,width:582,height:402,fill:'url(#feather-side)'},featherSideMask);
-const edgeAlpha=gradient('edge-alpha',{x1:0,y1:9,x2:0,y2:411},[['0%',1],['1%',.9],['3%',.35],['5.5%',0],['94.5%',0],['97%',.35],['99%',.9],['100%',1]]);
-for(const stop of edgeAlpha.children)stop.setAttribute('stop-color','black');
-const featherCut=svgNode('rect',{x:9,y:9,width:582,height:402,fill:'url(#edge-alpha)',mask:'url(#feather-side-mask)',opacity:0},contentFeather);
-const tintGradient=gradient('fold-tint-ramp',{x1:0,y1:0,x2:400,y2:0},[['0%',.42],['45%',.16],['100%',0]]);
+// A tapering feather: soft at the outer edge, progressively narrower toward the hinge.
+// Bake a smooth 2D alpha profile once instead of multiplying two broad linear fades.
+function featherCoverage(u,distance){
+ const depth=.18+12.5*Math.pow(1-Math.max(0,Math.min(1,u)),1.65);
+ const p=Math.max(0,Math.min(1,distance/depth));
+ return p*p*(3-2*p);
+}
+const featherRaster=document.createElement('canvas');featherRaster.width=512;featherRaster.height=804;
+const featherContext=featherRaster.getContext('2d');const featherPixels=featherContext.createImageData(512,804);
+for(let y=0;y<804;y++)for(let x=0;x<512;x++){
+ const coverage=featherCoverage(x/511,Math.min(y,803-y)/2);
+ const i=(y*512+x)*4,v=Math.round(255*coverage);
+ featherPixels.data[i]=v;featherPixels.data[i+1]=v;featherPixels.data[i+2]=v;featherPixels.data[i+3]=255;
+}
+featherContext.putImageData(featherPixels,0,0);
+const featherCut=svgNode('image',{href:featherRaster.toDataURL('image/png'),x:0,y:9,width:1,height:402,preserveAspectRatio:'none',opacity:0},contentFeather);
+const tintGradient=gradient('fold-tint-ramp',{x1:0,y1:0,x2:400,y2:0},[['0%',.25],['35%',.08],['100%',0]]);
 // Tint gradient has black RGB; its opacity is animated with the fold.
 for(const stop of tintGradient.children)stop.setAttribute('stop-color','#000');
 function landscape(parent){
@@ -404,7 +414,7 @@ function prepareBlurRasters(){
  sc.drawImage(source,(pad+599)*density,0,density,source.height,pad+600,0,pad,420+pad*2);
  for(let i=0;i<3;i++){
   const blurred=document.createElement('canvas');blurred.width=source.width;blurred.height=source.height;
-  const bc=blurred.getContext('2d');bc.filter=`blur(${[3,7,13][i]*density}px)`;bc.drawImage(source,0,0);
+  const bc=blurred.getContext('2d');bc.filter=`blur(${[1.8,4.5,9][i]*density}px)`;bc.drawImage(source,0,0);
   const crop=document.createElement('canvas');crop.width=1200;crop.height=840;
   crop.getContext('2d').drawImage(blurred,pad*density,pad*density,1200,840,0,0,1200,840);
   const url=crop.toDataURL('image/png');for(const image of blurImageNodes[i])image.setAttribute('href',url);
@@ -468,10 +478,12 @@ function updateBlur(t){
  const edge=project([9,210],t,front?0:-10.3)[0],hinge=project([front?300:291,210],t,front?0:-10.3)[0];
  // Mask coordinates live in the unzoomed image space; invert the wallpaper zoom.
  for(const gradient of blurGradients){gradient.setAttribute('x1',300+(edge-300)/zoom);gradient.setAttribute('x2',300+(hinge-300)/zoom)}
- featherSide.setAttribute('x1',edge);featherSide.setAttribute('x2',hinge);
- // Become fully feathered early in the fold; remain perfectly crisp at both endpoints.
- const featherProgress=Math.min(1,amount*4);
- featherCut.setAttribute('opacity',featherProgress*featherProgress*(3-2*featherProgress));
+ const regionLeft=300+(Math.min(edge,hinge)-300)/zoom,regionWidth=Math.max(.01,Math.abs(hinge-edge)/zoom);
+ for(const rect of blurRegionRects){rect.setAttribute('x',regionLeft);rect.setAttribute('width',regionWidth)}
+ // The same narrow-to-wide alpha profile mirrors with the moving face.
+ const featherWidth=Math.max(.01,Math.abs(hinge-edge));
+ featherCut.setAttribute('transform',`translate(${edge} 0) scale(${front?featherWidth:-featherWidth} 1)`);
+ featherCut.setAttribute('opacity',Math.pow(amount,.7));
  const start=Math.min(edge,hinge),end=Math.min(591,Math.max(edge,hinge)+100);
  tintGradient.setAttribute('x1',start);tintGradient.setAttribute('x2',end);
  const reveal=Math.max(0,Math.min(1,(t-Math.PI/2)/(Math.PI/2)));
