@@ -270,7 +270,7 @@ function tickFold(now){
  }else animationFrame=requestAnimationFrame(tickFold);
 }
 function animateFold(target){toggleTarget=Number(target);driveFold(target)}
-function beginInteraction(kind){interaction=kind;toggleTarget=null;foldTarget=foldPosition}
+function beginInteraction(kind){interaction=kind;toggleTarget=null;foldTarget=foldPosition;thumbAnchor=foldPosition<1?0:foldPosition>179?1:null}
 function snapFold(){
  interaction=null;
  // Choose by the visible fold, retaining velocity for a weighted release and reversal.
@@ -323,36 +323,87 @@ foldingPanel.addEventListener('pointerup',endDrag);foldingPanel.addEventListener
 // Project the display aperture, not its pixels: equivalent to inverse-transforming
 // the content, without the singular inverse at a 90-degree fold.
 const NS='http://www.w3.org/2000/svg';
-const overlay=document.createElementNS(NS,'svg');overlay.classList.add('screen-overlay');overlay.setAttribute('viewBox','0 0 600 420');overlay.setAttribute('aria-hidden','true');
-overlay.innerHTML=`<defs><mask id="screen-mask" maskUnits="userSpaceOnUse" x="-150" y="-150" width="900" height="720" style="mask-type:luminance"><path id="base-aperture" fill="white"/><path id="frame-occlusion" fill="black"/><path id="moving-aperture" fill="white"/><path id="hinge-bridge" fill="white"/></mask></defs><g mask="url(#screen-mask)"><foreignObject x="-100" y="-100" width="800" height="620"><div xmlns="http://www.w3.org/1999/xhtml" class="screen-canvas"><div class="canvas-half canvas-left"></div><div class="canvas-half canvas-right"></div></div></foreignObject></g>`;
+function svgNode(tag,attrs={},parent){const node=document.createElementNS(NS,tag);for(const [k,v] of Object.entries(attrs))node.setAttribute(k,v);if(parent)parent.append(node);return node}
+const overlay=svgNode('svg',{viewBox:'0 0 600 420','aria-hidden':'true'});overlay.classList.add('screen-overlay');
+const defs=svgNode('defs',{},overlay);
+const screenMask=svgNode('mask',{id:'screen-mask',maskUnits:'userSpaceOnUse',x:-100,y:-100,width:800,height:620,'mask-type':'luminance'},defs);
+for(const [id,fill] of [['base-aperture','white'],['frame-occlusion','black'],['moving-aperture','white'],['hinge-bridge','white']])svgNode('path',{id,fill},screenMask);
+const coverMask=svgNode('mask',{id:'cover-mask',maskUnits:'userSpaceOnUse',x:-100,y:-100,width:800,height:620,'mask-type':'luminance'},defs);
+svgNode('path',{id:'cover-aperture',fill:'white'},coverMask);
+const bounds=svgNode('clipPath',{id:'content-bounds',clipPathUnits:'userSpaceOnUse'},defs);svgNode('rect',{x:9,y:9,width:582,height:402},bounds);
+const mountainClip=svgNode('clipPath',{id:'mountain-contour',clipPathUnits:'userSpaceOnUse'},defs);
+svgNode('polygon',{points:'0,168 18,163.8 36,155.4 54,163.8 72,152.88 90,155.4 108,159.6 126,145.74 141,142.8 150,149.1 162,147 180,163.8 204,154.14 222,149.52 240,153.3 258,149.94 276,139.86 288,130.2 298.2,128.94 307.8,126 318,128.52 328.2,134.4 336,137.76 348,142.8 366,157.5 384,160.44 402,155.4 420,168 438,172.2 456,176.4 474,168 492,163.8 516,154.14 528,150.36 546,163.8 564,168 582,184.8 600,180.6 600,420 0,420'},mountainClip);
+const glass=svgNode('linearGradient',{id:'clock-glass',x1:0,y1:0,x2:.25,y2:1,gradientUnits:'objectBoundingBox'},defs);
+for(const [offset,color,opacity] of [['0%','#fff',1],['45%','#eaf7ff',.85],['58%','#c6e0eb',.65],['73%','#fff',.95],['100%','#e1f1ff',.85]])svgNode('stop',{offset,'stop-color':color,'stop-opacity':opacity},glass);
+const blurGradients=[],blurImageNodes=[[],[],[]],screenScenes=[];
+function gradient(id,attrs,stops){const g=svgNode('linearGradient',{id,gradientUnits:'userSpaceOnUse',...attrs},defs);for(const [offset,opacity] of stops)svgNode('stop',{offset,'stop-color':'white','stop-opacity':opacity},g);return g}
+for(let i=0;i<3;i++){
+ const reach=[.985,.95,.89][i];
+ blurGradients.push(gradient('blur-ramp-'+i,{x1:0,y1:210,x2:300,y2:210},[['0%',1],[`${reach*45}%`,.85],[`${reach*100}%`,0],['100%',0]]));
+ const mask=svgNode('mask',{id:'blur-region-'+i,maskUnits:'userSpaceOnUse',x:0,y:0,width:600,height:420,'mask-type':'luminance'},defs);
+ svgNode('rect',{width:600,height:420,fill:`url(#blur-ramp-${i})`},mask);
+ // Keep the stationary top/bottom edges softly feathered toward the hinge too.
+ const band=gradient('edge-band-'+i,{x1:0,y1:9,x2:0,y2:411},[['0%',.8],['16%',0],['84%',0],['100%',.8]]);
+ const side=gradient('edge-side-'+i,{x1:300,y1:0,x2:575,y2:0},[['0%',1],['100%',0]]);
+ const sideMask=svgNode('mask',{id:'edge-side-mask-'+i,maskUnits:'userSpaceOnUse',x:300,y:0,width:300,height:420,'mask-type':'luminance'},defs);
+ svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-side-${i})`},sideMask);
+ if(i<2)svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-band-${i})`,mask:`url(#edge-side-mask-${i})`},mask);
+}
+const tintGradient=gradient('fold-tint-ramp',{x1:0,y1:0,x2:400,y2:0},[['0%',.42],['45%',.16],['100%',0]]);
+// Tint gradient has black RGB; its opacity is animated with the fold.
+for(const stop of tintGradient.children)stop.setAttribute('stop-color','#000');
+function landscape(parent){
+ const layer=svgNode('g',{},parent);
+ svgNode('image',{href:wallpaperURL,width:600,height:420,preserveAspectRatio:'none'},layer);
+ const blurred=[];
+ for(let i=0;i<3;i++){
+  const image=svgNode('image',{width:600,height:420,preserveAspectRatio:'none',opacity:0,mask:`url(#blur-region-${i})`},layer);
+  blurImageNodes[i].push(image);blurred.push(image);
+ }
+ return {layer,blurred};
+}
+function createScene(cover){
+ const group=svgNode('g',{mask:`url(#${cover?'cover-mask':'screen-mask'})`},overlay);
+ const backing=svgNode('path',{fill:'#000'},group);backing.classList.add('screen-backing');
+ const content=svgNode('g',{'clip-path':'url(#content-bounds)'},group);
+ const base=landscape(content);
+ const ui=svgNode('g',{'font-family':'-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif','text-anchor':'middle'},content);
+ const center=cover?445.5:300,size=cover?92:104;
+ const date=svgNode('text',{x:center,y:39,'font-size':10.5,'font-weight':500,fill:'#fff','fill-opacity':.94},ui);date.textContent='Wednesday, September 9';
+ const clock=svgNode('text',{x:center,y:45+size*.83,'font-size':size,'font-weight':350,'letter-spacing':-.055*size,fill:'url(#clock-glass)',stroke:'#ffffff70','stroke-width':.35,'paint-order':'stroke fill'},ui);clock.textContent='9:41';
+ const foreground=svgNode('g',{},content),cutout=svgNode('g',{'clip-path':'url(#mountain-contour)'},foreground);
+ const depth=landscape(cutout);
+ svgNode('rect',{x:center-67.5,y:395,width:135,height:4,rx:2,fill:'#ffffff99'},content);
+ const tint=svgNode('rect',{width:600,height:420,fill:'url(#fold-tint-ramp)',opacity:0},content);
+ screenScenes.push({group,backing,base,foreground,depth,ui,tint,cover});
+ return group;
+}
+const innerGroup=createScene(false),coverGroup=createScene(true);
 document.querySelector('.stage').append(overlay);
-for(const side of ['left','right']){
- const content=document.querySelector(`.device .${side} .content`).cloneNode(true);
- content.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));
- overlay.querySelector(`.canvas-${side}`).append(content);
+// Build each blurred raster once. Animation only updates SVG geometry/opacity.
+// No foreignObject, CSS filters, nested HTML copies, or live GPU filter invalidation.
+let blurReady=false;
+function prepareBlurRasters(){
+ if(blurReady||!wallpaperCheck.naturalWidth)return;blurReady=true;
+ const density=2,pad=40;
+ const source=document.createElement('canvas');source.width=(600+pad*2)*density;source.height=(420+pad*2)*density;
+ const sc=source.getContext('2d');sc.scale(density,density);sc.drawImage(wallpaperCheck,pad,pad,600,420);
+ // Extend boundary pixels so blur never samples transparent/black image edges.
+ const w=wallpaperCheck.naturalWidth,h=wallpaperCheck.naturalHeight;
+ sc.drawImage(wallpaperCheck,0,0,w,1,pad,0,600,pad);sc.drawImage(wallpaperCheck,0,h-1,w,1,pad,420+pad,600,pad);
+ sc.drawImage(source,pad*density,0,density,source.height,0,0,pad,420+pad*2);
+ sc.drawImage(source,(pad+599)*density,0,density,source.height,pad+600,0,pad,420+pad*2);
+ for(let i=0;i<3;i++){
+  const blurred=document.createElement('canvas');blurred.width=source.width;blurred.height=source.height;
+  const bc=blurred.getContext('2d');bc.filter=`blur(${[3,7,13][i]*density}px)`;bc.drawImage(source,0,0);
+  const crop=document.createElement('canvas');crop.width=1200;crop.height=840;
+  crop.getContext('2d').drawImage(blurred,pad*density,pad*density,1200,840,0,0,1200,840);
+  const url=crop.toDataURL('image/png');for(const image of blurImageNodes[i])image.setAttribute('href',url);
+ }
 }
-// The cover uses the very same wallpaper coordinates, with only a four-icon dock.
-const coverMask=document.createElementNS(NS,'mask');coverMask.id='cover-mask';
-for(const [key,value] of Object.entries({maskUnits:'userSpaceOnUse',x:-150,y:-150,width:900,height:720}))coverMask.setAttribute(key,value);
-coverMask.innerHTML='<path id="cover-aperture" fill="white"/>';
-overlay.querySelector('defs').append(coverMask);
-const contentBounds=document.createElementNS(NS,'clipPath');contentBounds.id='content-bounds';contentBounds.setAttribute('clipPathUnits','userSpaceOnUse');
-contentBounds.innerHTML='<rect x="9" y="9" width="582" height="402"/>';
-overlay.querySelector('defs').append(contentBounds);
-const coverGroup=document.createElementNS(NS,'g');coverGroup.setAttribute('mask','url(#cover-mask)');
-const coverContent=overlay.querySelector('foreignObject').cloneNode(true);
-coverContent.querySelector('.screen-canvas').classList.add('cover-canvas');
-coverGroup.append(coverContent);overlay.append(coverGroup);
-for(const group of [overlay.querySelector('g[mask="url(#screen-mask)"]'),coverGroup]){
- const black=document.createElementNS(NS,'path');
- black.setAttribute('fill','#000');black.classList.add('screen-backing');
- group.prepend(black);
- group.querySelector('foreignObject').setAttribute('clip-path','url(#content-bounds)');
-}
-// Never paint a full mask-sized rectangle: its antialiased bounds can leak a hairline.
+wallpaperCheck.addEventListener('load',prepareBlurRasters);
 function updateScreenBacking(){
- overlay.querySelector('g[mask="url(#screen-mask)"] .screen-backing').setAttribute('d',
-  ['base-aperture','moving-aperture','hinge-bridge'].map(id=>document.getElementById(id).getAttribute('d')||'').join(' '));
+ innerGroup.querySelector('.screen-backing').setAttribute('d',['base-aperture','moving-aperture','hinge-bridge'].map(id=>document.getElementById(id).getAttribute('d')||'').join(' '));
  coverGroup.querySelector('.screen-backing').setAttribute('d',document.getElementById('cover-aperture').getAttribute('d')||'');
 }
 // Share the spring's rendered fold angle: translation spans the entire flip.
@@ -401,109 +452,64 @@ function updateScreenMask(t){
  const visible=Math.abs(Math.cos(t))<.004?'':path(aperture);
  moving.setAttribute('d',front?visible:'');cover.setAttribute('d',front?'':visible);
 }
-// Identical fixed landscape and lock-screen coordinates on both physical faces.
-for(const canvas of overlay.querySelectorAll('.screen-canvas')){
- canvas.insertAdjacentHTML('beforeend','<div class="mountain-depth"></div><div class="lock-ui"><div class="lock-date">Wednesday, September 9</div><div class="lock-clock">9:41</div></div><div class="lock-bar"></div>');
- // Three progressively stronger copies, all masked and clipped within original bounds.
- const original=canvas.cloneNode(true);
- for(let level=1;level<=3;level++){
-  const copy=original.cloneNode(true);copy.classList.add('blur-copy');copy.dataset.level=level;canvas.append(copy);
- }
- // A separate, gentler falloff follows the stationary screen's horizontal edges.
- if(!canvas.classList.contains('cover-canvas')){
-  for(let level=1;level<=2;level++){
-   const copy=original.cloneNode(true);copy.classList.add('flat-edge-blur');copy.dataset.level=level;canvas.append(copy);
-  }
- }
- // Soften the top and bottom cut edges across almost all of the moving aperture.
- for(let level=1;level<=2;level++){
-  const copy=original.cloneNode(true);copy.classList.add('moving-edge-blur');copy.dataset.level=level;canvas.append(copy);
- }
- // Tint sits above the blur copies and shares the physical display's SVG mask.
- const tint=document.createElement('div');tint.className='fold-tint';canvas.append(tint);
-}
-const flatEdgeCopies=overlay.querySelectorAll('.flat-edge-blur');
-const movingEdgeCopies=overlay.querySelectorAll('.moving-edge-blur');
-const foldTints=overlay.querySelectorAll('.fold-tint');
-const progressiveCopies=overlay.querySelectorAll('.blur-copy');
 function updateBlur(t){
  const amount=Math.max(0,Math.sin(t)),front=Math.cos(t)>=0;
- // Zoom the image and its depth cutout together; screen bounds and UI stay fixed.
- overlay.style.setProperty('--wallpaper-zoom',String(reducedMotion?1:1+.055*amount*amount));
- // Tie the entrance to the reveal angle so scrubbing and reverse folds stay continuous.
+ const zoom=reducedMotion?1:1+.055*amount*amount;
+ const transform=`translate(${300*(1-zoom)} ${210*(1-zoom)}) scale(${zoom})`;
+ const edge=project([9,210],t,front?0:-10.3)[0],hinge=project([front?300:291,210],t,front?0:-10.3)[0];
+ // Mask coordinates live in the unzoomed image space; invert the wallpaper zoom.
+ for(const gradient of blurGradients){gradient.setAttribute('x1',300+(edge-300)/zoom);gradient.setAttribute('x2',300+(hinge-300)/zoom)}
+ const start=Math.min(edge,hinge),end=Math.min(591,Math.max(edge,hinge)+100);
+ tintGradient.setAttribute('x1',start);tintGradient.setAttribute('x2',end);
  const reveal=Math.max(0,Math.min(1,(t-Math.PI/2)/(Math.PI/2)));
- const rise=1-(1-reveal)**3;
- overlay.style.setProperty('--cover-clock-y',`${reducedMotion?0:16*(1-rise)}px`);
- for(const copy of flatEdgeCopies){
-  const level=Number(copy.dataset.level);
-  const reach=level===1?62:32;
-  copy.style.filter=`blur(${amount*(level===1?2.5:5)}px)`;
-  copy.style.opacity=String(amount*.8);
-  // Intersect top/bottom bands with a fade strongest at the central hinge.
-  const bands=`linear-gradient(to bottom,transparent 108px,black 109px,transparent ${109+reach}px,transparent ${511-reach}px,black 511px,transparent 512px)`;
-  const towardHinge='linear-gradient(to right,transparent 399px,black 400px,transparent 675px)';
-  copy.style.maskImage=`${bands},${towardHinge}`;
-  copy.style.webkitMaskImage=`${bands},${towardHinge}`;
- }
- const edge=project([9,210],t,front?0:-10.3)[0]+100;
- const hinge=project([front?300:291,210],t,front?0:-10.3)[0]+100;
- const width=Math.max(.01,Math.abs(hinge-edge));
- const low=Math.min(edge,hinge),high=Math.max(edge,hinge);
- // Every level reaches near the hinge; the stronger levels taper off a little earlier.
- function edgeGradient(reach){
-  const fade=width*reach;
-  return front?`linear-gradient(to right,transparent ${low-.5}px,black ${low}px,rgba(0,0,0,.85) ${low+fade*.45}px,transparent ${low+fade}px)`:
-   `linear-gradient(to right,transparent ${high-fade}px,rgba(0,0,0,.85) ${high-fade*.45}px,black ${high}px,transparent ${high+.5}px)`;
- }
- for(const copy of movingEdgeCopies){
-  const level=Number(copy.dataset.level),reach=level===1?76:42;
-  copy.style.filter=`blur(${amount*(level===1?3.5:7)}px)`;
-  copy.style.opacity=amount<.001?'0':'1';
-  const bands=`linear-gradient(to bottom,black 109px,transparent ${109+reach}px,transparent ${511-reach}px,black 511px)`;
-  const gradient=`${bands},${edgeGradient(.985)}`;
-  copy.style.maskImage=gradient;copy.style.webkitMaskImage=gradient;
- }
- const tintStart=Math.min(edge,hinge);
- const tintEnd=Math.min(691,Math.max(edge,hinge)+100);
- for(const tint of foldTints){
-  tint.style.opacity=String(amount);
-  // Darken the softened edge, especially where it meets the black top/bottom gaps.
-  tint.style.background=`linear-gradient(to right,rgba(0,0,0,.48) ${tintStart}px,rgba(0,0,0,.18) ${tintStart+(tintEnd-tintStart)*.45}px,transparent ${tintEnd}px),linear-gradient(to bottom,rgba(0,0,0,.6) 109px,transparent 172px,transparent 448px,rgba(0,0,0,.6) 511px)`;
-  const fade=`linear-gradient(to right,black ${tintStart}px,transparent ${tintEnd}px)`;
-  tint.style.maskImage=fade;tint.style.webkitMaskImage=fade;
- }
- for(const copy of progressiveCopies){
-  const level=Number(copy.dataset.level),strength=amount*[0,3,7,13][level];
-  copy.style.filter=`blur(${strength}px)`;copy.style.opacity=amount<.001?'0':'1';
-  const gradient=edgeGradient([0,.985,.95,.89][level]);
-  copy.style.maskImage=gradient;copy.style.webkitMaskImage=gradient;
+ for(const scene of screenScenes){
+  scene.base.layer.setAttribute('transform',transform);scene.foreground.setAttribute('transform',transform);
+  for(const image of [...scene.base.blurred,...scene.depth.blurred])image.setAttribute('opacity',amount<.001?0:amount);
+  scene.ui.setAttribute('transform',`translate(0 ${scene.cover&&!reducedMotion?16*(1-reveal)**3:0})`);
+  scene.tint.setAttribute('opacity',amount);
  }
 }
+
 const sliderShell=document.querySelector('.slider-shell'),thumb=document.querySelector('.slider-thumb');
 let thumbTarget=0,thumbPosition=0,thumbVelocity=0,thumbStretch=0,thumbFrame=0,thumbTime=0;
+let thumbAnchor=null,thumbAdhesion=0;
+function thumbShape(position,stretch,anchor,adhesion,travel){
+ const baseCenter=22+position*travel,normalWidth=44+stretch*36;
+ const distance=anchor===1?1-position:position;
+ const stickyWidth=44+Math.min(62,Math.max(0,distance*travel*1.7));
+ const width=normalWidth+(stickyWidth-normalWidth)*adhesion;
+ const pinnedCenter=anchor===1?travel+44-width/2:width/2;
+ return {width,center:baseCenter+(pinnedCenter-baseCenter)*adhesion};
+}
 function paintThumb(){
  const travel=Math.max(0,sliderShell.clientWidth-44);
- thumb.style.left=`${22+thumbPosition*travel}px`;
- thumb.style.width=`${44+thumbStretch*36}px`;
- thumb.style.transform="translate(-50%,-50%)";
- sliderShell.style.setProperty('--fill',`${22+thumbPosition*travel}px`);
+ const shape=thumbShape(thumbPosition,thumbStretch,thumbAnchor,thumbAdhesion,travel);
+ thumb.style.left=`${shape.center}px`;thumb.style.width=`${shape.width}px`;
+ thumb.style.transform='translate(-50%,-50%)';
+ sliderShell.style.setProperty('--fill',`${shape.center}px`);
 }
 function setThumbTarget(value){
  thumbTarget=Math.max(0,Math.min(1,value/180));
- if(reducedMotion){thumbPosition=thumbTarget;thumbVelocity=0;thumbStretch=0;paintThumb();return}
+ if(reducedMotion){thumbPosition=thumbTarget;thumbVelocity=0;thumbStretch=0;thumbAdhesion=0;paintThumb();return}
  if(!thumbFrame){thumbTime=performance.now();thumbFrame=requestAnimationFrame(tickThumb)}
 }
 function tickThumb(now){
  const dt=Math.min(.032,Math.max(.001,(now-thumbTime)/1000));thumbTime=now;
  thumbVelocity+=(650*(thumbTarget-thumbPosition)-36*thumbVelocity)*dt;
  thumbPosition=Math.max(0,Math.min(1,thumbPosition+thumbVelocity*dt));
+ const anchorDistance=thumbAnchor===1?1-thumbTarget:thumbTarget;
+ const attached=interaction!==null&&thumbAnchor!==null&&anchorDistance<.14;
+ if(!attached&&thumbAdhesion<.002)thumbAnchor=null;
+ const adhesionTarget=attached?1:0;
+ thumbAdhesion+=(adhesionTarget-thumbAdhesion)*(1-Math.exp(-(attached?45:18)*dt));
  const stretchTarget=Math.min(.55,Math.abs(thumbVelocity)*.16);
  thumbStretch+=(stretchTarget-thumbStretch)*(1-Math.exp(-18*dt));
  paintThumb();
- if(Math.abs(thumbTarget-thumbPosition)>.0001||Math.abs(thumbVelocity)>.001||thumbStretch>.001){thumbFrame=requestAnimationFrame(tickThumb)}
+ if(Math.abs(thumbTarget-thumbPosition)>.0001||Math.abs(thumbVelocity)>.001||thumbStretch>.001||Math.abs(thumbAdhesion-adhesionTarget)>.001){thumbFrame=requestAnimationFrame(tickThumb)}
  else{thumbPosition=thumbTarget;thumbVelocity=0;thumbStretch=0;thumbFrame=0;paintThumb()}
 }
 window.addEventListener('resize',paintThumb);
 paintThumb();
+prepareBlurRasters();
 renderFold(0);
 </script></body></html>
