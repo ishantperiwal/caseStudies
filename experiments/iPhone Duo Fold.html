@@ -349,6 +349,15 @@ for(let i=0;i<3;i++){
  svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-side-${i})`},sideMask);
  if(i<2)svgNode('rect',{x:300,width:300,height:420,fill:`url(#edge-band-${i})`,mask:`url(#edge-side-mask-${i})`},mask);
 }
+// Feather the wallpaper's actual alpha boundary, rather than only its pixels.
+const contentFeather=svgNode('mask',{id:'screen-content-feather',maskUnits:'userSpaceOnUse',x:9,y:9,width:582,height:402,'mask-type':'luminance'},defs);
+svgNode('rect',{x:9,y:9,width:582,height:402,fill:'white'},contentFeather);
+const featherSide=gradient('feather-side',{x1:9,y1:0,x2:300,y2:0},[['0%',1],['65%',.95],['98.5%',0],['100%',0]]);
+const featherSideMask=svgNode('mask',{id:'feather-side-mask',maskUnits:'userSpaceOnUse',x:9,y:9,width:582,height:402,'mask-type':'luminance'},defs);
+svgNode('rect',{x:9,y:9,width:582,height:402,fill:'url(#feather-side)'},featherSideMask);
+const edgeAlpha=gradient('edge-alpha',{x1:0,y1:9,x2:0,y2:411},[['0%',1],['1%',.9],['3%',.35],['5.5%',0],['94.5%',0],['97%',.35],['99%',.9],['100%',1]]);
+for(const stop of edgeAlpha.children)stop.setAttribute('stop-color','black');
+const featherCut=svgNode('rect',{x:9,y:9,width:582,height:402,fill:'url(#edge-alpha)',mask:'url(#feather-side-mask)',opacity:0},contentFeather);
 const tintGradient=gradient('fold-tint-ramp',{x1:0,y1:0,x2:400,y2:0},[['0%',.42],['45%',.16],['100%',0]]);
 // Tint gradient has black RGB; its opacity is animated with the fold.
 for(const stop of tintGradient.children)stop.setAttribute('stop-color','#000');
@@ -365,7 +374,7 @@ function landscape(parent){
 function createScene(cover){
  const group=svgNode('g',{mask:`url(#${cover?'cover-mask':'screen-mask'})`},overlay);
  const backing=svgNode('path',{fill:'#000'},group);backing.classList.add('screen-backing');
- const content=svgNode('g',{'clip-path':'url(#content-bounds)'},group);
+ const content=svgNode('g',{mask:'url(#screen-content-feather)'},group);
  const base=landscape(content);
  const ui=svgNode('g',{'font-family':'-apple-system, BlinkMacSystemFont, Helvetica Neue, sans-serif','text-anchor':'middle'},content);
  const center=cover?445.5:300,size=cover?92:104;
@@ -459,6 +468,10 @@ function updateBlur(t){
  const edge=project([9,210],t,front?0:-10.3)[0],hinge=project([front?300:291,210],t,front?0:-10.3)[0];
  // Mask coordinates live in the unzoomed image space; invert the wallpaper zoom.
  for(const gradient of blurGradients){gradient.setAttribute('x1',300+(edge-300)/zoom);gradient.setAttribute('x2',300+(hinge-300)/zoom)}
+ featherSide.setAttribute('x1',edge);featherSide.setAttribute('x2',hinge);
+ // Become fully feathered early in the fold; remain perfectly crisp at both endpoints.
+ const featherProgress=Math.min(1,amount*4);
+ featherCut.setAttribute('opacity',featherProgress*featherProgress*(3-2*featherProgress));
  const start=Math.min(edge,hinge),end=Math.min(591,Math.max(edge,hinge)+100);
  tintGradient.setAttribute('x1',start);tintGradient.setAttribute('x2',end);
  const reveal=Math.max(0,Math.min(1,(t-Math.PI/2)/(Math.PI/2)));
