@@ -20,6 +20,10 @@ window.postPageData = {
       translation: 'Translated from Spanish · See original', likes: 5 },
     { id: 'nao', author: { name: 'Nao S.', initials: 'NS', color: '#665A44' }, time: '6 min ago',
       body: 'Yes! Seeing the same places in another decade makes Winden feel trapped in its own memories.',
-      likes: 9, liked: true, replyCount: 3 }
+      likes: 9, liked: true, replyCount: 3, replies: [
+        { id: 'nao-mina', author: { name: 'Mina R.', initials: 'MR', color: '#5B5550' }, isAuthor: true, time: '2 min ago', body: 'Exactly. The town feels like a character itself.', likes: 4 },
+        { id: 'nao-lucia', author: { name: 'Lucía M.', initials: 'LM', color: '#455666' }, time: '1 min ago', body: 'The school stood out to me. Same place, but the people bring a completely different feeling.', likes: 2 },
+        { id: 'nao-arjun', author: { name: 'Arjun K.', initials: 'AK', color: '#4D6654' }, time: 'Just now', body: 'I noticed that too. Even the familiar streets feel uneasy once you see them in 1986.', likes: 1 }
+      ] }
   ]
 };

@@ -1,2 +1,2 @@
-// Supply action handlers as a third argument when connecting real app behavior.
-window.PocketSaga.mount(document.getElementById('app'), window.communityPageData);
+const communityPreview = PocketSaga.mount(document.getElementById('app'), communityPageData);
+PocketSagaNavigation.attach(communityPreview, postPageData);

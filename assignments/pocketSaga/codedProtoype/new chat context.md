@@ -1,107 +1,122 @@
 # PocketSaga coded prototypes — new chat context
 
-Read this first when adding or improving screens. Then inspect the actual files: this document records the current implementation and user preferences, not a substitute for the code. Later user instructions take precedence. Keep this context updated when behavior or structure changes.
+Read this first, then inspect the implementation. This records current behavior and user preferences; later user instructions take precedence. Keep it updated when screens, shared patterns, or navigation change.
 
-## Project and entry point
+## Project and entry points
 
-This is a browser-based mobile UI prototype for PocketSaga, a community/discussion experience around movies and shows. The implemented screen is **Beyond Earth**, an Interstellar community with membership controls, a composer, posts, authors, media attachments, and reactions.
+Workspace: `assignments/pocketSaga/codedProtoype/` (existing spelling intentional).
 
-Workspace: `assignments/pocketSaga/codedProtoype/` (the spelling `codedProtoype` is intentional in the existing path).
+Plain HTML, CSS and classic deferred JavaScript; no framework, bundler or build step. GSAP and CustomEase are vendored. Google Fonts loads Newsreader and Manrope with local fallbacks. Keep runnable HTML screens at the top level and supporting code/assets in `components/`. This requested context document is a top-level documentation exception.
 
-Open [community.html](community.html). It was previously `test.html`; that old filename no longer exists. The preview uses plain HTML, CSS, and JavaScript with no framework, bundler, or build step. Google Fonts is the only remote presentation dependency; local font fallbacks are defined. GSAP is vendored locally.
+- `discover.html`: hero carousel, For you / Your posts / Your groups, community post cards and bottom navigation.
+- `community.html`: Beyond Earth community, membership, posts and composer.
+- `post.html`: sample Dark post, comments, sticky composer and comment focus mode.
+- `create-post.html`: reusable new-post editor. Default has no media selected; `?media=interstellar` (also dark, whiplash, prestige) preselects media.
 
-Keep runnable screens at this folder’s top level, named for the screen. Put supporting code/assets in `components/`. This context document is an explicitly requested top-level documentation exception.
+Navigation connects Discover post cards to the sample post, and community names/cards to the sample community. Content mapping remains intentionally incomplete until a later dataset pass. There is no backend or durable persistence.
 
 ## File map
 
-| File | Purpose |
+All paths below are inside `components/`.
+
+| Files | Responsibility |
 | --- | --- |
-| `community.html` | Small runnable entry point; loads styles and scripts in order. |
-| `components/components.js` | DOM component library exposed as `window.PocketSaga`, page assembly, preview scaling, mounting and cleanup. |
-| `components/community.css` | Shared visuals, theme tokens, device frame, spacing, scrolling, masks, and blur. |
-| `components/page-data.js` | `window.communityPageData`: community, theme, device, viewer, labels, and posts. |
-| `components/preview.js` | Mounts community data into `#app`; future action handlers can be supplied here. |
-| `components/motion.js` | `window.PocketSagaMotion.scrollHeader`: shared GSAP title/action reveals. |
-| `components/vendor/gsap.min.js` | Pinned GSAP 3.13.0; retain its license notice. |
-| `components/icons.js` | Original local SVG paths exposed as `window.PocketSagaIcons`. |
-| `components/assets/interstellar-1.jpg` | Artwork shared by the background, community identity, and attachment. |
-| `components/README.md` | Component API and reuse notes. |
+| `components.js`, `community.css`, `icons.js` | Shared PocketSaga DOM components, device, community screen, base typography/layout and icons. |
+| `surfaces.css` | Shared glass fill, edge, selection and post-card press treatments. |
+| `motion.js` | Scroll header, moving tab selection, sticky tabs and bottom-navigation visibility. |
+| `page-data.js`, `preview.js` | Community sample data and mounting/navigation hookup. |
+| `discover.js`, `discover.css`, `discover-data.js`, `discover-icons.js`, `discover-preview.js` | Discover screen, data and entry point. |
+| `card-deck.js`, `card-deck.css` | Reusable looping hero carousel. |
+| `post.js`, `post.css`, `post-data.js`, `post-preview.js` | Full post, comments, pagination and entry point. |
+| `reply-thread.js`, `reply-thread.css` | Expanding comment focus mode and reply composer. |
+| `create-post.js`, `create-post.css`, `create-post-data.js`, `create-post-icons.js`, `create-post-preview.js` | New-post screen, media/community pickers, sample data and entry point. |
+| `navigation.js`, `navigation.css` | In-phone route stack, history, cached views, screen transitions. |
+| `vendor/gsap.min.js`, `vendor/CustomEase.min.js` | Local animation dependencies; preserve licenses. |
+| `assets/` | Interstellar, Dark, Whiplash and Prestige artwork. |
 
-Script order: icons → GSAP → motion → components → page data → preview. Use deferred classic scripts so opening the HTML directly still works. Image paths in page data resolve relative to the HTML document, not the data script.
+Use existing HTML script order as the dependency reference. Asset paths resolve relative to the HTML, not to their data scripts. `components/README.md` contains older component notes; check code for current APIs.
 
-## Reusable components
+## Shared implementation rules
 
-- Device: `PhoneFrame`, `AtmosphericBackground`, `StatusBar`, `HomeIndicator`, `ProgressiveBlur`.
-- Page: `CommunityPage`, `CommunityHeader`, `Composer`, `FeedToolbar`, `PostCard`.
-- Card: `AuthorMeta`, `MediaAttachment`, `ReactionBar`.
-- Primitives: `Action`, `Avatar`, `Artwork`, `Icon`.
+`window.PocketSaga` exports device/page/card primitives, including `PhoneFrame`, `ProgressiveBlur`, `PostCard`, `Composer`, `MessageComposer`, `SeparatedMeta`, `Action`, `Avatar`, `Artwork` and `Icon`. `mountPage` handles uniform preview scaling and previous-mount cleanup. Dedicated screens compose these primitives.
 
-`PocketSaga.mount(target, data, handlers)` creates the community preview and replaces previous content. It disconnects the previous mount’s observers/listeners and stops its animations. Its return value is the page element.
+Retain `.flat(Infinity)` in the DOM helper: shallow flattening previously displayed `[object HTMLSpanElement]`. User text uses text nodes; innerHTML is only for trusted local SVG paths.
 
-The DOM helper must retain `.flat(Infinity)` when assembling children. Flattening only one level previously caused the composer’s avatar and placeholder to render as `[object HTMLSpanElement]`. User content is inserted as text nodes; `innerHTML` is used only for trusted local icon paths.
-
-Actions are semantic buttons with accessible labels. They emit a bubbling `community-action` event and can invoke supplied handlers: `back`, `membership`, `options`, `compose`, `sort`, `attachment`, `like`, `comments`. No backend, persistence, actual media playback, or default navigation is implemented. The filter is a visual control/action hook, not an implemented filter menu.
+Metadata dot separators must be separate entities with equal spacing before/after. Reuse `SeparatedMeta` rather than embedding spaced dots in text. Keep sample content separate from layout. Preserve unrelated workspace edits.
 
 ## Accepted visual direction
 
-Dark, cinematic, semi-transparent surfaces; muted green accents; Newsreader headings and Manrope UI/body text. Preserve the atmospheric artwork and subtle card treatment when making unrelated changes.
+Dark translucent glass with subtle light from the top, muted mint accents, Newsreader headings and Manrope UI/body. Avoid flat opaque pills, bright borders and noisy glows.
 
-- Phone casing: **438px** natural outer width. Inner screen: **412:896** fixed aspect ratio. The whole device scales uniformly down to fit the window, never compressing just its height. Casing, controls, text, and content scale together. This is an iPhone-style approximation, not an exact hardware preset.
-- The background stays fixed inside the phone. Only `.feed-scroll` scrolls.
-- Status indicators and home indicator stay fixed, without opaque bars.
-- Feed side padding: **16px**.
-- Post card padding: **16px top, 16px sides, 6px bottom**.
-- Author/avatar/time row comes **above the headline**, with **16px** spacing below it.
-- Do not repeat “Interstellar · Movie” above each post; the context belongs in the community header.
-- Gap below Posts toolbar: **12px**. Sort control is icon-only, with an accessible label.
-- Card fill has a faint top-left highlight and very subtle inset edge highlights. Keep it translucent, not a solid bright card.
-- App-bar actions use the original faint circular fill, 44px touch targets, and **20px backdrop blur**. A darker button fill and extra visible edges/shadows were tried and rejected. Improve legibility by softening content behind buttons, not making them dark.
+- Device: natural outer width 438px; screen aspect ratio 412:896. Uniformly scale the entire phone to fit; never compress height alone.
+- General screen horizontal padding: 16px. Scrolling content uses `.feed-scroll`; status and home indicators stay fixed.
+- Circular app-bar actions: 44px touch targets, faint translucent fill and blur. Bottom-sheet close buttons have a smaller visible circle with a generous target.
+- Selected tabs/navigation: subtle mint-tinted glass, light icon/text, weight 500. Unselected filter tabs have a faint flat pill; unselected bottom-nav items do not have individual containers.
+- No system outline focus rings. Keep keyboard activation, labels, focus restoration and reduced-motion support.
+- Tap feedback stays active during the press. Soft corner light plus a top-to-bottom fill highlight, restrained scale .985; release smoothly. Strong glow borders and larger scale reductions were rejected.
+- Screen/focus transitions use cubic-bezier(.6,0,.25,1). Create-post navigation uses the normal slide with a 350ms duration.
+- Shared post cards now highlight and scale to .985 while held. Cancel on pointer movement over 8px, pointer cancellation/leave/release. Nested controls act independently.
 
-## Current scroll behavior — important
+### Discover post cards — current tuning
 
-**Natural scrolling. No snap, scroll-position tween, or whole-introduction scale/fade.** Earlier experiments with snapping and shrinking were replaced at the user’s request; do not restore them by accident.
+Outer radius 28px. Padding is now 20px top/sides and 10px bottom; cards without the community banner have 24px top padding. Community/context line has extra space below it. Author row sits below the excerpt on Discover (above the headline in community cards).
 
-1. The back button remains fixed in the app bar below the device status area.
-2. Content scrolls normally and dissipates into a soft blur/fade behind the app bar.
-3. When the large community name passes the app bar, a centered compact community name appears.
-4. **Posts scrolls away; it is not sticky.**
-5. Once the Posts toolbar passes the app bar, a circular filter action appears in the **top-right action slot**. This slot is intended for a screen-specific prominent action on future screens.
-6. Scrolling back reverses the title/filter reveals. Their thresholds are independent.
+Show the inset community banner only for communities not joined; always retain the compact linked community/context line. Joining removes matching banners. Community artwork is larger than the early compact version; Join uses the shared group/users icon.
 
-`scrollHeader` accepts DOM references: `scroller`, `navigation`, `titleTrigger`, `actionTrigger`, `title`, `actionSlot`, plus optional reveal `duration` (default .18 seconds). It uses rendered element bounds so browser zoom and device scaling do not distort thresholds. GSAP animates only header reveal opacity. Hidden header elements are inert and aria-hidden; the scrolled-out toolbar becomes inert. Reduced-motion preferences are respected. The helper returns cleanup.
+Each card has blurred media artwork, controlled darkness, and a faint light wash stronger at the top and weaker at the bottom. Interstellar/Earth has a darker artwork override. Do not brighten every card to compensate for one image.
 
-## Blur tuning — preserve these recent decisions
+Discover-only `::after` border is 1.4px. Bottom-right radial highlight peaks at approximately 7% white, fading through weaker stops; fill unchanged. It lives in `surfaces.css` but is scoped to `.discover-post`. Earlier changes appeared ineffective because the shared `:is()` selector had excessive specificity from comment exclusions; those exclusions now use `:where()` so this override applies. Do not reintroduce that specificity bug.
 
-The user likes the current **softness and transition length**. Recent changes only shifted the effect downward in small steps, totaling **12px**; avoid changing the length when asked to move it.
+Filter pills have 6px extra margin below their anchor, on top of the scroll layout gap.
 
-- `.screen-top-blur`: top **12px**, height **135px**, bottom **147px**.
-- Feed fade mask: transparent through **88px**, then stops at **98 / 108 / 118 / 129 / 140px**, fully visible at **147px**. Both standard and WebKit masks must match.
-- Top blur uses five layers: `.5 / 1.5 / 3 / 6 / 10px`, with eased masks.
-- Back-button app bar: top **59px**, height **44px**. Introduction begins at **135px**.
-- Content may pass visibly behind the translucent back button; its own blur protects readability. Do not force a hard content cutoff at the button’s bottom.
-- Bottom uses a transparent progressive blur behind the home indicator. Do not restore a solid bottom fill.
+## Scrolling and blur
 
-Avoid separate opaque background strips behind the status bar/navigation/toolbar. Those produced visible seams. Keep device controls outside the scrolling content and above the blur. Changes to stacking contexts, masks, and overflow can affect backdrop blur: visually check them.
+Natural scrolling: no snapping or intro scale/collapse. Content dissipates smoothly behind app bars, not through hard clipping or opaque strips.
 
-## Adding another screen
+Community: back stays fixed; compact community name appears after the large name passes; Posts heading scrolls away; circular filter appears in top-right once its toolbar passes. Reverse scrolling reverses these states independently.
 
-For another community context, copy the small HTML entry and the data file, change the copied entry’s data reference, and edit the data. Reuse components/styles/motion. If retaining `preview.js`, the new data script should set `window.communityPageData` in that page.
+Base top blur: top 12px, height 135px, ending at 147px. Feed mask is transparent through 88px and becomes fully visible at 147px through eased stops. Keep standard/WebKit masks aligned. Preserve blur softness when merely shifting its position.
 
-For a different screen layout, create a dedicated page component/entry script inside `components/` and compose the existing device and UI primitives. `PocketSaga.mount` currently assembles `CommunityPage` and expects community-specific selectors; adapt the mounting API or add a screen-specific mount rather than passing incompatible DOM to it. The top-right navigation slot and `scrollHeader` can be reused with appropriate triggers.
+Discover: actual filter tabs dock into the header after passing it, replacing the greeting and hiding both utilities. Docked tabs have added top space and a slightly longer downward blur (147px blur height). Selection moves smoothly; content transitions fade/blur. Bottom navigation hides scrolling down and returns scrolling up, with jitter thresholds. Content remains visible but blurred through the bottom/home region.
 
-Keep theme/content separate from markup. Optional attachments and an empty posts list already have rendering paths. Do not duplicate entire card markup per post. Keep shared changes intentional: they affect every screen that imports them.
+Discover top ambient artwork fades with scroll, followed by an off-black/dark-gray base. Mint background was rejected. The atmosphere on Discover/community is deliberately darkened for readability.
+
+## Hero carousel
+
+Horizontal movement only. Scaled cards behind the active card are accepted; vertical offsets are not. Previous card peeks from the left at full opacity. Reverse swipe brings it above the outgoing card. Release includes a small directional elastic continuation before settling. Swipes retain vertical page scrolling.
+
+Ambient artwork crossfades during swipe progress, not only after settling. Bottom artwork blur overscans to avoid an unblurred hairline. Keep the directional right-edge shadow subtle and avoid heavy bottom black overlays.
+
+**The entire active hero card is now tappable** and opens New post with that media selected. The thoughts box does the same. Arrow keys navigate the carousel; Enter/Space on the active card opens the editor. A swipe must not trigger compose.
+
+## New-post screen and navigation transition
+
+Hero entry preselects that media; top create button opens an unselected editor. Use the same reusable `PocketSagaCreatePost.CreatePostPage` for both. Media/community pickers preserve draft text; changing media may clear an incompatible community selection. Post requires media, community and a nonempty headline. Publishing through Discover adds a local preview post; standalone editor only provides a local confirmation. Clip/Attach/Poll are affordances for a later pass, not implemented enrichment features.
+
+Editor: 20px internal padding; Newsreader headline 28px, weight 400, 32px line height. Starts one line and grows up to 160px. A subtle 1px `#ffffff12` separator sits between headline and body, with 14px gaps above and below. The former two-line minimum and missing separator were corrected.
+
+Create-post entry now uses the shared horizontal slide transition, including taps on hero cards, with a 350ms duration in both directions and cubic-bezier(.6,0,.25,1). The user dropped the seamless hero morph/crossfade experiment and will define a different interaction later. The custom image geometry, clones, clip expansion and separate content entrance have been removed. Hero entry still preselects the tapped media and restores focus to the hero on Back.
+
+Other routes retain slide transitions. `navigation.js` keeps the outer phone/status/home fixed, caches screens to preserve scroll/drafts, integrates browser Back/Forward, restores focus, and cleans up on unmount. Each new create entry gets a fresh route token; cached history entries retain their draft. Do not replace the entire device during navigation.
+
+## Post comments and focus mode
+
+Comments paginate without a Load more button. Entire comment opens focus mode, including comments with no replies. Use the same MessageComposer for main comments and focused replies; main composer sticks to the bottom.
+
+Expand/collapse animates container geometry separately from text; text blur/fades rather than scaling with the surface. Expanded surface is slightly more opaque, with subtle borders. Empty threads have dynamic height and centered “No replies yet.” Keep header/close aligned and gaps restrained.
+
+Dragging the handle down moves the **top edge downward while the bottom stays fixed**, shrinking height; release past threshold dismisses, otherwise restores. Background blur releases during the later part of dismissal, not immediately. Preserve Escape, focus restoration, scroll restoration and local reply counts.
 
 ## Design source
 
-The pen.dev canvas was accessible in the previous session at:
-`assignments/pocketSaga/pen dev/pocket saga designs.pen`
+Use pen.dev MCP for `assignments/pocketSaga/pen dev/pocket saga designs.pen`; never read encrypted .pen contents from the filesystem. Recheck live state/selection before relying on IDs.
 
-Relevant frame: `m6MegG`, “04b · Interstellar / Beyond Earth group feed”. Other screens exist in that design file. Recheck the live app state before relying on IDs or selection. Access `.pen` files only with pen.dev tools; do not parse their encrypted contents as text. The HTML has evolved through this conversation, so the canvas is a reference rather than a guaranteed current match.
+Known frames: `Czra1` selected-media create post, `McTEg` unselected-media create post, `vfozf` full Dark post, `VJKxI` reply focus, `m6MegG` older Beyond Earth community reference. HTML has evolved through user feedback and need not exactly match every canvas detail.
 
-## Verification and known limits
+## Verification and remaining work
 
-Run `node --check` on edited JavaScript and verify relative HTML/asset paths after moving files. Earlier code-level checks covered component rendering, alternate context/empty feed, action hooks, header thresholds in both directions, cleanup, and unchanged scroll position. These checks were ad hoc; there is no committed automated browser test suite.
+Run syntax checks for changed JavaScript and verify relative asset/import paths after moving files. Temporary HappyDOM checks using actual vendored GSAP live in `/private/tmp/pocketsaga-thread-check/`: `check.mjs`, `discover.mjs`, `navigation.mjs`, `create-post.mjs`. They cover interaction/navigation lifecycles, carousel, focus mode, drafts, pickers and local publication. Temporary files may not persist; there is no committed full browser test suite.
 
-Browser security previously blocked opening the local file through browser automation. Later visual feedback came from user screenshots; the current complete page has **not** had a fresh automated visual verification. Do not describe syntax or mocked geometry checks as browser verification. Use an authorized available preview surface and respect tool restrictions.
+The current Chrome preview at `http://127.0.0.1:5500/assignments/pocketSaga/codedProtoype/discover.html` is accessible through cua_repl. Use that supported browser surface for visual checks; do not claim mocked DOM checks are visual verification. Old temporary morph diagnostics in `/private/tmp/pocketsaga-thread-check/` describe the removed experiment and should not be used as checks for current navigation.
 
-When visually checking, cover initial view, slow scroll into the app bar, Posts passing the action threshold, reverse scroll, narrow windows, and browser zoom. Watch for hard blur edges, content interfering with buttons, duplicate filter controls, blank header gaps, and stretched device proportions. Keep changes scoped and do not overwrite unrelated workspace edits.
+Later dataset pass will connect route content consistently. Backend persistence, real enrichment tools and several secondary actions remain outside this prototype pass.

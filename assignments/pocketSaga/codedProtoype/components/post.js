@@ -1,12 +1,12 @@
-/* Focused post and comment components; navigation is intentionally left unconnected. */
+/* Focused post and comment components, reusable standalone or inside the navigation shell. */
 (() => {
-  const { node, Action, Avatar, MediaAttachment, PhoneFrame, Composer } = PocketSaga;
+  const { node, Action, Avatar, MediaAttachment, PhoneFrame, Composer, SeparatedMeta } = PocketSaga;
   const pageEmitters = new WeakMap();
   const pageSize = data => Math.max(1, Math.floor(data.commentPageSize || 10));
   function Attribution(post, community, emit) {
     return node('div', 'post-attribution', [Avatar(post.author), node('div', 'attribution-details', [
-      node('div', 'attribution-line', [node('span', 'attribution-name', post.author.name), node('span', 'attribution-connector', 'posted in'), Action({ label: community.name, className: 'community-link', onClick: () => emit('community', { community }) })]),
-      node('p', 'attribution-time', `${post.time} · ${post.type}`)
+      node('div', 'attribution-line', [node('span', 'attribution-name', post.author.name), node('span', 'attribution-connector', 'posted in'), Action({ label: community.name, icon: 'users', className: 'community-link', onClick: () => emit('community', { community }) })]),
+      SeparatedMeta([post.time, post.type], 'attribution-time', 'p')
     ])]);
   }
   function LikeButton(item, emit, className = '') {
@@ -29,18 +29,29 @@
     const card = node('article', 'comment-card', [
       node('header', 'comment-author', [Avatar(comment.author), node('span', 'comment-name', comment.author.name), node('span', 'comment-time', comment.time), Action({ label: `Options for ${comment.author.name}’s comment`, icon: 'ellipsis', className: 'comment-options', children: '', onClick: () => emit('comment-options', { comment }) })]),
       node('p', 'comment-body', comment.body),
-      comment.translation && Action({ label: comment.translation, className: 'comment-translation', onClick: () => emit('translation', { comment }) }),
+      comment.translation && Action({ label: comment.translation, children: SeparatedMeta(comment.translation), className: 'comment-translation', onClick: () => emit('translation', { comment }) }),
       node('footer', 'comment-actions', [LikeButton(comment, emit), Action({ label: `Reply to ${comment.author.name}`, children: 'Reply', className: 'comment-reply', onClick: () => emit('reply', { comment }) }), comment.replyCount && Action({ label: `${comment.replyCount} replies`, className: 'comment-reply-count', onClick: () => emit('replies', { comment }) })])
     ]);
     card.dataset.commentId = comment.id;
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', `Comment by ${comment.author.name}. Open focus mode`);
+    card.setAttribute('aria-haspopup', 'dialog');
+    card.addEventListener('click', event => {
+      if (event.target.closest('button, a, input, textarea') || window.getSelection()?.toString()) return;
+      emit('focus-comment', { comment });
+    });
+    card.addEventListener('keydown', event => {
+      if (event.target !== card || !['Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      emit('focus-comment', { comment });
+    });
     return card;
   }
   function CommentsSection(data, emit) {
     return node('section', 'comments-section', [
-      node('div', 'comments-toolbar', [node('h2', 'comments-heading', `${data.post.commentCount} Comments`), Action({ label: 'Recent first', icon: 'list-filter', className: 'comment-sort', onClick: () => emit('sort', {}) })]),
+      node('div', 'comments-toolbar', [node('h2', 'comments-heading', `${data.post.commentCount} Comments`), Action({ label: 'Recent first', icon: 'list-filter', className: 'comment-sort', children: '', onClick: () => emit('sort', {}) })]),
       node('div', 'comment-list', data.comments.slice(0, pageSize(data)).map(comment => CommentCard(comment, emit))),
-      node('div', 'comments-page-sentinel'),
-      Composer(data.viewer, 'Add a comment…', emit)
+      node('div', 'comments-page-sentinel')
     ]);
   }
   function PostPage(data, handlers = {}) {
@@ -59,10 +70,25 @@
     content.setAttribute('aria-label', 'Post and comments');
     page = PhoneFrame({ device: data.device, background: data.background, content });
     page.classList.add('post-page');
+    const composer = PocketSaga.MessageComposer(data.viewer, 'Add a comment…');
+    composer.addEventListener('submit', event => {
+      event.preventDefault();
+      const input = composer.querySelector('.message-input');
+      const body = input.value.trim();
+      if (!body) return;
+      const comment = { id: `local-comment-${Date.now()}`, author: data.viewer, time: 'Just now', body, likes: 0 };
+      page.querySelector('.comment-list').prepend(CommentCard(comment, emit));
+      post.commentCount += 1;
+      page.querySelector('.comments-heading').textContent = `${post.commentCount} Comments`;
+      input.value = '';
+      composer.querySelector('.message-send').disabled = true;
+      emit('send-comment', { comment });
+    });
+    page.querySelector('.phone-screen').append(node('div', 'post-fixed-composer', composer));
     page.querySelector('.phone-screen').append(node('nav', 'page-navigation post-navigation', [
       Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }),
       node('span', 'post-navigation-title', 'Post'),
-      Action({ label: 'Post options', icon: 'ellipsis', className: 'post-options', children: '', onClick: () => emit('options', { post }) })
+      Action({ label: 'Post options', icon: 'ellipsis', className: 'round-action post-options', children: '', onClick: () => emit('options', { post }) })
     ]));
     pageEmitters.set(page, emit);
     return page;
@@ -120,7 +146,12 @@
       scroller.removeEventListener('scroll', retry);
     };
   }
-  window.PocketSagaPost = { Attribution, PostActions, CommentCard, CommentsSection, PostPage,
-    mount(target, data, handlers) { return PocketSaga.mountPage(target, PostPage(data, handlers), page => paginateComments(page, data, handlers)); }
+  function setup(page, data, handlers = {}) {
+      const stopPagination = paginateComments(page, data, handlers);
+      const stopThread = PocketSagaThread.attach(page, data, pageEmitters.get(page));
+      return () => { stopPagination(); stopThread(); };
+  }
+  window.PocketSagaPost = { Attribution, PostActions, LikeButton, CommentCard, CommentsSection, PostPage, setup,
+    mount(target, data, handlers) { return PocketSaga.mountPage(target, PostPage(data, handlers), page => setup(page, data, handlers)); }
   };
 })();

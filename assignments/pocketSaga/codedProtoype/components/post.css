@@ -7,7 +7,8 @@
 .attribution-name { font-weight: 500; }
 .attribution-connector, .attribution-time { color: var(--muted); }
 .attribution-time { font-size: 11px; }
-.community-link { color: var(--accent); font-size: 12px; min-height: 0; }
+.community-link { color: var(--accent); font-size: 12px; min-height: 0; margin-left: 4px; }
+.community-link .icon { width: 14px; height: 14px; }
 .post-detail-title { font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.12; font-weight: 500; }
 .post-detail-body { display: flex; flex-direction: column; gap: 24px; color: #CDDBD3; font-size: 15px; line-height: 1.6; }
 .post-detail .media-attachment { margin-top: 0; }
@@ -18,12 +19,12 @@
 .detail-like[aria-pressed="true"] { color: var(--accent); }
 .detail-like[aria-pressed="true"] .icon { filter: drop-shadow(0 0 3px #bde0ca40); }
 .post-navigation { left: 16px; right: 16px; }
-.post-navigation-title { position: absolute; left: 52px; right: 52px; text-align: center; font-size: 15px; font-weight: 600; pointer-events: none; }
+.post-navigation-title { position: absolute; left: 52px; right: 52px; text-align: center; font-family: Newsreader, Georgia, serif; font-size: 20px; font-weight: 500; pointer-events: none; }
 .post-options { width: 44px; margin-left: auto; }
 .comments-section { display: flex; flex-direction: column; gap: 14px; }
 .comments-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; }
 .comments-heading { font-size: 18px; font-weight: 600; }
-.comment-sort { color: var(--accent); font-size: 11px; font-weight: 500; }
+.comment-sort { width: 44px; flex-shrink: 0; color: var(--accent); font-size: 11px; font-weight: 500; }
 .comment-sort .icon { width: 16px; height: 16px; }
 .comment-list { display: flex; flex-direction: column; gap: 12px; }
 .comment-card { padding: 16px; display: flex; flex-direction: column; gap: 11px; border-radius: 20px; background: var(--surface); }
@@ -41,3 +42,25 @@
 .comment-reply { color: var(--accent); }
 .comment-reply-count { margin-left: auto; color: var(--muted); }
 .comments-page-sentinel { height: 1px; margin-block: -7px; pointer-events: none; }
+
+/* Keep commenting available above the home indicator while the thread scrolls. */
+.post-fixed-composer { position: absolute; left: 16px; right: 16px; bottom: 32px; z-index: 12; }
+.post-page .post-scroll { padding-bottom: 120px; }
+.post-page .home-area { height: 120px; }
+
+.comment-list > .comment-card { cursor: pointer; }
+
+
+
+/* A soft top-weighted press highlight, with faint pools of light at the corners. */
+.comment-list > .comment-card { position: relative; isolation: isolate; }
+.comment-list > .comment-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  opacity: var(--press-highlight, 0);
+  background: var(--tap-highlight);
+}
