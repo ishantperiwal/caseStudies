@@ -142,6 +142,33 @@ window.pocketSagaData = {
       "joined": true,
       "mediaId": "everything-everywhere",
       "description": "For the tiny moments inside the multiverse. Talk family, kindness, wild details, and the scenes that made you feel everything."
+    },
+    {
+      "id": "cosmic-questions",
+      "name": "Cosmic Questions",
+      "members": "28K",
+      "activeMemberCount": 67,
+      "joined": false,
+      "mediaId": "interstellar",
+      "description": "For the questions that follow you out of the cinema. Explore time, distance, and the human side of Interstellar."
+    },
+    {
+      "id": "startup-chaos",
+      "name": "Startup Chaos",
+      "members": "19K",
+      "activeMemberCount": 42,
+      "joined": false,
+      "mediaId": "silicon-valley",
+      "description": "Great ideas, questionable decisions. Share your favourite Season 1 moments and the startup chaos that feels a little too familiar."
+    },
+    {
+      "id": "small-kindnesses",
+      "name": "Small Kindnesses",
+      "members": "41K",
+      "activeMemberCount": 96,
+      "joined": false,
+      "mediaId": "everything-everywhere",
+      "description": "Finding the small, human moments in Everything Everywhere All at Once. A place for rewatch discoveries and scenes that stay with you."
     }
   ],
   "posts": [
@@ -445,13 +472,169 @@ window.pocketSagaData = {
       "paragraphs": [
         "The spinning ship, the organ and that impossible approach. Does any other scene make you feel the stakes this physically?"
       ]
+    },
+    {
+      "id": "cosmic-time",
+      "title": "Time is the scariest part of Interstellar.",
+      "time": "12 min ago",
+      "type": "Thought",
+      "likes": 38,
+      "recommend": true,
+      "authorId": "lm",
+      "communityId": "cosmic-questions",
+      "mediaId": "interstellar",
+      "paragraphs": [
+        "The distance is huge, but it is the time passing at home that makes every decision feel impossible. A few minutes can cost someone an entire chapter of their life.",
+        "Which moment made that cost feel real to you? For me, it was coming back from the water planet."
+      ],
+      "comments": [
+        {
+          "id": "cosmic-time-comment",
+          "authorId": "ns",
+          "time": "Just now",
+          "body": "Romilly waiting all those years is the part I keep thinking about.",
+          "likes": 3,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "startup-house",
+      "title": "Would Pied Piper survive a normal office?",
+      "time": "19 min ago",
+      "type": "Discussion",
+      "likes": 27,
+      "recommend": true,
+      "authorId": "ak",
+      "communityId": "startup-chaos",
+      "mediaId": "silicon-valley",
+      "paragraphs": [
+        "Half the comedy comes from everyone living on top of each other. The house turns tiny disagreements into full company emergencies.",
+        "I cannot imagine Season 1 working as well if they could just go home after a bad meeting."
+      ],
+      "comments": [
+        {
+          "id": "startup-house-comment",
+          "authorId": "ns",
+          "time": "Just now",
+          "body": "Erlich would still find a way to make every meeting about himself.",
+          "likes": 4,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "kindness-ordinary",
+      "title": "The ordinary universe is the one I wanted to stay in.",
+      "time": "26 min ago",
+      "type": "Thought",
+      "likes": 64,
+      "recommend": true,
+      "authorId": "ns",
+      "communityId": "small-kindnesses",
+      "mediaId": "everything-everywhere",
+      "paragraphs": [
+        "The other lives look extraordinary, but the laundromat keeps pulling me back. I love that the film finds something worth saving in a messy, ordinary day.",
+        "Did you have a favourite universe, or did the everyday one win you over too?"
+      ],
+      "comments": [
+        {
+          "id": "kindness-ordinary-comment",
+          "authorId": "mr",
+          "time": "Just now",
+          "body": "The everyday one. It feels warmer by the end, even though the problems have not magically disappeared.",
+          "likes": 5,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "cosmic-silence",
+      "title": "Which quiet scene deserves more attention?",
+      "time": "33 min ago",
+      "type": "Discussion",
+      "likes": 19,
+      "recommend": true,
+      "authorId": "mr",
+      "communityId": "cosmic-questions",
+      "mediaId": "interstellar",
+      "paragraphs": [
+        "The huge sequences get the spotlight, but the pauses between them give the film its weight. Sometimes a face and a long silence are enough.",
+        "I would love a thread of the smaller moments people remember most."
+      ],
+      "comments": [
+        {
+          "id": "cosmic-silence-comment",
+          "authorId": "ns",
+          "time": "Just now",
+          "body": "Cooper looking at the messages. There is so much happening before he can say anything.",
+          "likes": 6,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "startup-jared",
+      "title": "Who would you actually want as your co-founder?",
+      "time": "40 min ago",
+      "type": "Discussion",
+      "likes": 43,
+      "recommend": true,
+      "authorId": "lm",
+      "communityId": "startup-chaos",
+      "mediaId": "silicon-valley",
+      "paragraphs": [
+        "Richard has the idea, Jared brings structure, and the rest of the house brings an unpredictable amount of chaos. You can pick one person from Season 1.",
+        "I am picking Jared. Somebody needs to remember that a company has to function tomorrow too."
+      ],
+      "comments": [
+        {
+          "id": "startup-jared-comment",
+          "authorId": "ns",
+          "time": "Just now",
+          "body": "Jared, easily. I need someone who will make a plan when everyone else starts arguing.",
+          "likes": 7,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "kindness-rewatch",
+      "title": "A rewatch made me pay more attention to Waymond.",
+      "time": "47 min ago",
+      "type": "Thought",
+      "likes": 56,
+      "recommend": true,
+      "authorId": "ak",
+      "communityId": "small-kindnesses",
+      "mediaId": "everything-everywhere",
+      "paragraphs": [
+        "The first time, I was trying to keep up with every universe. This time, I kept watching the small ways Waymond cares for people before anyone notices.",
+        "It changes the rhythm of the film when you know to look for those moments."
+      ],
+      "comments": [
+        {
+          "id": "kindness-rewatch-comment",
+          "authorId": "ns",
+          "time": "Just now",
+          "body": "Yes! His kindness is there long before the film asks us to really see it.",
+          "likes": 8,
+          "replies": []
+        }
+      ]
     }
   ],
   "discoverPostIds": [
     "from-road",
+    "startup-house",
     "eeaao-rocks",
+    "kindness-ordinary",
+    "cosmic-time",
     "messages",
+    "startup-jared",
+    "kindness-rewatch",
     "silicon-demo",
+    "cosmic-silence",
     "eeaao-kindness"
   ]
 };
