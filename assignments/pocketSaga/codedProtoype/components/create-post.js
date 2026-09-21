@@ -1,6 +1,6 @@
 /* One editor for selected-media and choose-media entry points. */
 (() => {
-  const { node, Action, Icon, Artwork, PhoneFrame, SeparatedMeta } = PocketSaga;
+  const { node, Action, Icon, Artwork, AmbientArtwork, PhoneFrame, SeparatedMeta } = PocketSaga;
   function SearchKeyboard(input) {
     const keyboard = node('div', 'picker-keyboard');
     keyboard.setAttribute('role', 'group');
@@ -130,7 +130,7 @@
       PocketSagaMedia.apply(atmosphere, media?.artwork);
       const old = [...atmosphere.querySelectorAll('.atmosphere-image')];
       if (media) {
-        const image = Artwork(media.artwork, 'atmosphere-image');
+        const image = AmbientArtwork(media.artwork, 'atmosphere-image');
         atmosphere.insertBefore(image, atmosphere.querySelector('.atmosphere-veil'));
         gsap.fromTo(image, { opacity: 0 }, { opacity: .58, duration: matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : .35 });
       }

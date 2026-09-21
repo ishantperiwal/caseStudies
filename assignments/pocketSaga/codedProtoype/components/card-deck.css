@@ -3,14 +3,17 @@
 .deck-stage:active { cursor: grabbing; }
 .watch-card { position: absolute; left: 0; top: 0; width: calc(100% - 64px); height: 300px; border-radius: 24px; overflow: hidden; background-color: #191d1f; transform-origin: left center; box-shadow: 5px 2px 9px -3px #00000038, 0 6px 18px #00000026; will-change: transform; user-select: none; }
 .watch-card { isolation: isolate; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+/* Clip composited backdrop layers explicitly; leave the outer shadow intact. */
+.watch-card-surface { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; clip-path: inset(0 round 24px); }
 .watch-artwork { position: absolute; width: 100%; height: auto; min-height: 100%; object-fit: cover; object-position: center top; pointer-events: none; }
 /* Overscan the blur beneath the rounded clip to avoid seams at fractional scales. */
 .watch-artwork-blur { position: absolute; inset: auto -8px -8px; height: 198px; pointer-events: none; }
 .watch-shade { position: absolute; inset: 0; background: radial-gradient(ellipse 110% 40% at 20% 66%, #090b0d99, #090b0d40 55%, transparent 100%), linear-gradient(to bottom, transparent 24%, #11121310 40%, #11121340 62%, #11121366 82%, #11121380); pointer-events: none; }
 .watch-card-copy { position: absolute; inset: auto 16px 16px; display: flex; flex-direction: column; gap: 4px; }
 .watch-title { font: 500 28px/1.1 Newsreader, Georgia, serif; color: #f5f6f2; text-shadow: 0 2px 10px #00000059; }
+.watch-card-copy > .watch-subtitle { margin-bottom: 4px; }
 .watch-subtitle { color: #d9dfdc; font-size: 12px; text-shadow: 0 1px 6px #00000040; }
-.watch-card .composer { margin-top: 10px; height: 52px; padding: 10px 12px; border-radius: 14px; background-color: #ffffff12; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+.watch-card .composer { margin-top: 4px; height: 52px; padding: 10px 12px; border-radius: 14px; background-color: #ffffff12; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 .watch-card .avatar { width: 28px; height: 28px; }
 .watch-card .composer-label { font-size: 12px; }
 .deck-announcement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }

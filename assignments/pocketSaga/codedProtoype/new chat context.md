@@ -178,3 +178,23 @@ Floating suggestion surfaces use a subtle 4% white fill. Their results container
 - Everything Everywhere All at Once has been removed from the active catalog, including watch history, communities, posts, and nested comments. The discarded ambience experiment remains disabled. Discover now has 7 seeded posts: 5 from unjoined communities and 2 from joined communities.
 
 - Added Coherence (2013) with local `components/assets/coherence.jpg`, watched-last-week history, unjoined community `coherence-dinner` (The Other Dinner Party), and two Discover posts with comments. It uses the same automatic artwork treatment and shared page adapters.
+
+- Palette ambience trial: `media-treatment.js` extracts dominant chromatic hue buckets from the existing 64px analysis, ignoring near-black/white/neutral pixels. It chooses one dominant and an optional related secondary hue, caps saturation at 16%/10% (red/orange primary hues capped at 10%), and generates cached soft SVG gradients for page backgrounds and Discover cards. Actual posters/reflections remain untouched. Existing carousel/editor crossfades consume these gradient sources. Set `ambience.enabled` to false in that module and reload to restore original blurred artwork globally. Empty/unreadable images have a neutral fallback.
+
+- Palette saturation reduced again: primary maximum 16%, secondary 10%, red/orange primary 10%. Mirrored gradient placement remains upper-right/lower-left. Dark is back alongside the other titles, using existing dark-artwork.png, S1 E3 scope, an unjoined Dark community, and two posts with matching comments.
+
+- Palette ambience now uses a soft top-center spotlight: primary ellipse centered at (300,35) in the 600×1000 gradient, with a faint wider secondary halo at the same horizontal center. Colors fade down toward the dark base; saturation remains muted. Hero carousel metadata appears above its title.
+
+- Non-bright page backgrounds have a trial 1% white overlay (`pageLift` in media-treatment.js), above the ambience veil but beneath content. Bright artwork and empty editor backgrounds get none. Discover interpolates this value during carousel changes. This does not affect posters or reflections. Set not-bright pageLift to 0 to revert.
+
+- Palette background base lifted from #080a0b to #202323 and the additional page bottom-darkening veil removed. Existing layer opacity and subtle non-bright white lift remain, so the final background is still dark but the spotlight no longer fades into near-black. Two muted tones remain, with a shared hue when no related secondary is prominent.
+
+- The trial white page-background overlay is now disabled: pageLift is 0 for both artwork brightness states.
+
+- Hybrid ambience is now active: shared `AmbientArtwork` wraps the palette base and original poster texture in one layer so carousel/editor crossfades move both together. Central media-treatment ambience settings: textureOpacity .22 (further multiplied by page/card opacity), textureSaturation .45, textureBlur 28px. Texture CSS brightness .72. Actual banners/reflections unchanged. Set textureOpacity to 0 for palette-only; set ambience.enabled false and reload for the original blurred-poster mode.
+
+- The progressive-only Discover header experiment was rejected: it exposed too much artwork/text behind the sticky pills and produced visual artifacts. Restored the scroll-content mask with an eased 105–133px feather, plus the original top blur at 55% opacity over 121px. Removed the navigation blur preset and the extra blur on unselected pills. The approved hybrid artwork ambience remains intact. Visually checked both the carousel and scrolled sticky-pills state.
+
+- Carousel artwork, blur, shade and copy now sit inside `.watch-card-surface` with an explicit 24px rounded clip-path. This contains overscanned backdrop layers at the bottom corners during transforms; the outer card retains its shadow and the reflection remains separate. Checked Interstellar and Silicon Valley after carousel navigation.
+
+- Carousel settle now retains the existing visible card and reflection nodes, shifts their slots, and creates only the hidden end-of-stack card. Avoid rebuilding the entire deck on settle: recreating backdrop layers can produce a sudden edge/halo change. Forward/reverse wraparound, retained blur nodes, active geometry, focus and compose callbacks were checked with `/private/tmp/pocketsaga-thread-check/deck-settle.mjs`; browser checked returning to Interstellar.

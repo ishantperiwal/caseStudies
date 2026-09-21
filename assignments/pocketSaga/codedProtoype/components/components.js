@@ -72,8 +72,21 @@
   function HomeIndicator() {
     return node('div', 'home-area', [ProgressiveBlur('bottom'), node('span', 'home-indicator')]);
   }
+  function AmbientArtwork(src, className) {
+    if (!PocketSagaMedia.ambience.enabled) return Artwork(src, className);
+    const layer = node('div', `${className} ambient-composite`, [
+      Artwork(PocketSagaMedia.ambientSource(src), 'ambient-color-base'),
+      Artwork(src, 'ambient-poster-texture')
+    ]);
+    layer.setAttribute('aria-hidden', 'true');
+    const settings = PocketSagaMedia.ambience;
+    layer.style.setProperty('--texture-opacity', settings.textureOpacity);
+    layer.style.setProperty('--texture-saturation', settings.textureSaturation);
+    layer.style.setProperty('--texture-blur', `${settings.textureBlur}px`);
+    return layer;
+  }
   function AtmosphericBackground(src) {
-    const el = node('div', 'atmosphere', [src && Artwork(src, 'atmosphere-image'), node('div', 'atmosphere-veil')]);
+    const el = node('div', 'atmosphere', [src && AmbientArtwork(src, 'atmosphere-image'), node('div', 'atmosphere-veil')]);
     el.setAttribute('aria-hidden', 'true');
     PocketSagaMedia.apply(el, src);
     return el;
@@ -197,7 +210,7 @@
       actionSlot: page.querySelector('.navigation-action-slot')
     });
   }
-  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, MediaAttachment, ReactionBar, Avatar, Artwork, Action, Icon, MessageComposer,
+  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, MediaAttachment, ReactionBar, Avatar, Artwork, AmbientArtwork, Action, Icon, MessageComposer,
     setupCommunity,
     mount(target, data, handlers) {
       return mountPage(target, CommunityPage(data, handlers), setupCommunity);

@@ -121,3 +121,24 @@
   backdrop-filter: blur(18px) saturate(1.25);
   box-shadow: inset 0 1px 1px #e1ffec38, inset 0 -1px 1px #79efaf14, 0 3px 12px #00000018;
 }
+
+/* A little more separation for the fixed comment and reply inputs. */
+.phone-case .message-composer {
+  --surface-edge: linear-gradient(155deg, #ffffff24, #ffffff12 45%, #ffffff0d);
+  background-color: rgb(38 46 43 / 78%);
+  background-image: linear-gradient(155deg, #ffffff0a, #ffffff04 70%);
+  box-shadow: 0 4px 16px #0000001f;
+}
+.phone-case .message-composer:focus-within {
+  background-color: rgb(42 51 47 / 82%);
+  background-image: linear-gradient(155deg, #ffffff0d, #ffffff06 70%);
+}
+
+/* Gently deepen post surfaces without dimming their text or controls. */
+.phone-case .post-card:not(.discover-post) {
+  background-image: linear-gradient(#0000000d, #0000000d), var(--surface-light);
+}
+.discover-post-atmosphere::after {
+  content: ''; position: absolute; inset: 0; background: rgb(0 0 0 / 5%);
+  pointer-events: none;
+}

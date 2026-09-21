@@ -1,5 +1,5 @@
 (() => {
-  const { node, Action, Artwork, PhoneFrame, PostCard, Icon, SeparatedMeta } = PocketSaga;
+  const { node, Action, Artwork, AmbientArtwork, PhoneFrame, PostCard, Icon, SeparatedMeta } = PocketSaga;
   function GroupRow(group, onJoin, recommended = false, onOpen = () => {}) {
     const button = Action({ label: group.joined ? `Joined ${group.name}` : `Join ${group.name}`, icon: group.joined ? 'check' : 'users', className: 'group-join tap-feedback', children: group.joined ? 'Joined' : recommended ? 'Join' : group.members, onClick: () => {
       group.joined = !group.joined;
@@ -82,7 +82,7 @@
       const artwork = post.artwork || group?.artwork;
       if (artwork) {
         PocketSagaMedia.apply(card, artwork);
-        const ambience = node('div', 'discover-post-atmosphere', [Artwork(artwork, 'discover-post-artwork'), node('div', 'discover-post-veil')]);
+        const ambience = node('div', 'discover-post-atmosphere', [AmbientArtwork(artwork, 'discover-post-artwork'), node('div', 'discover-post-veil')]);
         ambience.setAttribute('aria-hidden', 'true');
         card.prepend(ambience);
       }
@@ -127,6 +127,9 @@
         const weight = from.id === to.id ? Number(id === from.id) : id === from.id ? 1 - progress : id === to.id ? progress : 0;
         image.style.opacity = String(.58 * weight);
       }
+      const fromLift = PocketSagaMedia.get(from.artwork).pageLift;
+      const toLift = PocketSagaMedia.get(to.artwork).pageLift;
+      page?.querySelector('.atmosphere')?.style.setProperty('--atmosphere-light-overlay', String(fromLift + (toLift - fromLift) * progress));
       const fromVeil = PocketSagaMedia.get(from.artwork).pageVeil;
       const toVeil = PocketSagaMedia.get(to.artwork).pageVeil;
       page?.querySelector('.atmosphere')?.style.setProperty('--atmosphere-veil-opacity', String(fromVeil + (toVeil - fromVeil) * progress));
@@ -160,7 +163,7 @@
     const atmosphere = page.querySelector('.atmosphere');
     PocketSagaMedia.apply(atmosphere, data.history[0].artwork);
     data.history.forEach((item, index) => {
-      const image = index === 0 ? atmosphere.querySelector('.atmosphere-image') : Artwork(item.artwork, 'atmosphere-image');
+      const image = index === 0 ? atmosphere.querySelector('.atmosphere-image') : AmbientArtwork(item.artwork, 'atmosphere-image');
       image.style.opacity = index === 0 ? '.58' : '0';
       if (index) atmosphere.insertBefore(image, atmosphere.querySelector('.atmosphere-veil'));
       artworkLayers.set(item.id, image);

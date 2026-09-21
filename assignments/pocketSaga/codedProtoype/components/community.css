@@ -147,3 +147,30 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .membership-count .icon-chevron-down { width: 12px; height: 12px; transform: rotate(-90deg); }
 
 .membership-action.membership-join .icon { color: currentColor; }
+
+/* Muted extracted-palette trial: a generated gradient replaces ambient imagery.
+   Actual posters and perspective reflections retain their original artwork. */
+.atmosphere[data-ambience="palette"] .atmosphere-image {
+  inset: 0; width: 100%; height: 100%; filter: none;
+}
+.atmosphere[data-ambience="palette"] .atmosphere-veil {
+  background: transparent;
+}
+.discover-post[data-ambience="palette"] .discover-post-artwork {
+  inset: 0; width: 100%; height: 100%; filter: none; opacity: .6;
+}
+
+/* Trial: lift the black floor very slightly on non-bright page backgrounds. */
+.atmosphere::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: #fff; opacity: var(--atmosphere-light-overlay, 0);
+}
+
+/* One composited layer keeps palette and poster texture together during fades. */
+.ambient-composite { overflow: hidden; }
+.ambient-color-base { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ambient-poster-texture {
+  position: absolute; inset: -42px; width: calc(100% + 84px); height: calc(100% + 84px);
+  object-fit: cover; opacity: var(--texture-opacity, .22);
+  filter: blur(var(--texture-blur, 28px)) saturate(var(--texture-saturation, .45)) brightness(.72);
+}

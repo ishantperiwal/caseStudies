@@ -1,19 +1,22 @@
 .discover-page { --background: #080a0b; }
-.discover-base-tint { position: absolute; inset: 0; background: #0e0f10; opacity: 0; pointer-events: none; }
+.discover-base-tint { position: absolute; inset: 0; background: #141617; opacity: 0; pointer-events: none; }
 .discover-scroll { padding-top: 143px; padding-bottom: 130px; gap: 12px; overflow-x: hidden; }
+.discover-scroll .card-deck { height: 336px; }
 .discover-navigation { justify-content: space-between; gap: 6px; }
 .discover-heading-slot { position: relative; flex: 1; min-width: 0; height: 44px; display: flex; align-items: center; }
-.discover-tabs-anchor { min-height: 44px; margin-bottom: 12px; }
+.discover-tabs-anchor { min-height: 44px; margin-bottom: 24px; }
 .discover-tabs.is-floating, .discover-tabs.is-docked { position: absolute; inset: 6px 0 auto; gap: 8px; }
 .discover-tabs.is-docked .discover-tab { padding: 0 16px; white-space: nowrap; flex-shrink: 0; }
-/* Hide feed text through the full pill row (ends at 109px), then
-   reveal it in the gap before the first settled card at 125px. */
+/* Restore the content fade with a gentle eased feather beneath the chips.
+   It ends before the first card's snapped position (137px). */
 .discover-scroll {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 109px, #00000029 113px, #00000080 117px, #000000e6 122px, black 125px);
-  mask-image: linear-gradient(to bottom, transparent 109px, #00000029 113px, #00000080 117px, #000000e6 122px, black 125px);
+  --header-feather: linear-gradient(to bottom, transparent 105px,
+    #00000008 109px, #00000026 114px, #00000066 120px,
+    #000000b8 126px, #000000eb 130px, black 133px);
+  -webkit-mask-image: var(--header-feather);
+  mask-image: var(--header-feather);
 }
-.discover-page .screen-top-blur { height: 103px; }
-@media (prefers-reduced-motion: reduce) { .discover-page .screen-top-blur { transition: none; } }
+.discover-page .screen-top-blur { top: 12px; height: 121px; opacity: .55; }
 .discover-navigation h1 { font-size: 22px; font-weight: 600; letter-spacing: -.6px; }
 .discover-utilities { position: absolute; top: 0; right: 0; display: flex; gap: 12px; }
 .notification-count { position: absolute; top: 2px; right: 2px; background: var(--accent); color: #183d2b; border-radius: 10px; min-width: 15px; height: 15px; font-size: 9px; display: grid; place-items: center; }

@@ -87,6 +87,17 @@ window.pocketSagaData = {
       "artwork": "components/assets/coherence.jpg",
       "scope": "Movie",
       "mediaType": "movie"
+    },
+    {
+      "id": "dark",
+      "title": "Dark",
+      "subtitle": "Season 1 · Episode 3",
+      "context": "Dark · S1 E3",
+      "artwork": "components/assets/dark-artwork.png",
+      "scope": "Through S1 · E3",
+      "mediaType": "series",
+      "season": 1,
+      "episode": 3
     }
   ],
   "watchHistory": [
@@ -105,6 +116,10 @@ window.pocketSagaData = {
     {
       "mediaId": "coherence",
       "label": "Watched last week"
+    },
+    {
+      "mediaId": "dark",
+      "label": "Watched last month"
     }
   ],
   "communities": [
@@ -160,6 +175,15 @@ window.pocketSagaData = {
       "joined": false,
       "mediaId": "coherence",
       "description": "One dinner, too many possibilities. Compare clues, question every return to the house, and untangle Coherence together."
+    },
+    {
+      "id": "dark",
+      "name": "Dark community",
+      "members": "243K",
+      "activeMemberCount": 112,
+      "joined": false,
+      "mediaId": "dark",
+      "description": "Untangle Winden’s mysteries, timelines, and family connections together. Discussions here follow Season 1 through Episode 3."
     }
   ],
   "posts": [
@@ -538,10 +562,59 @@ window.pocketSagaData = {
           "replies": []
         }
       ]
+    },
+    {
+      "id": "winden",
+      "title": "Is Winden repeating its own history?",
+      "time": "18 min ago",
+      "type": "Theory",
+      "likes": 24,
+      "recommend": true,
+      "authorId": "mr",
+      "communityId": "dark",
+      "mediaId": "dark",
+      "paragraphs": [
+        "Seeing 1986 beside 2019 makes every familiar face feel like a clue. Are these echoes, or is something repeating?"
+      ],
+      "comments": [
+        {
+          "id": "winden-comment",
+          "authorId": "lm",
+          "time": "5 min ago",
+          "body": "Maybe the parallels show how families repeat the same mistakes. I keep noticing the places that barely seem to change.",
+          "likes": 5,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "dark-town",
+      "title": "Winden feels like a character of its own.",
+      "time": "18 min ago",
+      "type": "Discussion",
+      "likes": 17,
+      "recommend": true,
+      "authorId": "ns",
+      "communityId": "dark",
+      "mediaId": "dark",
+      "paragraphs": [
+        "The forest, the school, those quiet streets. By Episode 3, even familiar places feel different when you see who was there before. Which location stands out to you?"
+      ],
+      "comments": [
+        {
+          "id": "dark-town-comment",
+          "authorId": "lm",
+          "time": "5 min ago",
+          "body": "The school. Seeing it in another decade makes the town feel trapped in its own memories.",
+          "likes": 5,
+          "replies": []
+        }
+      ]
     }
   ],
   "discoverPostIds": [
     "from-road",
+    "winden",
     "startup-house",
     "coherence-trust",
     "cosmic-time",
@@ -549,6 +622,7 @@ window.pocketSagaData = {
     "startup-jared",
     "silicon-demo",
     "cosmic-silence",
-    "coherence-rewatch"
+    "coherence-rewatch",
+    "dark-town"
   ]
 };

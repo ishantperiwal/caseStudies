@@ -41,41 +41,57 @@
       }
       onProgress({ from: items[index], to: items[modulo(index + Math.sign(progress))], progress: Math.abs(progress) });
     }
-    function build() {
-      stage.replaceChildren();
-      reflections.replaceChildren();
-      cards = [-2, -1, 0, 1, 2, 3].map(slot => {
-        const item = items[modulo(index + slot)];
-        const copy = node('div', 'watch-card-copy', [node('h2', 'watch-title', item.title), SeparatedMeta(item.subtitle, 'watch-subtitle', 'p'), Composer(viewer, 'Write your thoughts…', () => onCompose(item, el))]);
-        const watchedTag = item.watchedLabel ? node('span', 'watch-timing', item.watchedLabel) : null;
-        const el = node('article', 'watch-card glass-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy]);
-        el.setAttribute('aria-label', `Write a post about ${item.title}`);
-        el.setAttribute('role', 'link');
-        el.tabIndex = slot === 0 ? 0 : -1;
-        el.style.cursor = 'pointer';
-        el.addEventListener('keydown', event => {
-          if (event.target !== el || !['Enter', ' '].includes(event.key)) return;
-          event.preventDefault();
-          if (!animation?.isActive()) onCompose(item, el);
-        });
-        el.inert = slot !== 0;
-        el.setAttribute('aria-hidden', String(slot !== 0));
-        el.style.pointerEvents = slot === 0 ? 'auto' : 'none';
-        const reflection = node('div', 'watch-reflection', node('div', 'watch-reflection-plane', Artwork(item.artwork, 'watch-reflection-artwork')));
-        PocketSagaMedia.apply(reflection, item.artwork);
-        reflections.append(reflection);
-        stage.append(el);
-        return { el, copy, watchedTag, reflection, slot };
+    function createCard(slot) {
+      const item = items[modulo(index + slot)];
+      const copy = node('div', 'watch-card-copy', [SeparatedMeta(item.subtitle, 'watch-subtitle', 'p'), node('h2', 'watch-title', item.title), Composer(viewer, 'Write your thoughts…', () => onCompose(item, el))]);
+      const watchedTag = item.watchedLabel ? node('span', 'watch-timing', item.watchedLabel) : null;
+      const surface = node('div', 'watch-card-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy]);
+      const el = node('article', 'watch-card glass-surface', surface);
+      el.setAttribute('aria-label', `Write a post about ${item.title}`);
+      el.setAttribute('role', 'link');
+      el.style.cursor = 'pointer';
+      el.addEventListener('keydown', event => {
+        if (event.target !== el || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        if (!animation?.isActive()) onCompose(item, el);
       });
+      const reflection = node('div', 'watch-reflection', node('div', 'watch-reflection-plane', Artwork(item.artwork, 'watch-reflection-artwork')));
+      PocketSagaMedia.apply(reflection, item.artwork);
+      reflections.append(reflection);
+      stage.append(el);
+      return { el, copy, watchedTag, reflection, slot };
+    }
+    function syncSelection() {
+      for (const card of cards) {
+        const active = card.slot === 0;
+        card.el.tabIndex = active ? 0 : -1;
+        card.el.inert = !active;
+        card.el.setAttribute('aria-hidden', String(!active));
+        card.el.style.pointerEvents = active ? 'auto' : 'none';
+      }
       root.dataset.activeIndex = String(index);
       live.textContent = `${items[index].title}, ${index + 1} of ${items.length}`;
       paint();
+    }
+    function advance(direction) {
+      index = modulo(index + direction);
+      // Preserve the visible surfaces and their backdrop layers when settling.
+      // Rebuilding them here caused a fresh composite and a sudden edge halo.
+      for (const card of cards) card.slot -= direction;
+      cards = cards.filter(card => {
+        if (card.slot >= -2 && card.slot <= 3) return true;
+        card.el.remove();
+        card.reflection.remove();
+        return false;
+      });
+      cards.push(createCard(direction > 0 ? 3 : -2));
+      syncSelection();
     }
     function settle(direction, from = 0, velocity = 0) {
       animation?.kill();
       const state = { progress: from, drift: 0 };
       const finish = () => {
-        if (direction) { index = modulo(index + direction); build(); onChange(items[index]); }
+        if (direction) { advance(direction); onChange(items[index]); }
         else paint();
         animation = null;
       };
@@ -144,7 +160,8 @@
       event.preventDefault();
       if (!animation?.isActive()) settle(event.key === 'ArrowRight' ? 1 : -1);
     });
-    build();
+    cards = [-2, -1, 0, 1, 2, 3].map(createCard);
+    syncSelection();
     const observer = new ResizeObserver(() => { if (!gesture && !animation?.isActive()) paint(); });
     observer.observe(stage);
     return { element: root, destroy() { animation?.kill(); observer.disconnect(); } };

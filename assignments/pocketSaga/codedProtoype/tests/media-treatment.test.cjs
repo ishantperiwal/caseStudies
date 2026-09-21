@@ -36,3 +36,23 @@ test('analysis caches image work and handles unreadable assets', async () => {
   assert.equal(result.unavailable, true);
   assert.equal(api.get('unreadable.jpg'), api.profiles['not-bright']);
 });
+
+test('palette ignores neutral pixels and mutes dominant chromatic colors', () => {
+  const api = load();
+  const red = Array.from({length: 30}, () => [230, 30, 30, 255]).flat();
+  const blue = Array.from({length: 5}, () => [20, 30, 220, 255]).flat();
+  const result = api.palette([...solid(255,255,100), ...solid(0,255,100), ...red, ...blue]);
+  assert.equal(result.primary, 'hsl(0, 10%, 27%)');
+  assert.equal(result.secondary, 'hsl(0, 10%, 19%)');
+  assert.equal(api.palette(solid(128)).primary, 'hsl(210, 5%, 24%)');
+  assert.equal(api.palette(solid(255,0)).primary, api.palette([]).primary);
+});
+
+test('gradient sources are cached and the original artwork mode is reversible', () => {
+  const api = load();
+  const source = api.ambientSource('poster.jpg');
+  assert(source.startsWith('data:image/svg+xml;'));
+  assert.equal(source, api.ambientSource('poster.jpg'));
+  api.ambience.enabled = false;
+  assert.equal(api.ambientSource('poster.jpg'), 'poster.jpg');
+});
