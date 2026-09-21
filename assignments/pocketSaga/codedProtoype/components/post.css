@@ -1,0 +1,43 @@
+/* Screen 03 content follows the selected pen.dev layout; the device shell is shared. */
+.post-scroll { padding-inline: 16px; gap: 20px; }
+.post-detail { margin-top: 135px; display: flex; flex-direction: column; gap: 20px; }
+.post-attribution { display: flex; align-items: center; gap: 9px; }
+.attribution-details { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.attribution-line { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 12px; }
+.attribution-name { font-weight: 500; }
+.attribution-connector, .attribution-time { color: var(--muted); }
+.attribution-time { font-size: 11px; }
+.community-link { color: var(--accent); font-size: 12px; min-height: 0; }
+.post-detail-title { font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.12; font-weight: 500; }
+.post-detail-body { display: flex; flex-direction: column; gap: 24px; color: #CDDBD3; font-size: 15px; line-height: 1.6; }
+.post-detail .media-attachment { margin-top: 0; }
+.post-detail .attachment-action { gap: 12px; }
+.post-detail-actions { display: flex; gap: 12px; }
+.detail-pill { min-height: 44px; padding: 0 16px; border-radius: 22px; background: var(--control); font-size: 12px; font-weight: 500; gap: 12px; }
+.detail-like.detail-pill { gap: 8px; color: var(--accent); background: #BDE0CA18; }
+.detail-like[aria-pressed="true"] { color: var(--accent); }
+.detail-like[aria-pressed="true"] .icon { filter: drop-shadow(0 0 3px #bde0ca40); }
+.post-navigation { left: 16px; right: 16px; }
+.post-navigation-title { position: absolute; left: 52px; right: 52px; text-align: center; font-size: 15px; font-weight: 600; pointer-events: none; }
+.post-options { width: 44px; margin-left: auto; }
+.comments-section { display: flex; flex-direction: column; gap: 14px; }
+.comments-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; }
+.comments-heading { font-size: 18px; font-weight: 600; }
+.comment-sort { color: var(--accent); font-size: 11px; font-weight: 500; }
+.comment-sort .icon { width: 16px; height: 16px; }
+.comment-list { display: flex; flex-direction: column; gap: 12px; }
+.comment-card { padding: 16px; display: flex; flex-direction: column; gap: 11px; border-radius: 20px; background: var(--surface); }
+.comment-author { display: flex; align-items: center; gap: 8px; position: relative; min-height: 24px; padding-right: 24px; }
+.comment-name { font-size: 12px; font-weight: 500; }
+.comment-time { font-size: 11px; color: var(--muted); }
+.comment-options { position: absolute; right: -10px; top: -10px; width: 44px; height: 44px; color: var(--muted); }
+.comment-body { color: #D5DFD8; font-size: 14px; line-height: 1.55; }
+.comment-translation { align-self: flex-start; min-height: 0; font-size: 10px; color: var(--muted); text-align: left; }
+.comment-actions { display: flex; align-items: center; gap: 18px; padding-top: 9px; min-height: 25px; }
+.comment-actions .action { min-height: 16px; font-size: 12px; }
+.comment-actions .detail-like { gap: 8px; color: var(--muted); }
+.comment-actions .detail-like[aria-pressed="true"] { color: var(--accent); }
+.comment-actions .icon { width: 16px; height: 16px; }
+.comment-reply { color: var(--accent); }
+.comment-reply-count { margin-left: auto; color: var(--muted); }
+.comments-page-sentinel { height: 1px; margin-block: -7px; pointer-events: none; }

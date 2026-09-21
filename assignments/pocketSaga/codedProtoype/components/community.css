@@ -1,0 +1,110 @@
+:root { font-family: Manrope, system-ui, sans-serif; color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-items: center; background: radial-gradient(ellipse at 50% 35%, #111615, #050707 65%); }
+#app { width: 100%; }
+.phone-stage { position: relative; width: 100%; height: calc(100svh - 56px); min-height: 1px; }
+.phone-stage > .phone-case { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(var(--preview-scale, 1)); transform-origin: center; }
+.phone-case { --accent: #BDE0CA; --text: #EEF2E9; --muted: #A3B4AD; --body: #AFBCB5; --background: #080A0B; --surface: #ffffff08; --control: #ffffff0c; --phone-width: 438px; --radius-card: 20px; position: relative; width: var(--phone-width); padding: 11px; border: 2px solid #444947; border-radius: 59px; color: var(--text); background: linear-gradient(115deg, #343836, #101211 25%, #222623 75%, #484d49); box-shadow: 0 0 0 1px #111, inset 0 0 0 2px #252827, 0 30px 70px #0009, 0 5px 15px #0008; }
+.phone-case::before, .phone-case::after { content: ''; position: absolute; width: 4px; border-radius: 3px; background: linear-gradient(90deg, #282c2a, #797e7b); }
+.phone-case::before { left: -5px; top: 156px; height: 54px; box-shadow: 0 69px 0 #505552; }
+.phone-case::after { right: -5px; top: 188px; height: 86px; }
+.phone-screen { position: relative; aspect-ratio: 412 / 896; border-radius: 46px; isolation: isolate; overflow: hidden; background: var(--background); box-shadow: 0 0 0 3px #050606; }
+.phone-case p, .phone-case h1, .phone-case h2, .phone-case h3 { margin: 0; }
+.atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.atmosphere-image { position: absolute; inset: -25px; width: calc(100% + 50px); height: calc(100% + 50px); object-fit: cover; opacity: .58; filter: blur(23px); }
+.atmosphere-veil { position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--background) 64%, transparent), color-mix(in srgb, var(--background) 76%, transparent) 35%, color-mix(in srgb, var(--background) 91%, transparent) 78%, color-mix(in srgb, var(--background) 96%, transparent)); }
+.feed-scroll { position: relative; z-index: auto; height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 16px 64px; scroll-padding-top: 67px; display: flex; flex-direction: column; gap: 24px; }
+.feed-scroll > * { flex-shrink: 0; }
+.feed-scroll::-webkit-scrollbar { display: none; }
+.status-bar { position: absolute; inset: 0 0 auto; height: 59px; padding: 0 27px; z-index: 10; display: flex; align-items: center; justify-content: space-between; pointer-events: none; }
+.status-time, .device-status { position: relative; z-index: 2; }
+.status-time { font-size: 14px; font-weight: 700; }
+.device-status { display: flex; align-items: center; gap: 5px; }
+.device-status .icon { width: 15px; height: 15px; }
+.device-status .icon-battery-full { width: 21px; height: 21px; }
+.dynamic-island { position: absolute; z-index: 2; top: 11px; left: 50%; transform: translateX(-50%); width: 118px; height: 33px; border-radius: 22px; background: radial-gradient(circle at 99px 16px, #152330 0 3px, #080b10 4px 6px, transparent 7px), #000; }
+.home-area { position: absolute; inset: auto 0 0; height: 88px; z-index: 10; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; pointer-events: none; }
+.home-indicator { position: relative; z-index: 2; width: 112px; height: 4px; border-radius: 2px; background: var(--text); opacity: .85; }
+.progressive-blur { position: absolute; inset: 0; pointer-events: none; }
+/* End above the feed’s 67px starting inset so the back button stays crisp. */
+.progressive-blur-top { height: 59px; --direction: to top; }
+.progressive-blur-bottom { --direction: to bottom; }
+.blur-layer { position: absolute; inset: 0; -webkit-backdrop-filter: blur(var(--blur)); backdrop-filter: blur(var(--blur)); -webkit-mask-image: linear-gradient(var(--direction), transparent var(--start), black var(--end)); mask-image: linear-gradient(var(--direction), transparent var(--start), black var(--end)); }
+.action { border: 0; padding: 0; color: inherit; font: inherit; background: transparent; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; cursor: pointer; }
+.action:focus-visible, .feed-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.icon { width: 18px; height: 18px; flex-shrink: 0; }
+.round-action { width: 44px; border-radius: 22px; background: var(--control); flex-shrink: 0; }
+.round-action .icon { width: 20px; height: 20px; }
+.community-header { display: flex; flex-direction: column; gap: 16px; }
+.community-identity { display: flex; align-items: center; gap: 14px; }
+.community-artwork { width: 60px; height: 72px; border-radius: 14px; object-fit: cover; flex-shrink: 0; }
+.community-titles { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.community-context { color: var(--accent); font-size: 12px; font-weight: 500; }
+.community-name { font-family: Newsreader, Georgia, serif; font-size: 28px; font-weight: 500; overflow-wrap: anywhere; }
+.community-membership { color: var(--muted); font-size: 12px; }
+.community-description { color: var(--muted); font-size: 13px; line-height: 20px; }
+.membership-actions { display: flex; gap: 12px; }
+.membership-action { flex: 1; border-radius: 22px; gap: 12px; padding: 0 16px; background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 13px; font-weight: 600; }
+.membership-action .icon { width: 16px; height: 16px; color: var(--accent); }
+.composer { width: 100%; padding: 16px; gap: 10px; border-radius: var(--radius-card); background: var(--surface); justify-content: flex-start; text-align: left; }
+.composer-label { color: var(--muted); font-size: 14px; }
+.avatar { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: #5b5550; font-size: 9px; font-weight: 500; }
+.avatar-large { width: 32px; height: 32px; font-size: 11px; font-weight: 700; }
+.feed-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.feed-heading { font-size: 18px; font-weight: 600; }
+.sort-action { font-size: 11px; font-weight: 500; color: var(--accent); }
+.sort-action .icon { width: 16px; height: 16px; }
+.post-list { display: flex; flex-direction: column; gap: 16px; }
+.post-card { display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 6px; background: linear-gradient(145deg, #ffffff08 0%, #ffffff02 48%, transparent 75%), var(--surface); border-radius: var(--radius-card); box-shadow: inset 0 1px 0 #ffffff12, inset 1px 0 0 #ffffff07, inset -1px 0 0 #ffffff04, inset 0 -1px 0 #ffffff04; overflow: hidden; }
+.post-context { font-size: 12px; font-weight: 600; color: var(--accent); }
+.post-copy { display: flex; flex-direction: column; gap: 8px; }
+.post-title { font-family: Newsreader, Georgia, serif; font-size: 22px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
+.post-body { font-size: 13px; line-height: 20px; color: var(--body); overflow-wrap: anywhere; }
+.author-meta { display: flex; gap: 9px; align-items: center; }
+.author-details { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; color: var(--muted); }
+.author-name { font-size: 11px; font-weight: 500; }
+.post-time { font-size: 10px; }
+.media-attachment { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px; margin-top: 4px; border-radius: 15px; background: var(--surface); }
+.attachment-artwork { width: 44px; height: 60px; object-fit: cover; border-radius: 6px; }
+.attachment-details { flex: 1; min-width: 80px; display: flex; flex-direction: column; gap: 5px; overflow-wrap: anywhere; }
+.attachment-title { font-size: 15px; font-weight: 600; }
+.attachment-subtitle { font-size: 12px; color: var(--muted); }
+.attachment-action { padding: 0 12px; gap: 8px; border-radius: 22px; background: var(--control); font-size: 12px; font-weight: 600; }
+.attachment-action .icon { width: 15px; height: 15px; }
+.reaction-bar { display: flex; gap: 18px; color: var(--muted); }
+.reaction-bar .action { font-size: 12px; font-weight: 500; }
+.like-action { color: var(--accent); }
+.empty-feed { font-size: 13px; color: var(--muted); padding: 16px; }
+
+
+/* Tighten only the toolbar-to-posts spacing; retain other section gaps. */
+.feed-toolbar + .post-list { margin-top: -12px; }
+.sort-action { width: 44px; flex-shrink: 0; }
+
+.post-card > .author-meta { margin-bottom: 4px; }
+
+/* Natural scrolling beneath the fixed app bar. */
+.community-intro { position: relative; z-index: 1; margin-top: 135px; display: flex; flex-direction: column; gap: 24px; }
+.page-navigation { position: absolute; top: 59px; left: 16px; right: 16px; z-index: 5; height: 44px; display: flex; align-items: center; }
+.compact-community-title { position: absolute; left: 52px; right: 52px; text-align: center; font-family: Newsreader, Georgia, serif; font-size: 20px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0; pointer-events: none; }
+.feed-toolbar { position: relative; z-index: 1; }
+.post-list { position: relative; z-index: 1; min-height: calc(100% - 100px); }
+/* Fade only the content entering the app bar, never the whole introduction. */
+.feed-scroll { scroll-padding-top: 135px; -webkit-mask-image: linear-gradient(to bottom, transparent 88px, #0000000a 98px, #00000029 108px, #00000066 118px, #000000b3 129px, #000000eb 140px, black 147px); mask-image: linear-gradient(to bottom, transparent 88px, #0000000a 98px, #00000029 108px, #00000066 118px, #000000b3 129px, #000000eb 140px, black 147px); }
+.screen-top-blur { position: absolute; inset: 12px 0 auto; height: 135px; z-index: 3; pointer-events: none; }
+.screen-top-blur .progressive-blur-top { height: 100%; }
+.navigation-action-slot { position: absolute; right: 0; width: 44px; height: 44px; opacity: 0; }
+.compact-sort-action { color: var(--accent); }
+
+/* Ease each top blur layer in rather than introducing a linear seam. */
+.progressive-blur-top .blur-layer {
+  --soft-mask: linear-gradient(to top, transparent var(--start), #0000001a calc(var(--start) + (var(--end) - var(--start)) * .25), #00000080 calc(var(--start) + (var(--end) - var(--start)) * .5), #000000e6 calc(var(--start) + (var(--end) - var(--start)) * .75), black var(--end));
+  -webkit-mask-image: var(--soft-mask);
+  mask-image: var(--soft-mask);
+}
+
+/* Preserve the original button fill; soften only the content behind it. */
+.page-navigation .round-action {
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
