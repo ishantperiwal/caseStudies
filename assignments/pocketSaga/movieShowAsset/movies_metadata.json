@@ -1,0 +1,829 @@
+[
+  {
+    "title": "The Shawshank Redemption",
+    "year": 1994,
+    "imdb_rating": 9.3,
+    "genres": [
+      "Drama"
+    ],
+    "directors": [
+      "Frank Darabont"
+    ],
+    "actors": [
+      "Tim Robbins",
+      "Morgan Freeman",
+      "Bob Gunton"
+    ],
+    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "image_file": "The Shawshank Redemption (1994).jpg",
+    "imdb_id": "title/tt0111161"
+  },
+  {
+    "title": "The Godfather",
+    "year": 1972,
+    "imdb_rating": 9.2,
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Francis Ford Coppola"
+    ],
+    "actors": [
+      "Marlon Brando",
+      "Al Pacino",
+      "James Caan"
+    ],
+    "description": "The aging patriarch of an organized crime dynasty in postwar New York City transfers control of his clandestine empire to his reluctant youngest son.",
+    "image_file": "The Godfather (1972).jpg",
+    "imdb_id": "title/tt0068646"
+  },
+  {
+    "title": "The Lord of the Rings - The Return of the King",
+    "year": 2003,
+    "imdb_rating": 9.0,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "directors": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Elijah Wood",
+      "Viggo Mortensen",
+      "Ian McKellen"
+    ],
+    "description": "Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.",
+    "image_file": "The Lord of the Rings - The Return of the King (2003).jpg",
+    "imdb_id": "title/tt0167260"
+  },
+  {
+    "title": "The Godfather Part II",
+    "year": 1974,
+    "imdb_rating": 9.0,
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Francis Ford Coppola"
+    ],
+    "actors": [
+      "Al Pacino",
+      "Robert De Niro",
+      "Robert Duvall"
+    ],
+    "description": "The early life and career of Vito Corleone in 1920s New York City is portrayed, while his son, Michael, expands and tightens his grip on the family crime syndicate.",
+    "image_file": "The Godfather Part II (1974).jpg",
+    "imdb_id": "title/tt0071562"
+  },
+  {
+    "title": "The Dark Knight",
+    "year": 2008,
+    "imdb_rating": 9.0,
+    "genres": [
+      "Action",
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Christian Bale",
+      "Heath Ledger",
+      "Aaron Eckhart"
+    ],
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "image_file": "The Dark Knight (2008).jpg",
+    "imdb_id": "title/tt0468569"
+  },
+  {
+    "title": "Schindler's List",
+    "year": 1994,
+    "imdb_rating": 9.0,
+    "genres": [
+      "Biography",
+      "Drama",
+      "History"
+    ],
+    "directors": [
+      "Steven Spielberg"
+    ],
+    "actors": [
+      "Liam Neeson",
+      "Ralph Fiennes",
+      "Ben Kingsley"
+    ],
+    "description": "In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.",
+    "image_file": "Schindler's List (1994).jpg",
+    "imdb_id": "title/tt0108052"
+  },
+  {
+    "title": "12 Angry Men",
+    "year": 1957,
+    "imdb_rating": 9.0,
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Sidney Lumet"
+    ],
+    "actors": [
+      "Henry Fonda",
+      "Lee J. Cobb",
+      "Martin Balsam"
+    ],
+    "description": "The jury in a New York City murder trial is frustrated by a single member whose skeptical caution forces them to more carefully consider the evidence before jumping to a hasty verdict.",
+    "image_file": "12 Angry Men (1957).jpg",
+    "imdb_id": "title/tt0050083"
+  },
+  {
+    "title": "Pulp Fiction",
+    "year": 1994,
+    "imdb_rating": 8.9,
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Quentin Tarantino"
+    ],
+    "actors": [
+      "John Travolta",
+      "Uma Thurman",
+      "Samuel L. Jackson"
+    ],
+    "description": "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+    "image_file": "Pulp Fiction (1994).jpg",
+    "imdb_id": "title/tt0110912"
+  },
+  {
+    "title": "The Lord of the Rings - The Two Towers",
+    "year": 2002,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "directors": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Elijah Wood",
+      "Ian McKellen",
+      "Viggo Mortensen"
+    ],
+    "description": "While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.",
+    "image_file": "The Lord of the Rings - The Two Towers (2002).jpg",
+    "imdb_id": "title/tt0167261"
+  },
+  {
+    "title": "The Lord of the Rings - The Fellowship of the Ring",
+    "year": 2001,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "directors": [
+      "Peter Jackson"
+    ],
+    "actors": [
+      "Elijah Wood",
+      "Ian McKellen",
+      "Orlando Bloom"
+    ],
+    "description": "A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.",
+    "image_file": "The Lord of the Rings - The Fellowship of the Ring (2001).jpg",
+    "imdb_id": "title/tt0120737"
+  },
+  {
+    "title": "Inception",
+    "year": 2010,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Sci-Fi"
+    ],
+    "directors": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Leonardo DiCaprio",
+      "Joseph Gordon-Levitt",
+      "Elliot Page"
+    ],
+    "description": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.",
+    "image_file": "Inception (2010).jpg",
+    "imdb_id": "title/tt1375666"
+  },
+  {
+    "title": "The Good, the Bad and the Ugly",
+    "year": 1967,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Adventure",
+      "Western"
+    ],
+    "directors": [
+      "Sergio Leone"
+    ],
+    "actors": [
+      "Clint Eastwood",
+      "Eli Wallach",
+      "Lee Van Cleef"
+    ],
+    "description": "A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.",
+    "image_file": "The Good, the Bad and the Ugly (1967).jpg",
+    "imdb_id": "title/tt0060196"
+  },
+  {
+    "title": "Forrest Gump",
+    "year": 1994,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Drama",
+      "Romance"
+    ],
+    "directors": [
+      "Robert Zemeckis"
+    ],
+    "actors": [
+      "Tom Hanks",
+      "Robin Wright",
+      "Gary Sinise"
+    ],
+    "description": "The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood swe...",
+    "image_file": "Forrest Gump (1994).jpg",
+    "imdb_id": "title/tt0109830"
+  },
+  {
+    "title": "Fight Club",
+    "year": 1999,
+    "imdb_rating": 8.8,
+    "genres": [
+      "Drama"
+    ],
+    "directors": [
+      "David Fincher"
+    ],
+    "actors": [
+      "Brad Pitt",
+      "Edward Norton",
+      "Meat Loaf"
+    ],
+    "description": "An insomniac office worker and a devil-may-care soap maker form an underground fight club that evolves into much more.",
+    "image_file": "Fight Club (1999).jpg",
+    "imdb_id": "title/tt0137523"
+  },
+  {
+    "title": "The Matrix",
+    "year": 1999,
+    "imdb_rating": 8.7,
+    "genres": [
+      "Action",
+      "Sci-Fi"
+    ],
+    "directors": [
+      "Lana Wachowski",
+      "Lilly Wachowski"
+    ],
+    "actors": [
+      "Keanu Reeves",
+      "Laurence Fishburne",
+      "Carrie-Anne Moss"
+    ],
+    "description": "When a beautiful stranger leads computer hacker Neo to a forbidding underworld, he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.",
+    "image_file": "The Matrix (1999).jpg",
+    "imdb_id": "title/tt0133093"
+  },
+  {
+    "title": "The Empire Strikes Back",
+    "year": 1980,
+    "imdb_rating": 8.7,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "directors": [
+      "Irvin Kershner"
+    ],
+    "actors": [
+      "Mark Hamill",
+      "Harrison Ford",
+      "Carrie Fisher"
+    ],
+    "description": "After the Rebels are brutally overpowered by the Empire on the ice planet Hoth, Luke Skywalker begins Jedi training with Yoda, while his friends are pursued across the galaxy by Darth Vader and bounty hunter Boba Fett.",
+    "image_file": "The Empire Strikes Back (1980).jpg",
+    "imdb_id": "title/tt0080684"
+  },
+  {
+    "title": "One Flew Over the Cuckoo's Nest",
+    "year": 1975,
+    "imdb_rating": 8.7,
+    "genres": [
+      "Drama"
+    ],
+    "directors": [
+      "Milos Forman"
+    ],
+    "actors": [
+      "Jack Nicholson",
+      "Louise Fletcher",
+      "Michael Berryman"
+    ],
+    "description": "In the Fall of 1963, a Korean War veteran and criminal pleads insanity and is admitted to a mental institution, where he rallies up the scared patients against the tyrannical nurse.",
+    "image_file": "One Flew Over the Cuckoo's Nest (1975).jpg",
+    "imdb_id": "title/tt0073486"
+  },
+  {
+    "title": "Goodfellas",
+    "year": 1990,
+    "imdb_rating": 8.7,
+    "genres": [
+      "Biography",
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Martin Scorsese"
+    ],
+    "actors": [
+      "Robert De Niro",
+      "Ray Liotta",
+      "Joe Pesci"
+    ],
+    "description": "The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito in the Italian-American crime syndicate.",
+    "image_file": "Goodfellas (1990).jpg",
+    "imdb_id": "title/tt0099685"
+  },
+  {
+    "title": "The Silence of the Lambs",
+    "year": 1991,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "directors": [
+      "Jonathan Demme"
+    ],
+    "actors": [
+      "Jodie Foster",
+      "Anthony Hopkins",
+      "Lawrence A. Bonney"
+    ],
+    "description": "A young F.B.I. cadet must receive the help of an incarcerated and manipulative cannibal killer to help catch another serial killer, a madman who skins his victims.",
+    "image_file": "The Silence of the Lambs (1991).jpg",
+    "imdb_id": "title/tt0102926"
+  },
+  {
+    "title": "The Green Mile",
+    "year": 1999,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Crime",
+      "Drama",
+      "Fantasy"
+    ],
+    "directors": [
+      "Frank Darabont"
+    ],
+    "actors": [
+      "Tom Hanks",
+      "Michael Clarke Duncan",
+      "David Morse"
+    ],
+    "description": "The lives of guards on Death Row are affected by one of their charges: a black man accused of child murder and rape, yet who has a mysterious gift.",
+    "image_file": "The Green Mile (1999).jpg",
+    "imdb_id": "title/tt0120689"
+  },
+  {
+    "title": "Terminator 2 - Judgment Day",
+    "year": 1991,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Action",
+      "Sci-Fi"
+    ],
+    "directors": [
+      "James Cameron"
+    ],
+    "actors": [
+      "Arnold Schwarzenegger",
+      "Linda Hamilton",
+      "Edward Furlong"
+    ],
+    "description": "A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her 10-year old adolescent son John from an even more advanced and powerful cyborg.",
+    "image_file": "Terminator 2 - Judgment Day (1991).jpg",
+    "imdb_id": "title/tt0103064"
+  },
+  {
+    "title": "Star Wars",
+    "year": 1977,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Fantasy"
+    ],
+    "directors": [
+      "George Lucas"
+    ],
+    "actors": [
+      "Mark Hamill",
+      "Harrison Ford",
+      "Carrie Fisher"
+    ],
+    "description": "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee and two droids to save the galaxy from the Empire's world-destroying battle station, while also attempting to rescue Princess Leia from the mysterious Darth ...",
+    "image_file": "Star Wars (1977).jpg",
+    "imdb_id": "title/tt0076759"
+  },
+  {
+    "title": "Harakiri",
+    "year": 1964,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Action",
+      "Drama",
+      "Mystery"
+    ],
+    "directors": [
+      "Masaki Kobayashi"
+    ],
+    "actors": [
+      "Tatsuya Nakadai",
+      "Akira Ishihama",
+      "Shima Iwashita"
+    ],
+    "description": "When a ronin requesting seppuku at a feudal lord's palace is told of the brutal suicide of another ronin who previously visited, he reveals how their pasts are intertwined - and in doing so challenges the clan's integrity.",
+    "image_file": "Harakiri (1964).jpg",
+    "imdb_id": "title/tt0056058"
+  },
+  {
+    "title": "Spirited Away",
+    "year": 2003,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Animation",
+      "Adventure",
+      "Family"
+    ],
+    "directors": [
+      "Hayao Miyazaki"
+    ],
+    "actors": [
+      "Daveigh Chase",
+      "Suzanne Pleshette",
+      "Miyu Irino"
+    ],
+    "description": "During her family's move to the suburbs, a sullen 10-year-old girl wanders into a world ruled by gods, witches, and spirits, and where humans are changed into beasts.",
+    "image_file": "Spirited Away (2003).jpg",
+    "imdb_id": "title/tt0245429"
+  },
+  {
+    "title": "Se7en",
+    "year": 1995,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Crime",
+      "Drama",
+      "Mystery"
+    ],
+    "directors": [
+      "David Fincher"
+    ],
+    "actors": [
+      "Morgan Freeman",
+      "Brad Pitt",
+      "Kevin Spacey"
+    ],
+    "description": "Two detectives, a rookie and a veteran, hunt a serial killer who uses the seven deadly sins as his motives.",
+    "image_file": "Se7en (1995).jpg",
+    "imdb_id": "title/tt0114369"
+  },
+  {
+    "title": "Saving Private Ryan",
+    "year": 1998,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Drama",
+      "War"
+    ],
+    "directors": [
+      "Steven Spielberg"
+    ],
+    "actors": [
+      "Tom Hanks",
+      "Matt Damon",
+      "Tom Sizemore"
+    ],
+    "description": "Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.",
+    "image_file": "Saving Private Ryan (1998).jpg",
+    "imdb_id": "title/tt0120815"
+  },
+  {
+    "title": "La vita è bella",
+    "year": 1997,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Comedy",
+      "Drama",
+      "Romance"
+    ],
+    "directors": [
+      "Roberto Benigni"
+    ],
+    "actors": [
+      "Roberto Benigni",
+      "Nicoletta Braschi",
+      "Giorgio Cantarini"
+    ],
+    "description": "When an open-minded Jewish waiter and his son become victims of the Holocaust, he uses a perfect mixture of will, humor, and imagination to protect his son from the dangers around their camp.",
+    "image_file": "La vita è bella (1997).jpg",
+    "imdb_id": "title/tt0118799"
+  },
+  {
+    "title": "It's a Wonderful Life",
+    "year": 1947,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Drama",
+      "Family",
+      "Fantasy"
+    ],
+    "directors": [
+      "Frank Capra"
+    ],
+    "actors": [
+      "James Stewart",
+      "Donna Reed",
+      "Lionel Barrymore"
+    ],
+    "description": "An angel is sent from Heaven to help a desperately frustrated businessman by showing him what life would have been like if he had never existed.",
+    "image_file": "It's a Wonderful Life (1947).jpg",
+    "imdb_id": "title/tt0038650"
+  },
+  {
+    "title": "Interstellar",
+    "year": 2014,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Adventure",
+      "Drama",
+      "Sci-Fi"
+    ],
+    "directors": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Matthew McConaughey",
+      "Anne Hathaway",
+      "Jessica Chastain"
+    ],
+    "description": "A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival.",
+    "image_file": "Interstellar (2014).jpg",
+    "imdb_id": "title/tt0816692"
+  },
+  {
+    "title": "City of God",
+    "year": 2004,
+    "imdb_rating": 8.6,
+    "genres": [
+      "Crime",
+      "Drama"
+    ],
+    "directors": [
+      "Fernando Meirelles",
+      "Kátia Lund"
+    ],
+    "actors": [
+      "Alexandre Rodrigues",
+      "Leandro Firmino",
+      "Matheus Nachtergaele"
+    ],
+    "description": "In the slums of Rio, two kids' paths diverge as one struggles to become a photographer and the other a kingpin.",
+    "image_file": "City of God (2004).jpg",
+    "imdb_id": "title/tt0317248"
+  },
+  {
+    "title": "Whiplash",
+    "year": 2014,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Drama",
+      "Music"
+    ],
+    "directors": [
+      "Damien Chazelle"
+    ],
+    "actors": [
+      "Miles Teller",
+      "J.K. Simmons",
+      "Melissa Benoist"
+    ],
+    "description": "A promising young drummer enrolls at a cut-throat music conservatory where his dreams of greatness are mentored by an instructor who will stop at nothing to realize a student's potential.",
+    "image_file": "Whiplash (2014).jpg",
+    "imdb_id": "title/tt2582802"
+  },
+  {
+    "title": "The Usual Suspects",
+    "year": 1995,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Crime",
+      "Drama",
+      "Mystery"
+    ],
+    "directors": [
+      "Bryan Singer"
+    ],
+    "actors": [
+      "Kevin Spacey",
+      "Gabriel Byrne",
+      "Chazz Palminteri"
+    ],
+    "description": "A sole survivor tells of the twisty events leading up to a horrific gun battle on a boat, which began when five criminals met at a seemingly random police lineup.",
+    "image_file": "The Usual Suspects (1995).jpg",
+    "imdb_id": "title/tt0114814"
+  },
+  {
+    "title": "The Prestige",
+    "year": 2006,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Drama",
+      "Mystery",
+      "Sci-Fi"
+    ],
+    "directors": [
+      "Christopher Nolan"
+    ],
+    "actors": [
+      "Christian Bale",
+      "Hugh Jackman",
+      "Scarlett Johansson"
+    ],
+    "description": "After a tragic accident, two stage magicians in 1890s London engage in a battle to create the ultimate illusion while sacrificing everything they have to outwit each other.",
+    "image_file": "The Prestige (2006).jpg",
+    "imdb_id": "title/tt0482571"
+  },
+  {
+    "title": "The Pianist",
+    "year": 2003,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Biography",
+      "Drama",
+      "Music"
+    ],
+    "directors": [
+      "Roman Polanski"
+    ],
+    "actors": [
+      "Adrien Brody",
+      "Thomas Kretschmann",
+      "Frank Finlay"
+    ],
+    "description": "A Polish Jewish musician struggles to survive the destruction of the Warsaw ghetto of World War II.",
+    "image_file": "The Pianist (2003).jpg",
+    "imdb_id": "title/tt0253474"
+  },
+  {
+    "title": "The Lion King",
+    "year": 1994,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Animation",
+      "Adventure",
+      "Drama"
+    ],
+    "directors": [
+      "Roger Allers",
+      "Rob Minkoff"
+    ],
+    "actors": [
+      "Matthew Broderick",
+      "Jeremy Irons",
+      "James Earl Jones"
+    ],
+    "description": "Lion prince Simba and his father are targeted by his bitter uncle, who wants to ascend the throne himself.",
+    "image_file": "The Lion King (1994).jpg",
+    "imdb_id": "title/tt0110357"
+  },
+  {
+    "title": "The Departed",
+    "year": 2006,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Crime",
+      "Drama",
+      "Thriller"
+    ],
+    "directors": [
+      "Martin Scorsese"
+    ],
+    "actors": [
+      "Leonardo DiCaprio",
+      "Matt Damon",
+      "Jack Nicholson"
+    ],
+    "description": "An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.",
+    "image_file": "The Departed (2006).jpg",
+    "imdb_id": "title/tt0407887"
+  },
+  {
+    "title": "Rear Window",
+    "year": 1954,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Mystery",
+      "Thriller"
+    ],
+    "directors": [
+      "Alfred Hitchcock"
+    ],
+    "actors": [
+      "James Stewart",
+      "Grace Kelly",
+      "Wendell Corey"
+    ],
+    "description": "A wheelchair-bound photographer spies on his neighbors from his Greenwich Village courtyard apartment window, and becomes convinced one of them has committed murder, despite the skepticism of his fashion-model girlfriend.",
+    "image_file": "Rear Window (1954).jpg",
+    "imdb_id": "title/tt0047396"
+  },
+  {
+    "title": "Gladiator",
+    "year": 2000,
+    "imdb_rating": 8.5,
+    "genres": [
+      "Action",
+      "Adventure",
+      "Drama"
+    ],
+    "directors": [
+      "Ridley Scott"
+    ],
+    "actors": [
+      "Russell Crowe",
+      "Joaquin Phoenix",
+      "Connie Nielsen"
+    ],
+    "description": "A former Roman General sets out to exact vengeance against the corrupt emperor who murdered his family and sent him into slavery.",
+    "image_file": "Gladiator (2000).jpg",
+    "imdb_id": "title/tt0172495"
+  },
+  {
+    "title": "WALL-E",
+    "year": 2008,
+    "imdb_rating": 8.4,
+    "genres": [
+      "Animation",
+      "Adventure",
+      "Family"
+    ],
+    "directors": [
+      "Andrew Stanton"
+    ],
+    "actors": [
+      "Ben Burtt",
+      "Elissa Knight",
+      "Jeff Garlin"
+    ],
+    "description": "In the distant future, a small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind.",
+    "image_file": "WALL-E (2008).jpg",
+    "imdb_id": "title/tt0910970"
+  },
+  {
+    "title": "Spider-Man - Into the Spider-Verse",
+    "year": 2018,
+    "imdb_rating": 8.4,
+    "genres": [
+      "Animation",
+      "Action",
+      "Adventure"
+    ],
+    "directors": [
+      "Bob Persichetti",
+      "Peter Ramsey",
+      "Rodney Rothman"
+    ],
+    "actors": [
+      "Shameik Moore",
+      "Jake Johnson",
+      "Hailee Steinfeld"
+    ],
+    "description": "Teen Miles Morales becomes the Spider-Man of his universe, and must join with five spider-powered individuals from other dimensions to stop a threat for all realities.",
+    "image_file": "Spider-Man - Into the Spider-Verse (2018).jpg",
+    "imdb_id": "title/tt4633694"
+  }
+]
