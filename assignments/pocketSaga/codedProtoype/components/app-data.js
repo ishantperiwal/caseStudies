@@ -71,14 +71,6 @@ window.pocketSagaData = {
       "season": 1
     },
     {
-      "id": "everything-everywhere",
-      "title": "Everything Everywhere All at Once",
-      "subtitle": "Movie · 2022",
-      "artwork": "components/assets/everything-everywhere-color.jpg",
-      "scope": "Movie",
-      "mediaType": "movie"
-    },
-    {
       "id": "from",
       "title": "From",
       "subtitle": "Season 1",
@@ -87,6 +79,14 @@ window.pocketSagaData = {
       "scope": "Season 1",
       "mediaType": "series",
       "season": 1
+    },
+    {
+      "id": "coherence",
+      "title": "Coherence",
+      "subtitle": "Movie · 2013",
+      "artwork": "components/assets/coherence.jpg",
+      "scope": "Movie",
+      "mediaType": "movie"
     }
   ],
   "watchHistory": [
@@ -99,12 +99,12 @@ window.pocketSagaData = {
       "label": "Watched yesterday"
     },
     {
-      "mediaId": "everything-everywhere",
-      "label": "Watched in 2023"
-    },
-    {
       "mediaId": "from",
       "label": "Watched last month"
+    },
+    {
+      "mediaId": "coherence",
+      "label": "Watched last week"
     }
   ],
   "communities": [
@@ -135,15 +135,6 @@ window.pocketSagaData = {
       "description": "Big ideas, terrible pitches, and one very crowded house. Talk Silicon Valley, starting with the first season."
     },
     {
-      "id": "every-universe",
-      "name": "Every Universe",
-      "activeMemberCount": 83,
-      "members": "52K",
-      "joined": true,
-      "mediaId": "everything-everywhere",
-      "description": "For the tiny moments inside the multiverse. Talk family, kindness, wild details, and the scenes that made you feel everything."
-    },
-    {
       "id": "cosmic-questions",
       "name": "Cosmic Questions",
       "members": "28K",
@@ -162,13 +153,13 @@ window.pocketSagaData = {
       "description": "Great ideas, questionable decisions. Share your favourite Season 1 moments and the startup chaos that feels a little too familiar."
     },
     {
-      "id": "small-kindnesses",
-      "name": "Small Kindnesses",
-      "members": "41K",
-      "activeMemberCount": 96,
+      "id": "coherence-dinner",
+      "name": "The Other Dinner Party",
+      "members": "17K",
+      "activeMemberCount": 38,
       "joined": false,
-      "mediaId": "everything-everywhere",
-      "description": "Finding the small, human moments in Everything Everywhere All at Once. A place for rewatch discoveries and scenes that stay with you."
+      "mediaId": "coherence",
+      "description": "One dinner, too many possibilities. Compare clues, question every return to the house, and untangle Coherence together."
     }
   ],
   "posts": [
@@ -231,31 +222,6 @@ window.pocketSagaData = {
       ]
     },
     {
-      "id": "eeaao-rocks",
-      "title": "How did two rocks become the most emotional scene?",
-      "time": "8 min ago",
-      "type": "Thought",
-      "likes": 54,
-      "comments": [
-        {
-          "id": "eeaao-rocks-comment",
-          "authorId": "lm",
-          "time": "Just now",
-          "body": "The tiny movement toward the other rock got me. Even there, she still reaches for her daughter.",
-          "likes": 2,
-          "replies": []
-        }
-      ],
-      "tint": "#ba633f20",
-      "authorId": "mr",
-      "communityId": "every-universe",
-      "mediaId": "everything-everywhere",
-      "paragraphs": [
-        "After all that noise and motion, the silence feels enormous. Two rocks on a cliff somehow say more than a big speech could.",
-        "I love that the film gives Evelyn and Joy room to just exist for a moment. Did this scene land hardest for anyone else?"
-      ]
-    },
-    {
       "id": "messages",
       "title": "Cooper watching 23 years of messages broke me.",
       "time": "24 min ago",
@@ -307,32 +273,6 @@ window.pocketSagaData = {
       ]
     },
     {
-      "id": "eeaao-kindness",
-      "title": "Waymond’s kindness is the real superpower.",
-      "time": "2 hr ago",
-      "type": "Thought",
-      "likes": 91,
-      "comments": [
-        {
-          "id": "eeaao-kindness-comment",
-          "authorId": "lm",
-          "time": "Just now",
-          "body": "The ordinary version of Waymond is the one who changed how I read the whole film.",
-          "likes": 2,
-          "replies": []
-        }
-      ],
-      "tint": "#ba633f20",
-      "showGroup": true,
-      "authorId": "mr",
-      "communityId": "every-universe",
-      "mediaId": "everything-everywhere",
-      "paragraphs": [
-        "In a film where everyone can borrow extraordinary skills, Waymond keeps choosing to be gentle. That is the part I keep coming back to.",
-        "It never feels like he does not understand how hard things are. It feels like he sees it clearly and chooses kindness anyway."
-      ]
-    },
-    {
       "id": "ishant-interstellar",
       "title": "The quiet moments stayed with me the longest.",
       "time": "2 hr ago",
@@ -378,30 +318,6 @@ window.pocketSagaData = {
         "Richard has the algorithm, but Jared keeps trying to turn a house full of arguments into an actual company. His completely sincere delivery makes every scene funnier."
       ],
       "tint": "#b64d4720"
-    },
-    {
-      "id": "ishant-eeaao",
-      "title": "The laundry-and-taxes scene stayed with me.",
-      "time": "Last week",
-      "type": "Thought",
-      "likes": 47,
-      "comments": [
-        {
-          "id": "ishant-eeaao-comment",
-          "authorId": "lm",
-          "time": "Just now",
-          "body": "That scene makes the laundromat feel different when we return to it. The same life, seen with a little more tenderness.",
-          "likes": 2,
-          "replies": []
-        }
-      ],
-      "authorId": "ishant",
-      "communityId": "every-universe",
-      "mediaId": "everything-everywhere",
-      "paragraphs": [
-        "Out of every possible life, the film makes an ordinary one feel worth choosing. I expected the multiverse spectacle; I did not expect to leave thinking about the everyday moments."
-      ],
-      "tint": "#ba633f20"
     },
     {
       "id": "ishant-earth",
@@ -524,31 +440,6 @@ window.pocketSagaData = {
       ]
     },
     {
-      "id": "kindness-ordinary",
-      "title": "The ordinary universe is the one I wanted to stay in.",
-      "time": "26 min ago",
-      "type": "Thought",
-      "likes": 64,
-      "recommend": true,
-      "authorId": "ns",
-      "communityId": "small-kindnesses",
-      "mediaId": "everything-everywhere",
-      "paragraphs": [
-        "The other lives look extraordinary, but the laundromat keeps pulling me back. I love that the film finds something worth saving in a messy, ordinary day.",
-        "Did you have a favourite universe, or did the everyday one win you over too?"
-      ],
-      "comments": [
-        {
-          "id": "kindness-ordinary-comment",
-          "authorId": "mr",
-          "time": "Just now",
-          "body": "The everyday one. It feels warmer by the end, even though the problems have not magically disappeared.",
-          "likes": 5,
-          "replies": []
-        }
-      ]
-    },
-    {
       "id": "cosmic-silence",
       "title": "Which quiet scene deserves more attention?",
       "time": "33 min ago",
@@ -599,26 +490,51 @@ window.pocketSagaData = {
       ]
     },
     {
-      "id": "kindness-rewatch",
-      "title": "A rewatch made me pay more attention to Waymond.",
-      "time": "47 min ago",
-      "type": "Thought",
-      "likes": 56,
+      "id": "coherence-trust",
+      "title": "When did you stop trusting everyone at the table?",
+      "time": "35 min ago",
+      "type": "Discussion",
+      "likes": 42,
       "recommend": true,
       "authorId": "ak",
-      "communityId": "small-kindnesses",
-      "mediaId": "everything-everywhere",
+      "communityId": "coherence-dinner",
+      "mediaId": "coherence",
       "paragraphs": [
-        "The first time, I was trying to keep up with every universe. This time, I kept watching the small ways Waymond cares for people before anyone notices.",
-        "It changes the rhythm of the film when you know to look for those moments."
+        "The familiar faces are what make this so unsettling. Once I started questioning who had come back, even the smallest reaction felt suspicious.",
+        "Was there one moment that changed how you watched the rest of the dinner?"
       ],
       "comments": [
         {
-          "id": "kindness-rewatch-comment",
-          "authorId": "ns",
-          "time": "Just now",
-          "body": "Yes! His kindness is there long before the film asks us to really see it.",
-          "likes": 8,
+          "id": "coherence-trust-comment",
+          "authorId": "mr",
+          "time": "12 min ago",
+          "body": "The conversations after they return feel just slightly off. I kept wondering whether I had missed something earlier.",
+          "likes": 4,
+          "replies": []
+        }
+      ]
+    },
+    {
+      "id": "coherence-rewatch",
+      "title": "This is a film I want to rewatch with a notebook.",
+      "time": "35 min ago",
+      "type": "Thought",
+      "likes": 29,
+      "recommend": true,
+      "authorId": "lm",
+      "communityId": "coherence-dinner",
+      "mediaId": "coherence",
+      "paragraphs": [
+        "I spent the first viewing trying to keep up. Now I want to follow the little objects and choices that help everyone make sense of the night.",
+        "The best part is how much tension comes from people talking in a room. It does not need a huge spectacle to feel completely out of control."
+      ],
+      "comments": [
+        {
+          "id": "coherence-rewatch-comment",
+          "authorId": "mr",
+          "time": "12 min ago",
+          "body": "I tried tracking who left the house together. It made the next viewing even more interesting.",
+          "likes": 4,
           "replies": []
         }
       ]
@@ -627,14 +543,12 @@ window.pocketSagaData = {
   "discoverPostIds": [
     "from-road",
     "startup-house",
-    "eeaao-rocks",
-    "kindness-ordinary",
+    "coherence-trust",
     "cosmic-time",
     "messages",
     "startup-jared",
-    "kindness-rewatch",
     "silicon-demo",
     "cosmic-silence",
-    "eeaao-kindness"
+    "coherence-rewatch"
   ]
 };
