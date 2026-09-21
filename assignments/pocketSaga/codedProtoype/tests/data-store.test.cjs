@@ -1,0 +1,46 @@
+const { test } = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const root = path.resolve(__dirname, '..');
+function load() {
+  const scope = { window: {}, structuredClone };
+  vm.createContext(scope);
+  for (const file of ['app-data.js', 'data-store.js']) vm.runInContext(fs.readFileSync(path.join(root, 'components', file), 'utf8'), scope);
+  return { store: scope.window.PocketSagaData, catalog: scope.window.pocketSagaData };
+}
+test('every post resolves its own author, community, media and comments', () => {
+  const { store, catalog } = load();
+  for (const records of [catalog.people, catalog.media, catalog.communities, catalog.posts]) assert.equal(new Set(records.map(r => r.id)).size, records.length);
+  for (const record of catalog.posts) {
+    const view = store.post(record.id);
+    assert.equal(view.post.title, record.title);
+    assert.equal(view.post.author.id, record.authorId);
+    assert.equal(view.community.id, record.communityId);
+    assert.equal(view.post.commentCount, view.comments.length);
+    assert.equal(view.background, catalog.media.find(m => m.id === record.mediaId).artwork);
+    assert(fs.existsSync(path.join(root, view.background)));
+  }
+  for (const group of catalog.communities) assert(store.community(group.id).posts.every(post => post.communityId === group.id));
+  assert(store.discover().yourPosts.every(post => post.author.id === catalog.viewerId));
+  assert.throws(() => store.post('missing'), /Unknown post/);
+});
+test('publishing feeds every relevant adapter without changing seed data', () => {
+  const { store, catalog } = load();
+  const post = store.publish({ id: 'new-post', group: 'earth', mediaId: 'interstellar', title: 'A new thought', body: 'First\n\nSecond', likes: 0, comments: 0 });
+  assert.equal(store.post(post.id).post.paragraphs.length, 2);
+  assert.equal(store.community('earth').posts[0].id, post.id);
+  assert.equal(store.discover().posts[0].id, post.id);
+  assert(store.discover().yourPosts.some(p => p.id === post.id));
+  assert(!catalog.posts.some(p => p.id === post.id));
+});
+test('comments and reactions stay scoped to their post', () => {
+  const { store } = load();
+  const before = store.post('ishant-silicon').post.commentCount;
+  store.addComment('ishant-silicon', { id: 'new-comment', body: 'A thought', likes: 0 });
+  store.setLike('ishant-silicon', true, 19);
+  assert.equal(store.post('ishant-silicon').post.commentCount, before + 1);
+  assert.equal(store.post('ishant-silicon').post.likes, 19);
+  assert(!store.post('from-road').comments.some(c => c.id === 'new-comment'));
+});

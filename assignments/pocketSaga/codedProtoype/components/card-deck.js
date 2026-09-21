@@ -9,7 +9,9 @@
     const live = node('span', 'deck-announcement');
     live.setAttribute('aria-live', 'polite');
     const stage = node('div', 'deck-stage');
-    root.append(stage, live);
+    const reflections = node('div', 'deck-reflections');
+    reflections.setAttribute('aria-hidden', 'true');
+    root.append(reflections, stage, live);
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     let index = 0, cards = [], gesture = null, animation = null, blockedClick = false;
     const modulo = n => (n % items.length + items.length) % items.length;
@@ -17,7 +19,7 @@
     const pose = slot => {
       const w = width();
       if (slot <= -2) return { x: -w - 40, y: 0, scale: 1, opacity: 0 };
-      if (slot === -1) return { x: -w + 14, y: 0, scale: 1, opacity: 1 };
+      if (slot === -1) return { x: -w + 8, y: 0, scale: 1, opacity: 1 };
       if (slot === 0) return { x: 24, y: 0, scale: 1, opacity: 1 };
       return { x: 24 + slot * 19 + w * slot * .055, y: 0, scale: 1 - slot * .055, opacity: slot > 2 ? 0 : 1 - slot * .16 };
     };
@@ -30,16 +32,23 @@
         // On a reverse swipe, the previous card returns over the departing card.
         card.el.style.zIndex = String(progress < 0 && card.slot === -1 ? 7 : card.slot === 0 ? 6 : card.slot < 0 ? 5 + card.slot : 4 - card.slot);
         gsap.set(card.el, value);
-        gsap.set(card.copy, { opacity: card.slot === 0 ? 1 - t : card.slot === Math.sign(progress) ? t : 0 });
+        // An opacity below 1 on the copy wrapper creates a backdrop root and
+        // prevents the composer from blurring the artwork until settling.
+        // Fade each child instead, keeping the composer's ancestors opaque.
+        const focus = card.slot === 0 ? 1 - t : card.slot === Math.sign(progress) ? t : 0;
+        gsap.set([...card.copy.children, ...(card.watchedTag ? [card.watchedTag] : [])], { opacity: focus });
+        gsap.set(card.reflection, { x: value.x, y: (value.scale - 1) * 150, scale: value.scale, opacity: focus * .28 });
       }
       onProgress({ from: items[index], to: items[modulo(index + Math.sign(progress))], progress: Math.abs(progress) });
     }
     function build() {
       stage.replaceChildren();
+      reflections.replaceChildren();
       cards = [-2, -1, 0, 1, 2, 3].map(slot => {
         const item = items[modulo(index + slot)];
         const copy = node('div', 'watch-card-copy', [node('h2', 'watch-title', item.title), SeparatedMeta(item.subtitle, 'watch-subtitle', 'p'), Composer(viewer, 'Write your thoughts…', () => onCompose(item, el))]);
-        const el = node('article', 'watch-card glass-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), copy]);
+        const watchedTag = item.watchedLabel ? node('span', 'watch-timing', item.watchedLabel) : null;
+        const el = node('article', 'watch-card glass-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy]);
         el.setAttribute('aria-label', `Write a post about ${item.title}`);
         el.setAttribute('role', 'link');
         el.tabIndex = slot === 0 ? 0 : -1;
@@ -52,8 +61,11 @@
         el.inert = slot !== 0;
         el.setAttribute('aria-hidden', String(slot !== 0));
         el.style.pointerEvents = slot === 0 ? 'auto' : 'none';
+        const reflection = node('div', 'watch-reflection', node('div', 'watch-reflection-plane', Artwork(item.artwork, 'watch-reflection-artwork')));
+        PocketSagaMedia.apply(reflection, item.artwork);
+        reflections.append(reflection);
         stage.append(el);
-        return { el, copy, slot };
+        return { el, copy, watchedTag, reflection, slot };
       });
       root.dataset.activeIndex = String(index);
       live.textContent = `${items[index].title}, ${index + 1} of ${items.length}`;

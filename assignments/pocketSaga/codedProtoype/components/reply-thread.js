@@ -48,7 +48,6 @@
       ghost.inert = true;
       const handle = Action({ label: 'Drag down to close replies', className: 'thread-drag-handle', children: node('span', '') });
       const heading = node('h2', 'thread-heading');
-      const closeButton = Action({ label: 'Close replies', icon: 'x', className: 'thread-close sheet-close', children: '', onClick: () => close() });
       const parent = PocketSagaPost.CommentCard(comment, (action, detail) => {
         if (action === 'reply' || action === 'replies' || action === 'focus-comment') input.focus({ preventScroll: true });
         else emit(action, detail);
@@ -66,7 +65,7 @@
       content.setAttribute('aria-label', 'Reply thread');
       content.addEventListener('scroll', () => panel.classList.toggle('thread-has-scroll', content.scrollTop > 1), { passive: true });
       const viewport = node('div', 'thread-scroll-viewport', [content, node('div', 'thread-scroll-blur thread-scroll-blur-top', PocketSaga.ProgressiveBlur('top')), node('div', 'thread-scroll-blur thread-scroll-blur-bottom', PocketSaga.ProgressiveBlur('bottom'))]);
-      const inner = node('div', 'thread-panel-inner', [handle, node('header', 'thread-header', [heading, closeButton]), viewport]);
+      const inner = node('div', 'thread-panel-inner', [handle, node('header', 'thread-header', [heading]), viewport]);
       panel.append(surface); panel.append(inner);
       const composer = PocketSaga.MessageComposer(data.viewer, `Reply to ${comment.author.name.split(' ')[0]}…`, 'thread-composer');
       const input = composer.querySelector('.message-input');
@@ -133,12 +132,12 @@
         gsap.set(composer, { opacity: 1, y: 0 });
         ghost.style.visibility = 'hidden';
         resizePanel();
-        (focusComposer ? input : keyboardOpened ? closeButton : overlay).focus({ preventScroll: true });
+        (focusComposer ? input : keyboardOpened ? handle : overlay).focus({ preventScroll: true });
       } else state.animation = gsap.timeline({ onComplete: () => {
         if (active !== state || state.closing) return;
         ghost.style.visibility = 'hidden';
         resizePanel();
-        (focusComposer ? input : keyboardOpened ? closeButton : overlay).focus({ preventScroll: true });
+        (focusComposer ? input : keyboardOpened ? handle : overlay).focus({ preventScroll: true });
       } })
         .to(scrim, { opacity: 1, duration: reduced.matches ? 0 : .3 }, 0)
         .to(surface, { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: 24, duration, ease: focusEase, force3D: true }, 0)

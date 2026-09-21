@@ -1,5 +1,16 @@
 /* In-phone route stack shared by standalone discovery, community and post previews. */
 (() => {
+  // Shared interaction types and route assignments. Tune activity motion here
+  // so every screen using it enters and returns with the same behavior.
+  const transitions = {
+    activity: {
+      duration: .4,
+      easing: '0.6,0,0.25,1',
+      foreground: { xPercent: 100, scale: .88, opacity: 1, borderRadius: 48, filter: 'blur(0px)' },
+      backdrop: { xPercent: 0, scale: .92, opacity: .8, borderRadius: 40, filter: 'blur(5px)' }
+    }
+  };
+  const routeTransitions = { 'create-post': 'activity', post: 'activity', community: 'activity' };
   function attach(page, postData, communityData = window.communityPageData) {
     const { node } = PocketSaga;
     const screen = page.querySelector('.phone-screen');
@@ -17,6 +28,7 @@
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const historyKey = `pocketsaga-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const ease = CustomEase.create('pageNavigation', '0.6,0,0.25,1');
+    const activityEase = CustomEase.create('activityNavigation', transitions.activity.easing);
     function routeFor(path) {
       const key = path.join('/');
       if (routes.has(key)) return routes.get(key);
@@ -29,7 +41,8 @@
         element = view.element;
         cleanup = view.destroy;
       } else {
-        const data = structuredClone(kind === 'post' ? postData : communityData);
+        const id = token.split(':')[1];
+        const data = kind === 'post' ? PocketSagaData.post(id || postData.post.id) : PocketSagaData.community(id || communityData.community.id);
         element = kind === 'post' ? PocketSagaPost.PostPage(data) : PocketSaga.CommunityPage(data);
         cleanup = () => {};
         setup = () => kind === 'post' ? PocketSagaPost.setup(element, data) : PocketSaga.setupCommunity(element);
@@ -40,7 +53,7 @@
       screen.append(element);
       gsap.set(element, { xPercent: 100 });
       if (setup) cleanup = setup();
-      const route = { element, path, cleanup, opener: null };
+      const route = { element, path, cleanup, opener: null, transition: routeTransitions[kind] || 'slide' };
       routes.set(key, route);
       return route;
     }
@@ -59,30 +72,67 @@
         route.element.setAttribute('aria-hidden', String(route !== next));
       }
       next.element.inert = false;
-      if (forward) gsap.set(next.element, { xPercent: 100, opacity: 1 });
+      if (forward) gsap.set(next.element, { xPercent: 100, scale: 1, opacity: 1, clearProps: 'borderRadius,transformOrigin,filter' });
       next.element.style.zIndex = String(path.length + 1);
       previous.element.style.zIndex = String(previous.path.length + 1);
-      const editorTransition = (forward ? next : previous).element.classList.contains('navigation-create-post');
-      const duration = reduced.matches ? 0 : editorTransition ? .35 : forward ? .54 : .46;
+      const activityTransition = (forward ? next : previous).transition === 'activity';
+      const duration = reduced.matches ? 0 : activityTransition ? transitions.activity.duration : forward ? .54 : .46;
       const complete = () => {
         if (current !== next) return;
         previous.element.hidden = true;
+        gsap.set(next.element, { scale: 1, clearProps: 'borderRadius,transformOrigin,filter' });
         next.element.removeAttribute('aria-hidden');
+        // Retained feeds keep their scroll position while reflecting detail edits.
+        for (const card of next.element.querySelectorAll('.post-card')) {
+          if (!PocketSagaData.hasPost(card.dataset.postId)) continue;
+          const post = PocketSagaData.post(card.dataset.postId).post;
+          const like = card.querySelector('.like-action');
+          if (like) {
+            like.replaceChildren(PocketSaga.Icon('heart'), String(post.likes));
+            like.setAttribute('aria-label', `${post.likes} likes`);
+            like.setAttribute('aria-pressed', String(Boolean(post.liked)));
+          }
+          const comment = card.querySelector('.reaction-bar button:not(.like-action)');
+          if (comment) {
+            comment.replaceChildren(PocketSaga.Icon('message-circle'), String(post.commentCount));
+            comment.setAttribute('aria-label', `${post.commentCount} comments`);
+          }
+        }
         const focus = !forward && previous.opener?.isConnected ? previous.opener : next.element.querySelector('.feed-scroll');
         focus?.focus({ preventScroll: true });
       };
+      if (activityTransition) {
+        const { foreground, backdrop } = transitions.activity;
+        // Treat the incoming route as an activity above the retained screen. Keep
+        // the backdrop pose cached so Back can reverse the same movement.
+        gsap.set((forward ? next : previous).element, { transformOrigin: 'right center' });
+        if (forward) {
+          // GSAP mutates vars (set adds duration: 0). Never pass the shared
+          // pose itself, or subsequent Back tweens inherit that zero duration.
+          gsap.set(next.element, { ...foreground });
+          gsap.set(previous.element, { transformOrigin: 'center center' });
+        }
+        animation = gsap.timeline({ onComplete: complete, defaults: { duration, ease: activityEase } })
+          .to(next.element, { xPercent: 0, scale: 1, opacity: 1, borderRadius: 0, filter: 'blur(0px)' }, 0)
+          .to(previous.element, { ...(forward ? backdrop : foreground) }, 0);
+        return;
+      }
       animation = gsap.timeline({ onComplete: complete })
-        .to(next.element, { xPercent: 0, opacity: 1, duration, ease }, 0)
+        .to(next.element, { xPercent: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration, ease }, 0)
         .to(previous.element, { xPercent: forward ? -14 : 100, opacity: forward ? .72 : 1, duration, ease }, 0);
     }
     function navigate(kind, sourcePost, media = null, source = null) {
       if (kind === 'community' && !communityData) return;
       if (animation?.isActive()) return;
       if (kind === 'create-post' && !window.PocketSagaCreatePost) return;
-      const token = kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}` : kind;
+      const id = sourcePost?.id || (kind === 'post' ? postData.post.id : communityData?.community.id);
+      const token = kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}` : `${kind}:${id}`;
       const path = [...current.path, token];
+      // Reopening a record gets fresh store data; ancestors stay mounted for Back.
+      const stale = routes.get(path.join('/'));
+      if (stale) { stale.cleanup?.(); stale.element.remove(); routes.delete(path.join('/')); }
       const opener = sourcePost ? [...current.element.querySelectorAll('.post-card')].find(card => card.dataset.postId === sourcePost.id) : document.activeElement;
-      history.pushState({ ...history.state, pocketSagaNavigation: historyKey, pocketSagaRoutes: path }, '', `#${kind}`);
+      history.pushState({ ...history.state, pocketSagaNavigation: historyKey, pocketSagaRoutes: path }, '', `#${token}`);
       show(path, source || opener);
     }
     function back() {
@@ -95,18 +145,38 @@
       }
     }
     const onAction = event => {
-      const { action, post, media, source } = event.detail;
+      const { action, post, media, source, group, community } = event.detail;
       if (['open-post', 'comments'].includes(action)) navigate('post', post);
-      else if (action === 'community') navigate('community');
+      else if (action === 'community') navigate('community', group || community);
       else if (action === 'create-post') navigate('create-post', null, media, source);
-      else if (action === 'publish') { page.dispatchEvent(new CustomEvent('draft-published', { detail: { post } })); back(); }
+      else if (action === 'publish') {
+        page.dispatchEvent(new CustomEvent('draft-published', { detail: { post } }));
+        // Replace the editor with the post, retaining its parent for Back.
+        const draftRoute = current;
+        current = routeFor(current.path.slice(0, -1));
+        draftRoute.element.hidden = true;
+        const path = [...current.path, `post:${post.id}`];
+        history.replaceState({ ...history.state, pocketSagaNavigation: historyKey, pocketSagaRoutes: path }, '', `#post:${post.id}`);
+        show(path, draftRoute.opener);
+      }
       else if (action === 'back') back();
+    };
+    const validToken = token => {
+      if (typeof token !== 'string') return false;
+      const [kind, id] = token.split(':');
+      if (kind === 'post') return !id || PocketSagaData.hasPost(id);
+      if (kind === 'community') return !id || PocketSagaData.hasCommunity(id);
+      return Boolean(window.PocketSagaCreatePost) && /^create-post(?::[a-z0-9_-]+:[0-9-]+)?$/.test(token);
     };
     const readPath = () => {
       const saved = history.state?.pocketSagaRoutes;
-      if (Array.isArray(saved) && saved.every(kind => typeof kind === 'string' && (['post', 'community'].includes(kind) || (window.PocketSagaCreatePost && /^create-post(?::[a-z0-9_-]+:[0-9-]+)?$/.test(kind))))) return saved;
-      const hashes = ['#post', '#community', ...(window.PocketSagaCreatePost ? ['#create-post'] : [])];
-      return hashes.includes(location.hash) ? [location.hash.slice(1)] : [];
+      if (Array.isArray(saved)) {
+        const path = [];
+        for (const token of saved) { if (!validToken(token)) break; path.push(token); }
+        return path;
+      }
+      const token = location.hash.slice(1);
+      return validToken(token) ? [token] : [];
     };
     const onHistory = () => show(readPath());
     const events = ['discover-action', 'community-action', 'post-action', 'create-post-action'];
@@ -126,5 +196,5 @@
     page.addEventListener('preview-unmount', destroy, { once: true });
     return { open: () => navigate('post'), openCommunity: () => navigate('community'), back, destroy };
   }
-  window.PocketSagaNavigation = { attach };
+  window.PocketSagaNavigation = { attach, transitions, routeTransitions };
 })();

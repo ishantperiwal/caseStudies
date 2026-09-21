@@ -24,11 +24,11 @@
 /* Replace old edge shadows so the shared highlight never stacks up. */
 .phone-case .discover-post::after {
   padding: 1.4px;
-  background: radial-gradient(ellipse at bottom right, #ffffff12, #ffffff06 12%, #ffffff02 34%, transparent 58%), var(--surface-edge);
+  background: radial-gradient(ellipse at bottom right, rgb(255 255 255 / 5%), #ffffff06 12%, #ffffff02 34%, transparent 58%), var(--surface-edge);
   z-index: 2;
 }
 /* Scaled deck surfaces use a soft inset edge instead of a subpixel mask cutout. */
-.phone-case .post-card::before {
+.phone-case :is(.post-card, .discover-group-row)::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -39,12 +39,12 @@
   opacity: 0;
   transition: opacity .18s ease-out;
 }
-.phone-case .post-card { transition: scale .18s cubic-bezier(.6, 0, .25, 1); }
-.phone-case .post-card.is-pressed { scale: .985; transition-duration: .085s; }
-.phone-case .post-card.is-pressed::before { opacity: 1; transition-duration: .085s; }
+.phone-case :is(.post-card, .discover-group-row) { transition: scale .18s cubic-bezier(.6, 0, .25, 1); }
+.phone-case :is(.post-card, .discover-group-row).is-pressed { scale: .985; transition-duration: .085s; }
+.phone-case :is(.post-card, .discover-group-row).is-pressed::before { opacity: 1; transition-duration: .085s; }
 @media (prefers-reduced-motion: reduce) {
-  .phone-case .post-card, .phone-case .post-card::before { transition: none; }
-  .phone-case .post-card.is-pressed { scale: 1; }
+  .phone-case .post-card, .phone-case :is(.post-card, .discover-group-row)::before { transition: none; }
+  .phone-case :is(.post-card, .discover-group-row).is-pressed { scale: 1; }
 }
 
 .phone-case .watch-card::after,
@@ -109,3 +109,15 @@
   box-shadow: none;
 }
 .phone-case .animated-selection > button.is-selected::after { content: none; }
+
+/* Shared mint glass for primary actions and the selected bottom tab. */
+.phone-case :is(.membership-action.membership-join, .bottom-navigation .glass-choice.is-selected, .discover-write) {
+  background-color: rgb(128 213 169 / 25%);
+  color: #e3f8eb;
+  background-image: var(--surface-light);
+  --surface-light: linear-gradient(155deg, #c8f3dc38, #91d9b20a 45%, #70c99a20);
+  --surface-edge: linear-gradient(155deg, #d5ffe99c, #80efb530 38%, #5de29d0d 70%, #a5ffd34d);
+  -webkit-backdrop-filter: blur(18px) saturate(1.25);
+  backdrop-filter: blur(18px) saturate(1.25);
+  box-shadow: inset 0 1px 1px #e1ffec38, inset 0 -1px 1px #79efaf14, 0 3px 12px #00000018;
+}

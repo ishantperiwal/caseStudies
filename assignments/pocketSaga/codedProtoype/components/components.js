@@ -37,8 +37,10 @@
     return button;
   }
   function Avatar(person, large = false) {
-    const el = node('span', `avatar${large ? ' avatar-large' : ''}`, person.initials);
-    if (person.color) el.style.backgroundColor = person.color;
+    const el = node('span', `avatar${large ? ' avatar-large' : ''}`);
+    el.innerHTML = PocketSagaAvatars.render(person);
+    el.setAttribute('role', 'img');
+    el.setAttribute('aria-label', `${person.name}'s avatar`);
     return el;
   }
   function Artwork(src, className, alt = '') {
@@ -73,6 +75,7 @@
   function AtmosphericBackground(src) {
     const el = node('div', 'atmosphere', [src && Artwork(src, 'atmosphere-image'), node('div', 'atmosphere-veil')]);
     el.setAttribute('aria-hidden', 'true');
+    PocketSagaMedia.apply(el, src);
     return el;
   }
   function PhoneFrame({ device = {}, background, content }) {
@@ -83,9 +86,9 @@
   }
   function CommunityHeader(community, labels, emit) {
     return node('section', 'community-header', [
-      node('div', 'community-identity', [community.artwork && Artwork(community.artwork, 'community-artwork'), node('div', 'community-titles', [SeparatedMeta(community.context, 'community-context', 'p'), node('h1', 'community-name', community.name), node('p', 'community-membership', community.membership)])]),
+      node('div', 'community-identity', [community.artwork && Artwork(community.artwork, 'community-artwork'), node('div', 'community-titles', [node('h1', 'community-name', community.name), SeparatedMeta(community.context, 'community-context', 'p')])]),
       node('p', 'community-description', community.description),
-      node('div', 'membership-actions', [Action({ label: community.joined ? labels.joined : labels.join, icon: community.joined ? 'check' : null, className: 'membership-action', onClick: () => emit('membership', { community }) }), Action({ label: 'Community options', icon: 'ellipsis', className: 'round-action', children: '', onClick: () => emit('options', { community }) })])
+      node('div', 'membership-actions', [Action({ label: community.joined ? labels.joined : labels.join, icon: community.joined ? 'check' : null, className: `membership-action${community.joined ? '' : ' membership-join'} tap-feedback`, onClick: () => emit('membership', { community }) }), Action({ label: `${community.members} members`, icon: 'users', className: 'membership-action membership-count tap-feedback', children: [community.members, Icon('chevron-down')], onClick: () => emit('members', { community }) }), Action({ label: 'Community options', icon: 'ellipsis', className: 'round-action', children: '', onClick: () => emit('options', { community }) })])
     ]);
   }
   function Composer(viewer, label, emit) {
@@ -112,7 +115,7 @@
     return node('div', 'media-attachment', [attachment.artwork && Artwork(attachment.artwork, 'attachment-artwork'), node('div', 'attachment-details', [node('p', 'attachment-title', attachment.title), SeparatedMeta(attachment.subtitle, 'attachment-subtitle', 'p')]), Action({ label: attachment.action || 'Open', icon: 'play', className: 'attachment-action', onClick: () => emit('attachment', { post, attachment }) })]);
   }
   function ReactionBar(post, emit) {
-    return node('footer', 'reaction-bar', [Action({ label: `${post.likes ?? 0} likes`, icon: 'heart', className: 'like-action', children: String(post.likes ?? 0), onClick: () => emit('like', { post }) }), Action({ label: `${post.comments ?? 0} comments`, icon: 'message-circle', children: String(post.comments ?? 0), onClick: () => emit('comments', { post }) })]);
+    return node('footer', 'reaction-bar', [Action({ label: `${(post.likes ?? 0) + Number(Boolean(post.liked))} likes`, icon: 'heart', className: 'like-action', children: String((post.likes ?? 0) + Number(Boolean(post.liked))), onClick: () => emit('like', { post }) }), Action({ label: `${post.comments ?? 0} comments`, icon: 'message-circle', children: String(post.comments ?? 0), onClick: () => emit('comments', { post }) })]);
   }
   function PostCard(post, context, emit) {
     const el = node('article', 'post-card', [AuthorMeta(post), node('div', 'post-copy', [node('h3', 'post-title', post.title), node('p', 'post-body', post.body)]), post.attachment && MediaAttachment(post.attachment, post, emit), ReactionBar(post, emit)]);
@@ -126,7 +129,7 @@
       el.classList.remove('is-pressed');
     };
     el.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || event.target.closest('button, a, input, textarea')) return;
+      if (event.button !== 0 || event.target.closest('button, a, input, textarea') || event.target.closest('[role="link"]') !== el) return;
       pressStart = { x: event.clientX, y: event.clientY };
       el.classList.add('is-pressed');
     });
@@ -135,7 +138,7 @@
     });
     for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture']) el.addEventListener(event, releasePress);
     el.addEventListener('click', event => {
-      if (event.target.closest('button, a, input, textarea') || window.getSelection()?.toString()) return;
+      if (event.target.closest('button, a, input, textarea') || event.target.closest('[role="link"]') !== el || window.getSelection()?.toString()) return;
       emit('open-post', { post });
     });
     el.addEventListener('keydown', event => {

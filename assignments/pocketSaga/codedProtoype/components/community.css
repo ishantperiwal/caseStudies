@@ -11,8 +11,8 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .phone-screen { position: relative; aspect-ratio: 412 / 896; border-radius: 46px; isolation: isolate; overflow: hidden; background: var(--background); box-shadow: 0 0 0 3px #050606; }
 .phone-case p, .phone-case h1, .phone-case h2, .phone-case h3 { margin: 0; }
 .atmosphere { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.atmosphere-image { position: absolute; inset: -25px; width: calc(100% + 50px); height: calc(100% + 50px); object-fit: cover; opacity: .58; filter: blur(23px) brightness(var(--ambient-brightness, 1)); }
-:is(.community-page, .discover-page) { --ambient-brightness: .68; }
+.atmosphere-image { position: absolute; inset: -25px; width: calc(100% + 50px); height: calc(100% + 50px); object-fit: cover; opacity: .58; filter: blur(23px) saturate(1.1) brightness(var(--ambient-brightness, 1)); }
+:is(.community-page, .discover-page) { --ambient-brightness: .72; }
 .atmosphere-veil { position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--background) 64%, transparent), color-mix(in srgb, var(--background) 76%, transparent) 35%, color-mix(in srgb, var(--background) 91%, transparent) 78%, color-mix(in srgb, var(--background) 96%, transparent)); }
 .feed-scroll { position: relative; z-index: auto; height: 100%; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 0 16px 64px; scroll-padding-top: 67px; display: flex; flex-direction: column; gap: 24px; }
 .feed-scroll > * { flex-shrink: 0; }
@@ -47,13 +47,16 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .community-context { color: var(--accent); font-size: 12px; font-weight: 500; }
 .community-name { font-family: Newsreader, Georgia, serif; font-size: 28px; font-weight: 500; overflow-wrap: anywhere; }
 .community-membership { color: var(--muted); font-size: 12px; }
-.community-description { color: var(--muted); font-size: 13px; line-height: 20px; }
+.community-description { color: var(--muted); font-size: 13px; line-height: 22px; }
 .membership-actions { display: flex; gap: 12px; }
 .membership-action { flex: 1; border-radius: 22px; gap: 12px; padding: 0 16px; background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 13px; font-weight: 600; }
 .membership-action .icon { width: 16px; height: 16px; color: var(--accent); }
+.membership-count { background-color: var(--control); gap: 8px; }
 .composer { width: 100%; padding: 16px; gap: 10px; border-radius: var(--radius-card); background: var(--surface); justify-content: flex-start; text-align: left; }
 .composer-label { color: var(--muted); font-size: 14px; }
 .avatar { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; background: #5b5550; font-size: 9px; font-weight: 500; }
+.avatar { overflow: hidden; }
+.avatar > svg { display: block; width: 100%; height: 100%; }
 .avatar-large { width: 32px; height: 32px; font-size: 11px; font-weight: 700; }
 .feed-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .feed-heading { font-size: 18px; font-weight: 600; }
@@ -63,8 +66,8 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .post-card { display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 6px; background: linear-gradient(145deg, #ffffff08 0%, #ffffff02 48%, transparent 75%), var(--surface); border-radius: var(--radius-card); box-shadow: inset 0 1px 0 #ffffff12, inset 1px 0 0 #ffffff07, inset -1px 0 0 #ffffff04, inset 0 -1px 0 #ffffff04; overflow: hidden; }
 .post-context { font-size: 12px; font-weight: 600; color: var(--accent); }
 .post-copy { display: flex; flex-direction: column; gap: 8px; }
-.post-title { font-family: Newsreader, Georgia, serif; font-size: 22px; line-height: 25px; font-weight: 500; overflow-wrap: anywhere; }
-.post-body { font-size: 13px; line-height: 20px; color: var(--body); overflow-wrap: anywhere; }
+.post-title { font-family: Newsreader, Georgia, serif; font-size: 22px; line-height: 28px; font-weight: 500; overflow-wrap: anywhere; }
+.post-body { font-size: 13px; line-height: 22px; color: var(--body); overflow-wrap: anywhere; }
 .author-meta { display: flex; gap: 9px; align-items: center; }
 .author-details { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; color: var(--muted); }
 .author-name { font-size: 11px; font-weight: 500; }
@@ -137,3 +140,10 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 
 .message-composer { transition: background-color .16s ease; }
 @media (prefers-reduced-motion: reduce) { .message-composer { transition: none; } }
+
+/* Applied by the shared two-state media classifier. */
+.atmosphere .atmosphere-veil { opacity: var(--atmosphere-veil-opacity, .92); }
+
+.membership-count .icon-chevron-down { width: 12px; height: 12px; transform: rotate(-90deg); }
+
+.membership-action.membership-join .icon { color: currentColor; }

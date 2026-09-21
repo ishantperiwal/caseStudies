@@ -9,11 +9,27 @@
       onJoin(group);
     } });
     button.setAttribute('aria-pressed', String(group.joined));
-    const row = node('div', 'discover-group-row glass-surface', [Artwork(group.artwork, 'discover-group-artwork', `${group.name} artwork`), node('div', 'discover-group-copy', [node('span', 'group-name', group.name), node('span', 'group-eyebrow', `${group.members} members`)]), button]);
+    const count = Math.max(0, group.activeMemberCount || 0);
+    const activity = node('span', 'group-activity', [Icon('users'), `${count.toLocaleString()} online`, Icon('chevron-down')]);
+    activity.setAttribute('aria-label', `${count.toLocaleString()} ${count === 1 ? 'member' : 'members'} online now`);
+    const row = node('div', 'discover-group-row glass-surface', [Artwork(group.artwork, 'discover-group-artwork', `${group.name} artwork`), node('div', 'discover-group-copy', [node('span', 'group-name', group.name), node('span', 'group-eyebrow', `${group.members} members`)]), group.joined && !recommended ? activity : button]);
     row.tabIndex = 0;
     row.setAttribute('role', 'link');
     row.setAttribute('aria-label', `Open ${group.name}`);
     row.dataset.groupId = group.id;
+    let pressStart = null;
+    const releasePress = () => { pressStart = null; row.classList.remove('is-pressed'); };
+    row.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || event.target.closest('button')) return;
+      event.stopPropagation();
+      pressStart = { x: event.clientX, y: event.clientY };
+      row.classList.add('is-pressed');
+    });
+    row.addEventListener('pointermove', event => {
+      if (pressStart && Math.hypot(event.clientX - pressStart.x, event.clientY - pressStart.y) > 8) releasePress();
+    });
+    for (const event of ['pointerup', 'pointercancel', 'pointerleave', 'lostpointercapture', 'blur']) row.addEventListener(event, releasePress);
+
     row.addEventListener('click', event => {
       if (event.target.closest('button')) return;
       event.stopPropagation();
@@ -39,6 +55,7 @@
     let page, deck, feedTransition, activeTab = 'For you';
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const localPosts = [];
+    const ownPosts = (data.yourPosts || []);
     const emit = (action, detail = {}) => {
       handlers[action]?.(detail);
       page.dispatchEvent(new CustomEvent('discover-action', { bubbles: true, detail: { action, ...detail } }));
@@ -64,8 +81,7 @@
       card.classList.add('discover-post');
       const artwork = post.artwork || group?.artwork;
       if (artwork) {
-        const brightness = post.artworkBrightness ?? group?.artworkBrightness;
-        if (brightness != null) card.style.setProperty('--card-artwork-brightness', String(brightness));
+        PocketSagaMedia.apply(card, artwork);
         const ambience = node('div', 'discover-post-atmosphere', [Artwork(artwork, 'discover-post-artwork'), node('div', 'discover-post-veil')]);
         ambience.setAttribute('aria-hidden', 'true');
         card.prepend(ambience);
@@ -93,7 +109,7 @@
     function renderFeed() {
       if (activeTab === 'Your groups') list.replaceChildren(...data.groups.filter(group => group.joined).map(group => node('article', 'discover-group-card glass-surface', GroupRow(group, () => renderFeed(), false, group => emit('community', { group })))));
       else {
-        const posts = activeTab === 'Your posts' ? localPosts : [...localPosts, ...data.posts];
+        const posts = activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
         list.replaceChildren(...(posts.length ? posts.map(renderPost) : [node('p', 'empty-feed', 'Your thoughts belong here. Write about something you’ve watched.')]));
       }
     }
@@ -111,6 +127,9 @@
         const weight = from.id === to.id ? Number(id === from.id) : id === from.id ? 1 - progress : id === to.id ? progress : 0;
         image.style.opacity = String(.58 * weight);
       }
+      const fromVeil = PocketSagaMedia.get(from.artwork).pageVeil;
+      const toVeil = PocketSagaMedia.get(to.artwork).pageVeil;
+      page?.querySelector('.atmosphere')?.style.setProperty('--atmosphere-veil-opacity', String(fromVeil + (toVeil - fromVeil) * progress));
     } });
     const tabs = node('div', 'discover-tabs', ['For you','Your posts','Your groups'].map(label => Action({ label, className: `discover-tab glass-choice tap-feedback${label === activeTab ? ' is-selected' : ''}`, onClick: event => {
       if (activeTab === label) return;
@@ -139,6 +158,7 @@
     baseTint.setAttribute('aria-hidden', 'true');
     page.querySelector('.phone-screen').prepend(baseTint);
     const atmosphere = page.querySelector('.atmosphere');
+    PocketSagaMedia.apply(atmosphere, data.history[0].artwork);
     data.history.forEach((item, index) => {
       const image = index === 0 ? atmosphere.querySelector('.atmosphere-image') : Artwork(item.artwork, 'atmosphere-image');
       image.style.opacity = index === 0 ? '.58' : '0';
@@ -162,12 +182,13 @@
     updateAtmosphere();
     const greeting = node('h1', '', 'Hi, ' + data.viewer.name);
     const headingSlot = node('div', 'discover-heading-slot', greeting);
-    const header = node('header','page-navigation discover-navigation',[headingSlot,node('div','discover-utilities',[Action({label:'Create a post',icon:'square-pen',className:'round-action',children:'',onClick:()=>compose()}),Action({label:'Notifications, 3 unread',icon:'bell',className:'round-action',children:node('span','notification-count','3'),onClick:()=>toast('You’re all caught up in this preview.')})])]);
+    const header = node('header','page-navigation discover-navigation',[headingSlot,node('div','discover-utilities',[Action({label:'Notifications, 3 unread',icon:'bell',className:'round-action',children:node('span','notification-count','3'),onClick:()=>toast('You’re all caught up in this preview.')}),Action({label:'Create a post',icon:'square-pen',className:'round-action discover-write',children:'',onClick:()=>compose()})])]);
     page.querySelector('.phone-screen').append(header, BottomNavigation((action,detail)=>{ emit(action,detail); if(detail.destination!=='Community')toast(`${detail.destination} will be connected later.`); }), announce);
-    const undockTabs = PocketSagaMotion.dockTabs({ scroller, anchor: tabAnchor, tabs, slot: headingSlot, greeting, utilities: header.querySelector('.discover-utilities') });
+    const undockTabs = PocketSagaMotion.dockTabs({ scroller, anchor: tabAnchor, tabs, slot: headingSlot, greeting, utilities: header.querySelector('.discover-utilities'), headerManaged: true });
+    const stopCarouselCollapse = PocketSagaMotion.collapseCarousel({ scroller, carousel: deck.element, anchor: tabAnchor, slot: headingSlot, tabs, headerElements: [greeting, header.querySelector('.discover-utilities')] });
     const stopAutoHide = PocketSagaMotion.autoHideNavigation({ scroller, navigation: page.querySelector('.bottom-navigation-area') });
     renderFeed();
-    return { element: page, destroy() { page.removeEventListener('draft-published', onPublished); stopAutoHide(); undockTabs(); deck.destroy(); selection.destroy(); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
+    return { element: page, destroy() { page.removeEventListener('draft-published', onPublished); stopAutoHide(); stopCarouselCollapse(); undockTabs(); deck.destroy(); selection.destroy(); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
   }
   window.PocketSagaDiscover = { GroupRow, BottomNavigation, DiscoverPage, mount(target,data,handlers) { const view = DiscoverPage(data,handlers); return PocketSaga.mountPage(target,view.element,()=>view.destroy); } };
 })();

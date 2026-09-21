@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PocketSaga · Avatar preview</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #000; color: #eef2e9; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    main { max-width: 1160px; margin: auto; padding: 88px 32px 64px; }
+    header { margin-bottom: 52px; }
+    .eyebrow { margin: 0 0 16px; color: #bde0ca; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 0 0 12px; font-size: clamp(28px, 4vw, 42px); font-weight: 550; letter-spacing: -.04em; }
+    .intro { margin: 0; color: #89918c; font-size: 15px; line-height: 1.5; }
+    .generated-study { margin: 0 0 48px; }
+    .generated-study img { display: block; width: 100%; height: auto; }
+    .generated-study figcaption { color: #89918c; font-size: 13px; line-height: 1.5; }
+    .avatars { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 28px; list-style: none; padding: 0; margin: 0; }
+    .portrait { display: block; width: 100%; aspect-ratio: 1; border-radius: 22%; overflow: hidden; }
+    svg { display: block; width: 100%; height: 100%; }
+    h2 { font-size: 16px; font-weight: 500; margin: 20px 0 6px; }
+    .description { color: #7e8780; font-size: 12px; margin: 0; }
+    .sizes { display: flex; align-items: center; gap: 14px; margin-top: 25px; min-height: 48px; }
+    .sample { border-radius: 50%; overflow: hidden; flex-shrink: 0; }
+    .size-note { margin: 42px 0 0; font-size: 12px; color: #69716b; }
+    @media (max-width: 850px) { .avatars { grid-template-columns: repeat(3,minmax(0,1fr)); row-gap: 42px; } }
+    @media (max-width: 520px) { main { padding: 48px 24px; } header { margin-bottom: 34px; } .avatars { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 36px 24px; } .sizes { gap: 10px; } }
+  </style>
+  <script src="components/app-data.js" defer></script>
+  <script defer src="components/avatars.js"></script>
+  <script defer src="components/avatar-preview.js"></script>
+</head>
+<body>
+  <main>
+    <header>
+      <p class="eyebrow">PocketSaga / Profile studies</p>
+      <h1>A familiar little face.</h1>
+      <p class="intro">One simple family. A little personality for everyone.</p>
+    </header>
+    <ul class="avatars" aria-label="Profile avatar concepts"></ul>
+    <p class="size-note">Live shared avatars · circle previews at 48, 32 and 24px. These same characters appear throughout the app.</p>
+<details style="margin-top:48px"><summary style="color:#89918c;cursor:pointer">Earlier explorations</summary>    <figure class="generated-study">
+      <img src="components/assets/avatar-character-concept.png" alt="Five abstract illustrated avatar characters in mint, rose, blue, amber and lilac with distinct silhouettes and expressions">
+      <figcaption>Direction 02 · illustrated characters, soft grain and distinct silhouettes.</figcaption>
+    </figure>
+    <figure class="generated-study">
+      <img src="components/assets/avatar-clay-concept.png" alt="Five textured clay avatar concepts in mint, rose, blue, amber and lilac, each with a different expression">
+      <figcaption>Image-generated exploration · soft clay and expressive faces. Current shared avatars below.</figcaption>
+    </figure>
+</details>
+  </main>
+</body>
+</html>

@@ -29,7 +29,6 @@
     const card = node('article', 'comment-card', [
       node('header', 'comment-author', [Avatar(comment.author), node('span', 'comment-name', comment.author.name), node('span', 'comment-time', comment.time), Action({ label: `Options for ${comment.author.name}’s comment`, icon: 'ellipsis', className: 'comment-options', children: '', onClick: () => emit('comment-options', { comment }) })]),
       node('p', 'comment-body', comment.body),
-      comment.translation && Action({ label: comment.translation, children: SeparatedMeta(comment.translation), className: 'comment-translation', onClick: () => emit('translation', { comment }) }),
       node('footer', 'comment-actions', [LikeButton(comment, emit), Action({ label: `Reply to ${comment.author.name}`, children: 'Reply', className: 'comment-reply', onClick: () => emit('reply', { comment }) }), comment.replyCount && Action({ label: `${comment.replyCount} replies`, className: 'comment-reply-count', onClick: () => emit('replies', { comment }) })])
     ]);
     card.dataset.commentId = comment.id;
@@ -49,7 +48,7 @@
   }
   function CommentsSection(data, emit) {
     return node('section', 'comments-section', [
-      node('div', 'comments-toolbar', [node('h2', 'comments-heading', `${data.post.commentCount} Comments`), Action({ label: 'Recent first', icon: 'list-filter', className: 'comment-sort', children: '', onClick: () => emit('sort', {}) })]),
+      node('div', 'comments-toolbar', [node('h2', 'comments-heading', `${data.post.commentCount} ${data.post.commentCount === 1 ? 'Comment' : 'Comments'}`), Action({ label: 'Recent first', icon: 'list-filter', className: 'comment-sort', children: '', onClick: () => emit('sort', {}) })]),
       node('div', 'comment-list', data.comments.slice(0, pageSize(data)).map(comment => CommentCard(comment, emit))),
       node('div', 'comments-page-sentinel')
     ]);
@@ -57,6 +56,9 @@
   function PostPage(data, handlers = {}) {
     let page;
     const emit = (action, detail) => {
+      if (action === 'like' && detail.item.id === data.post.id && PocketSagaData.hasPost(data.post.id)) PocketSagaData.setLike(data.post.id, detail.liked, detail.count);
+      if (action === 'send-reply') (detail.comment.replies ||= []).push(detail.reply);
+      if (action === 'send-comment' && PocketSagaData.hasPost(data.post.id)) PocketSagaData.addComment(data.post.id, detail.comment);
       handlers[action]?.(detail);
       page.dispatchEvent(new CustomEvent('post-action', { bubbles: true, detail: { action, ...detail } }));
     };
@@ -79,7 +81,7 @@
       const comment = { id: `local-comment-${Date.now()}`, author: data.viewer, time: 'Just now', body, likes: 0 };
       page.querySelector('.comment-list').prepend(CommentCard(comment, emit));
       post.commentCount += 1;
-      page.querySelector('.comments-heading').textContent = `${post.commentCount} Comments`;
+      page.querySelector('.comments-heading').textContent = `${post.commentCount} ${post.commentCount === 1 ? 'Comment' : 'Comments'}`;
       input.value = '';
       composer.querySelector('.message-send').disabled = true;
       emit('send-comment', { comment });

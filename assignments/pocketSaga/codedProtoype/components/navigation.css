@@ -7,4 +7,5 @@
 .navigation-route > .phone-screen { height: 100%; aspect-ratio: auto; border-radius: inherit; box-shadow: none; }
 .navigation-route > .phone-screen > .status-bar, .navigation-route > .phone-screen > .home-area > .home-indicator { display: none; }
 .navigation-route[hidden] { display: none; }
+.navigation-route { overflow: hidden; }
 .post-card[role="link"] { cursor: pointer; }

@@ -6,7 +6,7 @@
 .thread-drag-handle { flex-shrink: 0; min-height: 16px; width: 100%; touch-action: none; cursor: grab; }
 .thread-drag-handle span { width: 36px; height: 4px; border-radius: 2px; background: #ffffff38; }
 .thread-header { display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; height: 52px; padding: 4px 0; }
-.thread-heading { font-family: Newsreader, Georgia, serif; font-size: 24px; line-height: 1; font-weight: 500; transform: translateY(2px); }
+.thread-heading { padding-left: 4px; font-family: Newsreader, Georgia, serif; font-size: 24px; line-height: 1; font-weight: 500; transform: translateY(2px); }
 .thread-scroll { height: 100%; padding: 16px 0 44px; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
 .thread-scroll::-webkit-scrollbar { display: none; }
 .thread-parent.comment-card { padding: 0 0 28px; gap: 12px; border-radius: 0; background: transparent; }
@@ -15,7 +15,7 @@
 .thread-reply { display: flex; flex-direction: column; gap: 12px; padding-left: 16px; border-left: 1px solid #bde0ca14; }
 .thread-reply-author { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .thread-author-badge { color: var(--accent); font-size: 8px; letter-spacing: .4px; }
-.thread-reply-body { color: #CDDBD3; font-size: 13px; line-height: 20px; }
+.thread-reply-body { color: #CDDBD3; font-size: 13px; line-height: 22px; }
 .thread-like { align-self: flex-start; min-height: 16px; gap: 8px; color: var(--muted); font-size: 12px; }
 .thread-like .icon { width: 15px; height: 15px; }
 .thread-empty { color: var(--muted); font-size: 13px; padding: 16px 0; }

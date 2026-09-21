@@ -10,7 +10,9 @@
 .community-link { color: var(--accent); font-size: 12px; min-height: 0; margin-left: 4px; }
 .community-link .icon { width: 14px; height: 14px; }
 .post-detail-title { font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.12; font-weight: 500; }
+.post-attribution + .post-detail-title { margin-top: 4px; }
 .post-detail-body { display: flex; flex-direction: column; gap: 24px; color: #CDDBD3; font-size: 15px; line-height: 1.6; }
+.post-detail-title + .post-detail-body { margin-top: -10px; }
 .post-detail .media-attachment { margin-top: 0; }
 .post-detail .attachment-action { gap: 12px; }
 .post-detail-actions { display: flex; gap: 12px; }

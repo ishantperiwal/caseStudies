@@ -3,25 +3,30 @@
 .discover-scroll { padding-top: 143px; padding-bottom: 130px; gap: 12px; overflow-x: hidden; }
 .discover-navigation { justify-content: space-between; gap: 6px; }
 .discover-heading-slot { position: relative; flex: 1; min-width: 0; height: 44px; display: flex; align-items: center; }
-.discover-tabs-anchor { min-height: 44px; margin-bottom: 6px; }
-.discover-tabs.is-docked { position: absolute; inset: 6px 0 auto; gap: 8px; }
+.discover-tabs-anchor { min-height: 44px; margin-bottom: 12px; }
+.discover-tabs.is-floating, .discover-tabs.is-docked { position: absolute; inset: 6px 0 auto; gap: 8px; }
 .discover-tabs.is-docked .discover-tab { padding: 0 16px; white-space: nowrap; flex-shrink: 0; }
-.discover-page .screen-top-blur { transition: height .24s ease; }
-.discover-page:has(.discover-tabs.is-docked) .screen-top-blur { height: 147px; }
+/* Hide feed text through the full pill row (ends at 109px), then
+   reveal it in the gap before the first settled card at 125px. */
+.discover-scroll {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 109px, #00000029 113px, #00000080 117px, #000000e6 122px, black 125px);
+  mask-image: linear-gradient(to bottom, transparent 109px, #00000029 113px, #00000080 117px, #000000e6 122px, black 125px);
+}
+.discover-page .screen-top-blur { height: 103px; }
 @media (prefers-reduced-motion: reduce) { .discover-page .screen-top-blur { transition: none; } }
 .discover-navigation h1 { font-size: 22px; font-weight: 600; letter-spacing: -.6px; }
-.discover-utilities { position: absolute; top: 0; right: 0; display: flex; gap: 8px; }
+.discover-utilities { position: absolute; top: 0; right: 0; display: flex; gap: 12px; }
 .notification-count { position: absolute; top: 2px; right: 2px; background: var(--accent); color: #183d2b; border-radius: 10px; min-width: 15px; height: 15px; font-size: 9px; display: grid; place-items: center; }
 .discover-tabs { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .discover-tab { border-radius: 22px; min-height: 38px; padding: 0 16px; font-size: 14px; color: var(--muted); background: #ffffff05; }
 .phone-case .discover-tab.glass-choice:not(.is-selected) { background: #ffffff07; }
 
-.discover-post-list { gap: 16px; min-height: 220px; }
+.discover-post-list { gap: 16px; min-height: var(--discover-feed-min-height, 220px); }
 .discover-post { isolation: isolate; padding: 20px 20px 10px; border-radius: 28px; background-color: #15191b70; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
 .discover-post:not(:has(> .discover-group-row)) { padding-top: 24px; }
 .discover-post:not(:has(> .discover-group-row)) .discover-post-context { margin-bottom: 6px !important; }
 .discover-post-atmosphere { position: absolute; inset: 0; z-index: 0; border-radius: inherit; overflow: hidden; pointer-events: none; }
-.discover-post-artwork { position: absolute; inset: -36px; width: calc(100% + 72px); height: calc(100% + 72px); object-fit: cover; filter: blur(28px) saturate(.75) brightness(var(--card-artwork-brightness, var(--ambient-brightness, .68))); opacity: .3; }
+.discover-post-artwork { position: absolute; inset: -36px; width: calc(100% + 72px); height: calc(100% + 72px); object-fit: cover; filter: blur(28px) saturate(.9) brightness(var(--card-artwork-brightness, var(--ambient-brightness, .72))); opacity: .3; }
 .discover-post-veil { position: absolute; inset: 0; background: var(--artwork-surface-wash), #11131538; }
 .discover-post > :not(.discover-post-atmosphere) { position: relative; z-index: 1; }
 .discover-post > .author-meta { margin: 0; }
@@ -61,3 +66,17 @@
 
 /* Keep a 44px tap area around the slimmer community action. */
 .group-join::after { content: ""; position: absolute; inset: -4px 0; border-radius: 22px; }
+
+.discover-group-row[role="link"] { cursor: pointer; isolation: isolate; }
+.discover-group-row > * { position: relative; z-index: 2; }
+
+/* A single uniform fill avoids stepped, stacked low-alpha gradients. */
+.phone-case .discover-group-card.glass-surface { --surface-light: none; background: rgb(255 255 255 / 3%); }
+.phone-case .discover-group-card > .discover-group-row.glass-surface { background: transparent; }
+.phone-case .discover-group-card > .discover-group-row.glass-surface::after { content: none; }
+.group-activity { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; font-size: 12px; line-height: 18px; font-weight: 500; color: var(--accent); }
+
+.group-activity .icon { width: 12px; height: 12px; flex-shrink: 0; }
+.group-activity .icon-chevron-down { transform: rotate(-90deg); }
+
+.discover-post-veil { opacity: var(--card-veil-opacity, .85); }
