@@ -4,5 +4,3 @@ Object.assign(window.PocketSagaIcons, {"search": "<svg viewBox=\"0 0 13.99993896
 window.PocketSagaIcons.image = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><circle cx="4.5" cy="4.5" r="1"/><path d="m2 10 3-3 2 2 2.5-3 3 4"/></g>';
 
 window.PocketSagaIcons.filmstrip = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><path d="M4 1.5v11M10 1.5v11M1.5 4.5H4m6 0h2.5M1.5 9.5H4m6 0h2.5M4 7h6"/></g>';
-
-window.PocketSagaIcons["screen-play"] = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.25" y="2" width="11.5" height="8.5" rx="1.5"/><path d="M5 12.25h4M7 10.5v1.75"/><path d="m5.75 4.25 3.5 2-3.5 2z"/></g>';

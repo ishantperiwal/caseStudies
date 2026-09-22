@@ -18,17 +18,22 @@
     const item = requireRecord(media, group.mediaId, 'media');
     return Object.assign(group, { artwork: item.artwork, background: item.artwork, context: `${item.title} · ${item.subtitle}`, membership: `${group.members} members` });
   });
+  function mediaIdentifier(item, record) {
+    return { title: item.title, subtitle: item.subtitle, artwork: item.artwork,
+      kind: record.clip ? 'clip' : 'title', clip: record.clip || null,
+      action: record.clip ? 'Watch clip' : 'Watch' };
+  }
   const previews = new Map(catalog.posts.map(record => {
     const item = requireRecord(media, record.mediaId, 'media');
     requireRecord(communities, record.communityId, 'community');
-    return [record.id, { ...record, group: record.communityId, author: requireRecord(people, record.authorId, 'person'), context: item.context || item.title, artwork: item.artwork, body: record.paragraphs[0] || '', comments: record.comments.length, attachment: record.attachmentSubtitle ? { title: item.title, subtitle: record.attachmentSubtitle, artwork: item.artwork, action: 'Watch Clip' } : null }];
+    return [record.id, { ...record, group: record.communityId, author: requireRecord(people, record.authorId, 'person'), context: item.context || item.title, artwork: item.artwork, body: record.paragraphs[0] || '', comments: record.comments.length, attachment: mediaIdentifier(item, record) }];
   }));
   const device = label => ({ ...catalog.device, label: `PocketSaga ${label} preview` });
   function post(id = 'from-road') {
     const item = requireRecord(previews, id, 'post');
     const group = requireRecord(communities, item.group, 'community');
     return { device: device('post'), viewer, background: item.artwork, community: group,
-      post: { ...item, attachment: item.attachment || { title: media.get(item.mediaId).title, subtitle: media.get(item.mediaId).subtitle, artwork: item.artwork, action: 'Watch Clip' }, likes: item.likes + Number(Boolean(item.liked)), commentCount: item.comments }, comments: comments.get(id) };
+      post: { ...item, likes: item.likes + Number(Boolean(item.liked)), commentCount: item.comments }, comments: comments.get(id) };
   }
   function community(id = 'earth') {
     const group = requireRecord(communities, id, 'community');
@@ -50,7 +55,7 @@
     const item = requireRecord(media, draft.mediaId || group.mediaId, 'media');
     const record = { ...draft, authorId: viewer.id, communityId: group.id, mediaId: item.id,
       author: viewer, paragraphs: draft.body ? draft.body.split(/\n\s*\n/) : [], artwork: item.artwork,
-      attachment: null };
+      attachment: mediaIdentifier(item, draft) };
     previews.set(record.id, record); comments.set(record.id, []);
     postIds.unshift(record.id); catalog.discoverPostIds.unshift(record.id);
     return record;

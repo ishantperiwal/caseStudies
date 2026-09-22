@@ -19,7 +19,7 @@
     const pose = slot => {
       const w = width();
       if (slot <= -2) return { x: -w - 40, y: 0, scale: 1, opacity: 0 };
-      if (slot === -1) return { x: -w + 8, y: 0, scale: 1, opacity: 1 };
+      if (slot === -1) return { x: -w, y: 0, scale: 1, opacity: 1 };
       if (slot === 0) return { x: 24, y: 0, scale: 1, opacity: 1 };
       return { x: 24 + slot * 19 + w * slot * .055, y: 0, scale: 1 - slot * .055, opacity: slot > 2 ? 0 : 1 - slot * .16 };
     };
@@ -36,8 +36,14 @@
         // prevents the composer from blurring the artwork until settling.
         // Fade each child instead, keeping the composer's ancestors opaque.
         const focus = card.slot === 0 ? 1 - t : card.slot === Math.sign(progress) ? t : 0;
+        gsap.set(card.dim, { opacity: .22 * (1 - focus) });
         gsap.set([...card.copy.children, ...(card.watchedTag ? [card.watchedTag] : [])], { opacity: focus });
-        gsap.set(card.reflection, { x: value.x, y: (value.scale - 1) * 150, scale: value.scale, opacity: focus * .28 });
+        // Clear the outgoing reflection early in a leftward slide. Driving it
+        // from gesture progress also restores it smoothly if the swipe cancels.
+        const reflectionFocus = card.slot === 0 && progress > 0
+          ? Math.pow(Math.max(0, 1 - t / .7), 2)
+          : focus;
+        gsap.set(card.reflection, { x: value.x, y: (value.scale - 1) * 150, scale: value.scale, opacity: reflectionFocus * .28 });
       }
       onProgress({ from: items[index], to: items[modulo(index + Math.sign(progress))], progress: Math.abs(progress) });
     }
@@ -45,8 +51,11 @@
       const item = items[modulo(index + slot)];
       const copy = node('div', 'watch-card-copy', [SeparatedMeta(item.subtitle, 'watch-subtitle', 'p'), node('h2', 'watch-title', item.title), Composer(viewer, 'Write your thoughts…', () => onCompose(item, el))]);
       const watchedTag = item.watchedLabel ? node('span', 'watch-timing', item.watchedLabel) : null;
-      const surface = node('div', 'watch-card-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy]);
+      const dim = node('div', 'watch-inactive-shade');
+      dim.setAttribute('aria-hidden', 'true');
+      const surface = node('div', 'watch-card-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy, dim]);
       const el = node('article', 'watch-card glass-surface', surface);
+      PocketSagaMedia.apply(el, item.artwork);
       el.setAttribute('aria-label', `Write a post about ${item.title}`);
       el.setAttribute('role', 'link');
       el.style.cursor = 'pointer';
@@ -59,7 +68,7 @@
       PocketSagaMedia.apply(reflection, item.artwork);
       reflections.append(reflection);
       stage.append(el);
-      return { el, copy, watchedTag, reflection, slot };
+      return { el, copy, watchedTag, reflection, dim, slot };
     }
     function syncSelection() {
       for (const card of cards) {

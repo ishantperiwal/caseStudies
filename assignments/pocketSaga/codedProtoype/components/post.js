@@ -1,6 +1,6 @@
 /* Focused post and comment components, reusable standalone or inside the navigation shell. */
 (() => {
-  const { node, Action, Avatar, MediaAttachment, PhoneFrame, Composer, SeparatedMeta } = PocketSaga;
+  const { node, Action, Avatar, MediaAttachment, SceneAttachment, PhoneFrame, Composer, SeparatedMeta } = PocketSaga;
   const pageEmitters = new WeakMap();
   const pageSize = data => Math.max(1, Math.floor(data.commentPageSize || 10));
   function Attribution(post, community, emit) {
@@ -17,6 +17,7 @@
       button.setAttribute('aria-pressed', String(liked));
       button.setAttribute('aria-label', `${liked ? 'Unlike' : 'Like'}, ${count} likes`);
       button.querySelector('.like-count').textContent = count;
+      PocketSagaMotion.animateLike(button, liked);
       emit('like', { item, liked, count });
     } });
     button.setAttribute('aria-pressed', String(liked));
@@ -64,7 +65,7 @@
     };
     const post = data.post;
     const content = node('div', 'feed-scroll post-scroll', [
-      node('article', 'post-detail', [Attribution(post, data.community, emit), node('h1', 'post-detail-title', post.title), node('div', 'post-detail-body', post.paragraphs.map(paragraph => node('p', '', paragraph))), post.attachment && MediaAttachment(post.attachment, post, emit), PostActions(post, emit)]),
+      node('article', 'post-detail', [Attribution(post, data.community, emit), node('h1', 'post-detail-title', post.title), node('div', 'post-detail-body', post.paragraphs.map(paragraph => node('p', '', paragraph))), SceneAttachment(post.scene), post.attachment && MediaAttachment(post.attachment, post, emit), PostActions(post, emit)]),
       CommentsSection(data, emit)
     ]);
     content.tabIndex = 0;
@@ -89,7 +90,7 @@
     page.querySelector('.phone-screen').append(node('div', 'post-fixed-composer', composer));
     page.querySelector('.phone-screen').append(node('nav', 'page-navigation post-navigation', [
       Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }),
-      node('span', 'post-navigation-title', 'Post'),
+      node('span', 'screen-navigation-title post-navigation-title', 'Post'),
       Action({ label: 'Post options', icon: 'ellipsis', className: 'round-action post-options', children: '', onClick: () => emit('options', { post }) })
     ]));
     pageEmitters.set(page, emit);

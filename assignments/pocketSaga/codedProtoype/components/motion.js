@@ -55,28 +55,32 @@
     move(selected, true);
     return { move, destroy() { observer.disconnect(); gsap.killTweensOf(marker); marker.remove(); } };
   }
-  function dockTabs({ scroller, anchor, tabs, slot, greeting, utilities, headerManaged = false }) {
+  function dockTabs({ scroller, anchor, tabs, fixedTabs, slot, greeting, utilities, headerManaged = false }) {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     let docked = false, frame = 0;
-    // At the top, use native scroll composition so the pills share elastic
-    // overscroll. Lift the same row above the mask only during collapse.
+    // Both rows remain in place; switch visibility at their shared position.
+    const setVisible = (row, visible) => {
+      row.style.visibility = visible ? 'visible' : 'hidden';
+      row.inert = !visible;
+      row.setAttribute('aria-hidden', String(!visible));
+    };
+    setVisible(tabs, true);
+    setVisible(fixedTabs, false);
     const update = () => {
       frame = 0;
       if (!scroller.isConnected || !scroller.clientHeight) return;
       const scale = scroller.getBoundingClientRect().height / scroller.clientHeight || 1;
       const offset = (anchor.getBoundingClientRect().top - slot.getBoundingClientRect().top) / scale - 6;
-      const floating = scroller.scrollTop > 0;
-      if (floating) {
-        if (tabs.parentElement !== slot) { tabs.classList.add('is-floating'); slot.append(tabs); }
-        gsap.set(tabs, { y: Math.max(0, offset), width: anchor.clientWidth, opacity: 1 });
-      } else if (tabs.parentElement !== anchor) {
-        tabs.classList.remove('is-floating'); anchor.append(tabs);
-        gsap.set(tabs, { clearProps: 'transform,width,opacity' });
-      }
-      const next = floating && offset <= 0;
+      const next = scroller.scrollTop > 0 && offset <= .5;
       if (next === docked) return;
+      const from = next ? tabs : fixedTabs, to = next ? fixedTabs : tabs;
+      const focusedIndex = [...from.querySelectorAll('.discover-tab')].indexOf(document.activeElement);
       docked = next;
-      tabs.classList.toggle('is-docked', docked);
+      setVisible(tabs, !docked);
+      setVisible(fixedTabs, docked);
+      fixedTabs.classList.toggle('is-docked', docked);
+      scroller.classList.toggle('has-docked-tabs', docked);
+      if (focusedIndex >= 0) to.querySelectorAll('.discover-tab')[focusedIndex].focus({ preventScroll: true });
       if (!headerManaged) {
         greeting.inert = docked;
         greeting.setAttribute('aria-hidden', String(docked));
@@ -96,8 +100,9 @@
     return () => {
       cancelAnimationFrame(frame); observer.disconnect(); scroller.removeEventListener('scroll', schedule);
       gsap.killTweensOf([tabs, greeting, utilities].filter(Boolean));
-      tabs.classList.remove('is-floating', 'is-docked'); anchor.append(tabs);
-      gsap.set(tabs, { clearProps: 'transform,width,opacity' });
+      fixedTabs.classList.remove('is-docked');
+      scroller.classList.remove('has-docked-tabs');
+      setVisible(tabs, true); setVisible(fixedTabs, false);
     };
   }
   function collapseCarousel({ scroller, carousel, anchor, slot, tabs, headerElements = [] }) {
@@ -106,16 +111,16 @@
     const ease = CustomEase.create('carouselScrollSnap', '0.6,0,0.25,1');
     const distance = () => {
       const scale = scroller.getBoundingClientRect().height / scroller.clientHeight || 1;
-      return Math.max(1, scroller.scrollTop + (anchor.getBoundingClientRect().top - slot.getBoundingClientRect().top) / scale + 2);
+      return Math.max(1, scroller.scrollTop + (anchor.getBoundingClientRect().top - slot.getBoundingClientRect().top) / scale - 6);
     };
     const paint = () => {
       frame = 0;
       if (!scroller.isConnected || !scroller.clientHeight) return;
       const travel = distance(), top = Math.max(0, scroller.scrollTop);
       const progress = Math.min(1, top / travel);
-      // Counteract natural translation; the hero recedes in place while the
-      // feed moves up through its reserved layout space.
-      gsap.set(carousel, { y: Math.min(top, travel), scale: reduced.matches ? 1 : 1 - .4 * progress, opacity: Math.pow(1 - progress, 2), transformOrigin: 'center top' });
+      // CSS sticky pins the top edge natively; only scale, blur, and fade respond to
+      // scroll, so a delayed scroll event cannot briefly pull the hero upward.
+      gsap.set(carousel, { scale: reduced.matches ? 1 : 1 - .4 * progress, opacity: Math.pow(1 - progress, 2), filter: reduced.matches || progress === 0 ? 'none' : `blur(${8 * progress}px)`, transformOrigin: 'center top' });
       carousel.inert = progress >= .85;
       carousel.setAttribute('aria-hidden', String(progress >= .85));
       gsap.set(headerElements, { autoAlpha: Math.pow(1 - progress, 2) });
@@ -144,7 +149,8 @@
     const openFeed = event => {
       if (event.target.closest('.discover-tab')) scrollTo(distance());
     };
-    tabs?.addEventListener('click', openFeed);
+    const filterRows = [tabs].flat().filter(Boolean);
+    filterRows.forEach(row => row.addEventListener('click', openFeed));
     const settle = () => {
       clearTimeout(timer);
       if (destroyed || pressed || snapping || !scroller.isConnected || !scroller.clientHeight || scroller.closest('[inert]')) return;
@@ -183,12 +189,12 @@
     return () => {
       scroller.removeEventListener('touchstart', touchStart); window.removeEventListener('touchend', touchEnd); window.removeEventListener('touchcancel', touchEnd);
       destroyed = true; interrupt(); cancelAnimationFrame(frame); observer.disconnect();
-      tabs?.removeEventListener('click', openFeed);
+      filterRows.forEach(row => row.removeEventListener('click', openFeed));
       scroller.removeEventListener('scroll', schedule); scroller.removeEventListener('pointerdown', down);
       scroller.removeEventListener('scrollend', schedule);
       scroller.removeEventListener('wheel', input); scroller.removeEventListener('keydown', input);
       window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
-      gsap.set(carousel, { clearProps: 'transform,opacity' }); carousel.inert = false; carousel.removeAttribute('aria-hidden');
+      gsap.set(carousel, { clearProps: 'transform,opacity,filter' }); carousel.inert = false; carousel.removeAttribute('aria-hidden');
       gsap.set(headerElements, { clearProps: 'opacity,visibility' });
       for (const element of headerElements) { element.inert = false; element.removeAttribute('aria-hidden'); }
       scroller.style.removeProperty('--discover-feed-min-height');
@@ -221,5 +227,46 @@
     scroller.addEventListener('scroll', schedule, { passive: true });
     return () => { cancelAnimationFrame(frame); scroller.removeEventListener('scroll', schedule); gsap.killTweensOf(navigation); };
   }
-  window.PocketSagaMotion = { scrollHeader, selectionHighlight, dockTabs, collapseCarousel, autoHideNavigation };
+  const likeAnimations = new WeakMap();
+  function animateLike(button, liked) {
+    likeAnimations.get(button)?.();
+    const icon = button.querySelector('.icon-heart');
+    if (!icon || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let particles;
+    const timeline = gsap.timeline({ onComplete: () => {
+      particles?.remove();
+      gsap.set(icon, { clearProps: 'transform,transformOrigin' });
+      likeAnimations.delete(button);
+    } });
+    likeAnimations.set(button, () => {
+      timeline.kill(); particles?.remove();
+      gsap.set(icon, { clearProps: 'transform,transformOrigin' });
+      likeAnimations.delete(button);
+    });
+    gsap.set(icon, { transformOrigin: '50% 50%' });
+    timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
+      .to(icon, { scale: 1, duration: liked ? .6 : .18, ease: liked ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    if (!liked) return;
+    particles = document.createElement('span');
+    particles.className = 'like-particles';
+    particles.setAttribute('aria-hidden', 'true');
+    const rect = icon.getBoundingClientRect(), bounds = button.getBoundingClientRect();
+    const scale = bounds.width / button.offsetWidth || 1;
+    particles.style.left = `${(rect.left + rect.width / 2 - bounds.left) / scale}px`;
+    particles.style.top = `${(rect.top + rect.height / 2 - bounds.top) / scale}px`;
+    button.append(particles);
+    [-10, -3, 4, 11].forEach((offset, index) => {
+      const x = offset + (Math.random() - .5) * 5;
+      const rise = 60 + Math.random() * 18;
+      const heart = icon.cloneNode(true);
+      heart.removeAttribute('style');
+      heart.classList.add('like-particle');
+      particles.append(heart);
+      gsap.set(heart, { x: -6, y: -6, scale: .4, opacity: 0, rotation: x * .5 });
+      timeline.to(heart, { opacity: .8, scale: index % 2 ? .8 : 1, duration: .12 }, .1 + index * .035)
+        .to(heart, { x, y: -rise, rotation: x, duration: .78, ease: 'power2.out' }, .1 + index * .035)
+        .to(heart, { opacity: 0, scale: .35, duration: .32 }, .54 + index * .035);
+    });
+  }
+  window.PocketSagaMotion = { scrollHeader, selectionHighlight, dockTabs, collapseCarousel, autoHideNavigation, animateLike };
 })();

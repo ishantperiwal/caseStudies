@@ -77,7 +77,7 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .attachment-details { flex: 1; min-width: 80px; display: flex; flex-direction: column; gap: 5px; overflow-wrap: anywhere; }
 .attachment-title { font-size: 15px; font-weight: 600; }
 .attachment-subtitle { font-size: 12px; color: var(--muted); }
-.attachment-action { padding: 0 12px; gap: 8px; border-radius: 22px; background: var(--control); font-size: 12px; font-weight: 600; }
+.attachment-action { padding: 0 16px; gap: 8px; border-radius: 22px; background: var(--control); font-size: 12px; font-weight: 600; }
 .attachment-action .icon { width: 15px; height: 15px; }
 .reaction-bar { display: flex; gap: 18px; color: var(--muted); }
 .reaction-bar .action { font-size: 12px; font-weight: 500; }
@@ -94,7 +94,9 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 /* Natural scrolling beneath the fixed app bar. */
 .community-intro { position: relative; z-index: 1; margin-top: 135px; display: flex; flex-direction: column; gap: 24px; }
 .page-navigation { position: absolute; top: 59px; left: 16px; right: 16px; z-index: 5; height: 44px; display: flex; align-items: center; }
-.compact-community-title { position: absolute; left: 52px; right: 52px; text-align: center; font-family: Newsreader, Georgia, serif; font-size: 20px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0; pointer-events: none; }
+/* Newsreader glyphs sit high within their line box; optically align with navigation icons. */
+.screen-navigation-title { position: absolute; inset: 0 52px; translate: 0 2px; display: flex; align-items: center; justify-content: center; text-align: center; font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 24px; font-weight: 500; letter-spacing: normal; pointer-events: none; }
+.compact-community-title { display: block; line-height: 44px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; opacity: 0; }
 .feed-toolbar { position: relative; z-index: 1; }
 .post-list { position: relative; z-index: 1; min-height: calc(100% - 100px); }
 /* Fade only the content entering the app bar, never the whole introduction. */
@@ -168,9 +170,26 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 
 /* One composited layer keeps palette and poster texture together during fades. */
 .ambient-composite { overflow: hidden; }
+/* Keep bright-artwork darkening inside each layer so it follows crossfades. */
+.ambient-composite::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none;
+  background: #000; opacity: var(--ambient-shade-opacity, 0);
+}
 .ambient-color-base { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ambient-poster-texture {
   position: absolute; inset: -42px; width: calc(100% + 84px); height: calc(100% + 84px);
   object-fit: cover; opacity: var(--texture-opacity, .22);
   filter: blur(var(--texture-blur, 28px)) saturate(var(--texture-saturation, .45)) brightness(.72);
 }
+
+/* Scene attachments are still images; the media identifier stays separate. */
+.post-scene-image { display: block; width: 100%; max-height: 360px; object-fit: contain; border-radius: 16px; }
+
+/* Heart feedback is decorative and never intercepts a tap. */
+.like-action, .detail-like { position: relative; }
+.like-particles { position: absolute; width: 0; height: 0; pointer-events: none; z-index: 4; color: var(--accent); }
+.like-particles .like-particle { position: absolute; width: 12px; height: 12px; fill: currentColor; pointer-events: none; }
+
+.icon-heart .heart-solid { display: none; }
+[aria-pressed="true"] > .icon-heart .heart-outline, .like-particle .heart-outline { display: none; }
+[aria-pressed="true"] > .icon-heart .heart-solid, .like-particle .heart-solid { display: inline; }

@@ -9,7 +9,7 @@
 .attribution-time { font-size: 11px; }
 .community-link { color: var(--accent); font-size: 12px; min-height: 0; margin-left: 4px; }
 .community-link .icon { width: 14px; height: 14px; }
-.post-detail-title { font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 1.12; font-weight: 500; }
+.post-detail-title { font-family: Newsreader, Georgia, serif; font-size: 30px; line-height: 1.18; font-weight: 500; }
 .post-attribution + .post-detail-title { margin-top: 4px; }
 .post-detail-body { display: flex; flex-direction: column; gap: 24px; color: #CDDBD3; font-size: 15px; line-height: 1.6; }
 .post-detail-title + .post-detail-body { margin-top: -10px; }
@@ -21,7 +21,6 @@
 .detail-like[aria-pressed="true"] { color: var(--accent); }
 .detail-like[aria-pressed="true"] .icon { filter: drop-shadow(0 0 3px #bde0ca40); }
 .post-navigation { left: 16px; right: 16px; }
-.post-navigation-title { position: absolute; left: 52px; right: 52px; text-align: center; font-family: Newsreader, Georgia, serif; font-size: 20px; font-weight: 500; pointer-events: none; }
 .post-options { width: 44px; margin-left: auto; }
 .comments-section { display: flex; flex-direction: column; gap: 14px; }
 .comments-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 44px; }

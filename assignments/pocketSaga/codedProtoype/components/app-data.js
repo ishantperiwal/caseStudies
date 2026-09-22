@@ -102,24 +102,24 @@ window.pocketSagaData = {
   ],
   "watchHistory": [
     {
-      "mediaId": "interstellar",
-      "label": "Recently watched"
+      "mediaId": "dark",
+      "label": "Watched yesterday"
     },
     {
       "mediaId": "silicon-valley",
+      "label": "Finished yesterday"
+    },
+    {
+      "mediaId": "interstellar",
       "label": "Watched yesterday"
     },
     {
       "mediaId": "from",
-      "label": "Watched last month"
+      "label": "Finished 1 week ago"
     },
     {
       "mediaId": "coherence",
-      "label": "Watched last week"
-    },
-    {
-      "mediaId": "dark",
-      "label": "Watched last month"
+      "label": "Watched 1 week ago"
     }
   ],
   "communities": [
@@ -388,7 +388,7 @@ window.pocketSagaData = {
       "paragraphs": [
         "The coordinates lead him to NASA, but he sends them from the tesseract later. Is this a closed loop, or did someone have to start it?"
       ],
-      "attachmentSubtitle": "The tesseract · Clip"
+      "clip": { "title": "The tesseract" }
     },
     {
       "id": "docking",
@@ -419,9 +419,9 @@ window.pocketSagaData = {
       "time": "12 min ago",
       "type": "Thought",
       "likes": 38,
-      "recommend": true,
+      "recommend": false,
       "authorId": "lm",
-      "communityId": "cosmic-questions",
+      "communityId": "earth",
       "mediaId": "interstellar",
       "paragraphs": [
         "The distance is huge, but it is the time passing at home that makes every decision feel impossible. A few minutes can cost someone an entire chapter of their life.",
@@ -444,9 +444,9 @@ window.pocketSagaData = {
       "time": "19 min ago",
       "type": "Discussion",
       "likes": 27,
-      "recommend": true,
+      "recommend": false,
       "authorId": "ak",
-      "communityId": "startup-chaos",
+      "communityId": "pied-piper",
       "mediaId": "silicon-valley",
       "paragraphs": [
         "Half the comedy comes from everyone living on top of each other. The house turns tiny disagreements into full company emergencies.",
@@ -613,8 +613,8 @@ window.pocketSagaData = {
     }
   ],
   "discoverPostIds": [
-    "from-road",
     "winden",
+    "from-road",
     "startup-house",
     "coherence-trust",
     "cosmic-time",

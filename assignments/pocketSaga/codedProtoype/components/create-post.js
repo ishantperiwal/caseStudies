@@ -175,7 +175,7 @@
     scroller.tabIndex = 0; scroller.setAttribute('aria-label', 'New post editor');
     page = PhoneFrame({ device: data.device, background: media?.artwork, content: scroller });
     page.classList.add('create-post-page');
-    const header = node('nav', 'page-navigation create-post-navigation', [Action({ label: 'Close new post', icon: 'x', className: 'round-action', children: '', onClick: () => emit('back') }), node('h1', '', 'New post')]);
+    const header = node('nav', 'page-navigation create-post-navigation', [Action({ label: 'Close new post', icon: 'x', className: 'round-action', children: '', onClick: () => emit('back') }), node('h1', 'screen-navigation-title', 'New post')]);
     page.querySelector('.phone-screen').append(header, node('footer', 'create-publish-bar', [groupButton, publish]), notice);
     refresh();
     return { element: page, destroy() { picker?.destroy(); clearTimeout(toastTimer); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };

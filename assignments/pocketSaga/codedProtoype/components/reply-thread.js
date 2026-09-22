@@ -1,6 +1,7 @@
 /* A comment expands into a modal reply thread inside its phone preview. */
 (() => {
   gsap.registerPlugin(CustomEase);
+  const transitionDuration = .35;
   const focusEase = CustomEase.create('commentFocus', '0.6,0,0.25,1');
   const { node, Action, Avatar } = PocketSaga;
   function ReplyItem(reply, emit) {
@@ -124,7 +125,7 @@
       state.resize.observe(parent);
       state.resize.observe(replyList);
       overlay.focus({ preventScroll: true });
-      const duration = reduced.matches ? 0 : .58;
+      const duration = reduced.matches ? 0 : transitionDuration;
       if (reduced.matches) {
         gsap.set(surface, { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: 24 });
         gsap.set([scrim, inner], { opacity: 1 });
@@ -139,11 +140,11 @@
         resizePanel();
         (focusComposer ? input : keyboardOpened ? handle : overlay).focus({ preventScroll: true });
       } })
-        .to(scrim, { opacity: 1, duration: reduced.matches ? 0 : .3 }, 0)
+        .to(scrim, { opacity: 1, duration: duration * .52 }, 0)
         .to(surface, { x: 0, y: 0, scaleX: 1, scaleY: 1, borderRadius: 24, duration, ease: focusEase, force3D: true }, 0)
-        .to(ghost, { opacity: 0, filter: 'blur(6px)', duration: .22, ease: focusEase }, 0)
-        .to(inner, { opacity: 1, filter: 'blur(0px)', duration: .32, ease: focusEase }, duration * .42)
-        .to(composer, { opacity: 1, y: 0, duration: reduced.matches ? 0 : .34, ease: 'power3.out' }, duration * .42);
+        .to(ghost, { opacity: 0, filter: 'blur(6px)', duration: duration * .38, ease: focusEase }, 0)
+        .to(inner, { opacity: 1, filter: 'blur(0px)', duration: duration * .55, ease: focusEase }, duration * .42)
+        .to(composer, { opacity: 1, y: 0, duration: duration * .58, ease: 'power3.out' }, duration * .42);
       input.addEventListener('input', () => { drafts.set(comment.id, input.value); send.disabled = !input.value.trim(); });
       composer.addEventListener('submit', event => {
         event.preventDefault();
@@ -242,12 +243,12 @@
       const dragY = Number(gsap.getProperty(state.panel, 'y')) || 0;
       gsap.set(state.surface, { y: Number(gsap.getProperty(state.surface, 'y')) + dragY });
       gsap.set(state.panel, { y: 0 });
-      const duration = reduced.matches ? 0 : .46;
+      const duration = reduced.matches ? 0 : transitionDuration;
       state.animation = gsap.timeline({ onComplete: () => restore(state) })
-        .to(state.composer, { opacity: 0, y: 10, duration: reduced.matches ? 0 : .14 }, 0)
-        .to(state.inner, { opacity: 0, filter: 'blur(6px)', duration: .2, ease: focusEase }, 0)
+        .to(state.composer, { opacity: 0, y: 10, duration: duration * .3 }, 0)
+        .to(state.inner, { opacity: 0, filter: 'blur(6px)', duration: duration * .43, ease: focusEase }, 0)
         .to(state.surface, { x: destination.left - state.target.left, y: destination.top - state.target.top, scaleX: destination.width / state.target.width, scaleY: destination.height / state.target.height, borderRadius: 20, duration, ease: focusEase, force3D: true }, 0)
-        .to(state.ghost, { opacity: 1, filter: 'blur(0px)', duration: .24, ease: focusEase }, duration * .48)
+        .to(state.ghost, { opacity: 1, filter: 'blur(0px)', duration: duration * .52, ease: focusEase }, duration * .48)
         // Hold background separation until the card is mostly collapsed.
         .to(state.scrim, {
           opacity: 0,

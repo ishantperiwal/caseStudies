@@ -44,3 +44,25 @@ test('comments and reactions stay scoped to their post', () => {
   assert.equal(store.post('ishant-silicon').post.likes, 19);
   assert(!store.post('from-road').comments.some(c => c.id === 'new-comment'));
 });
+
+test('every post keeps its media identifier and only clip attachments say Watch clip', () => {
+  const { store, catalog } = load();
+  for (const record of catalog.posts) {
+    const attachment = store.post(record.id).post.attachment;
+    const media = catalog.media.find(item => item.id === record.mediaId);
+    assert.equal(attachment.title, media.title);
+    assert.equal(attachment.subtitle, media.subtitle);
+    assert.equal(attachment.action, record.clip ? 'Watch clip' : 'Watch');
+  }
+  assert(store.discover().posts.every(post => post.attachment));
+  assert(store.community('earth').posts.every(post => post.attachment));
+  const scene = { src: 'components/assets/scene-example.jpg', alt: 'A scene still' };
+  const draft = { group: 'earth', mediaId: 'interstellar', title: 'A thought', body: 'A scene', likes: 0, comments: 0 };
+  const imagePost = store.publish({ ...draft, id: 'scene-post', scene });
+  assert.equal(store.post(imagePost.id).post.scene, scene);
+  assert.equal(imagePost.attachment.action, 'Watch');
+  const clip = { src: 'clip-example.mp4' };
+  const clipPost = store.publish({ ...draft, id: 'clip-post', clip });
+  assert.equal(clipPost.attachment.action, 'Watch clip');
+  assert.equal(clipPost.attachment.clip, clip);
+});

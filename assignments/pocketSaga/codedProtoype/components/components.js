@@ -26,6 +26,15 @@
     el.setAttribute('aria-hidden', 'true');
     // Only locally defined icon markup is inserted; page content uses text nodes.
     el.innerHTML = window.PocketSagaIcons[name] || '';
+    if (name === 'heart') {
+      const outline = el.querySelector('path');
+      const solid = outline.cloneNode(true);
+      // Keep the original outer contour, without the outline's inner cutout.
+      solid.setAttribute('d', outline.getAttribute('d').split(/z\s*m/i)[0] + 'z');
+      outline.classList.add('heart-outline');
+      solid.classList.add('heart-solid');
+      el.append(solid);
+    }
     return el;
   }
   function Action({ label, icon, className = '', onClick, children }) {
@@ -79,6 +88,7 @@
       Artwork(src, 'ambient-poster-texture')
     ]);
     layer.setAttribute('aria-hidden', 'true');
+    PocketSagaMedia.apply(layer, src);
     const settings = PocketSagaMedia.ambience;
     layer.style.setProperty('--texture-opacity', settings.textureOpacity);
     layer.style.setProperty('--texture-saturation', settings.textureSaturation);
@@ -125,13 +135,18 @@
     return node('div', 'author-meta', [Avatar(post.author), node('div', 'author-details', [node('span', 'author-name', post.author.name), SeparatedMeta([post.time, post.type], 'post-time')])]);
   }
   function MediaAttachment(attachment, post, emit) {
-    return node('div', 'media-attachment', [attachment.artwork && Artwork(attachment.artwork, 'attachment-artwork'), node('div', 'attachment-details', [node('p', 'attachment-title', attachment.title), SeparatedMeta(attachment.subtitle, 'attachment-subtitle', 'p')]), Action({ label: attachment.action || 'Open', icon: 'play', className: 'attachment-action', onClick: () => emit('attachment', { post, attachment }) })]);
+    return node('div', 'media-attachment', [attachment.artwork && Artwork(attachment.artwork, 'attachment-artwork'), node('div', 'attachment-details', [node('p', 'attachment-title', attachment.title), SeparatedMeta(attachment.subtitle, 'attachment-subtitle', 'p')]), Action({ label: attachment.action || 'Open', icon: attachment.kind === 'clip' ? 'play' : 'screen-play', className: 'attachment-action', onClick: () => emit('attachment', { post, attachment }) })]);
+  }
+  function SceneAttachment(scene) {
+    return scene?.src ? Artwork(scene.src, 'post-scene-image', scene.alt || 'Attached scene') : null;
   }
   function ReactionBar(post, emit) {
-    return node('footer', 'reaction-bar', [Action({ label: `${(post.likes ?? 0) + Number(Boolean(post.liked))} likes`, icon: 'heart', className: 'like-action', children: String((post.likes ?? 0) + Number(Boolean(post.liked))), onClick: () => emit('like', { post }) }), Action({ label: `${post.comments ?? 0} comments`, icon: 'message-circle', children: String(post.comments ?? 0), onClick: () => emit('comments', { post }) })]);
+    const like = Action({ label: `${(post.likes ?? 0) + Number(Boolean(post.liked))} likes`, icon: 'heart', className: 'like-action', children: String((post.likes ?? 0) + Number(Boolean(post.liked))), onClick: () => emit('like', { post }) });
+    like.setAttribute('aria-pressed', String(Boolean(post.liked)));
+    return node('footer', 'reaction-bar', [like, Action({ label: `${post.comments ?? 0} comments`, icon: 'message-circle', children: String(post.comments ?? 0), onClick: () => emit('comments', { post }) })]);
   }
   function PostCard(post, context, emit) {
-    const el = node('article', 'post-card', [AuthorMeta(post), node('div', 'post-copy', [node('h3', 'post-title', post.title), node('p', 'post-body', post.body)]), post.attachment && MediaAttachment(post.attachment, post, emit), ReactionBar(post, emit)]);
+    const el = node('article', 'post-card', [AuthorMeta(post), node('div', 'post-copy', [node('h3', 'post-title', post.title), node('p', 'post-body', post.body)]), SceneAttachment(post.scene), ReactionBar(post, emit)]);
     el.dataset.postId = post.id;
     el.tabIndex = 0;
     el.setAttribute('role', 'link');
@@ -168,7 +183,7 @@
       page.dispatchEvent(new CustomEvent('community-action', { bubbles: true, detail: { action, ...detail } }));
     };
     const labels = { composer: 'Write in this community…', posts: 'Posts', sort: 'Recent first', joined: 'Joined', join: 'Join community', empty: 'No posts yet.', ...data.labels };
-    const navigation = node('nav', 'page-navigation', [Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }), node('span', 'compact-community-title', data.community.name), node('div', 'navigation-action-slot', Action({ label: labels.sort, icon: 'list-filter', className: 'round-action compact-sort-action', children: '', onClick: () => emit('sort', {}) }))]);
+    const navigation = node('nav', 'page-navigation', [Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }), node('span', 'screen-navigation-title compact-community-title', data.community.name), node('div', 'navigation-action-slot', Action({ label: labels.sort, icon: 'list-filter', className: 'round-action compact-sort-action', children: '', onClick: () => emit('sort', {}) }))]);
     const intro = node('div', 'community-intro', [CommunityHeader(data.community, labels, emit), Composer(data.viewer, labels.composer, emit)]);
     const toolbar = FeedToolbar(labels, emit);
     const feed = node('div', 'feed-scroll', [intro, toolbar,
@@ -210,7 +225,7 @@
       actionSlot: page.querySelector('.navigation-action-slot')
     });
   }
-  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, MediaAttachment, ReactionBar, Avatar, Artwork, AmbientArtwork, Action, Icon, MessageComposer,
+  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, MediaAttachment, SceneAttachment, ReactionBar, Avatar, Artwork, AmbientArtwork, Action, Icon, MessageComposer,
     setupCommunity,
     mount(target, data, handlers) {
       return mountPage(target, CommunityPage(data, handlers), setupCommunity);

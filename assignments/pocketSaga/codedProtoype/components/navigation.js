@@ -10,7 +10,7 @@
       backdrop: { xPercent: 0, scale: .92, opacity: .8, borderRadius: 40, filter: 'blur(5px)' }
     }
   };
-  const routeTransitions = { 'create-post': 'activity', post: 'activity', community: 'activity' };
+  const routeTransitions = { 'create-post': 'activity', post: 'activity', community: 'activity', notifications: 'activity' };
   function attach(page, postData, communityData = window.communityPageData) {
     const { node } = PocketSaga;
     const screen = page.querySelector('.phone-screen');
@@ -24,7 +24,7 @@
     screen.append(feed, node('div', 'navigation-home', indicator));
     const root = { element: feed, path: [], opener: null };
     const routes = new Map([['', root]]);
-    let current = root, animation = null, draftSequence = 0;
+    let current = root, animation = null, draftSequence = 0, closeNotifications = null;
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     const historyKey = `pocketsaga-${Date.now()}-${Math.random().toString(36).slice(2)}`;
     const ease = CustomEase.create('pageNavigation', '0.6,0,0.25,1');
@@ -35,7 +35,10 @@
       const token = path.at(-1);
       const kind = token.split(':')[0];
       let element, cleanup, setup;
-      if (kind === 'create-post') {
+      if (kind === 'notifications') {
+        element = PocketSagaNotifications.Page();
+        cleanup = () => {};
+      } else if (kind === 'create-post') {
         const selected = createPostData.media.find(item => item.id === token.split(':')[1]) || null;
         const view = PocketSagaCreatePost.CreatePostPage(createPostData, selected);
         element = view.element;
@@ -126,7 +129,7 @@
       if (animation?.isActive()) return;
       if (kind === 'create-post' && !window.PocketSagaCreatePost) return;
       const id = sourcePost?.id || (kind === 'post' ? postData.post.id : communityData?.community.id);
-      const token = kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}` : `${kind}:${id}`;
+      const token = kind === 'notifications' ? 'notifications' : kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}` : `${kind}:${id}`;
       const path = [...current.path, token];
       // Reopening a record gets fresh store data; ancestors stay mounted for Back.
       const stale = routes.get(path.join('/'));
@@ -147,6 +150,10 @@
     const onAction = event => {
       const { action, post, media, source, group, community } = event.detail;
       if (['open-post', 'comments'].includes(action)) navigate('post', post);
+      else if (action === 'notifications') {
+        closeNotifications?.();
+        closeNotifications = PocketSagaNotifications.OpenUnread(screen, { onPost: post => navigate('post', post), onHistory: () => navigate('notifications') });
+      }
       else if (action === 'community') navigate('community', group || community);
       else if (action === 'create-post') navigate('create-post', null, media, source);
       else if (action === 'publish') {
@@ -164,6 +171,7 @@
     const validToken = token => {
       if (typeof token !== 'string') return false;
       const [kind, id] = token.split(':');
+      if (kind === 'notifications') return Boolean(window.PocketSagaNotifications);
       if (kind === 'post') return !id || PocketSagaData.hasPost(id);
       if (kind === 'community') return !id || PocketSagaData.hasCommunity(id);
       return Boolean(window.PocketSagaCreatePost) && /^create-post(?::[a-z0-9_-]+:[0-9-]+)?$/.test(token);
@@ -178,8 +186,8 @@
       const token = location.hash.slice(1);
       return validToken(token) ? [token] : [];
     };
-    const onHistory = () => show(readPath());
-    const events = ['discover-action', 'community-action', 'post-action', 'create-post-action'];
+    const onHistory = () => { closeNotifications?.(); show(readPath()); };
+    const events = ['notifications-action', 'discover-action', 'community-action', 'post-action', 'create-post-action'];
     events.forEach(name => page.addEventListener(name, onAction));
     window.addEventListener('popstate', onHistory);
     const initialPath = readPath();
@@ -188,6 +196,7 @@
     if (initialPath.length) show(initialPath);
     const destroy = () => {
       animation?.kill();
+      closeNotifications?.();
       routes.forEach(route => route.cleanup?.());
       events.forEach(name => page.removeEventListener(name, onAction));
       window.removeEventListener('popstate', onHistory);

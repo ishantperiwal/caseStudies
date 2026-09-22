@@ -3,8 +3,8 @@
 (() => {
   const settings = Object.freeze({ sampleSize: 64, meanThreshold: .28, highlightThreshold: .5, highlightCoverageThreshold: .28 });
   const profiles = Object.freeze({
-    bright: Object.freeze({ pageVeil: .96, pageLift: 0, cardBrightness: .34, cardVeil: .85 }),
-    'not-bright': Object.freeze({ pageVeil: .92, pageLift: 0, cardBrightness: .72, cardVeil: .85 })
+    bright: Object.freeze({ pageVeil: .96, pageLift: 0, ambientShade: .24, cardBrightness: .34, cardVeil: .85 }),
+    'not-bright': Object.freeze({ pageVeil: .92, pageLift: 0, ambientShade: 0, cardBrightness: .72, cardVeil: .85 })
   });
   const cache = new Map(), results = new Map();
   const linear = value => { const v = value / 255; return v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4; };
@@ -99,6 +99,7 @@
     element.dataset.mediaTone = results.get(src)?.state || 'not-bright';
     element.style.setProperty('--atmosphere-veil-opacity', profile.pageVeil);
     element.style.setProperty('--atmosphere-light-overlay', src ? profile.pageLift : 0);
+    element.style.setProperty('--ambient-shade-opacity', profile.ambientShade);
     element.style.setProperty('--card-artwork-brightness', profile.cardBrightness);
     element.style.setProperty('--card-veil-opacity', profile.cardVeil);
   }
