@@ -193,3 +193,11 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .icon-heart .heart-solid { display: none; }
 [aria-pressed="true"] > .icon-heart .heart-outline, .like-particle .heart-outline { display: none; }
 [aria-pressed="true"] > .icon-heart .heart-solid, .like-particle .heart-solid { display: inline; }
+
+.save-post { color: var(--muted); }
+.save-post[aria-pressed="true"] { color: var(--accent); }
+.save-post[aria-pressed="true"] .icon-bookmark path { fill: currentColor; }
+.save-post.detail-pill { min-width: 44px; padding: 0 14px; }
+
+.save-post { position: relative; }
+.save-feedback { position: absolute; right: 0; bottom: calc(100% - 4px); z-index: 5; pointer-events: none; white-space: nowrap; padding: 6px 11px; border-radius: 16px; font-size: 11px; font-weight: 600; line-height: 16px; color: #eef2e9; background: rgb(35 40 38 / 72%); box-shadow: inset 0 1px 0 #ffffff24, 0 4px 12px #0003; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }

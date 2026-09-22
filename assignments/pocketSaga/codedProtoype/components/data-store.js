@@ -64,10 +64,28 @@
     requireRecord(previews, postId, 'post').comments += 1;
     comments.get(postId).unshift(comment);
   }
+  let savedIds = [];
+  try { savedIds = JSON.parse(localStorage.getItem('pocketsaga-saved-posts') || '[]'); } catch {}
+  const saved = new Set(Array.isArray(savedIds) ? savedIds.filter(id => previews.has(id)) : []);
+  // Add preview examples once, retaining existing saves and later removals.
+  let seedExamples = true;
+  try { seedExamples = localStorage.getItem('pocketsaga-saved-examples-v1') !== '1'; } catch {}
+  if (seedExamples) {
+    (catalog.savedPostIds || []).filter(id => previews.has(id)).forEach(id => saved.add(id));
+    try {
+      localStorage.setItem('pocketsaga-saved-posts', JSON.stringify([...saved]));
+      localStorage.setItem('pocketsaga-saved-examples-v1', '1');
+    } catch {}
+  }
+  function setSaved(id, value) {
+    requireRecord(previews, id, 'post');
+    if (value) saved.add(id); else saved.delete(id);
+    try { localStorage.setItem('pocketsaga-saved-posts', JSON.stringify([...saved])); } catch {}
+  }
   function setLike(postId, liked, count) {
     const post = requireRecord(previews, postId, 'post');
     post.liked = liked; post.likes = count - Number(liked);
   }
-  window.PocketSagaData = { post, community, discover, editor, publish, addComment, setLike,
+  window.PocketSagaData = { post, community, discover, editor, publish, addComment, setLike, setSaved, isSaved: id => saved.has(id), savedPosts: () => [...saved].reverse().map(id => previews.get(id)).filter(Boolean),
     hasPost: id => previews.has(id), hasCommunity: id => communities.has(id) };
 })();

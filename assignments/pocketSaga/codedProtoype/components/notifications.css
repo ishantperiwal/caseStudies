@@ -30,17 +30,17 @@
 .notification-group { display: inline-flex; align-items: center; gap: 5px; }
 .notification-group .icon { width: 13px; height: 13px; flex-shrink: 0; }
 
-.notifications-overlay { position: absolute; inset: 0; z-index: 120; display: flex; align-items: flex-end; padding: 70px 16px 32px; background: rgb(0 0 0 / 55%); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); animation: notification-overlay-in .22s ease-out; }
+.notifications-overlay { position: absolute; inset: 0; z-index: 120; display: flex; align-items: flex-start; padding: 70px 16px 32px; background: rgb(0 0 0 / 55%); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); animation: notification-overlay-in .22s ease-out; }
 .notifications-unread-panel { width: 100%; max-height: 100%; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
-.notifications-unread-header { display: flex; align-items: center; justify-content: center; gap: 16px; flex-shrink: 0; }
-.notifications-unread-header .round-action { flex: 0 0 44px; background: #ffffff0d; }
 .notifications-unread-list { overflow-y: auto; min-height: 0; overscroll-behavior: contain; scrollbar-width: none; border-radius: 20px; }
 .notifications-unread-list .notification-item:last-child { margin-bottom: 0; }
-.notifications-history { flex-shrink: 0; align-self: center; width: fit-content; max-width: 100%; padding: 14px 20px; border-radius: 22px; gap: 8px; color: var(--accent); font-size: 13px; min-height: 50px; background: linear-gradient(140deg, #d9fbe914, #ffffff06); box-shadow: inset 0 1px 0 #d9fbe91c; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.notifications-history { flex-shrink: 0; align-self: center; width: fit-content; max-width: 100%; color: var(--text); --control: rgb(255 255 255 / 12%); }
 .notifications-history .icon { width: 14px; height: 14px; rotate: -90deg; }
 .notifications-unread-panel .notifications-empty { padding: 40px 20px; }
 @keyframes notification-overlay-in { from { opacity: 0; } to { opacity: 1; } }
-.notifications-unread-list .notification-item, .notifications-unread-header, .notifications-history, .notifications-unread-panel .notifications-empty { animation: notification-card-in .42s cubic-bezier(.2,.7,.2,1) var(--notification-delay, 0ms) backwards; }
+.notifications-unread-list .notification-item, .notifications-overlay-title, .notifications-history, .notifications-unread-panel .notifications-empty { animation: notification-card-in .42s cubic-bezier(.2,.7,.2,1) var(--notification-delay, 0ms) backwards; }
 .notifications-history { --notification-delay: 210ms; }
-@keyframes notification-card-in { from { opacity: 0; transform: translateY(24px); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
-@media (prefers-reduced-motion: reduce) { .notifications-overlay, .notifications-unread-panel, .notifications-unread-list .notification-item, .notifications-unread-header, .notifications-history, .notifications-unread-panel .notifications-empty { animation: none; } }
+@keyframes notification-card-in { from { opacity: 0; transform: translateY(-24px); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+@media (prefers-reduced-motion: reduce) { .notifications-overlay, .notifications-unread-panel, .notifications-unread-list .notification-item, .notifications-overlay-title, .notifications-history, .notifications-unread-panel .notifications-empty { animation: none; } }
+
+.notifications-overlay-title { font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 26px; font-weight: 500; text-align: center; flex-shrink: 0; }

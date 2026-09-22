@@ -75,6 +75,7 @@
       if (next === docked) return;
       const from = next ? tabs : fixedTabs, to = next ? fixedTabs : tabs;
       const focusedIndex = [...from.querySelectorAll('.discover-tab')].indexOf(document.activeElement);
+      to.scrollLeft = from.scrollLeft;
       docked = next;
       setVisible(tabs, !docked);
       setVisible(fixedTabs, docked);
@@ -208,7 +209,12 @@
       hidden = next;
       navigation.inert = hidden;
       navigation.setAttribute('aria-hidden', String(hidden));
-      gsap.to(navigation, { yPercent: hidden ? 100 : 0, autoAlpha: hidden ? 0 : 1, duration: reduced.matches ? 0 : .3, ease: 'power2.out', overwrite: true });
+      // An opacity below 1 on this ancestor isolates the glass from the feed.
+      // Keep it opaque throughout the slide so backdrop blur remains active.
+      gsap.set(navigation, { opacity: 1, visibility: 'visible' });
+      gsap.to(navigation, { yPercent: hidden ? 100 : 0, duration: reduced.matches ? 0 : .3, ease: 'power2.out', overwrite: true,
+        onComplete: () => { if (hidden) navigation.style.visibility = 'hidden'; }
+      });
     };
     const update = () => {
       frame = 0;
@@ -268,5 +274,35 @@
         .to(heart, { opacity: 0, scale: .35, duration: .32 }, .54 + index * .035);
     });
   }
-  window.PocketSagaMotion = { scrollHeader, selectionHighlight, dockTabs, collapseCarousel, autoHideNavigation, animateLike };
+  const saveAnimations = new WeakMap();
+  function animateSave(button, saved) {
+    saveAnimations.get(button)?.();
+    const icon = button.querySelector('.icon-bookmark');
+    if (!icon || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let bubble;
+    const timeline = gsap.timeline({ onComplete: () => {
+      bubble?.remove();
+      gsap.set(icon, { clearProps: 'transform,transformOrigin' });
+      saveAnimations.delete(button);
+    } });
+    saveAnimations.set(button, () => {
+      timeline.kill(); bubble?.remove();
+      gsap.set(icon, { clearProps: 'transform,transformOrigin' });
+      saveAnimations.delete(button);
+    });
+    gsap.set(icon, { transformOrigin: '50% 50%' });
+    timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
+      .to(icon, { scale: 1, duration: saved ? .6 : .18, ease: saved ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    if (!saved) return;
+    bubble = document.createElement('span');
+    bubble.className = 'save-feedback';
+    bubble.textContent = 'Saved';
+    bubble.setAttribute('aria-hidden', 'true');
+    button.append(bubble);
+    gsap.set(bubble, { y: 8, scale: .8, opacity: 0, rotation: -4, transformOrigin: 'bottom right' });
+    timeline.to(bubble, { y: -44, duration: 1.03, ease: 'none' }, .1)
+      .to(bubble, { opacity: 1, scale: 1, rotation: 0, duration: .28, ease: 'back.out(1.5)' }, .1)
+      .to(bubble, { opacity: 0, scale: .94, duration: .35, ease: 'power1.in' }, .78);
+  }
+  window.PocketSagaMotion = { scrollHeader, selectionHighlight, dockTabs, collapseCarousel, autoHideNavigation, animateLike, animateSave };
 })();

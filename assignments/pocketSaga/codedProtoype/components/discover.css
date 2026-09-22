@@ -1,5 +1,5 @@
 .discover-page { --background: #080a0b; }
-.discover-base-tint { position: absolute; inset: 0; background: #141617; opacity: 0; pointer-events: none; }
+.discover-base-tint { position: absolute; inset: 0; background: #121415; opacity: 0; pointer-events: none; }
 /* Hero-only trial: favor blurred artwork over the extracted-color wash. */
 .discover-page .atmosphere .ambient-poster-texture { --texture-opacity: .52; }
 .discover-page .atmosphere .ambient-color-base { opacity: .55; }
@@ -21,7 +21,7 @@
   -webkit-mask-image: var(--header-feather);
   mask-image: var(--header-feather);
 }
-.discover-page .screen-top-blur { top: 0; height: 145px; opacity: 0; }
+.discover-page .screen-top-blur { top: 0; height: 157px; opacity: 0; }
 .discover-page:has(.has-docked-tabs) .screen-top-blur { opacity: 1; }
 .discover-page .screen-top-blur::after {
   content: "";
@@ -107,3 +107,13 @@
 .phone-case .recommended-groups-title { margin: 0 0 4px; font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
 
 .bottom-destination .avatar { width: 20px; height: 20px; }
+
+.discover-tab { gap: 8px; white-space: nowrap; }
+.discover-tab > .icon { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* Four feed tabs retain comfortable sizing and scroll horizontally. */
+.discover-tabs { width: calc(100% + 32px); max-width: none; margin-left: -16px; overflow-x: auto; scrollbar-width: none; }
+.discover-tabs-track { display: flex; align-items: center; gap: 8px; width: max-content; min-height: 44px; padding: 0 16px; flex-shrink: 0; }
+.discover-tabs-track > .discover-tab { position: relative; z-index: 1; flex-shrink: 0; }
+.phone-case .discover-tabs-track > .selection-highlight { z-index: 0; }
+.discover-post .reaction-bar > .save-post { margin-left: auto; }

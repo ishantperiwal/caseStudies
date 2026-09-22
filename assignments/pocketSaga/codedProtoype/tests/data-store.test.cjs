@@ -4,8 +4,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
-function load() {
-  const scope = { window: {}, structuredClone };
+function load(localStorage) {
+  const scope = { window: {}, structuredClone, localStorage };
   vm.createContext(scope);
   for (const file of ['app-data.js', 'data-store.js']) vm.runInContext(fs.readFileSync(path.join(root, 'components', file), 'utf8'), scope);
   return { store: scope.window.PocketSagaData, catalog: scope.window.pocketSagaData };
@@ -65,4 +65,22 @@ test('every post keeps its media identifier and only clip attachments say Watch 
   const clipPost = store.publish({ ...draft, id: 'clip-post', clip });
   assert.equal(clipPost.attachment.action, 'Watch clip');
   assert.equal(clipPost.attachment.clip, clip);
+});
+
+test('saved posts stay unique, can be removed, and survive reload', () => {
+  const values = new Map();
+  const storage = { getItem: key => values.get(key) || null, setItem: (key, value) => values.set(key, value) };
+  const { store } = load(storage);
+  assert.equal(store.savedPosts().length, 3);
+  store.savedPosts().forEach(post => store.setSaved(post.id, false));
+  store.setSaved('winden', true);
+  store.setSaved('winden', true);
+  store.setSaved('silicon-demo', true);
+  assert.equal(store.savedPosts().length, 2);
+  assert.equal(store.savedPosts()[0].id, 'silicon-demo');
+  const reloaded = load(storage).store;
+  assert.equal(reloaded.isSaved('winden'), true);
+  reloaded.setSaved('winden', false);
+  assert.equal(load(storage).store.isSaved('winden'), false);
+  assert.throws(() => store.setSaved('missing', true), /Unknown post/);
 });

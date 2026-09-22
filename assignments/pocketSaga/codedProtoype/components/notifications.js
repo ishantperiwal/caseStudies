@@ -52,20 +52,19 @@
       const finish = () => { remove(restoreFocus); afterClose(); };
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
       const cards = [...list.children].reverse();
-      const controls = [closeButton, panel.querySelector('.notifications-history')];
+      const controls = [panel.querySelector('.notifications-overlay-title'), panel.querySelector('.notifications-history')];
       // Preserve the current entrance frame when closing before it finishes.
-      for (const element of [overlay, panel.querySelector('.notifications-unread-header'), ...cards, ...controls]) {
+      for (const element of [overlay, ...cards, ...controls]) {
         const style = getComputedStyle(element);
         const snapshot = { opacity: style.opacity, transform: style.transform, filter: style.filter };
         element.style.animation = 'none';
         gsap.set(element, snapshot);
       }
       exitAnimation = gsap.timeline({ onComplete: finish })
-        .to(cards, { y: 20, opacity: 0, filter: 'blur(7px)', duration: .24, stagger: { each: .035, amount: Math.min(.14, Math.max(0, cards.length - 1) * .035) }, ease: 'power2.in' }, 0)
-        .to(controls, { y: 10, opacity: 0, filter: 'blur(4px)', duration: .22, ease: 'power2.in' }, 0)
+        .to(cards, { y: -20, opacity: 0, filter: 'blur(7px)', duration: .24, stagger: { each: .035, amount: Math.min(.14, Math.max(0, cards.length - 1) * .035) }, ease: 'power2.in' }, 0)
+        .to(controls, { y: -10, opacity: 0, filter: 'blur(4px)', duration: .22, ease: 'power2.in' }, 0)
         .to(overlay, { opacity: 0, backdropFilter: 'blur(0px)', webkitBackdropFilter: 'blur(0px)', duration: .3, ease: 'power2.inOut' }, .08);
     }
-    const closeButton = Action({ label: 'Close notifications', icon: 'x', children: '', className: 'round-action', onClick: () => close() });
     const list = node('div', 'notifications-unread-list');
     const unread = items.filter(item => item.unread);
     unread.forEach((item, index) => {
@@ -75,9 +74,9 @@
     });
     if (!unread.length) list.append(node('div', 'notifications-empty', [Icon('check'), node('h2', '', 'All caught up'), node('p', '', 'No unread notifications.')]));
     const panel = node('section', 'notifications-unread-panel', [
-      node('div', 'notifications-unread-header', closeButton),
+      node('h2', 'notifications-overlay-title', 'Notifications'),
       list,
-      Action({ label: 'Show notification history', className: 'notifications-history', children: ['Show notification history', Icon('chevron-down')], onClick: () => { close(false, onHistory); } })
+      Action({ label: 'Show notification history', className: 'detail-pill notifications-history', children: ['Show notification history', Icon('chevron-down')], onClick: () => { close(false, onHistory); } })
     ]);
     overlay.append(panel);
     overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
@@ -91,7 +90,7 @@
     }
     document.addEventListener('keydown', onKey);
     screen.append(overlay);
-    closeButton.focus({ preventScroll: true });
+    panel.querySelector('.notifications-history').focus({ preventScroll: true });
     return () => { exitAnimation?.kill(); remove(false); };
   }
   function Page() {
@@ -109,7 +108,7 @@
       if (!list.children.length) list.append(node('div', 'notifications-empty', [Icon('check'), node('h2', '', 'All caught up'), node('p', '', 'New likes, comments and replies will appear here.')]));
       updateBadge();
     }
-    const header = node('header', 'page-navigation', [Action({ label: 'Back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back') }), node('h1', 'screen-navigation-title notifications-heading', 'Notifications'), node('span', 'notifications-header-spacer')]);
+    const header = node('header', 'page-navigation', [Action({ label: 'Back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back') }), node('h1', 'screen-navigation-title notifications-heading', 'Notification History'), node('span', 'notifications-header-spacer')]);
     const content = node('div', 'notifications-scroll', [list]);
     page = PhoneFrame({ device: pocketSagaData.device, content });
     page.classList.add('notifications-page');

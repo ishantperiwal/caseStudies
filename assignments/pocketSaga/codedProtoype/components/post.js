@@ -1,6 +1,6 @@
 /* Focused post and comment components, reusable standalone or inside the navigation shell. */
 (() => {
-  const { node, Action, Avatar, MediaAttachment, SceneAttachment, PhoneFrame, Composer, SeparatedMeta } = PocketSaga;
+  const { node, Action, Avatar, SaveButton, MediaAttachment, SceneAttachment, PhoneFrame, Composer, SeparatedMeta } = PocketSaga;
   const pageEmitters = new WeakMap();
   const pageSize = data => Math.max(1, Math.floor(data.commentPageSize || 10));
   function Attribution(post, community, emit) {
@@ -24,7 +24,7 @@
     return button;
   }
   function PostActions(post, emit) {
-    return node('div', 'post-detail-actions', [LikeButton(post, emit, 'detail-pill'), Action({ label: 'Share', icon: 'share-2', className: 'detail-pill', onClick: () => emit('share', { post }) })]);
+    return node('div', 'post-detail-actions', [LikeButton(post, emit, 'detail-pill'), Action({ label: 'Share', icon: 'share-2', className: 'detail-pill', onClick: () => emit('share', { post }) }), SaveButton(post, 'detail-pill')]);
   }
   function CommentCard(comment, emit) {
     const card = node('article', 'comment-card', [

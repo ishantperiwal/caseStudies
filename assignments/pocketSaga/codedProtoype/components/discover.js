@@ -1,5 +1,5 @@
 (() => {
-  const { node, Action, Artwork, AmbientArtwork, PhoneFrame, PostCard, Avatar, Icon, SeparatedMeta } = PocketSaga;
+  const { node, Action, Artwork, AmbientArtwork, PhoneFrame, PostCard, SaveButton, Avatar, Icon, SeparatedMeta } = PocketSaga;
   function GroupRow(group, onJoin, recommended = false, onOpen = () => {}) {
     const button = Action({ label: group.joined ? `Joined ${group.name}` : `Join ${group.name}`, icon: group.joined ? 'check' : 'users', className: 'group-join tap-feedback', children: group.joined ? 'Joined' : recommended ? 'Join' : group.members, onClick: () => {
       group.joined = !group.joined;
@@ -80,6 +80,7 @@
         emit(action, detail);
       });
       card.classList.add('discover-post');
+      card.querySelector('.reaction-bar').append(SaveButton(post));
       const artwork = post.artwork || group?.artwork;
       if (artwork) {
         PocketSagaMedia.apply(card, artwork);
@@ -124,13 +125,15 @@
         );
       }
       else {
-        const posts = activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
-        list.replaceChildren(...(posts.length ? posts.map(renderPost) : [node('p', 'empty-feed', 'Your thoughts belong here. Write about something you’ve watched.')]));
+        const posts = activeTab === 'Saved' ? PocketSagaData.savedPosts() : activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
+        list.replaceChildren(...(posts.length ? posts.map(renderPost) : [node('p', 'empty-feed', activeTab === 'Saved' ? 'Save posts to revisit them here.' : 'Your thoughts belong here. Write about something you’ve watched.')]));
       }
     }
     function compose(item = null, source = null) {
       emit('create-post', { media: item, source });
     }
+    const onSavedChange = () => { if (activeTab === 'Saved') renderFeed(); };
+    document.addEventListener('post-saved-change', onSavedChange);
     const onPublished = event => {
       localPosts.unshift(event.detail.post);
       renderFeed();
@@ -153,13 +156,16 @@
     function selectFilter(label) {
       if (activeTab === label) return;
       activeTab = label;
-      for (const { buttons, selection } of filterRows) {
+      for (const { row, buttons, selection } of filterRows) {
         buttons.forEach(button => {
-          const selected = button.textContent === activeTab;
+          const selected = button.getAttribute('aria-label') === activeTab;
           button.classList.toggle('is-selected', selected);
           button.setAttribute('aria-pressed', String(selected));
         });
-        selection.move(buttons.find(button => button.textContent === activeTab));
+        const selectedButton = buttons.find(button => button.getAttribute('aria-label') === activeTab);
+        selection.move(selectedButton);
+        const target = Math.max(0, selectedButton.offsetLeft - (row.clientWidth - selectedButton.offsetWidth) / 2);
+        row.scrollTo({ left: target, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
       }
       feedTransition?.kill();
       if (reducedMotion.matches) { renderFeed(); gsap.set(list, { opacity: 1, filter: 'blur(0px)' }); list.inert = false; return; }
@@ -170,18 +176,19 @@
         .to(list, { opacity: 1, filter: 'blur(0px)', duration: .3, ease: 'power2.out' });
     }
     function createFilters(fixed = false) {
-      const row = node('div', `discover-tabs${fixed ? ' discover-tabs-fixed' : ''}`, ['For you', 'Your posts', 'Your groups'].map(label => Action({
-        label, className: `discover-tab glass-choice tap-feedback${label === activeTab ? ' is-selected' : ''}`,
+      const track = node('div', 'discover-tabs-track', ['For you', 'Your posts', 'Your groups', 'Saved'].map(label => Action({
+        label, icon: { 'For you': 'sparkles', 'Your posts': 'square-pen', 'Your groups': 'users', 'Saved': 'bookmark' }[label], className: `discover-tab glass-choice tap-feedback${label === activeTab ? ' is-selected' : ''}`,
         onClick: () => selectFilter(label)
       })));
-      row.setAttribute('aria-label', 'Community feed filters');
-      const buttons = [...row.children];
+      const row = node('div', `discover-tabs${fixed ? ' discover-tabs-fixed' : ''}`, track);
+      row.setAttribute('aria-label', 'Community feed tabs');
+      const buttons = [...track.children];
       buttons.forEach(button => {
-        button.setAttribute('aria-pressed', String(button.textContent === activeTab));
+        button.setAttribute('aria-pressed', String(button.getAttribute('aria-label') === activeTab));
         button.setAttribute('aria-controls', list.id);
       });
       if (fixed) { row.inert = true; row.setAttribute('aria-hidden', 'true'); }
-      filterRows.push({ row, buttons, selection: PocketSagaMotion.selectionHighlight(row, buttons) });
+      filterRows.push({ row, buttons, selection: PocketSagaMotion.selectionHighlight(track, buttons) });
       return row;
     }
     const tabs = createFilters();
@@ -226,7 +233,7 @@
     const stopCarouselCollapse = PocketSagaMotion.collapseCarousel({ scroller, carousel: deck.element, anchor: tabAnchor, slot: headingSlot, tabs: [tabs, fixedTabs], headerElements: [greeting, header.querySelector('.discover-utilities')] });
     const stopAutoHide = PocketSagaMotion.autoHideNavigation({ scroller, navigation: page.querySelector('.bottom-navigation-area') });
     renderFeed();
-    return { element: page, destroy() { page.removeEventListener('draft-published', onPublished); stopAutoHide(); stopCarouselCollapse(); undockTabs(); deck.destroy(); filterRows.forEach(({ selection }) => selection.destroy()); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
+    return { element: page, destroy() { document.removeEventListener('post-saved-change', onSavedChange); page.removeEventListener('draft-published', onPublished); stopAutoHide(); stopCarouselCollapse(); undockTabs(); deck.destroy(); filterRows.forEach(({ selection }) => selection.destroy()); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
   }
   window.PocketSagaDiscover = { GroupRow, BottomNavigation, DiscoverPage, mount(target,data,handlers) { const view = DiscoverPage(data,handlers); return PocketSaga.mountPage(target,view.element,()=>view.destroy); } };
 })();

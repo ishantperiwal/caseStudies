@@ -140,6 +140,22 @@
   function SceneAttachment(scene) {
     return scene?.src ? Artwork(scene.src, 'post-scene-image', scene.alt || 'Attached scene') : null;
   }
+  function SaveButton(post, className = '') {
+    const button = Action({ label: 'Save post', icon: 'bookmark', className: `save-post ${className}`, children: '', onClick: () => {
+      PocketSagaData.setSaved(post.id, !PocketSagaData.isSaved(post.id));
+      document.querySelectorAll('.save-post').forEach(control => {
+        const saved = PocketSagaData.isSaved(control.dataset.postId);
+        control.setAttribute('aria-pressed', String(saved));
+        control.setAttribute('aria-label', saved ? 'Unsave post' : 'Save post');
+      });
+      PocketSagaMotion.animateSave(button, PocketSagaData.isSaved(post.id));
+      document.dispatchEvent(new CustomEvent('post-saved-change', { detail: { id: post.id } }));
+    } });
+    button.dataset.postId = post.id;
+    button.setAttribute('aria-pressed', String(PocketSagaData.isSaved(post.id)));
+    button.setAttribute('aria-label', PocketSagaData.isSaved(post.id) ? 'Unsave post' : 'Save post');
+    return button;
+  }
   function ReactionBar(post, emit) {
     const like = Action({ label: `${(post.likes ?? 0) + Number(Boolean(post.liked))} likes`, icon: 'heart', className: 'like-action', children: String((post.likes ?? 0) + Number(Boolean(post.liked))), onClick: () => emit('like', { post }) });
     like.setAttribute('aria-pressed', String(Boolean(post.liked)));
@@ -225,7 +241,7 @@
       actionSlot: page.querySelector('.navigation-action-slot')
     });
   }
-  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, MediaAttachment, SceneAttachment, ReactionBar, Avatar, Artwork, AmbientArtwork, Action, Icon, MessageComposer,
+  window.PocketSaga = { node, SeparatedMeta, mountPage, CommunityPage, PhoneFrame, StatusBar, HomeIndicator, ProgressiveBlur, AtmosphericBackground, CommunityHeader, Composer, FeedToolbar, PostCard, AuthorMeta, SaveButton, MediaAttachment, SceneAttachment, ReactionBar, Avatar, Artwork, AmbientArtwork, Action, Icon, MessageComposer,
     setupCommunity,
     mount(target, data, handlers) {
       return mountPage(target, CommunityPage(data, handlers), setupCommunity);
