@@ -72,19 +72,19 @@ header{position:relative;z-index:2}
 #view-menu button[aria-checked=true]::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(155deg,#ffffff38,#ffffff0e 38%,#ffffff02 72%,#ffffff08);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
 #view-menu button:hover:not([aria-checked=true]){background:rgb(255 255 255/.05);color:var(--ink)}
 /* Laptop/desktop: two panes. A full-height glass sidebar on the left holds the view list (the dropdown trigger is
-   hidden); the selected view's content sits in a matching full-height rounded glass panel on the right. */
+   hidden); the selected view's content sits inside a rounded outline with no fill on the right. */
 @media (min-width:1024px){
-  body{padding:24px 24px 24px 284px;height:100svh;min-height:0;overflow:hidden}
+  body{padding:24px 24px 24px 300px;height:100svh;min-height:0;overflow:hidden}
   main{min-height:0;overflow:auto;align-content:safe center;padding-top:32px;padding-bottom:32px;-webkit-mask:linear-gradient(transparent,#000 28px,#000 calc(100% - 28px),transparent);mask:linear-gradient(transparent,#000 28px,#000 calc(100% - 28px),transparent)}
   header{padding:0;height:0}
-  footer{position:fixed;left:284px;right:24px;bottom:24px;z-index:3;transition:opacity .35s,visibility .35s}
+  footer{position:fixed;left:300px;right:24px;bottom:24px;z-index:3;transition:opacity .35s,visibility .35s}
   body:not([data-view=material]):not([data-view=background]) footer{opacity:0;visibility:hidden}
   body{grid-template-rows:auto 1fr}
-  body::before{content:'';position:fixed;top:24px;right:24px;bottom:24px;left:284px;z-index:0;border-radius:28px;pointer-events:none;background:linear-gradient(180deg,rgb(255 255 255/.04),rgb(255 255 255/.012)),rgb(10 13 12/.22);box-shadow:0 18px 40px #0004}
-  body::after{content:'';position:fixed;top:24px;right:24px;bottom:24px;left:284px;z-index:0;border-radius:28px;padding:1px;pointer-events:none;background:linear-gradient(155deg,#ffffff2a,#ffffff0a 38%,#ffffff02 72%,#ffffff08);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+  body::before{content:'';position:fixed;top:24px;right:24px;bottom:24px;left:300px;z-index:0;border-radius:28px;pointer-events:none;background:none;box-shadow:0 18px 40px #0004}
+  body::after{content:'';position:fixed;top:24px;right:24px;bottom:24px;left:300px;z-index:2;border-radius:28px;padding:1px;pointer-events:none;background:radial-gradient(ellipse 12% 75% at top left,#ffffff0c,transparent 100%),linear-gradient(155deg,#ffffff28,#ffffff08 38%,#ffffff02 72%,#ffffff08);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
   main{position:relative;z-index:1}
   #view{display:none}
-  #view-menu,#view-menu[hidden]{display:block!important;position:fixed;left:24px;top:24px;bottom:24px;transform:none;min-width:0;width:236px;padding:12px;overflow:auto;border-radius:28px;background:linear-gradient(180deg,rgb(255 255 255/.07),rgb(255 255 255/.025)),rgb(10 13 12/.42);box-shadow:0 18px 40px #0005;backdrop-filter:blur(22px) saturate(1.1)}
+  #view-menu,#view-menu[hidden]{display:block!important;position:fixed;left:24px;top:24px;bottom:24px;transform:none;min-width:0;width:252px;padding:12px;overflow:auto;border-radius:28px;background:linear-gradient(180deg,rgb(255 255 255/.07),rgb(255 255 255/.025)),rgb(10 13 12/.50);box-shadow:0 18px 40px #0005;backdrop-filter:blur(22px) saturate(1.1)}
   #view-menu::before{content:'';position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(155deg,#ffffff30,#ffffff0c 38%,#ffffff02 72%,#ffffff08);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
   #view-menu button{padding:12px 14px;border-radius:16px}
   #view-menu button+button{margin-top:4px}

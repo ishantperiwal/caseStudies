@@ -41820,6 +41820,1228 @@
           ]
         }
       ]
+    },
+    {
+      "type": "frame",
+      "id": "n70bW6",
+      "x": 3411,
+      "y": 0,
+      "name": "01d · Streaming Home / Ribbon gradient background",
+      "context": "Main streaming Home. Sample catalog artwork supplied by user. Dark Continue watching and episode-complete Community entry lead to existing title and community screens. Search opens on demand. Additional context screen outside the five community deliverables.",
+      "clip": true,
+      "width": 414,
+      "fill": {
+        "type": "shader",
+        "enabled": true,
+        "url": "ribbon-flow.glsl",
+        "uniforms": {
+          "u_speed": 0.08,
+          "u_softness": 0.3,
+          "u_intensity": 1.3,
+          "u_angle": 0,
+          "u_motion": 0.16,
+          "u_warp": 0,
+          "u_grain": 0.35,
+          "u_bg": "#05080A",
+          "u_mint": "#BDE0CA"
+        }
+      },
+      "cornerRadius": 36,
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "bDHXo",
+          "name": "Home status bar",
+          "width": "fill_container",
+          "height": 54,
+          "gap": 10,
+          "padding": [
+            0,
+            25
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "pLaEO",
+              "name": "Time",
+              "fill": "$ag-ink",
+              "content": "9:41",
+              "fontFamily": "$ag-font",
+              "fontSize": 14,
+              "fontWeight": "700"
+            },
+            {
+              "type": "frame",
+              "id": "Pjb5i",
+              "name": "Device status",
+              "gap": 5,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "LqydO",
+                  "name": "Signal",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "signal",
+                  "library": "lucide",
+                  "fill": "$ag-ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "X7PxfS",
+                  "name": "Wi-Fi",
+                  "width": 15,
+                  "height": 15,
+                  "icon": "wifi",
+                  "library": "lucide",
+                  "fill": "$ag-ink"
+                },
+                {
+                  "type": "icon",
+                  "id": "zt696",
+                  "name": "Battery",
+                  "width": 21,
+                  "height": 21,
+                  "icon": "battery-full",
+                  "library": "lucide",
+                  "fill": "$ag-ink"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "XGswi",
+          "name": "Streaming home content",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 24,
+          "padding": [
+            4,
+            22,
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "ABfQP",
+              "name": "Home header",
+              "width": "fill_container",
+              "gap": 10,
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "neTQn",
+                  "name": "Profile greeting",
+                  "fill": "$ag-ink",
+                  "content": "For Anika",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 24,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.7
+                },
+                {
+                  "type": "frame",
+                  "id": "pPRyp",
+                  "name": "Home utilities",
+                  "gap": 4,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "rzD3b",
+                      "name": "Cast to screen",
+                      "width": 40,
+                      "height": 40,
+                      "gap": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "rt3mv",
+                          "name": "Cast to screen icon",
+                          "width": 21,
+                          "height": 21,
+                          "icon": "cast",
+                          "library": "lucide",
+                          "fill": "$ag-ink"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dZ0rU",
+                      "name": "Search catalog",
+                      "width": 40,
+                      "height": 40,
+                      "gap": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "D6yK4U",
+                          "name": "Search catalog icon",
+                          "width": 21,
+                          "height": 21,
+                          "icon": "search",
+                          "library": "lucide",
+                          "fill": "$ag-ink"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "vPqYI",
+              "name": "Catalog filters",
+              "width": "fill_container",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "IAdV2",
+                  "name": "All selected",
+                  "fill": "$ag-accent",
+                  "content": "All",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 13,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "TkASR",
+                  "name": "Series filter",
+                  "fill": "$ag-muted",
+                  "content": "TV shows",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "dudLi",
+                  "name": "Films filter",
+                  "fill": "$ag-muted",
+                  "content": "Movies",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "mhaAL",
+                  "name": "Genre picker",
+                  "gap": 5,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RNFuu",
+                      "name": "Category label",
+                      "fill": "$ag-muted",
+                      "content": "Categories",
+                      "fontFamily": "$ag-font",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "icon",
+                      "id": "A3eBK",
+                      "name": "Open categories",
+                      "width": 14,
+                      "height": 14,
+                      "icon": "chevron-down",
+                      "library": "lucide",
+                      "fill": "$ag-muted"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "a12gi9",
+              "name": "Featured Interstellar",
+              "context": "Cinematic hero with rounded top corners and a borderless lower fade into the page. Dark backing prevents a pale rim; the bottom becomes fully opaque before the clipping boundary. Original poster crop retained.",
+              "clip": true,
+              "width": "fill_container",
+              "height": 380,
+              "fill": "#080A0B",
+              "cornerRadius": [
+                18,
+                18,
+                0,
+                0
+              ],
+              "layout": "none",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "FYsqg",
+                  "x": 0,
+                  "y": -22,
+                  "name": "Interstellar supplied poster",
+                  "context": "Intentional poster crop inside hero: retains the astronaut’s face; release credits extend below the masked artwork area.",
+                  "fill": {
+                    "type": "image",
+                    "enabled": true,
+                    "url": "../movieShowAsset/Interstellar (2014).jpg",
+                    "mode": "fill"
+                  },
+                  "width": 370,
+                  "height": 548
+                },
+                {
+                  "type": "rectangle",
+                  "id": "Ssqjw",
+                  "x": 0,
+                  "y": 0,
+                  "name": "Hero reading gradient",
+                  "fill": {
+                    "type": "gradient",
+                    "gradientType": "linear",
+                    "enabled": true,
+                    "rotation": 180,
+                    "size": {
+                      "height": 1
+                    },
+                    "colors": [
+                      {
+                        "color": "#080A0B08",
+                        "position": 0
+                      },
+                      {
+                        "color": "#080A0B10",
+                        "position": 0.3
+                      },
+                      {
+                        "color": "#080A0BE8",
+                        "position": 0.78
+                      },
+                      {
+                        "color": "#080A0BFF",
+                        "position": 0.92
+                      },
+                      {
+                        "color": "#080A0BFF",
+                        "position": 1
+                      }
+                    ]
+                  },
+                  "width": 370,
+                  "height": 380
+                },
+                {
+                  "type": "frame",
+                  "id": "GlPvr",
+                  "x": 20,
+                  "y": 244,
+                  "name": "Featured title and actions",
+                  "width": 330,
+                  "layout": "vertical",
+                  "gap": 12,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "PM93r",
+                      "name": "Hero title",
+                      "fill": "#F3F5EF",
+                      "content": "INTERSTELLAR",
+                      "fontFamily": "$ag-font",
+                      "fontSize": 29,
+                      "fontWeight": "600",
+                      "letterSpacing": 2
+                    },
+                    {
+                      "type": "text",
+                      "id": "DooMY",
+                      "name": "Hero genres",
+                      "fill": "#CDD8D3",
+                      "content": "Mind-bending · Emotional · Sci-fi",
+                      "fontFamily": "$ag-font",
+                      "fontSize": 11,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Dzx71",
+                      "name": "Featured actions",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "FE7Sx",
+                          "name": "Play Interstellar",
+                          "width": "fill_container",
+                          "height": 44,
+                          "fill": "#EEF2E9",
+                          "cornerRadius": 12,
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "YebUN",
+                              "name": "Play icon",
+                              "width": 17,
+                              "height": 17,
+                              "icon": "play",
+                              "library": "lucide",
+                              "fill": "#142A24"
+                            },
+                            {
+                              "type": "text",
+                              "id": "u98Cz",
+                              "name": "Play label",
+                              "fill": "#142A24",
+                              "content": "Play",
+                              "fontFamily": "$ag-font",
+                              "fontSize": 13,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "XOc2a",
+                          "name": "Add Interstellar to list",
+                          "width": "fill_container",
+                          "height": 44,
+                          "fill": {
+                            "type": "shader",
+                            "enabled": true,
+                            "url": "pocket%20saga%20designs-assets/liquid-glass.glsl",
+                            "uniforms": {
+                              "u_refraction": 9,
+                              "u_frost": 6,
+                              "u_tint": "#111713",
+                              "u_tintStrength": 0.6
+                            }
+                          },
+                          "cornerRadius": 12,
+                          "stroke": "#FFFFFF55",
+                          "strokeWidth": 1,
+                          "gap": 10,
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "LMOoC",
+                              "name": "Save icon",
+                              "width": 17,
+                              "height": 17,
+                              "icon": "plus",
+                              "library": "lucide",
+                              "fill": "$ag-ink"
+                            },
+                            {
+                              "type": "text",
+                              "id": "fl3Hq",
+                              "name": "My List label",
+                              "fill": "$ag-ink",
+                              "content": "My List",
+                              "fontFamily": "$ag-font",
+                              "fontSize": 13,
+                              "fontWeight": "700"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ShNMA",
+              "name": "Continue watching shelf",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 13,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "YhaqR",
+                  "name": "Continue heading",
+                  "fill": "$ag-ink",
+                  "content": "Continue watching",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 19,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "frame",
+                  "id": "yDlbA",
+                  "name": "Continue titles",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XaWi9",
+                      "name": "Dark continue item",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "jADsC",
+                          "name": "Dark landscape cover",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 103,
+                          "fill": [
+                            "#ffffff",
+                            {
+                              "type": "image",
+                              "enabled": true,
+                              "url": "pocket%20saga%20designs-assets/screenshot-imdb.com.png",
+                              "mode": "fill"
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "wnbda",
+                              "x": 0,
+                              "y": 0,
+                              "name": "Dark cover shade",
+                              "fill": "#00000020",
+                              "width": 179,
+                              "height": 103
+                            },
+                            {
+                              "type": "frame",
+                              "id": "LCUWT",
+                              "x": 70,
+                              "y": 33,
+                              "name": "Dark play",
+                              "width": 38,
+                              "height": 38,
+                              "fill": "#132821A0",
+                              "cornerRadius": 19,
+                              "stroke": "#FFFFFF66",
+                              "strokeWidth": 1,
+                              "gap": 10,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "V84lgl",
+                                  "name": "Dark play icon",
+                                  "width": 17,
+                                  "height": 17,
+                                  "icon": "play",
+                                  "library": "lucide",
+                                  "fill": "$ag-ink"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "SjEYM",
+                          "name": "Dark progress",
+                          "width": "fill_container",
+                          "height": 2,
+                          "fill": "#FFFFFF20",
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "p7v6kY",
+                              "x": 0,
+                              "y": 0,
+                              "name": "Dark watched length",
+                              "fill": "#4C665C",
+                              "width": 179,
+                              "height": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "hgoFU",
+                          "name": "Dark title",
+                          "fill": "$ag-ink",
+                          "content": "Dark",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RpJQz",
+                          "name": "Dark resume detail",
+                          "fill": "$ag-muted",
+                          "content": "S1 E4 · Ready to continue",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mxG1f",
+                      "name": "Stranger Things continue item",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "iMTvi",
+                          "name": "Stranger Things landscape cover",
+                          "clip": true,
+                          "width": "fill_container",
+                          "height": 103,
+                          "fill": [
+                            "#ffffff",
+                            {
+                              "type": "image",
+                              "enabled": true,
+                              "url": "pocket%20saga%20designs-assets/screenshot-imdb.com-1.png",
+                              "mode": "fill"
+                            }
+                          ],
+                          "cornerRadius": 10,
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "H3zu3",
+                              "x": 0,
+                              "y": 0,
+                              "name": "Stranger Things cover shade",
+                              "fill": "#00000020",
+                              "width": 179,
+                              "height": 103
+                            },
+                            {
+                              "type": "frame",
+                              "id": "X3sIOR",
+                              "x": 70,
+                              "y": 33,
+                              "name": "Stranger Things play",
+                              "width": 38,
+                              "height": 38,
+                              "fill": "#132821A0",
+                              "cornerRadius": 19,
+                              "stroke": "#FFFFFF66",
+                              "strokeWidth": 1,
+                              "gap": 10,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "Y1V2u",
+                                  "name": "Stranger Things play icon",
+                                  "width": 17,
+                                  "height": 17,
+                                  "icon": "play",
+                                  "library": "lucide",
+                                  "fill": "$ag-ink"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "ZBPJJ",
+                          "name": "Stranger Things progress",
+                          "width": "fill_container",
+                          "height": 2,
+                          "fill": "#FFFFFF20",
+                          "layout": "none",
+                          "children": [
+                            {
+                              "type": "rectangle",
+                              "id": "l3M2Bb",
+                              "x": 0,
+                              "y": 0,
+                              "name": "Stranger Things watched length",
+                              "fill": "#BDE0CA",
+                              "width": 87,
+                              "height": 2
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "M7Er4",
+                          "name": "Stranger Things title",
+                          "fill": "$ag-ink",
+                          "content": "Stranger Things",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 13,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ZpOdS",
+                          "name": "Stranger Things resume detail",
+                          "fill": "$ag-muted",
+                          "content": "S1 E2 · 24 min left",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YG2wL",
+                  "name": "Dark community contextual entry",
+                  "context": "Tap opens Dark community with spoiler boundary set to S1 E3.",
+                  "width": "fill_container",
+                  "gap": 10,
+                  "padding": [
+                    8,
+                    0,
+                    0,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "u18ih",
+                      "name": "Community entry icon",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "messages-square",
+                      "library": "lucide",
+                      "fill": "$ag-accent"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "lfPUn",
+                      "name": "Community entry text",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 4,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "NNZkF",
+                          "name": "Community entry label",
+                          "fill": "$ag-ink",
+                          "content": "Finished Dark episode 3?",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 12,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DAH7x",
+                          "name": "Community entry action",
+                          "fill": "$ag-accent",
+                          "content": "See what other viewers noticed",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "mwKCB",
+                      "name": "Open discussion arrow",
+                      "width": 17,
+                      "height": 17,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "$ag-accent"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "V5bnU",
+              "name": "Movie discovery shelf",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 13,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "WUKBo",
+                  "name": "Movie shelf heading",
+                  "fill": "$ag-ink",
+                  "content": "Your next movie night",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 19,
+                  "fontWeight": "700",
+                  "letterSpacing": -0.4
+                },
+                {
+                  "type": "frame",
+                  "id": "K5LqRY",
+                  "name": "Movie poster rail",
+                  "width": "fill_container",
+                  "gap": 11,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "BS994",
+                      "name": "Inception catalog item",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 9,
+                          "id": "szASX",
+                          "name": "Inception supplied poster",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "../movieShowAsset/Inception (2010).jpg",
+                            "mode": "fill"
+                          },
+                          "width": "fill_container",
+                          "height": 174
+                        },
+                        {
+                          "type": "text",
+                          "id": "v3aMPD",
+                          "name": "Inception caption",
+                          "fill": "$ag-muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Inception",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Y004Q",
+                      "name": "The Prestige catalog item",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 9,
+                          "id": "gGWWP",
+                          "name": "The Prestige supplied poster",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "../movieShowAsset/The Prestige (2006).jpg",
+                            "mode": "fill"
+                          },
+                          "width": "fill_container",
+                          "height": 174
+                        },
+                        {
+                          "type": "text",
+                          "id": "AIY76",
+                          "name": "The Prestige caption",
+                          "fill": "$ag-muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "The Prestige",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "cMADl",
+                      "name": "Whiplash catalog item",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 7,
+                      "children": [
+                        {
+                          "type": "rectangle",
+                          "cornerRadius": 9,
+                          "id": "jwrYR",
+                          "name": "Whiplash supplied poster",
+                          "fill": {
+                            "type": "image",
+                            "enabled": true,
+                            "url": "../movieShowAsset/Whiplash (2014).jpg",
+                            "mode": "fill"
+                          },
+                          "width": "fill_container",
+                          "height": 174
+                        },
+                        {
+                          "type": "text",
+                          "id": "eTroo",
+                          "name": "Whiplash caption",
+                          "fill": "$ag-muted",
+                          "textGrowth": "fixed-width",
+                          "width": "fill_container",
+                          "content": "Whiplash",
+                          "fontFamily": "$ag-font",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "X1DjSS",
+          "name": "Main home navigation",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 13,
+          "padding": [
+            4,
+            22,
+            12,
+            22
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "id": "wI22K",
+              "type": "ref",
+              "ref": "b9GjbO",
+              "name": "Home selected navigation",
+              "width": "fill_container",
+              "descendants": {
+                "wk00E": {
+                  "fill": "#BDE0CA"
+                },
+                "i5UvJ": {
+                  "fill": "#183D2B"
+                },
+                "TUYj5": {
+                  "fill": "#183D2B",
+                  "fontWeight": "700"
+                },
+                "xhX7T": {
+                  "fill": "#FFFFFF00"
+                },
+                "dQHDU": {
+                  "fill": "$ag-muted"
+                },
+                "NHMuM": {
+                  "fill": "$ag-muted",
+                  "fontWeight": "500"
+                }
+              }
+            },
+            {
+              "type": "rectangle",
+              "cornerRadius": 2,
+              "id": "jwdHN",
+              "name": "Home indicator",
+              "fill": "#CDDAD3",
+              "width": 112,
+              "height": 4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "PbOB3",
+      "x": 3905,
+      "y": 0,
+      "name": "Ribbon flow · Shader background",
+      "clip": true,
+      "width": 1654,
+      "height": 1203,
+      "fill": {
+        "type": "shader",
+        "enabled": true,
+        "url": "ribbon-flow.glsl",
+        "uniforms": {
+          "u_speed": 0.22,
+          "u_softness": 0.3,
+          "u_intensity": 1.9,
+          "u_angle": 0,
+          "u_motion": 0.42,
+          "u_warp": 0.55,
+          "u_grain": 0.35,
+          "u_bg": "#05080A",
+          "u_mint": "#BDE0CA"
+        }
+      },
+      "cornerRadius": 36,
+      "layout": "none"
+    },
+    {
+      "type": "frame",
+      "id": "v73aTH",
+      "x": 3905,
+      "y": 1293,
+      "name": "Mint shader studies",
+      "clip": true,
+      "fill": "#0A0D0F",
+      "cornerRadius": 20,
+      "gap": 36,
+      "padding": 36,
+      "children": [
+        {
+          "type": "frame",
+          "id": "g9l8EO",
+          "name": "Aurora veil",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "frame",
+              "id": "TsMJt",
+              "name": "Aurora veil · art",
+              "clip": true,
+              "width": 620,
+              "height": 452,
+              "fill": {
+                "type": "shader",
+                "enabled": true,
+                "url": "aurora-veil.glsl",
+                "uniforms": {
+                  "u_speed": 0.14,
+                  "u_intensity": 1,
+                  "u_grain": 0.35,
+                  "u_bg": "#05080A",
+                  "u_mint": "#BDE0CA"
+                }
+              },
+              "cornerRadius": 14,
+              "layout": "none"
+            },
+            {
+              "type": "text",
+              "id": "n4loe",
+              "name": "Aurora veil · label",
+              "fill": "$ag-ink",
+              "content": "Aurora veil",
+              "fontFamily": "$ag-font",
+              "fontSize": 17,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "EbPzF",
+              "name": "Aurora veil · caption",
+              "fill": "$ag-muted",
+              "textGrowth": "fixed-width",
+              "width": 620,
+              "content": "Drifting noise curtains, fading upward",
+              "lineHeight": 1.4,
+              "fontFamily": "$ag-font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "C3blqj",
+          "name": "Caustic weave",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "frame",
+              "id": "UErQu",
+              "name": "Caustic weave · art",
+              "clip": true,
+              "width": 620,
+              "height": 452,
+              "fill": {
+                "type": "shader",
+                "enabled": true,
+                "url": "caustic-weave.glsl",
+                "uniforms": {
+                  "u_speed": 0.16,
+                  "u_intensity": 1,
+                  "u_grain": 0.35,
+                  "u_bg": "#05080A",
+                  "u_mint": "#BDE0CA"
+                }
+              },
+              "cornerRadius": 14,
+              "layout": "none"
+            },
+            {
+              "type": "text",
+              "id": "oNxQ9",
+              "name": "Caustic weave · label",
+              "fill": "$ag-ink",
+              "content": "Caustic weave",
+              "fontFamily": "$ag-font",
+              "fontSize": 17,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "o4gjzw",
+              "name": "Caustic weave · caption",
+              "fill": "$ag-muted",
+              "textGrowth": "fixed-width",
+              "width": 620,
+              "content": "Five rotating wave fields interfering",
+              "lineHeight": 1.4,
+              "fontFamily": "$ag-font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sDGvk",
+          "name": "Silk contours",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "frame",
+              "id": "VCSws",
+              "name": "Silk contours · art",
+              "clip": true,
+              "width": 620,
+              "height": 452,
+              "fill": {
+                "type": "shader",
+                "enabled": true,
+                "url": "silk-contours.glsl",
+                "uniforms": {
+                  "u_speed": 0.13,
+                  "u_intensity": 1,
+                  "u_grain": 0.35,
+                  "u_bg": "#05080A",
+                  "u_mint": "#BDE0CA"
+                }
+              },
+              "cornerRadius": 14,
+              "layout": "none"
+            },
+            {
+              "type": "text",
+              "id": "MSMOH",
+              "name": "Silk contours · label",
+              "fill": "$ag-ink",
+              "content": "Silk contours",
+              "fontFamily": "$ag-font",
+              "fontSize": 17,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "QHkQM",
+              "name": "Silk contours · caption",
+              "fill": "$ag-muted",
+              "textGrowth": "fixed-width",
+              "width": 620,
+              "content": "Domain-warped field sliced into contour lines",
+              "lineHeight": 1.4,
+              "fontFamily": "$ag-font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KEOOV",
+          "name": "Mint orbs",
+          "layout": "vertical",
+          "gap": 12,
+          "children": [
+            {
+              "type": "frame",
+              "id": "dWDro",
+              "name": "Mint orbs · art",
+              "clip": true,
+              "width": 620,
+              "height": 452,
+              "fill": {
+                "type": "shader",
+                "enabled": true,
+                "url": "mint-orbs.glsl",
+                "uniforms": {
+                  "u_speed": 0.18,
+                  "u_intensity": 1.1,
+                  "u_grain": 0.35,
+                  "u_bg": "#05080A",
+                  "u_mint": "#BDE0CA"
+                }
+              },
+              "cornerRadius": 14,
+              "layout": "none"
+            },
+            {
+              "type": "text",
+              "id": "OphQe",
+              "name": "Mint orbs · label",
+              "fill": "$ag-ink",
+              "content": "Mint orbs",
+              "fontFamily": "$ag-font",
+              "fontSize": 17,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "text",
+              "id": "wEfqq",
+              "name": "Mint orbs · caption",
+              "fill": "$ag-muted",
+              "textGrowth": "fixed-width",
+              "width": 620,
+              "content": "Metaball iso-contours merging and splitting",
+              "lineHeight": 1.4,
+              "fontFamily": "$ag-font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        }
+      ]
     }
   ],
   "variables": {
