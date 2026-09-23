@@ -140,7 +140,7 @@
       toast('Posted to this preview');
     };
     const artworkLayers = new Map();
-    deck = PocketSagaDeck.CardDeck(data.history, data.viewer, { onCompose: compose, onProgress: ({ from, to, progress }) => {
+    deck = PocketSagaDeck.CardDeck(data.history, data.viewer, { variant: new URLSearchParams(location.search).get('carousel') === 'a' ? 'stack' : 'slide', onCompose: compose, onProgress: ({ from, to, progress }) => {
       for (const [id, image] of artworkLayers) {
         const weight = from.id === to.id ? Number(id === from.id) : id === from.id ? 1 - progress : id === to.id ? progress : 0;
         image.style.opacity = String(.58 * weight);
@@ -155,6 +155,8 @@
     const filterRows = [];
     function selectFilter(label) {
       if (activeTab === label) return;
+      const tabOrder = ['For you', 'Your posts', 'Your groups', 'Saved'];
+      const direction = Math.sign(tabOrder.indexOf(label) - tabOrder.indexOf(activeTab));
       activeTab = label;
       for (const { row, buttons, selection } of filterRows) {
         buttons.forEach(button => {
@@ -167,17 +169,27 @@
         const target = Math.max(0, selectedButton.offsetLeft - (row.clientWidth - selectedButton.offsetWidth) / 2);
         row.scrollTo({ left: target, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
       }
+      const swapFeed = () => {
+        if (scroller.classList.contains('has-docked-tabs')) {
+          const scale = scroller.getBoundingClientRect().height / scroller.clientHeight || 1;
+          const target = scroller.scrollTop + (tabAnchor.getBoundingClientRect().top - headingSlot.getBoundingClientRect().top) / scale - 6;
+          scroller.scrollTo({ top: Math.max(0, target), behavior: 'instant' });
+        }
+        renderFeed();
+      };
       feedTransition?.kill();
-      if (reducedMotion.matches) { renderFeed(); gsap.set(list, { opacity: 1, filter: 'blur(0px)' }); list.inert = false; return; }
+      if (reducedMotion.matches) { swapFeed(); gsap.set(list, { x: 0, opacity: 1, filter: 'blur(0px)' }); list.inert = false; return; }
       list.inert = true;
       feedTransition = gsap.timeline({ onComplete: () => { list.inert = false; } })
-        .to(list, { opacity: 0, filter: 'blur(4px)', duration: .16, ease: 'power2.inOut' })
-        .call(renderFeed)
-        .to(list, { opacity: 1, filter: 'blur(0px)', duration: .3, ease: 'power2.out' });
+        .to(list, { x: -20 * direction, opacity: 0, filter: 'blur(4px)', duration: .18, ease: 'power2.in' })
+        .call(swapFeed)
+        .set(list, { x: 24 * direction })
+        .to(list, { x: 0, opacity: 1, filter: 'blur(0px)', duration: .34, ease: 'power2.out' });
     }
     function createFilters(fixed = false) {
       const track = node('div', 'discover-tabs-track', ['For you', 'Your posts', 'Your groups', 'Saved'].map(label => Action({
         label, icon: { 'For you': 'sparkles', 'Your posts': 'square-pen', 'Your groups': 'users', 'Saved': 'bookmark' }[label], className: `discover-tab glass-choice tap-feedback${label === activeTab ? ' is-selected' : ''}`,
+        children: node('span', 'discover-tab-label', label),
         onClick: () => selectFilter(label)
       })));
       const row = node('div', `discover-tabs${fixed ? ' discover-tabs-fixed' : ''}`, track);

@@ -59,7 +59,7 @@
       if (keyboard) animation.to(keyboard, { y: 40, opacity: 0, duration: .28, ease: 'power2.inOut' }, 0);
     };
     const mediaSheet = searchable && layout === 'wrap';
-    if (mediaSheet) search.inputMode = 'none';
+    if (mediaSheet) search.inputMode = matchMedia('(max-width: 600px)').matches ? 'search' : 'none';
     const keyboard = mediaSheet ? SearchKeyboard(search) : null;
     overlay.classList.toggle('has-system-keyboard', mediaSheet);
     const searchSurface = mediaSheet ? node('div', 'media-search-surface glass-surface', [Icon('search'), search]) : null;
@@ -70,11 +70,19 @@
     const render = () => {
       const query = search.value.toLowerCase().trim();
       const filtered = choices.filter(item => (!query && layout === 'wrap' ? Boolean(item.watchedLabel) || item.id === selectedId : item.title.toLowerCase().includes(query)));
-      results.replaceChildren(...(filtered.length ? filtered.map(item => {
+      if (mediaSheet && !query) filtered.sort((a, b) => Number(b.id === 'dark') - Number(a.id === 'dark'));
+      const options = filtered.map(item => {
         const option = Action({ label: item.title, className: 'create-picker-option glass-surface tap-feedback', children: [item.artwork && Artwork(item.artwork, 'create-picker-artwork'), node('span', 'create-picker-copy', [node('span', 'create-picker-name', item.title), item.subtitle && SeparatedMeta(item.subtitle, 'create-picker-subtitle')]), layout !== 'wrap' && item.watchedLabel && node('span', 'create-picker-watched', item.watchedLabel), item.id === selectedId && Icon('check')], onClick: () => { onSelect(item); close(); } });
         option.setAttribute('aria-pressed', String(item.id === selectedId));
         return option;
-      }) : [node('p', 'empty-feed', 'No matching titles.')]));
+      });
+      if (mediaSheet && options.length) {
+        const rows = [];
+        const firstCount = options.length % 2 || 2;
+        rows.push(node('div', 'create-suggestion-row', options.slice(0, firstCount)));
+        for (let i = firstCount; i < options.length; i += 2) rows.push(node('div', 'create-suggestion-row', options.slice(i, i + 2)));
+        results.replaceChildren(...rows);
+      } else results.replaceChildren(...(options.length ? options : [node('p', 'empty-feed', 'No matching titles.')]));
     };
     search.addEventListener('input', render); render();
     background.forEach(([element]) => { element.inert = true; });
@@ -139,7 +147,7 @@
     };
     const openMedia = () => {
       picker?.destroy();
-      picker = ChoiceSheet(page, { title: 'Choose a title', choices: data.media.map(item => ({ ...item, subtitle: item.selectionLabel || item.scope })), selectedId: media?.id, searchable: true, layout: 'wrap', onSelect: changeMedia });
+      picker = ChoiceSheet(page, { title: 'Choose a title', choices: data.media.map(item => ({ ...item, subtitle: item.episode != null ? `S${item.season} · Episode ${item.episode}` : item.selectionLabel || item.scope })), selectedId: media?.id, searchable: true, layout: 'wrap', onSelect: changeMedia });
     };
     const openCommunity = () => {
       picker?.destroy();

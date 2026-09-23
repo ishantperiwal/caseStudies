@@ -25,7 +25,7 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 .device-status .icon-battery-full { width: 21px; height: 21px; }
 .dynamic-island { position: absolute; z-index: 2; top: 11px; left: 50%; transform: translateX(-50%); width: 118px; height: 33px; border-radius: 22px; background: radial-gradient(circle at 99px 16px, #152330 0 3px, #080b10 4px 6px, transparent 7px), #000; }
 .home-area { position: absolute; inset: auto 0 0; height: 88px; z-index: 10; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; pointer-events: none; }
-.home-indicator { position: relative; z-index: 2; width: 112px; height: 4px; border-radius: 2px; background: var(--text); opacity: .85; }
+.home-indicator { position: relative; z-index: 2; width: 112px; height: 4px; border-radius: 2px; background: var(--text); opacity: .6; }
 .progressive-blur { position: absolute; inset: 0; pointer-events: none; }
 /* End above the feed’s 67px starting inset so the back button stays crisp. */
 .progressive-blur-top { height: 59px; --direction: to top; }
@@ -201,3 +201,6 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 
 .save-post { position: relative; }
 .save-feedback { position: absolute; right: 0; bottom: calc(100% - 4px); z-index: 5; pointer-events: none; white-space: nowrap; padding: 6px 11px; border-radius: 16px; font-size: 11px; font-weight: 600; line-height: 16px; color: #eef2e9; background: rgb(35 40 38 / 72%); box-shadow: inset 0 1px 0 #ffffff24, 0 4px 12px #0003; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+
+/* Use the app’s pressed states instead of the browser’s rectangular tap flash. */
+.phone-case { -webkit-tap-highlight-color: transparent; }

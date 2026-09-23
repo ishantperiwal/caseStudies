@@ -1,8 +1,10 @@
 /* Reusable looping deck: one previous peek, active card, and a replenished right stack. */
 (() => {
   const { node, Artwork, Composer, ProgressiveBlur, SeparatedMeta } = PocketSaga;
-  function CardDeck(items, viewer, { onChange = () => {}, onCompose = () => {}, onProgress = () => {} } = {}) {
+  function CardDeck(items, viewer, { onChange = () => {}, onCompose = () => {}, onProgress = () => {}, variant = 'stack' } = {}) {
     const root = node('section', 'card-deck');
+    const sliding = variant === 'slide';
+    root.dataset.variant = sliding ? 'slide' : 'stack';
     root.tabIndex = 0;
     root.setAttribute('aria-roledescription', 'carousel');
     root.setAttribute('aria-label', 'Recently watched. Swipe or use left and right arrow keys.');
@@ -16,8 +18,14 @@
     let index = 0, cards = [], gesture = null, animation = null, blockedClick = false;
     const modulo = n => (n % items.length + items.length) % items.length;
     const width = () => stage.clientWidth - 64;
+    const activeX = () => sliding ? 32 : 24;
     const pose = slot => {
       const w = width();
+      if (sliding) {
+        const scale = slot === 0 ? 1 : .94;
+        // Keep the smaller side cards symmetric, with 28px of clear space.
+        return { x: activeX() + slot * (w * .97 + 28) + (1 - scale) * w / 2, y: 0, scale, opacity: 1 };
+      }
       if (slot <= -2) return { x: -w - 40, y: 0, scale: 1, opacity: 0 };
       if (slot === -1) return { x: -w, y: 0, scale: 1, opacity: 1 };
       if (slot === 0) return { x: 24, y: 0, scale: 1, opacity: 1 };
@@ -36,7 +44,10 @@
         // prevents the composer from blurring the artwork until settling.
         // Fade each child instead, keeping the composer's ancestors opaque.
         const focus = card.slot === 0 ? 1 - t : card.slot === Math.sign(progress) ? t : 0;
-        gsap.set(card.dim, { opacity: .22 * (1 - focus) });
+        const dimForSlot = slot => slot === 0 ? 0 : sliding ? .34 : slot > 0 ? .42 : .22;
+        const dimFrom = dimForSlot(card.slot), dimTo = dimForSlot(card.slot - Math.sign(progress));
+        gsap.set(card.dim, { opacity: dimFrom + (dimTo - dimFrom) * t });
+        card.el.style.setProperty('--deck-shadow-opacity', String(.22 + .26 * focus));
         gsap.set([...card.copy.children, ...(card.watchedTag ? [card.watchedTag] : [])], { opacity: focus });
         // Clear the outgoing reflection early in a leftward slide. Driving it
         // from gesture progress also restores it smoothly if the swipe cancels.
@@ -53,7 +64,8 @@
       const watchedTag = item.watchedLabel ? node('span', 'watch-timing', item.watchedLabel) : null;
       const dim = node('div', 'watch-inactive-shade');
       dim.setAttribute('aria-hidden', 'true');
-      const surface = node('div', 'watch-card-surface', [Artwork(item.artwork, 'watch-artwork'), node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy, dim]);
+      const artwork = Artwork(item.artwork, 'watch-artwork');
+      const surface = node('div', 'watch-card-surface', [artwork, node('div', 'watch-artwork-blur', ProgressiveBlur('bottom')), node('div', 'watch-shade'), watchedTag, copy, dim]);
       const el = node('article', 'watch-card glass-surface', surface);
       PocketSagaMedia.apply(el, item.artwork);
       el.setAttribute('aria-label', `Write a post about ${item.title}`);
@@ -68,7 +80,7 @@
       PocketSagaMedia.apply(reflection, item.artwork);
       reflections.append(reflection);
       stage.append(el);
-      return { el, copy, watchedTag, reflection, dim, slot };
+      return { el, copy, watchedTag, reflection, dim, artwork, slot };
     }
     function syncSelection() {
       for (const card of cards) {
@@ -118,7 +130,7 @@
       return { x: (event.clientX - rect.left) * stage.clientWidth / rect.width, y: event.clientY, scale: stage.clientWidth / rect.width };
     };
     root.addEventListener('pointerdown', event => {
-      if (event.button !== 0 || event.isPrimary === false || animation?.isActive() || event.target.closest('button,textarea')) return;
+      if (event.button !== 0 || event.isPrimary === false || animation?.isActive() || event.target.closest('input,textarea')) return;
       const point = local(event);
       const now = performance.now();
       gesture = { id: event.pointerId, ...point, startX: event.clientX, time: now, samples: [{ x: event.clientX, time: now }], progress: 0, axis: null };
@@ -133,10 +145,11 @@
       }
       if (gesture.axis) blockedClick = true;
       if (gesture.axis !== 'x') return;
+      if (event.cancelable) event.preventDefault();
       const now = performance.now();
       gesture.samples.push({ x: event.clientX, time: now });
       while (gesture.samples.length > 2 && gesture.samples[0].time < now - 100) gesture.samples.shift();
-      gesture.progress = Math.max(-1, Math.min(1, -dx * gesture.scale / (width() * .8)));
+      gesture.progress = Math.max(-1, Math.min(1, -dx * gesture.scale / (sliding ? width() * .97 + 28 : width() * .8)));
       paint(gesture.progress);
     });
     function release(event) {
@@ -152,13 +165,23 @@
     }
     root.addEventListener('pointerup', release);
     root.addEventListener('pointercancel', release);
-    root.addEventListener('lostpointercapture', release);
+    root.addEventListener('lostpointercapture', event => {
+      // iOS implicitly captures to the touched child. Transferring capture to
+      // the deck must not cancel the swipe when that child's loss bubbles up.
+      if (event.target === root && !root.hasPointerCapture(event.pointerId)) release(event);
+    });
+    root.addEventListener('click', event => {
+      if (!blockedClick) return;
+      blockedClick = false;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }, true);
     root.addEventListener('click', event => {
       if (blockedClick) { blockedClick = false; return; }
       if (event.target.closest('button') || animation?.isActive()) return;
       const x = local(event).x;
-      if (x < 24) settle(-1);
-      else if (x > width() + 24) settle(1);
+      if (x < activeX()) settle(-1);
+      else if (x > width() + activeX()) settle(1);
       else {
         const active = cards.find(card => card.slot === 0);
         if (active?.el.contains(event.target)) onCompose(items[index], active.el);

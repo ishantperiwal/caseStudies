@@ -92,7 +92,7 @@
       feed.style.overflowY = 'hidden';
       source.style.visibility = 'hidden';
       const width = screen.clientWidth - 32;
-      const panelBottom = 32 + 64 + 12; // Composer bottom + height + gap.
+      const panelBottom = (parseFloat(getComputedStyle(composer).bottom) || 32) + composer.offsetHeight + 12; // Actual safe-area inset + composer + gap.
       panel.style.width = `${width}px`;
       const measureHeight = () => {
         const chrome = 12 + handle.offsetHeight + inner.querySelector('.thread-header').offsetHeight;

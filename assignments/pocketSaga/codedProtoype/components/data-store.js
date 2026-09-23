@@ -47,7 +47,7 @@
       yourPosts: [...previews.values()].filter(post => post.author.id === viewer.id) };
   }
   function editor() {
-    return { device: device('create post'), viewer, media: [...media.values()].map(item => ({ ...item, selectionLabel: item.mediaType === 'movie' ? 'Movie' : item.episode != null ? `S${item.season} · E${item.episode}` : item.season != null ? `Season ${item.season}` : item.scope, watchedLabel: catalog.watchHistory.find(entry => entry.mediaId === item.id)?.label })), groups,
+    return { device: device('create post'), viewer, media: [...media.values()].map(item => ({ ...item, selectionLabel: item.mediaType === 'movie' ? 'Movie' : item.episode != null ? `Season ${item.season} · Episode ${item.episode}` : item.season != null ? `Season ${item.season}` : item.scope, watchedLabel: catalog.watchHistory.find(entry => entry.mediaId === item.id)?.label })), groups,
       recommendations: Object.fromEntries([...media.keys()].map(id => [id, groups.filter(group => group.mediaId === id).map(group => group.id)])) };
   }
   function publish(draft) {

@@ -160,3 +160,24 @@
   background-color: rgb(178 219 194 / 14%);
   background-image: linear-gradient(155deg, #cdebd824, #bde0ca10 45%, #bde0ca06 75%, #c6e7d212);
 }
+
+/* Keep tab bases stable while the translucent selection travels over them. */
+.phone-case .discover-tabs .discover-tabs-track > .discover-tab.glass-choice {
+  background: #ffffff07;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+.phone-case .discover-tabs.is-docked .discover-tabs-track > .discover-tab.glass-choice {
+  background: rgb(35 39 37 / 78%);
+}
+
+/* Override the shared marker's negative stacking level for Discover tabs. */
+.phone-case .discover-tabs .discover-tabs-track.animated-selection > .selection-highlight {
+  z-index: 1;
+}
+
+/* Mirror the navigation shadow downward beneath the sticky tabs. */
+.phone-case .discover-tabs.is-docked .discover-tabs-track > .discover-tab.glass-choice {
+  box-shadow: 0 2px 24px #00000052;
+}

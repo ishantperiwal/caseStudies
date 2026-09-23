@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glass icon</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #000; }
+  #glass { position: fixed; inset: 0; }
+</style>
+<script src="glass-icon.js" defer></script>
+</head>
+<body>
+<div id="glass" aria-label="Rotating liquid glass torus over Interstellar artwork" role="img"></div>
+<script>
+  addEventListener('DOMContentLoaded', () => {
+    PocketSagaGlassIcon.create(document.querySelector('#glass'), {
+      shape: 'Torus',
+      backdrop: { type: 'Image', image: '../codedProtoype/components/assets/interstellar-1.jpg' }
+    });
+  });
+</script>
+</body>
+</html>

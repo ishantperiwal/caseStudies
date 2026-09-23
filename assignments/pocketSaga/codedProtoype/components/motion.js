@@ -148,7 +148,7 @@
       snapping = gsap.to(scroller, { scrollTop: target, duration: .4, ease, onUpdate: paint, onComplete: () => { snapping = null; paint(); } });
     };
     const openFeed = event => {
-      if (event.target.closest('.discover-tab')) scrollTo(distance());
+      if (event.target.closest('.discover-tab') && !scroller.classList.contains('has-docked-tabs')) scrollTo(distance());
     };
     const filterRows = [tabs].flat().filter(Boolean);
     filterRows.forEach(row => row.addEventListener('click', openFeed));
@@ -203,12 +203,14 @@
   }
   function autoHideNavigation({ scroller, navigation }) {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const bottomBlur = scroller.parentElement.querySelector('.home-area');
     let previous = 0, direction = 0, travel = 0, hidden = false, frame = 0;
     const setHidden = next => {
       if (hidden === next) return;
       hidden = next;
       navigation.inert = hidden;
       navigation.setAttribute('aria-hidden', String(hidden));
+      if (bottomBlur) gsap.to(bottomBlur, { '--bottom-blur-strength': hidden ? .15 : 1, duration: reduced.matches ? 0 : .3, ease: 'power2.out', overwrite: true });
       // An opacity below 1 on this ancestor isolates the glass from the feed.
       // Keep it opaque throughout the slide so backdrop blur remains active.
       gsap.set(navigation, { opacity: 1, visibility: 'visible' });
@@ -231,7 +233,7 @@
     };
     const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
     scroller.addEventListener('scroll', schedule, { passive: true });
-    return () => { cancelAnimationFrame(frame); scroller.removeEventListener('scroll', schedule); gsap.killTweensOf(navigation); };
+    return () => { cancelAnimationFrame(frame); scroller.removeEventListener('scroll', schedule); gsap.killTweensOf(navigation); if (bottomBlur) { gsap.killTweensOf(bottomBlur); bottomBlur.style.removeProperty('--bottom-blur-strength'); } };
   }
   const likeAnimations = new WeakMap();
   function animateLike(button, liked) {

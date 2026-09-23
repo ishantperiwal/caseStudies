@@ -27,13 +27,13 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, transparent 0%, rgb(0 0 0 / .003) 8%, rgb(0 0 0 / .012) 16%, rgb(0 0 0 / .035) 24%, rgb(0 0 0 / .075) 32%, rgb(0 0 0 / .13) 40%, rgb(0 0 0 / .18) 48%, rgb(0 0 0 / .21) 56%, rgb(0 0 0 / .23) 64%);
+  background: linear-gradient(to top, transparent 0%, rgb(0 0 0 / .005) 8%, rgb(0 0 0 / .018) 16%, rgb(0 0 0 / .053) 24%, rgb(0 0 0 / .114) 32%, rgb(0 0 0 / .198) 40%, rgb(0 0 0 / .274) 48%, rgb(0 0 0 / .32) 56%, rgb(0 0 0 / .35) 64%);
 }
 
 /* Strong at the pills, progressively feathered into the unobscured feed below. */
 .discover-page .screen-top-blur .blur-layer {
-  -webkit-backdrop-filter: blur(calc(var(--blur) * 2));
-  backdrop-filter: blur(calc(var(--blur) * 2));
+  -webkit-backdrop-filter: blur(var(--sticky-blur));
+  backdrop-filter: blur(var(--sticky-blur));
   --soft-mask: linear-gradient(to top, transparent 0%, #00000003 8%, #0000000d 16%, #00000026 24%, #00000052 32%, #0000008c 40%, #000000c7 48%, #000000eb 56%, black 64%);
 }
 .discover-navigation h1 { flex-shrink: 0; white-space: nowrap; font-size: 22px; font-weight: 600; letter-spacing: -.6px; }
@@ -52,7 +52,7 @@
 .discover-post-veil { position: absolute; inset: 0; background: var(--artwork-surface-wash), #11131538; }
 .discover-post > :not(.discover-post-atmosphere) { position: relative; z-index: 1; }
 .discover-post > .author-meta { margin: 0; }
-.discover-post .post-copy { gap: 10px; }
+.discover-post .post-copy { gap: 6px; }
 .discover-post-context { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--accent); font-size: 12px; line-height: 18px; margin-bottom: 2px !important; }
 .discover-community-link { min-height: 0; font-size: inherit; line-height: inherit; text-align: left; }
 .discover-post-context .icon { width: 14px; height: 14px; }
@@ -114,6 +114,29 @@
 /* Four feed tabs retain comfortable sizing and scroll horizontally. */
 .discover-tabs { width: calc(100% + 32px); max-width: none; margin-left: -16px; overflow-x: auto; scrollbar-width: none; }
 .discover-tabs-track { display: flex; align-items: center; gap: 8px; width: max-content; min-height: 44px; padding: 0 16px; flex-shrink: 0; }
-.discover-tabs-track > .discover-tab { position: relative; z-index: 1; flex-shrink: 0; }
-.phone-case .discover-tabs-track > .selection-highlight { z-index: 0; }
+.discover-tabs-track > .discover-tab { position: relative; z-index: auto; isolation: auto; flex-shrink: 0; }
+.phone-case .discover-tabs-track > .selection-highlight { z-index: 1; }
 .discover-post .reaction-bar > .save-post { margin-left: auto; }
+
+.discover-page .home-area { --bottom-blur-strength: 1; }
+.discover-page .home-area .blur-layer { -webkit-backdrop-filter: blur(calc(var(--blur) * var(--bottom-blur-strength))); backdrop-filter: blur(calc(var(--blur) * var(--bottom-blur-strength))); }
+
+/* Backgrounds below the travelling highlight; labels and icons above it. */
+.discover-tabs-track > .discover-tab > :is(.icon, .discover-tab-label) { position: relative; z-index: 2; }
+.discover-tabs-track > .discover-tab:active { transform: none; }
+.discover-tabs-track > .discover-tab::before, .discover-tabs-track > .discover-tab::after { z-index: 0; }
+
+/* Match the bottom area’s four blur strengths when its navigation is visible. */
+.discover-page .screen-top-blur .blur-layer:nth-child(1) { --sticky-blur: 1px; }
+.discover-page .screen-top-blur .blur-layer:nth-child(2) { --sticky-blur: 3px; }
+.discover-page .screen-top-blur .blur-layer:nth-child(3) { --sticky-blur: 6px; }
+.discover-page .screen-top-blur .blur-layer:nth-child(4) { --sticky-blur: 12px; }
+.discover-page .screen-top-blur .blur-layer:nth-child(5) { display: none; }
+
+/* Horizontal scrolling also clips vertical shadows; reserve their fade area. */
+.discover-tabs.discover-tabs-fixed.is-docked {
+  padding-block: 32px;
+  margin-block: -32px;
+  pointer-events: none;
+}
+.discover-tabs.discover-tabs-fixed.is-docked .discover-tabs-track { pointer-events: auto; }

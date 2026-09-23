@@ -33265,7 +33265,7 @@
     {
       "type": "frame",
       "id": "GMUrq",
-      "x": 1907,
+      "x": 2406,
       "y": 0,
       "name": "02 · Community / Watch-history card deck",
       "context": "Community is a destination within the streaming product, alongside Home and You. Search opens on demand. Featured title opens title community.",
@@ -38609,435 +38609,8 @@
     },
     {
       "type": "frame",
-      "id": "m3t0yt",
-      "x": 2462,
-      "y": 819,
-      "name": "The Prestige · Recommended conversation",
-      "context": "Discussion from a movie the viewer has completed. Eligibility is based on viewing history, not a spoiler-free label.",
-      "clip": true,
-      "width": "fill_container(370)",
-      "fill": "#151a20",
-      "cornerRadius": 20,
-      "stroke": "#FFFFFF1B",
-      "layout": "vertical",
-      "gap": 12,
-      "padding": [
-        14,
-        16,
-        6,
-        16
-      ],
-      "children": [
-        {
-          "type": "frame",
-          "id": "qjWux",
-          "layoutPosition": "absolute",
-          "x": 0,
-          "y": 0,
-          "name": "Balanced blurred artwork · Card background",
-          "context": "Artwork softly layered over the normalized dark movie tint. Image strength is lower for bright posters to maintain similar visual weight across cards. Decorative, clipped to the card; resize with content.",
-          "clip": true,
-          "width": 370,
-          "height": 338,
-          "cornerRadius": 20,
-          "layout": "none",
-          "children": [
-            {
-              "type": "rectangle",
-              "id": "JWNyN",
-              "x": 0,
-              "y": 0,
-              "name": "Low-intensity blurred artwork",
-              "opacity": 0.3,
-              "fill": {
-                "type": "image",
-                "enabled": true,
-                "url": "../movieShowAsset/The Prestige (2006).jpg",
-                "mode": "fill"
-              },
-              "width": 370,
-              "height": 338,
-              "effect": {
-                "type": "blur",
-                "radius": 48
-              }
-            },
-            {
-              "type": "rectangle",
-              "id": "XooSe",
-              "x": 0,
-              "y": 0,
-              "name": "Tonal balancing veil",
-              "fill": {
-                "type": "gradient",
-                "gradientType": "linear",
-                "enabled": true,
-                "rotation": 180,
-                "size": {
-                  "height": 1
-                },
-                "colors": [
-                  {
-                    "color": "#151a2040",
-                    "position": 0
-                  },
-                  {
-                    "color": "#151a2080",
-                    "position": 1
-                  }
-                ]
-              },
-              "width": 370,
-              "height": 338
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "lWCrt",
-          "x": 0,
-          "y": 0,
-          "name": "Attachment preview · When present",
-          "context": "Reserved conditional media slot. Render only when this post has a real attached image or clip; populate from that attachment, not from the film poster. Place before headline and body; suppress the small poster in media-first mode. Clips expose play and duration; no autoplay sound. No attachment supplied in this sample.",
-          "enabled": false,
-          "clip": true,
-          "width": 338,
-          "height": 190,
-          "cornerRadius": 12
-        },
-        {
-          "type": "frame",
-          "id": "egovE",
-          "x": 16,
-          "y": 16,
-          "name": "Post-watch heading",
-          "enabled": false,
-          "width": 338,
-          "gap": 9,
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "icon",
-              "id": "hdPQw",
-              "x": 0,
-              "y": 0,
-              "name": "Post-watch sparkle",
-              "enabled": false,
-              "width": 17,
-              "height": 17,
-              "icon": "sparkles",
-              "library": "lucide",
-              "fill": "$ag-accent"
-            },
-            {
-              "type": "text",
-              "id": "QWfxB",
-              "name": "Post-watch kicker",
-              "fill": "$ag-muted",
-              "content": "PICK UP THE CONVERSATION",
-              "fontFamily": "$ag-font",
-              "fontSize": 10,
-              "fontWeight": "700",
-              "letterSpacing": 1.1
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "PZ4dK",
-          "name": "Full-width post headline and excerpt",
-          "context": "Text-only state: film name precedes the headline; small poster identifies the title. If actual post media is attached, give the attachment a full-width preview before headline/body, use compact title attribution, and do not let the poster thumbnail compete with it. Keep a short body excerpt beneath the headline.",
-          "width": "fill_container",
-          "layout": "vertical",
-          "gap": 12,
-          "children": [
-            {
-              "type": "frame",
-              "id": "NRj1J",
-              "name": "Community and episode context",
-              "width": "fill_container",
-              "gap": 8,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "uGUVn",
-                  "name": "Community icon",
-                  "width": 14,
-                  "height": 14,
-                  "icon": "users",
-                  "library": "lucide",
-                  "fill": "$ag-accent"
-                },
-                {
-                  "type": "frame",
-                  "id": "KxbA7",
-                  "name": "Frame 7",
-                  "height": 16,
-                  "gap": 4,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "L5bfkk",
-                      "name": "Community name",
-                      "fill": "$ag-accent",
-                      "textGrowth": "fixed-width-height",
-                      "width": 93,
-                      "height": "fill_container",
-                      "content": "The Final Reveal",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "l3StcQ",
-                      "name": "Episode context",
-                      "fill": "$ag-accent",
-                      "content": "·",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "x8Bly4",
-                      "name": "Episode context",
-                      "fill": "$ag-accent",
-                      "content": "The Prestige",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 12,
-                      "fontWeight": "600"
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "sIxOT",
-              "name": "Frame 8",
-              "width": 338,
-              "layout": "vertical",
-              "gap": 8,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "f4z4R",
-                  "name": "Recommended discussion title",
-                  "fill": "$ag-ink",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "When did you first suspect Borden’s secret?",
-                  "lineHeight": 1.15,
-                  "fontFamily": "$ag-heading",
-                  "fontSize": 22,
-                  "fontWeight": "500"
-                },
-                {
-                  "type": "text",
-                  "id": "R26dL",
-                  "name": "Post body excerpt",
-                  "fill": "#AFBCB5",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "On a rewatch, the smallest gestures feel deliberate. Which moment gave it away for you?",
-                  "lineHeight": 1.5,
-                  "fontFamily": "$ag-font",
-                  "fontSize": 13,
-                  "fontWeight": "normal"
-                }
-              ]
-            },
-            {
-              "type": "frame",
-              "id": "GVoFI",
-              "name": "Post author",
-              "width": "fill_container",
-              "gap": 9,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "e7jMBJ",
-                  "name": "Mina R. avatar",
-                  "width": 24,
-                  "height": 24,
-                  "fill": "#5B5550",
-                  "cornerRadius": 12,
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "Y0hUzQ",
-                      "name": "Mina R. avatar initials",
-                      "fill": "$ag-ink",
-                      "content": "MR",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 9,
-                      "fontWeight": "500"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "PRlPQ",
-                  "name": "Mina R. details",
-                  "width": "fill_container",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "WOUsA",
-                      "name": "Mina R. name",
-                      "fill": "$ag-muted",
-                      "content": "Mina R.",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 11,
-                      "fontWeight": "600"
-                    },
-                    {
-                      "type": "text",
-                      "id": "p3HsS1",
-                      "name": "Mina R. time",
-                      "fill": "$ag-muted",
-                      "content": "8 min ago · Theory",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 10,
-                      "fontWeight": "normal"
-                    }
-                  ]
-                },
-                {
-                  "type": "icon",
-                  "id": "aqXTb",
-                  "x": 320,
-                  "y": 7.5,
-                  "name": "Post options",
-                  "enabled": false,
-                  "width": 18,
-                  "height": 18,
-                  "icon": "ellipsis",
-                  "library": "lucide",
-                  "fill": "$ag-muted"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "SfOGr",
-          "name": "Frame 3",
-          "width": 338,
-          "layout": "vertical",
-          "gap": 4,
-          "children": [
-            {
-              "type": "rectangle",
-              "id": "D0JGF",
-              "x": 0,
-              "y": 0,
-              "name": "Community header separator",
-              "enabled": false,
-              "fill": "#FFFFFF12",
-              "width": "fill_container(338)",
-              "height": 1
-            },
-            {
-              "type": "frame",
-              "id": "UBFIl",
-              "name": "Post likes and comments",
-              "context": "Comment icon and count identify discussion activity. The card opens the post and comments; no separate reveal or join action is shown.",
-              "width": "fill_container",
-              "height": 44,
-              "gap": 18,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "kgLln",
-                  "name": "Like post · 54",
-                  "context": "Toggle this post reaction on or off. Use accent color when liked and update the count; the full 44px-high region is interactive.",
-                  "height": 44,
-                  "gap": 6,
-                  "padding": [
-                    0,
-                    2
-                  ],
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "hR6kH",
-                      "name": "Post heart",
-                      "width": 18,
-                      "height": 18,
-                      "icon": "heart",
-                      "library": "lucide",
-                      "fill": "$ag-muted"
-                    },
-                    {
-                      "type": "text",
-                      "id": "jvnZX",
-                      "name": "Post like count",
-                      "fill": "$ag-muted",
-                      "content": "54",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 12,
-                      "fontWeight": "500"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "l06VXx",
-                  "name": "Post comments · Touch target",
-                  "height": 44,
-                  "gap": 6,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "XxCzh",
-                      "name": "Comments",
-                      "width": 17,
-                      "height": 17,
-                      "icon": "message-circle",
-                      "library": "lucide",
-                      "fill": "$ag-muted"
-                    },
-                    {
-                      "type": "text",
-                      "id": "PQa4T",
-                      "name": "Comment count",
-                      "fill": "$ag-muted",
-                      "content": "24",
-                      "fontFamily": "$ag-font",
-                      "fontSize": 12,
-                      "fontWeight": "500"
-                    }
-                  ]
-                },
-                {
-                  "type": "frame",
-                  "id": "sZwzz",
-                  "name": "Flexible space before media link",
-                  "width": "fill_container",
-                  "height": 1
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
       "id": "m6MegG",
-      "x": 2912,
+      "x": 1918,
       "y": 0,
       "name": "04b · Interstellar / Beyond Earth group feed",
       "context": "Joined Beyond Earth community for Interstellar. Matches 04a structure with movie context, three discussion posts and an illustrative attached clip. Original Dark page preserved.",
@@ -41162,8 +40735,7 @@
     {
       "type": "rectangle",
       "id": "G5KnrK",
-      "layoutPosition": "absolute",
-      "x": 2510,
+      "x": 3009,
       "y": 113,
       "name": "Top-aligned artwork · Preserve faces",
       "context": "Full-width natural image ratio, anchored to the top rather than center-cropped. Card clips the lower portion; preserves subjects near the upper artwork.",
@@ -41887,6 +41459,363 @@
                   ]
                 }
               ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "qjWux",
+      "x": 2961,
+      "y": 819,
+      "name": "Balanced blurred artwork · Card background",
+      "context": "Artwork softly layered over the normalized dark movie tint. Image strength is lower for bright posters to maintain similar visual weight across cards. Decorative, clipped to the card; resize with content.",
+      "clip": true,
+      "width": 370,
+      "height": 338,
+      "cornerRadius": 20,
+      "layout": "none",
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "JWNyN",
+          "x": 0,
+          "y": 0,
+          "name": "Low-intensity blurred artwork",
+          "opacity": 0.3,
+          "fill": {
+            "type": "image",
+            "enabled": true,
+            "url": "../movieShowAsset/The Prestige (2006).jpg",
+            "mode": "fill"
+          },
+          "width": 370,
+          "height": 338,
+          "effect": {
+            "type": "blur",
+            "radius": 48
+          }
+        },
+        {
+          "type": "rectangle",
+          "id": "XooSe",
+          "x": 0,
+          "y": 0,
+          "name": "Tonal balancing veil",
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 180,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#151a2040",
+                "position": 0
+              },
+              {
+                "color": "#151a2080",
+                "position": 1
+              }
+            ]
+          },
+          "width": 370,
+          "height": 338
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "PZ4dK",
+      "x": 2977,
+      "y": 833,
+      "name": "Full-width post headline and excerpt",
+      "context": "Text-only state: film name precedes the headline; small poster identifies the title. If actual post media is attached, give the attachment a full-width preview before headline/body, use compact title attribution, and do not let the poster thumbnail compete with it. Keep a short body excerpt beneath the headline.",
+      "width": "fill_container(338)",
+      "layout": "vertical",
+      "gap": 12,
+      "children": [
+        {
+          "type": "frame",
+          "id": "NRj1J",
+          "name": "Community and episode context",
+          "width": "fill_container",
+          "gap": 8,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon",
+              "id": "uGUVn",
+              "name": "Community icon",
+              "width": 14,
+              "height": 14,
+              "icon": "users",
+              "library": "lucide",
+              "fill": "$ag-accent"
+            },
+            {
+              "type": "frame",
+              "id": "KxbA7",
+              "name": "Frame 7",
+              "height": 16,
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "L5bfkk",
+                  "name": "Community name",
+                  "fill": "$ag-accent",
+                  "textGrowth": "fixed-width-height",
+                  "width": 93,
+                  "height": "fill_container",
+                  "content": "The Final Reveal",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "l3StcQ",
+                  "name": "Episode context",
+                  "fill": "$ag-accent",
+                  "content": "·",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "x8Bly4",
+                  "name": "Episode context",
+                  "fill": "$ag-accent",
+                  "content": "The Prestige",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 12,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "sIxOT",
+          "name": "Frame 8",
+          "width": 338,
+          "layout": "vertical",
+          "gap": 8,
+          "children": [
+            {
+              "type": "text",
+              "id": "f4z4R",
+              "name": "Recommended discussion title",
+              "fill": "$ag-ink",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "When did you first suspect Borden’s secret?",
+              "lineHeight": 1.15,
+              "fontFamily": "$ag-heading",
+              "fontSize": 22,
+              "fontWeight": "500"
+            },
+            {
+              "type": "text",
+              "id": "R26dL",
+              "name": "Post body excerpt",
+              "fill": "#AFBCB5",
+              "textGrowth": "fixed-width",
+              "width": "fill_container",
+              "content": "On a rewatch, the smallest gestures feel deliberate. Which moment gave it away for you?",
+              "lineHeight": 1.5,
+              "fontFamily": "$ag-font",
+              "fontSize": 13,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "GVoFI",
+          "name": "Post author",
+          "width": "fill_container",
+          "gap": 9,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "e7jMBJ",
+              "name": "Mina R. avatar",
+              "width": 24,
+              "height": 24,
+              "fill": "#5B5550",
+              "cornerRadius": 12,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Y0hUzQ",
+                  "name": "Mina R. avatar initials",
+                  "fill": "$ag-ink",
+                  "content": "MR",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 9,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "PRlPQ",
+              "name": "Mina R. details",
+              "width": "fill_container",
+              "gap": 8,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "WOUsA",
+                  "name": "Mina R. name",
+                  "fill": "$ag-muted",
+                  "content": "Mina R.",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 11,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "p3HsS1",
+                  "name": "Mina R. time",
+                  "fill": "$ag-muted",
+                  "content": "8 min ago · Theory",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 10,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "icon",
+              "id": "aqXTb",
+              "x": 320,
+              "y": 7.5,
+              "name": "Post options",
+              "enabled": false,
+              "width": 18,
+              "height": 18,
+              "icon": "ellipsis",
+              "library": "lucide",
+              "fill": "$ag-muted"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "SfOGr",
+      "x": 2977,
+      "y": 1007,
+      "name": "Frame 3",
+      "width": 338,
+      "layout": "vertical",
+      "gap": 4,
+      "children": [
+        {
+          "type": "rectangle",
+          "id": "D0JGF",
+          "x": 0,
+          "y": 0,
+          "name": "Community header separator",
+          "enabled": false,
+          "fill": "#FFFFFF12",
+          "width": "fill_container(338)",
+          "height": 1
+        },
+        {
+          "type": "frame",
+          "id": "UBFIl",
+          "name": "Post likes and comments",
+          "context": "Comment icon and count identify discussion activity. The card opens the post and comments; no separate reveal or join action is shown.",
+          "width": "fill_container",
+          "height": 44,
+          "gap": 18,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "kgLln",
+              "name": "Like post · 54",
+              "context": "Toggle this post reaction on or off. Use accent color when liked and update the count; the full 44px-high region is interactive.",
+              "height": 44,
+              "gap": 6,
+              "padding": [
+                0,
+                2
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "hR6kH",
+                  "name": "Post heart",
+                  "width": 18,
+                  "height": 18,
+                  "icon": "heart",
+                  "library": "lucide",
+                  "fill": "$ag-muted"
+                },
+                {
+                  "type": "text",
+                  "id": "jvnZX",
+                  "name": "Post like count",
+                  "fill": "$ag-muted",
+                  "content": "54",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l06VXx",
+              "name": "Post comments · Touch target",
+              "height": 44,
+              "gap": 6,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon",
+                  "id": "XxCzh",
+                  "name": "Comments",
+                  "width": 17,
+                  "height": 17,
+                  "icon": "message-circle",
+                  "library": "lucide",
+                  "fill": "$ag-muted"
+                },
+                {
+                  "type": "text",
+                  "id": "PQa4T",
+                  "name": "Comment count",
+                  "fill": "$ag-muted",
+                  "content": "24",
+                  "fontFamily": "$ag-font",
+                  "fontSize": 12,
+                  "fontWeight": "500"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "sZwzz",
+              "name": "Flexible space before media link",
+              "width": "fill_container",
+              "height": 1
             }
           ]
         }

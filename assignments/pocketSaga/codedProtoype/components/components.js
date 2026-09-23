@@ -219,15 +219,24 @@
     mountedPreviews.get(target)?.();
     const stage = node('div', 'phone-stage', page);
     target.replaceChildren(stage);
+    const mobile = matchMedia('(max-width: 600px)');
     const fit = () => {
+      if (mobile.matches) {
+        stage.style.setProperty('--mobile-viewport-height', `${window.visualViewport?.height || window.innerHeight}px`);
+        page.style.setProperty('--preview-scale', '1');
+        return;
+      }
+      stage.style.removeProperty('--mobile-viewport-height');
       const scale = Math.min(1, Math.max(0, stage.clientWidth - 10) / page.offsetWidth, stage.clientHeight / page.offsetHeight);
       page.style.setProperty('--preview-scale', String(scale));
     };
+    window.visualViewport?.addEventListener('resize', fit);
+    mobile.addEventListener('change', fit);
     const observer = new ResizeObserver(fit);
     observer.observe(stage);
     observer.observe(page);
     const cleanup = setup(page);
-    mountedPreviews.set(target, () => { page.dispatchEvent(new Event('preview-unmount')); observer.disconnect(); cleanup?.(); });
+    mountedPreviews.set(target, () => { page.dispatchEvent(new Event('preview-unmount')); observer.disconnect(); window.visualViewport?.removeEventListener('resize', fit); mobile.removeEventListener('change', fit); cleanup?.(); });
     fit();
     return page;
   }

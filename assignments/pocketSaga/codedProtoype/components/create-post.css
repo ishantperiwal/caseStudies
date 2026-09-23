@@ -1,19 +1,19 @@
 .create-post-page { --background: #0e0f10; --ambient-brightness: .59; }
-.create-post-scroll { padding: 135px 16px 100px; gap: 16px; }
-.create-media-banner { width: 100%; min-height: 74px; border-radius: 18px; padding: 12px; gap: 12px; background-color: #ffffff06; justify-content: flex-start; text-align: left; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.create-post-scroll { padding: 135px 16px 100px; gap: 16px; overflow: hidden; min-height: 0; }
+.create-media-banner { width: 100%; min-height: 74px; border-radius: 18px; padding: 12px; gap: 12px; background-color: #ffffff06; justify-content: flex-start; text-align: left; }
 .create-media-artwork { width: 36px; height: 50px; object-fit: cover; flex-shrink: 0; border-radius: 6px; }
 .create-media-banner > .icon:first-child { width: 24px; height: 24px; color: var(--muted); margin: 0 6px; }
-.create-media-banner > .icon:last-child { margin-left: auto; width: 18px; height: 18px; color: var(--muted); }
+.create-media-banner > .icon:last-child { margin-left: auto; margin-right: 7px; width: 18px; height: 18px; color: var(--muted); }
 .create-media-copy { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .create-media-name { font-size: 16px; font-weight: 500; }
 .create-media-subtitle { color: var(--muted); font-size: 12px; }
-.create-writing-surface { display: flex; flex-direction: column; flex: 1 0 530px; min-height: 530px; padding: 24px 20px 20px; gap: 14px; border-radius: 22px; background-color: #ffffff05; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.create-writing-surface { display: flex; flex-direction: column; flex: 1 1 0; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 24px 20px 20px; gap: 14px; border-radius: 22px; background-color: #ffffff05; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
 .create-headline, .create-body { width: 100%; border: 0; padding: 0; resize: none; background: transparent; color: var(--text); }
 .create-headline { height: 32px; min-height: 32px; max-height: 160px; flex-shrink: 0; font: 400 28px/32px Newsreader, Georgia, serif; }
 .create-editor-separator { height: 1px; flex-shrink: 0; width: 100%; background: #ffffff12; }
-.create-body { flex: 1; min-height: 230px; font: 400 15px/1.6 Manrope, system-ui, sans-serif; color: #cddbd3; }
+.create-body { flex: 1 1 0; min-height: 0; overflow-y: auto; overscroll-behavior: contain; font: 400 15px/1.6 Manrope, system-ui, sans-serif; color: #cddbd3; }
 .create-headline::placeholder, .create-body::placeholder { color: var(--muted); opacity: .8; }
-.create-editor-tools { display: flex; gap: 10px; margin-top: auto; }
+.create-editor-tools { flex-shrink: 0; display: flex; gap: 10px; margin-top: auto; }
 .create-tool { flex: 1; min-height: 40px; border-radius: 22px; gap: 8px; font-size: 12px; color: var(--muted); background-color: #ffffff04; }
 .create-tool .icon { width: 17px; height: 17px; }
 .create-publish-bar { position: absolute; bottom: 32px; left: 16px; right: 16px; z-index: 12; display: flex; align-items: stretch; gap: 12px; }
@@ -39,7 +39,7 @@
 .create-picker-search:focus { background: #ffffff0d; }
 .create-picker-header + .create-picker-search { margin-top: -4px; }
 .create-picker-search::placeholder { color: var(--muted); }
-.create-picker-results { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 4px 0 16px; mask-image: linear-gradient(to bottom, transparent, black 4px, black calc(100% - 16px), transparent); -webkit-mask-image: linear-gradient(to bottom, transparent, black 4px, black calc(100% - 16px), transparent); }
+.create-picker-results { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; padding: 28px 0 16px; mask-image: linear-gradient(to bottom, transparent 0, #00000020 4px, #00000080 12px, #000000df 20px, black 28px, black calc(100% - 16px), transparent); -webkit-mask-image: linear-gradient(to bottom, transparent 0, #00000020 4px, #00000080 12px, #000000df 20px, black 28px, black calc(100% - 16px), transparent); }
 .create-picker-option { flex-shrink: 0; width: 100%; padding: 12px; border-radius: 16px; gap: 12px; justify-content: flex-start; text-align: left; background-color: #ffffff04; }
 .create-picker-option[aria-pressed="true"] { background-color: #bde0ca13; }
 .create-picker-option > .icon { margin-left: auto; color: var(--accent); }
@@ -53,7 +53,7 @@
 
 .create-media-selection { position: relative; flex-shrink: 0; }
 .create-media-selection .create-media-banner.has-selection { padding-right: 56px; }
-.create-media-clear { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; color: var(--muted); }
+.create-media-clear { position: absolute; right: 6px; top: 50%; translate: 0 -50%; width: 44px; height: 44px; border-radius: 50%; color: var(--muted); }
 .create-media-clear .icon { width: 18px; height: 18px; }
 .create-media-clear[hidden] { display: none; }
 
@@ -86,3 +86,20 @@
 /* Lift floating media suggestions above the blurred backdrop. */
 .media-title-floating .create-picker-option { background-color: rgb(255 255 255 / 4%); --surface-light: linear-gradient(155deg, #ffffff06, #ffffff02 60%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
 .media-title-floating .create-picker-option[aria-pressed="true"] { background-color: rgb(189 224 202 / 10%); }
+
+.media-title-floating .create-picker-wrap { flex-direction: column; flex-wrap: nowrap; align-items: stretch; }
+.create-suggestion-row { display: flex; justify-content: center; gap: 16px; flex-shrink: 0; }
+.create-suggestion-row > .create-picker-option { min-width: 0; }
+
+/* Bring the community list’s soft edge closer to its heading. */
+.create-picker-sheet > .create-picker-results { margin-top: -12px; }
+
+/* Keep the community selector legible against the dark editor backdrop. */
+.phone-case .create-destination.glass-surface {
+  padding-left: 18px;
+  background-color: rgb(43 49 47 / 76%);
+  color: #eef2e9;
+  --surface-light: linear-gradient(155deg, #ffffff0d, #ffffff04 55%, transparent);
+  --surface-edge: linear-gradient(155deg, #ffffff22, #ffffff0c 38%, #ffffff03 78%, #ffffff06);
+}
+.phone-case .create-destination > .icon { color: #c5d2cb; }

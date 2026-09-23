@@ -2,6 +2,46 @@
 
 Read this first, then inspect the implementation. This records current behavior and user preferences; later user instructions take precedence. Keep it updated when screens, shared patterns, or navigation change.
 
+
+## Latest handoff — Prism design-system playground (23 September 2026)
+
+Recent work is in `../design system/` (named **Prism**), separate from the prototype screens. It is a desktop presentation aid the user narrates, not an app-wide token migration. Read [its README](../design%20system/README.md) before editing: it holds every current value (colors, timings, sizes). This section is the overview of what the playground is, how it got here, and what not to repeat. Open `http://127.0.0.1:5500/assignments/pocketSaga/design%20system/index.html` (VS Code Live Server; its injected reload script may log a harmless console error).
+
+### What it is now
+
+- **Layout (≥1024px):** two panes with 24px margins/gutter. Left: full-height glass sidebar (236px) listing the views, each with an 18px line icon; selected item is neutral glass (no mint — the user disliked the green highlight). Right: a matching full-height rounded (28px) glass panel (`body::before/::after`) showing the selected view. Narrow screens fall back to the top-left dropdown. No Reset button (removed at the user's request; reload restores defaults).
+- **Views, in order:** Prism (title, default) → Material → Background → Shapes → Color → Spacing & roundness → Font & typography → Avatars.
+- **Scroll-connected tabs:** wheel/trackpad past the end of a view's content (140px overscroll), or ArrowUp/Down/PageUp/PageDown at an edge, slides the whole right pane (fill, rim and content) up and out and the next view in from below; the sidebar selection follows. A short cooldown absorbs trackpad momentum. Clicking the sidebar still switches instantly.
+- **Prism title:** `prism-title.js` + `glass-icon.js`. A ray-marched glass pyramid (port of Originkit's "Liquid Glass Cluster" React component, extended with a Pyramid shape, yaw-only drag with inertia, `backdrop.under` and `backdrop.paintText`) refracts "PRISM" (Manrope 500 capitals, strong-mint fill, soft top glow, top-edge highlight) and "DESIGN SYSTEM" (tracked so its letter ink spans exactly P→M). The live ribbon shader is composited under the text each frame so the glass refracts the moving background. Whole composition scaled by `SCALE = .85`.
+- **Backgrounds:** Material and Background use the blurred banner atmosphere with the artwork selector (5 artworks, no empty option). All other views use the Ribbon flow shader (`ribbon-bg.js`, loading `../pen dev/ribbon-flow.glsl` unchanged; muted mint `#94A39C`, intensity 1.0, breathing width floor .85).
+- **Material:** Fill → Tint → Wash & blur → Edge → Feedback; all on at load; Fill cannot switch off. **Background:** Artwork → Blur → Mute → Palette → Contrast; loads with all five on; never fully off. Both step rows sit 72px below their content (not in the footer), with no description line.
+- **Step controls:** goo-merged glass pills (SVG blur/threshold + specular top-left rim). Elastic press (squash .92 → overshoot → settle), bridges stretch in with overshoot and a thickness swell, and a hover light sweeps the pill then travels outward across connected bridges.
+- **Shared control glass:** Container/Pill toggle, artwork arrows and thumbnail frame use one CSS glass with a 155° top-left-bright rim (the user objected to uniform all-round borders).
+
+### What was tried and rejected (don't reintroduce)
+
+- Backdrops for the static views, in order: soft CSS blobs (too minty, then "not interesting"), SVG tapered ribbon waves ("ugly, not subtle"), a warped conic gradient via SVG `feDisplacementMap` plus grain (pixelated/dithered — avoid displacement filters and grain overlays on large layers), six varied blobs ("looks bad"), a mint liquid-glass panel behind content (misread request). The pen.dev Ribbon flow shader was the one kept.
+- Pasting the user's light pastel `.gradient-fluid` CSS verbatim as a backdrop was declined mid-way; don't add it.
+- Lavender dropdown glass (replaced by the dark glass with a turning pastel rim, kept for narrow screens).
+- PRISM text: pastel left→right gradient; Newsreader serif; title case "Prism"; a stroked outline edge (showed the font's overlapping contours as boxes — edges are now cut by subtracting a shifted copy); top-left highlight (now top-down); heavy glow (now 7%/14%); a transparent plate that made the pyramid milky grey (fixed by compositing the ribbon under the text).
+- Uniform ring borders on glass controls; description text under the steps; the visible `1×5` counter; R24/R14 radius labels on the Shapes card; the Reset button.
+
+### User preferences
+
+Minimal text; muted, subtle mint (they repeatedly asked to mute further); glass with directional top-left or top-down light rather than all-round rims; elastic, tactile feedback; verify in the browser before reporting. When a request is ambiguous (which element, which file), ask rather than guess — misreading a pen.dev selection caused real frustration.
+
+### pen.dev
+
+`pen dev/pocket saga designs.pen` via the pencil MCP (needs a file open in pen.dev; `get_app_state` shows the selection). Node `PbOB3` "Ribbon flow · Shader background" runs `pen dev/ribbon-flow.glsl`; node `I7q4g` ("+ My List" button) runs `liquid-glass.glsl` and was left at its original dark tint.
+
+### Maintenance notes
+
+- Earlier Python edit scripts overwrote CSS with JS; use targeted, asserted replacements and check the stylesheet and browser, not just `node --check`.
+- A user revert restored `index.html`/`playground.js` but left CSS from a reverted one-page layout (`.page-section`, `.prism-hero`, `.prism-doc`, `.pd-*`) in `playground.css`. Its `main{display:block}` was removed because it collapsed the step spacing; the rest is unused except `body[data-view=title]::before{background:none}`.
+- Live Server/Chrome caches scripts aggressively: after edits, `fetch(file, {cache:'reload'})` then reload when verifying.
+- Stage selectors must target buttons (`button[data-material-step]`, `button[data-step]`) because the specimen container also carries a stage attribute.
+- Open finding still unresolved: the mint washes' 155° gradient dips mid-way (diagonal dark band); a one-way fade was only discussed.
+
 ## Project and entry points
 
 Workspace: `assignments/pocketSaga/codedProtoype/` (existing spelling intentional).

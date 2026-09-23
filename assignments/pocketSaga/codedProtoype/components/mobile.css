@@ -1,0 +1,31 @@
+/* Edge-to-edge phone layout; desktop retains the scaled device preview. */
+@media (max-width: 600px) {
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { display: block; min-height: 0; padding: 0; background: #080a0b; }
+  #app, .phone-stage { width: 100%; height: var(--mobile-viewport-height, 100dvh); min-height: 0; }
+  .phone-stage > .phone-case { position: absolute; inset: 0; width: 100%; height: 100%; transform: none; }
+  .phone-case { padding: 0; border: 0; border-radius: 0; box-shadow: none; background: var(--background); }
+  .phone-case::before, .phone-case::after { content: none; }
+  .phone-case > .phone-screen { height: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; }
+  .phone-screen > .status-bar, .home-indicator, .navigation-home { display: none; }
+  .page-navigation .round-action { width: 42px; height: 42px; min-height: 42px; border-radius: 50%; }
+  .page-navigation .round-action .icon { width: 18px; height: 18px; }
+  .discover-utilities { height: 44px; align-items: center; }
+  .navigation-action-slot { display: flex; align-items: center; justify-content: flex-end; }
+  .page-navigation { top: calc(env(safe-area-inset-top) + 12px); }
+  .discover-scroll { padding-top: calc(env(safe-area-inset-top) + 96px); padding-bottom: calc(env(safe-area-inset-bottom) + 110px); }
+  .create-post-scroll { padding-top: calc(env(safe-area-inset-top) + 88px); padding-bottom: calc(max(12px, env(safe-area-inset-bottom)) + 68px); }
+  .post-detail { margin-top: calc(env(safe-area-inset-top) + 88px); }
+  .notifications-scroll { padding-top: calc(env(safe-area-inset-top) + 81px); padding-bottom: calc(env(safe-area-inset-bottom) + 32px); }
+  .feed-scroll:not(.discover-scroll) { -webkit-mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); }
+  .discover-scroll.has-docked-tabs { --header-feather: linear-gradient(to bottom, transparent env(safe-area-inset-top), black calc(env(safe-area-inset-top) + 15px)); }
+  .screen-top-blur { top: 0; height: calc(env(safe-area-inset-top) + 100px); }
+  .discover-page .screen-top-blur { height: calc(env(safe-area-inset-top) + 110px); }
+  .bottom-navigation-area { padding-bottom: max(12px, env(safe-area-inset-bottom)); height: calc(110px + env(safe-area-inset-bottom)); }
+  .post-fixed-composer, .thread-composer, .create-publish-bar { bottom: max(12px, env(safe-area-inset-bottom)); }
+  .notifications-overlay { padding-top: calc(env(safe-area-inset-top) + 24px); padding-bottom: max(16px, env(safe-area-inset-bottom)); }
+  .home-area { height: calc(64px + env(safe-area-inset-bottom)); }
+  .picker-keyboard { display: none; }
+  .has-system-keyboard { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
+  input, textarea, .message-input, .media-search-surface .create-picker-search { font-size: 16px; }
+}
