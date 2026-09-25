@@ -358,3 +358,7 @@ Floating suggestion surfaces use a subtle 4% white fill. Their results container
 - Greeting avatar hidden: Discover now shows plain “Hi, Ishant” text. Notification dismissal now removes the card once and animates remaining rows/history via 300ms position transforms instead of height/padding collapse, avoiding minimum-height snaps and repeated layout. Swipe geometry uses local pixels at phone-preview scale. Entrance uses a shorter 320ms staggered translate/fade without per-card filter animation. Swipe and keyboard dismissal browser checked.
 
 - Notification history material trial: Show notification history now uses Prism Highlight mint (14% fill, pale directional wash/rim, 18px blur and restrained shadow), replacing Medium mint. Geometry and tap feedback remain unchanged.
+
+- Bottom navigation shadow trial: increased outer black shadow opacity from 32% to 40% (`#00000066`), preserving the -2px upward offset, 24px blur and inset highlights.
+
+- Stronger bottom-navigation shadow trial rejected; restored the original `0 -2px 24px #00000052` outer shadow (32% opacity).
