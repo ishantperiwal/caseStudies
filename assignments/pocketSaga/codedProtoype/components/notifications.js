@@ -10,15 +10,20 @@
     { id: 'n6', person: 'ak', type: 'reply', text: 'replied to your comment', quote: 'A rewatch completely changes how that moment feels.', post: 'coordinates', time: '1d ago', day: 'Yesterday' },
     { id: 'n7', person: 'lm', type: 'like', text: 'and 8 others liked your post', post: 'ishant-interstellar', time: '1d ago', day: 'Yesterday' }
   ];
+  const unreadCount = () => items.filter(item => item.unread).length;
   function updateBadge() {
-    const count = items.filter(item => item.unread).length;
-    document.querySelectorAll('.notification-count').forEach(badge => { badge.textContent = String(count); badge.hidden = !count; badge.parentElement.setAttribute('aria-label', `Notifications, ${count} unread`); });
+    const count = unreadCount();
+    document.querySelectorAll('.notification-count').forEach(badge => {
+      badge.textContent = count ? String(count) : '';
+      badge.hidden = count === 0;
+      badge.parentElement.setAttribute('aria-label', count ? `Notifications, ${count} unread` : 'Notifications');
+    });
   }
   function Card(item, onOpen) {
     const data = PocketSagaData.post(item.post);
     const person = pocketSagaData.people.find(person => person.id === item.person);
     const icon = item.type === 'like' ? 'heart' : item.type === 'reply' ? 'message-circle' : 'message-circle';
-    return Action({ label: `${person.name} ${item.text}. ${item.time}. ${data.community.name}${item.unread ? '. Unread' : ''}`, className: `notification-item ${item.unread ? 'is-unread' : ''}`, children: [
+    return Action({ label: `${person.name} ${item.text}. ${item.time}. ${data.community.name}${item.unread ? '. Unread' : ''}`, className: `notification-item tap-feedback ${item.unread ? 'is-unread' : ''}`, children: [
       node('span', `notification-avatar notification-${item.type}`, [Avatar(person), node('span', 'notification-type', Icon(icon))]),
       node('span', 'notification-copy', [
         node('span', 'notification-summary', [node('strong', '', person.name), ` ${item.text}`]),
@@ -67,16 +72,145 @@
     }
     const list = node('div', 'notifications-unread-list');
     const unread = items.filter(item => item.unread);
+    const title = node('h2', 'notifications-overlay-title');
+    title.setAttribute('aria-live', 'polite');
+    title.setAttribute('aria-atomic', 'true');
+    function updateTitle() {
+      const count = unreadCount();
+      title.textContent = count ? `${count} notification${count === 1 ? '' : 's'}` : 'No notifications';
+    }
+    updateTitle();
+    function enableSwipeDismiss(card, item) {
+      let gesture = null, swipeGhost = null, restoring = false, suppressClickUntil = 0;
+      card.setAttribute('aria-description', 'Swipe left or right to dismiss. Press Delete to dismiss.');
+      card.setAttribute('aria-keyshortcuts', 'Delete Backspace');
+      card.addEventListener('click', event => {
+        if (!card.dataset.dismissing && performance.now() >= suppressClickUntil) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }, true);
+      function makeSwipeGhost() {
+        const cardRect = card.getBoundingClientRect();
+        const overlayRect = overlay.getBoundingClientRect();
+        swipeGhost = card.cloneNode(true);
+        swipeGhost.classList.add('notification-swipe-ghost');
+        swipeGhost.setAttribute('aria-hidden', 'true');
+        swipeGhost.inert = true;
+        swipeGhost.style.animation = 'none';
+        swipeGhost.style.left = `${cardRect.left - overlayRect.left}px`;
+        swipeGhost.style.top = `${cardRect.top - overlayRect.top}px`;
+        swipeGhost.style.width = `${cardRect.width}px`;
+        swipeGhost.style.height = `${cardRect.height}px`;
+        overlay.append(swipeGhost);
+        card.style.opacity = '0';
+      }
+      function restore() {
+        if (!swipeGhost) return;
+        restoring = true;
+        const returning = swipeGhost;
+        const revealCard = () => {
+          returning.remove();
+          if (swipeGhost === returning) swipeGhost = null;
+          card.style.opacity = '';
+          card.style.transition = '';
+          card.classList.remove('is-swiping');
+          restoring = false;
+        };
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) { revealCard(); return; }
+        const start = getComputedStyle(returning);
+        returning.animate([
+          { transform: start.transform, opacity: start.opacity },
+          { transform: 'translateX(0px)', opacity: 1 }
+        ], { duration: 200, easing: 'ease-out' }).finished.then(revealCard, revealCard);
+      }
+      async function dismiss(direction) {
+        if (card.dataset.dismissing || closed || removed) return;
+        card.dataset.dismissing = 'true';
+        card.classList.remove('is-swiping');
+        card.style.animation = 'none';
+        card.style.transition = 'none';
+        item.unread = false;
+        updateBadge();
+        updateTitle();
+        const movingCard = swipeGhost || card;
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const start = getComputedStyle(movingCard);
+          const flight = movingCard.animate([
+            { transform: start.transform, opacity: start.opacity },
+            { transform: `translateX(${direction * (overlay.clientWidth + movingCard.offsetWidth)}px)`, opacity: 0 }
+          ], { duration: 220, easing: 'cubic-bezier(.2,.7,.2,1)', fill: 'forwards' });
+          await flight.finished.catch(() => {});
+        }
+        if (swipeGhost) { swipeGhost.remove(); swipeGhost = null; }
+        if (!card.isConnected) return;
+        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const style = getComputedStyle(card);
+          card.style.overflow = 'hidden';
+          const collapse = card.animate([
+            { height: `${card.offsetHeight}px`, marginBottom: style.marginBottom, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom },
+            { height: '0px', marginBottom: '0px', paddingTop: '0px', paddingBottom: '0px' }
+          ], { duration: 180, easing: 'ease-in-out', fill: 'forwards' });
+          await collapse.finished.catch(() => {});
+        }
+        const wasFocused = document.activeElement === card;
+        card.remove();
+        if (wasFocused && !closed && !removed) {
+          (list.querySelector('.notification-item:not([data-dismissing])') || panel.querySelector('.notifications-history')).focus({ preventScroll: true });
+        }
+      }
+      card.addEventListener('pointerdown', event => {
+        if (card.dataset.dismissing || restoring || (event.pointerType === 'mouse' && event.button !== 0)) return;
+        gesture = { id: event.pointerId, x: event.clientX, y: event.clientY, time: performance.now(), swiping: false };
+      });
+      card.addEventListener('pointermove', event => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y;
+        if (!gesture.swiping) {
+          if (Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
+          if (Math.abs(dy) >= Math.abs(dx)) { gesture = null; return; }
+          gesture.swiping = true;
+          card.setPointerCapture(event.pointerId);
+          card.style.animation = 'none';
+          card.style.transition = 'none';
+          card.classList.add('is-swiping');
+          makeSwipeGhost();
+        }
+        if (event.cancelable) event.preventDefault();
+        swipeGhost.style.transform = `translateX(${dx}px)`;
+        swipeGhost.style.opacity = String(Math.max(.35, 1 - Math.abs(dx) / card.offsetWidth));
+      });
+      card.addEventListener('pointerup', event => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        const dx = event.clientX - gesture.x;
+        const swiping = gesture.swiping;
+        const speed = Math.abs(dx) / Math.max(1, performance.now() - gesture.time);
+        gesture = null;
+        if (!swiping) return;
+        suppressClickUntil = performance.now() + 350;
+        if (Math.abs(dx) > card.offsetWidth * .25 || (Math.abs(dx) > 28 && speed > .55)) dismiss(Math.sign(dx));
+        else restore();
+      });
+      card.addEventListener('pointercancel', event => {
+        if (!gesture || event.pointerId !== gesture.id) return;
+        if (gesture.swiping) restore();
+        gesture = null;
+      });
+      card.addEventListener('keydown', event => {
+        if (event.key !== 'Delete' && event.key !== 'Backspace') return;
+        event.preventDefault();
+        dismiss(-1);
+      });
+    }
     unread.forEach((item, index) => {
       const card = Card(item, post => { close(false, () => onPost(post)); });
       card.style.setProperty('--notification-delay', `${60 + Math.min(index, 6) * 65}ms`);
+      enableSwipeDismiss(card, item);
       list.append(card);
     });
-    if (!unread.length) list.append(node('div', 'notifications-empty', [Icon('check'), node('h2', '', 'All caught up'), node('p', '', 'No unread notifications.')]));
     const panel = node('section', 'notifications-unread-panel', [
-      node('h2', 'notifications-overlay-title', 'Notifications'),
+      title,
       list,
-      Action({ label: 'Show notification history', className: 'detail-pill notifications-history', children: ['Show notification history', Icon('chevron-down')], onClick: () => { close(false, onHistory); } })
+      Action({ label: 'Show notification history', className: 'detail-pill notifications-history tap-feedback', children: ['Show notification history', Icon('chevron-down')], onClick: () => { close(false, onHistory); } })
     ]);
     overlay.append(panel);
     overlay.addEventListener('click', event => { if (event.target === overlay) close(); });
@@ -116,5 +250,5 @@
     render();
     return page;
   }
-  window.PocketSagaNotifications = { Page, Card, OpenUnread };
+  window.PocketSagaNotifications = { Page, Card, OpenUnread, unreadCount };
 })();

@@ -39,6 +39,7 @@
 .discover-navigation h1 { flex-shrink: 0; white-space: nowrap; font-size: 22px; font-weight: 600; letter-spacing: -.6px; }
 .discover-utilities { position: absolute; top: 0; right: 0; display: flex; gap: 12px; }
 .notification-count { position: absolute; top: 2px; right: 2px; background: var(--accent); color: #183d2b; border-radius: 10px; min-width: 15px; height: 15px; font-size: 9px; display: grid; place-items: center; }
+.notification-count[hidden] { display: none; }
 .discover-tabs { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .discover-tab { border-radius: 22px; min-height: 38px; padding: 0 16px; font-size: 14px; color: var(--muted); background: #ffffff05; }
 .phone-case .discover-tab.glass-choice:not(.is-selected) { background: #ffffff07; }
@@ -54,7 +55,8 @@
 .discover-post > .author-meta { margin: 0; }
 .discover-post .post-copy { gap: 6px; }
 .discover-post-context { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--accent); font-size: 12px; line-height: 18px; margin-bottom: 2px !important; }
-.discover-community-link { min-height: 0; font-size: inherit; line-height: inherit; text-align: left; }
+.discover-community-link { min-width: 0; max-width: 100%; min-height: 0; overflow: hidden; font-size: inherit; line-height: inherit; text-align: left; }
+.discover-community-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .discover-post-context .icon { width: 14px; height: 14px; }
 .discover-group-row { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 16px; background-color: #ffffff05; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
 .discover-post > .discover-group-row { margin-bottom: 4px; }
@@ -64,6 +66,8 @@
 .discover-group-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
 .group-eyebrow { color: var(--muted); font-size: 12px; line-height: 18px; }
 .group-name { color: var(--text); font-size: 14px; line-height: 19px; font-weight: 600; overflow-wrap: anywhere; }
+.group-name.is-two-line { font-size: 13px; line-height: 18px; }
+.discover-post > .discover-group-row .group-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; overflow-wrap: normal; font-size: 14px; line-height: 19px; }
 .group-join { flex-shrink: 0; min-height: 36px; padding: 0 16px; border-radius: 18px; background: var(--surface-light), #ffffff08; box-shadow: inset 0 1px 0 #ffffff10; font-size: 12px; font-weight: 500; color: var(--accent); }
 .discover-group-card { padding: 0; border-radius: 16px; background-color: #ffffff03; }
 .discover-group-card .discover-group-row { background-color: transparent; }

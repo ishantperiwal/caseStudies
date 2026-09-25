@@ -59,7 +59,7 @@
 .phone-case .thread-panel-surface { box-shadow: 0 -8px 32px #00000040; }
 .phone-case .message-composer:focus-within { background-image: linear-gradient(to bottom, #ffffff08, #ffffff02); }
 
-/* Reusable glass selection for segmented controls and navigation destinations. */
+/* Reusable glass selection for segmented controls and selected actions. */
 .phone-case .glass-choice {
   position: relative;
   background: transparent;
@@ -101,6 +101,7 @@
   pointer-events: none;
   z-index: -1;
 }
+.phone-case .bottom-navigation.animated-selection > .selection-highlight { border-radius: 999px; }
 .phone-case .animated-selection > button { font-weight: 500; }
 .phone-case .animated-selection > button.is-selected {
   background: transparent;
@@ -110,8 +111,8 @@
 }
 .phone-case .animated-selection > button.is-selected::after { content: none; }
 
-/* Shared mint glass for primary actions and the selected bottom tab. */
-.phone-case :is(.membership-action.membership-join, .bottom-navigation .glass-choice.is-selected, .discover-tabs.is-docked .selection-highlight, .discover-write) {
+/* Shared strong mint glass for primary actions, the travelling bottom tab and docked filters. */
+.phone-case :is(.membership-action.membership-join, .bottom-navigation > .selection-highlight, .discover-tabs.is-docked .selection-highlight, .discover-write, .home-play) {
   background-color: rgb(128 213 169 / 25%);
   color: #e3f8eb;
   background-image: var(--surface-light);
@@ -156,9 +157,20 @@
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor; mask-composite: exclude;
 }
+/* Discover's undocked selection indicates the active filter without reading as an action. */
 .phone-case .discover-tabs:not(.is-docked) .selection-highlight {
   background-color: rgb(178 219 194 / 14%);
   background-image: linear-gradient(155deg, #cdebd824, #bde0ca10 45%, #bde0ca06 75%, #c6e7d212);
+}
+
+/* Medium mint for the empty title chooser and the notification history action. */
+.phone-case :is(.create-media-banner.glass-surface:not(.has-selection), .notifications-history) {
+  background-color: rgb(120 169 138 / 10%);
+  background-image: radial-gradient(ellipse 105% 85% at 16% -45%, #f4fff461, #f2fff41c 45%, transparent 76%), linear-gradient(170deg, #d8f5df18, #789a8308 54%, #07170e1c);
+  --surface-edge: linear-gradient(150deg, #f4fff591, #dfffea32 22%, #ffffff07 52%, transparent 72%, #ffffff0b);
+  -webkit-backdrop-filter: blur(20px) saturate(1.12);
+  backdrop-filter: blur(20px) saturate(1.12);
+  box-shadow: inset 0 1px 0 #ffffff32, inset 1px 0 0 #ffffff0d, inset 0 -10px 14px #07170e24, 0 4px 12px #00000020;
 }
 
 /* Keep tab bases stable while the translucent selection travels over them. */

@@ -1,7 +1,8 @@
 /* Keep the device outside page transitions; each route retains its own scroll layer. */
 .navigation-feed { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; background: var(--background); }
-.navigation-shell > .phone-screen > .status-bar { z-index: 100; }
-.navigation-home { position: absolute; z-index: 100; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; }
+/* Device chrome remains visible above in-phone overlays such as notifications. */
+.navigation-shell > .phone-screen > .status-bar { z-index: 130; }
+.navigation-home { position: absolute; z-index: 130; bottom: 12px; left: 0; right: 0; display: flex; justify-content: center; pointer-events: none; }
 .phone-case.navigation-route { position: absolute; inset: 0; z-index: 40; width: 100%; height: 100%; padding: 0; border: 0; border-radius: inherit; background: var(--background); box-shadow: -8px 0 24px #00000026; }
 .phone-case.navigation-route::before, .phone-case.navigation-route::after { content: none; }
 .navigation-route > .phone-screen { height: 100%; aspect-ratio: auto; border-radius: inherit; box-shadow: none; }
@@ -9,3 +10,17 @@
 .navigation-route[hidden] { display: none; }
 .navigation-route { overflow: hidden; }
 .post-card[role="link"] { cursor: pointer; }
+
+/* Main tab shell (tabs.js): Home and Community panels share one phone and bottom navigation. */
+.tab-panel { position: absolute; inset: 0; border-radius: inherit; overflow: hidden; background: var(--background); transform: translate3d(0, 0, 0); backface-visibility: hidden; }
+.tab-panel[hidden] { display: none; }
+/* Blur the rendered incoming panel as an overlay, without isolating its glass descendants. */
+.tab-entry-blur { position: absolute; inset: 0; z-index: 30; border-radius: inherit; pointer-events: none; opacity: 0; visibility: hidden; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+/* Only the icon and label respond to a press; the selected glass stays put. */
+.phone-case .bottom-destination:active { color: #fff; }
+.phone-case .bottom-destination > :is(.icon, .avatar, span) { transition: transform .18s cubic-bezier(.22, 1, .36, 1); }
+.phone-case .bottom-destination:active > :is(.icon, .avatar, span) { transform: scale(.88); }
+@media (prefers-reduced-motion: reduce) {
+  .phone-case .bottom-destination > :is(.icon, .avatar, span) { transition: none; }
+  .phone-case .bottom-destination:active > :is(.icon, .avatar, span) { transform: none; }
+}

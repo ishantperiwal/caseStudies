@@ -106,7 +106,7 @@
       setVisible(tabs, true); setVisible(fixedTabs, false);
     };
   }
-  function collapseCarousel({ scroller, carousel, anchor, slot, tabs, headerElements = [] }) {
+  function collapseCarousel({ scroller, carousel, anchor, slot, tabs, headerElements = [], onCollapse = () => {} }) {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
     let frame = 0, timer = 0, pressed = false, touching = false, snapping = null, destroyed = false;
     const ease = CustomEase.create('carouselScrollSnap', '0.6,0,0.25,1');
@@ -122,6 +122,7 @@
       // CSS sticky pins the top edge natively; only scale, blur, and fade respond to
       // scroll, so a delayed scroll event cannot briefly pull the hero upward.
       gsap.set(carousel, { scale: reduced.matches ? 1 : 1 - .4 * progress, opacity: Math.pow(1 - progress, 2), filter: reduced.matches || progress === 0 ? 'none' : `blur(${8 * progress}px)`, transformOrigin: 'center top' });
+      onCollapse(reduced.matches ? 0 : progress);
       carousel.inert = progress >= .85;
       carousel.setAttribute('aria-hidden', String(progress >= .85));
       gsap.set(headerElements, { autoAlpha: Math.pow(1 - progress, 2) });
@@ -196,6 +197,7 @@
       scroller.removeEventListener('wheel', input); scroller.removeEventListener('keydown', input);
       window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up);
       gsap.set(carousel, { clearProps: 'transform,opacity,filter' }); carousel.inert = false; carousel.removeAttribute('aria-hidden');
+      onCollapse(0);
       gsap.set(headerElements, { clearProps: 'opacity,visibility' });
       for (const element of headerElements) { element.inert = false; element.removeAttribute('aria-hidden'); }
       scroller.style.removeProperty('--discover-feed-min-height');
@@ -235,11 +237,31 @@
     scroller.addEventListener('scroll', schedule, { passive: true });
     return () => { cancelAnimationFrame(frame); scroller.removeEventListener('scroll', schedule); gsap.killTweensOf(navigation); if (bottomBlur) { gsap.killTweensOf(bottomBlur); bottomBlur.style.removeProperty('--bottom-blur-strength'); } };
   }
+  const pillAnimations = new WeakMap();
+  function animateDetailPill(button) {
+    if (!button.classList.contains('detail-pill')) return false;
+    const previous = pillAnimations.get(button);
+    const start = getComputedStyle(button).scale;
+    previous?.cancel();
+    const animation = button.animate([
+      { scale: start === 'none' ? '1' : start },
+      { scale: '.93', offset: .26 },
+      { scale: '1.025', offset: .66 },
+      { scale: '1' }
+    ], { duration: 380, easing: 'cubic-bezier(.4,0,.2,1)' });
+    pillAnimations.set(button, animation);
+    animation.onfinish = animation.oncancel = () => {
+      if (pillAnimations.get(button) === animation) pillAnimations.delete(button);
+    };
+    return true;
+  }
   const likeAnimations = new WeakMap();
   function animateLike(button, liked) {
     likeAnimations.get(button)?.();
     const icon = button.querySelector('.icon-heart');
     if (!icon || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const wholePill = animateDetailPill(button);
+    if (wholePill && !liked) return;
     let particles;
     const timeline = gsap.timeline({ onComplete: () => {
       particles?.remove();
@@ -251,9 +273,11 @@
       gsap.set(icon, { clearProps: 'transform,transformOrigin' });
       likeAnimations.delete(button);
     });
-    gsap.set(icon, { transformOrigin: '50% 50%' });
-    timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
-      .to(icon, { scale: 1, duration: liked ? .6 : .18, ease: liked ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    if (!wholePill) {
+      gsap.set(icon, { transformOrigin: '50% 50%' });
+      timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
+        .to(icon, { scale: 1, duration: liked ? .6 : .18, ease: liked ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    }
     if (!liked) return;
     particles = document.createElement('span');
     particles.className = 'like-particles';
@@ -281,6 +305,8 @@
     saveAnimations.get(button)?.();
     const icon = button.querySelector('.icon-bookmark');
     if (!icon || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const wholePill = animateDetailPill(button);
+    if (wholePill && !saved) return;
     let bubble;
     const timeline = gsap.timeline({ onComplete: () => {
       bubble?.remove();
@@ -292,9 +318,11 @@
       gsap.set(icon, { clearProps: 'transform,transformOrigin' });
       saveAnimations.delete(button);
     });
-    gsap.set(icon, { transformOrigin: '50% 50%' });
-    timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
-      .to(icon, { scale: 1, duration: saved ? .6 : .18, ease: saved ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    if (!wholePill) {
+      gsap.set(icon, { transformOrigin: '50% 50%' });
+      timeline.to(icon, { scale: .72, duration: .09, ease: 'power2.out' })
+        .to(icon, { scale: 1, duration: saved ? .6 : .18, ease: saved ? 'elastic.out(1.4, 0.38)' : 'power2.out' });
+    }
     if (!saved) return;
     bubble = document.createElement('span');
     bubble.className = 'save-feedback';

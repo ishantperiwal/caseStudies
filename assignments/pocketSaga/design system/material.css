@@ -1,4 +1,5 @@
-/* PocketSaga material primitives: source values from codedProtoype/components/surfaces.css.
+/* PocketSaga material primitives: recipes adapted from codedProtoype/components/surfaces.css
+   and the dense-neutral destination control in create-post.css.
    Material and geometry are independent: apply data-material to any shape. */
 :root {
   --canvas: #080a0b;
@@ -22,10 +23,26 @@
   backdrop-filter: blur(var(--material-blur)) saturate(var(--saturation));
   -webkit-backdrop-filter: blur(var(--material-blur)) saturate(var(--saturation));
 }
-[data-material="mint"] {
+[data-material="neutral"] {
+  --fill: rgb(178 219 194 / 4%);
+}
+[data-material="dense-neutral"] {
+  --fill: rgb(43 49 47 / 76%);
+  --wash: linear-gradient(155deg, #ffffff0d, #ffffff04 55%, transparent);
+  --edge: linear-gradient(155deg, #ffffff22, #ffffff0c 38%, #ffffff03 78%, #ffffff06);
+}
+[data-material="highlight"] {
   --fill: rgb(178 219 194 / 14%);
   --wash: linear-gradient(155deg, #cdebd824, #bde0ca10 45%, #bde0ca06 75%, #c6e7d212);
   --edge: linear-gradient(155deg, #ffffff32, #ffffff0c 38%, #ffffff03 72%, #ffffff16);
+}
+[data-material="medium"] {
+  --fill: rgb(120 169 138 / 10%);
+  --wash: radial-gradient(ellipse 105% 85% at 16% -45%, #f4fff461, #f2fff41c 45%, transparent 76%), linear-gradient(170deg, #d8f5df18, #789a8308 54%, #07170e1c);
+  --edge: linear-gradient(150deg, #f4fff591, #dfffea32 22%, #ffffff07 52%, transparent 72%, #ffffff0b);
+  --material-blur: 20px;
+  --saturation: 1.12;
+  box-shadow: inset 0 1px 0 #ffffff32, inset 1px 0 0 #ffffff0d, inset 0 -10px 14px #07170e24, 0 4px 12px #00000020;
 }
 [data-material="strong"] {
   --fill: rgb(128 213 169 / 25%);

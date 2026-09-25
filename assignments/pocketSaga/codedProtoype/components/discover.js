@@ -42,10 +42,11 @@
     });
     return row;
   }
-  function BottomNavigation(emit, viewer) {
-    const nav = node('nav', 'bottom-navigation glass-surface', [['Home','house'],['Community','messages-square'],['Profile','user-round']].map(([label, icon]) => {
-      const button = Action({ label, className: `bottom-destination glass-choice tap-feedback${label === 'Community' ? ' is-selected' : ''}`, children: [label === 'Profile' ? Avatar(viewer) : Icon(icon), node('span', '', label)], onClick: () => emit('navigate', { destination: label }) });
-      if (label === 'Community') button.setAttribute('aria-current', 'page');
+  function BottomNavigation(emit, viewer, selected = 'Community') {
+    const nav = node('nav', 'bottom-navigation glass-surface', [['Home','house','Home'],['Community','messages-square','Community'],['Profile','user-round','Profile']].map(([label, icon, destination]) => {
+      const button = Action({ label, className: `bottom-destination glass-choice${destination === selected ? ' is-selected' : ''}`, children: [label === 'Profile' ? Avatar(viewer) : Icon(icon), node('span', '', label)], onClick: () => emit('navigate', { destination }) });
+      button.dataset.destination = destination;
+      if (destination === selected) button.setAttribute('aria-current', 'page');
       return button;
     }));
     nav.setAttribute('aria-label', 'Main navigation');
@@ -53,6 +54,8 @@
   }
   function DiscoverPage(data, handlers = {}) {
     let page, deck, feedTransition, activeTab = 'For you';
+    // Keep the current Saved list stable while its save buttons toggle; refresh on the next visit.
+    let savedTabPosts = null;
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const localPosts = [];
     const ownPosts = (data.yourPosts || []);
@@ -102,8 +105,8 @@
         }
       }, true, group => emit('community', { group })));
       const context = SeparatedMeta([
-        group ? Action({ label: `Open ${group.name}`, icon: 'users', className: 'discover-community-link', children: group.name, onClick: () => emit('community', { group }) }) : node('span', '', 'Your thoughts'),
-        post.context
+        group ? Action({ label: `Open ${group.name}`, icon: 'users', className: 'discover-community-link', children: node('span', 'discover-community-label', group.name), onClick: () => emit('community', { group }) }) : node('span', '', 'Your thoughts'),
+        group ? group.context : post.context
       ], 'discover-post-context', 'div');
       card.querySelector('.post-copy').prepend(context);
       return card;
@@ -125,15 +128,14 @@
         );
       }
       else {
-        const posts = activeTab === 'Saved' ? PocketSagaData.savedPosts() : activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
+        if (activeTab === 'Saved' && savedTabPosts === null) savedTabPosts = PocketSagaData.savedPosts();
+        const posts = activeTab === 'Saved' ? savedTabPosts : activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
         list.replaceChildren(...(posts.length ? posts.map(renderPost) : [node('p', 'empty-feed', activeTab === 'Saved' ? 'Save posts to revisit them here.' : 'Your thoughts belong here. Write about something you’ve watched.')]));
       }
     }
     function compose(item = null, source = null) {
       emit('create-post', { media: item, source });
     }
-    const onSavedChange = () => { if (activeTab === 'Saved') renderFeed(); };
-    document.addEventListener('post-saved-change', onSavedChange);
     const onPublished = event => {
       localPosts.unshift(event.detail.post);
       renderFeed();
@@ -157,6 +159,7 @@
       if (activeTab === label) return;
       const tabOrder = ['For you', 'Your posts', 'Your groups', 'Saved'];
       const direction = Math.sign(tabOrder.indexOf(label) - tabOrder.indexOf(activeTab));
+      if (activeTab === 'Saved') savedTabPosts = null;
       activeTab = label;
       for (const { row, buttons, selection } of filterRows) {
         buttons.forEach(button => {
@@ -193,7 +196,7 @@
         onClick: () => selectFilter(label)
       })));
       const row = node('div', `discover-tabs${fixed ? ' discover-tabs-fixed' : ''}`, track);
-      row.setAttribute('aria-label', 'Community feed tabs');
+      row.setAttribute('aria-label', 'Group feed tabs');
       const buttons = [...track.children];
       buttons.forEach(button => {
         button.setAttribute('aria-pressed', String(button.getAttribute('aria-label') === activeTab));
@@ -207,7 +210,7 @@
     const fixedTabs = createFilters(true);
     const tabAnchor = node('div', 'discover-tabs-anchor', tabs);
     const scroller = node('div','feed-scroll discover-scroll',[deck.element,tabAnchor,list]);
-    scroller.setAttribute('aria-label','Community discovery feed'); scroller.tabIndex = 0;
+    scroller.setAttribute('aria-label','Group discovery feed'); scroller.tabIndex = 0;
     page = PhoneFrame({ device: data.device, background: data.history[0].artwork, content: scroller });
     page.classList.add('discover-page');
     page.addEventListener('draft-published', onPublished);
@@ -239,13 +242,16 @@
     updateAtmosphere();
     const greeting = node('h1', '', 'Hi, ' + data.viewer.name);
     const headingSlot = node('div', 'discover-heading-slot', [greeting, fixedTabs]);
-    const header = node('header','page-navigation discover-navigation',[headingSlot,node('div','discover-utilities',[Action({label:'Notifications, 3 unread',icon:'bell',className:'round-action',children:node('span','notification-count','3'),onClick:()=>emit('notifications')}),Action({label:'Create a post',icon:'square-pen',className:'round-action discover-write',children:'',onClick:()=>compose()})])]);
-    page.querySelector('.phone-screen').append(header, BottomNavigation((action,detail)=>{ emit(action,detail); if(detail.destination!=='Community')toast(`${detail.destination} will be connected later.`); }, data.viewer), announce);
+    const notificationCount = PocketSagaNotifications.unreadCount();
+    const badge = node('span', 'notification-count', notificationCount ? String(notificationCount) : '');
+    badge.hidden = notificationCount === 0;
+    const header = node('header','page-navigation discover-navigation',[headingSlot,node('div','discover-utilities',[Action({label:notificationCount ? `Notifications, ${notificationCount} unread` : 'Notifications',icon:'bell',className:'round-action',children:badge,onClick:()=>emit('notifications')}),Action({label:'Create a post',icon:'square-pen',className:'round-action discover-write',children:'',onClick:()=>compose()})])]);
+    page.querySelector('.phone-screen').append(header, BottomNavigation((action,detail)=>{ emit(action,detail); if(handlers.navigate)return; if(detail.destination==='Home')location.href='home.html'; else if(detail.destination!=='Community')toast(`${detail.destination} will be connected later.`); }, data.viewer), announce);
     const undockTabs = PocketSagaMotion.dockTabs({ scroller, anchor: tabAnchor, tabs, fixedTabs, slot: headingSlot, greeting, utilities: header.querySelector('.discover-utilities'), headerManaged: true });
-    const stopCarouselCollapse = PocketSagaMotion.collapseCarousel({ scroller, carousel: deck.element, anchor: tabAnchor, slot: headingSlot, tabs: [tabs, fixedTabs], headerElements: [greeting, header.querySelector('.discover-utilities')] });
+    const stopCarouselCollapse = PocketSagaMotion.collapseCarousel({ scroller, carousel: deck.element, anchor: tabAnchor, slot: headingSlot, tabs: [tabs, fixedTabs], headerElements: [greeting, header.querySelector('.discover-utilities')], onCollapse: progress => deck.setCollapseProgress(progress) });
     const stopAutoHide = PocketSagaMotion.autoHideNavigation({ scroller, navigation: page.querySelector('.bottom-navigation-area') });
     renderFeed();
-    return { element: page, destroy() { document.removeEventListener('post-saved-change', onSavedChange); page.removeEventListener('draft-published', onPublished); stopAutoHide(); stopCarouselCollapse(); undockTabs(); deck.destroy(); filterRows.forEach(({ selection }) => selection.destroy()); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
+    return { element: page, toast, destroy() { page.removeEventListener('draft-published', onPublished); stopAutoHide(); stopCarouselCollapse(); undockTabs(); deck.destroy(); filterRows.forEach(({ selection }) => selection.destroy()); feedTransition?.kill(); clearTimeout(toastTimer); cancelAnimationFrame(atmosphereFrame); scroller.removeEventListener('scroll', scheduleAtmosphere); gsap.killTweensOf(page.querySelectorAll('.atmosphere-image')); } };
   }
   window.PocketSagaDiscover = { GroupRow, BottomNavigation, DiscoverPage, mount(target,data,handlers) { const view = DiscoverPage(data,handlers); return PocketSaga.mountPage(target,view.element,()=>view.destroy); } };
 })();

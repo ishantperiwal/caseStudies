@@ -18,6 +18,7 @@
 .post-detail-actions { display: flex; gap: 12px; }
 .detail-pill { min-height: 44px; padding: 0 16px; border-radius: 22px; background: var(--control); font-size: 12px; font-weight: 500; gap: 12px; }
 .detail-like.detail-pill { gap: 8px; color: var(--accent); background: #BDE0CA18; }
+.detail-like.detail-pill .like-count { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .detail-like[aria-pressed="true"] { color: var(--accent); }
 .detail-like[aria-pressed="true"] .icon { filter: drop-shadow(0 0 3px #bde0ca40); }
 .post-navigation { left: 16px; right: 16px; }

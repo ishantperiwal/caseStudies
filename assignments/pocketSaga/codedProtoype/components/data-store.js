@@ -16,7 +16,8 @@
   const comments = new Map(catalog.posts.map(post => [post.id, post.comments.map(hydrateComment)]));
   const groups = catalog.communities.map(group => {
     const item = requireRecord(media, group.mediaId, 'media');
-    return Object.assign(group, { artwork: item.artwork, background: item.artwork, context: `${item.title} · ${item.subtitle}`, membership: `${group.members} members` });
+    const kind = item.mediaType === 'movie' ? 'Movie' : 'TV series';
+    return Object.assign(group, { artwork: item.artwork, background: item.artwork, context: `${item.title} · ${kind}`, membership: `${group.members} members` });
   });
   function mediaIdentifier(item, record) {
     return { title: item.title, subtitle: item.subtitle, artwork: item.artwork,
@@ -37,7 +38,7 @@
   }
   function community(id = 'earth') {
     const group = requireRecord(communities, id, 'community');
-    return { device: device('community'), theme: catalog.theme, viewer, community: group,
+    return { device: device('group'), theme: catalog.theme, viewer, community: group,
       posts: postIds.map(id => previews.get(id)).filter(item => item.group === id) };
   }
   function discover() {
@@ -45,6 +46,16 @@
       history: catalog.watchHistory.map(entry => ({ ...requireRecord(media, entry.mediaId, 'media'), watchedLabel: entry.label })),
       posts: catalog.discoverPostIds.map(id => requireRecord(previews, id, 'post')),
       yourPosts: [...previews.values()].filter(post => post.author.id === viewer.id) };
+  }
+  // Home tab: the same watch history as Discover, plus resume points and suggestions.
+  function home() {
+    const history = catalog.watchHistory.map(entry => ({ ...requireRecord(media, entry.mediaId, 'media'), watchedLabel: entry.label }));
+    const { featured, continueWatching, suggestions } = catalog.home;
+    return { device: device('home'), viewer, history,
+      featured: { ...requireRecord(media, featured.mediaId, 'media'), tags: featured.tags },
+      continueWatching: continueWatching.map(entry => ({ ...entry, media: requireRecord(media, entry.mediaId, 'media'),
+        prompt: entry.prompt && { ...entry.prompt, community: requireRecord(communities, entry.prompt.communityId, 'community') } })),
+      suggestions };
   }
   function editor() {
     return { device: device('create post'), viewer, media: [...media.values()].map(item => ({ ...item, selectionLabel: item.mediaType === 'movie' ? 'Movie' : item.episode != null ? `Season ${item.season} · Episode ${item.episode}` : item.season != null ? `Season ${item.season}` : item.scope, watchedLabel: catalog.watchHistory.find(entry => entry.mediaId === item.id)?.label })), groups,
@@ -86,6 +97,6 @@
     const post = requireRecord(previews, postId, 'post');
     post.liked = liked; post.likes = count - Number(liked);
   }
-  window.PocketSagaData = { post, community, discover, editor, publish, addComment, setLike, setSaved, isSaved: id => saved.has(id), savedPosts: () => [...saved].reverse().map(id => previews.get(id)).filter(Boolean),
+  window.PocketSagaData = { post, community, discover, home, editor, publish, addComment, setLike, setSaved, isSaved: id => saved.has(id), savedPosts: () => [...saved].reverse().map(id => previews.get(id)).filter(Boolean),
     hasPost: id => previews.has(id), hasCommunity: id => communities.has(id) };
 })();

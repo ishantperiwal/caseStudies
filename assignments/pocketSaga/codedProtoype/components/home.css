@@ -1,0 +1,64 @@
+/* Home tab. Reuses the Discover filter pills, bottom navigation and shared glass;
+   only the streaming shelves are specific to this screen. */
+.home-page { --background: #080a0b; --ambient-brightness: .72; }
+.home-page .atmosphere {
+  -webkit-mask-image: linear-gradient(to bottom, black 30%, #000e 42%, #0009 58%, #0003 76%, transparent 90%);
+  mask-image: linear-gradient(to bottom, black 30%, #000e 42%, #0009 58%, #0003 76%, transparent 90%);
+}
+.home-scroll {
+  padding-top: 120px; padding-bottom: 130px; gap: 32px; overflow-x: hidden; scroll-padding-top: 120px;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 104px, #00000080 111px, black 118px);
+  mask-image: linear-gradient(to bottom, transparent 104px, #00000080 111px, black 118px);
+}
+.home-page .screen-top-blur { top: 0; height: 118px; }
+.home-page .home-area { height: 136px; --bottom-blur-strength: 1; }
+.home-page .home-area .blur-layer { -webkit-backdrop-filter: blur(calc(var(--blur) * var(--bottom-blur-strength))); backdrop-filter: blur(calc(var(--blur) * var(--bottom-blur-strength))); }
+
+.home-navigation { justify-content: space-between; gap: 6px; }
+.home-navigation h1 { white-space: nowrap; font-size: 22px; font-weight: 600; letter-spacing: -.6px; }
+.home-utilities { display: flex; gap: 12px; }
+
+.home-filters { margin-bottom: -16px; }
+.home-categories { flex-direction: row-reverse; gap: 6px; }
+
+/* Featured title: the hero card radius (24px) with a reading shade under the copy. */
+/* clip-path clips the composited hero once; overflow + radius antialiased artwork and shade separately, leaving a bright hairline. */
+.home-hero { position: relative; isolation: isolate; height: 400px; border-radius: 24px; clip-path: inset(0 round 24px); }
+.home-hero-artwork { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; object-position: center 12%; }
+.home-hero-shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, #080a0b1f, transparent 26%, transparent 42%, #080a0b99 62%, #080a0bf2 82%, #080a0b 92%); }
+.home-hero::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 1px 1px #ffffff1c, inset 1px 0 1px #ffffff08; }
+.home-hero-copy { position: absolute; inset: auto 20px 20px; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.home-hero-title { font-family: Newsreader, Georgia, serif; font-size: 32px; line-height: 36px; font-weight: 500; letter-spacing: -.3px; }
+.home-hero-tags { display: flex; gap: 6px; margin-top: 6px !important; color: #cddbd3; font-size: 12px; line-height: 18px; }
+.home-hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; margin-top: 18px; }
+.home-hero-action { min-height: 44px; border-radius: 22px; font-size: 14px; font-weight: 600; gap: 8px; }
+.home-hero-action .icon { width: 15px; height: 15px; }
+.phone-case .home-list.glass-surface { background-color: rgb(20 24 23 / 42%); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); color: var(--text); }
+
+.home-shelf { display: flex; flex-direction: column; gap: 14px; }
+.home-shelf-heading { font-family: Newsreader, Georgia, serif; font-size: 22px; line-height: 28px; font-weight: 500; }
+.home-shelf :is(.home-continue-card, .home-poster) { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; min-height: 0; text-align: left; border-radius: 14px; }
+.home-item-title { margin-top: 8px; font-size: 13px; line-height: 18px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.home-item-meta { display: flex; gap: 5px; margin-top: 2px; font-size: 11px; line-height: 16px; color: var(--muted); white-space: nowrap; overflow: hidden; }
+
+.home-continue-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.home-continue-cover { position: relative; display: block; aspect-ratio: 16 / 9.2; border-radius: 14px; overflow: hidden; box-shadow: inset 0 1px 1px #ffffff14; }
+.home-continue-artwork { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.86); }
+.phone-case .home-continue-play.glass-surface { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: 38px; height: 38px; border-radius: 19px; display: grid; place-items: center; background-color: rgb(19 40 33 / 46%); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.home-continue-play .icon { width: 15px; height: 15px; margin-left: 2px; }
+.home-progress { display: block; height: 2px; margin-top: 10px; border-radius: 1px; background: #ffffff1a; overflow: hidden; }
+.home-progress-value { display: block; height: 100%; background: var(--accent); opacity: .72; }
+
+/* Inline, tertiary entry into the title's community (mint text, quiet glass row). */
+.home-community-prompt { width: 100%; justify-content: flex-start; gap: 12px; padding: 12px 14px; border-radius: 16px; text-align: left; background-color: #ffffff05; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.home-community-prompt > .icon { width: 18px; height: 18px; flex-shrink: 0; color: var(--accent); }
+.home-community-prompt > .icon-chevron-down { width: 14px; height: 14px; transform: rotate(-90deg); }
+.home-prompt-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 2px; }
+.home-prompt-label { font-size: 13px; line-height: 18px; font-weight: 600; color: var(--text); }
+.home-prompt-action { font-size: 12px; line-height: 18px; color: var(--accent); }
+
+.home-rail { display: flex; gap: 12px; width: calc(100% + 32px); margin-left: -16px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.home-rail::-webkit-scrollbar { display: none; }
+.home-poster-recent { width: 104px; flex-shrink: 0; }
+.home-suggestion-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; }
+.home-poster-artwork { display: block; width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 14px; box-shadow: inset 0 1px 1px #ffffff14, 0 8px 20px #00000033; }

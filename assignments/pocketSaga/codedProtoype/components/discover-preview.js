@@ -1,5 +1,1 @@
-PocketSagaMedia.ready.then(() => {
-const discoverPreview = PocketSagaDiscover.mount(document.getElementById('app'), discoverPageData);
-PocketSagaNavigation.attach(discoverPreview, postPageData);
-
-});
+PocketSagaMedia.ready.then(() => PocketSagaTabs.mount(document.getElementById('app'), 'Community'));

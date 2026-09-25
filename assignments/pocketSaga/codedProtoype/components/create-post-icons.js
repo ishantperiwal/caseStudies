@@ -4,3 +4,6 @@ Object.assign(window.PocketSagaIcons, {"search": "<svg viewBox=\"0 0 13.99993896
 window.PocketSagaIcons.image = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><circle cx="4.5" cy="4.5" r="1"/><path d="m2 10 3-3 2 2 2.5-3 3 4"/></g>';
 
 window.PocketSagaIcons.filmstrip = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="1.5"/><path d="M4 1.5v11M10 1.5v11M1.5 4.5H4m6 0h2.5M1.5 9.5H4m6 0h2.5M4 7h6"/></g>';
+
+// Lucide refresh-cw: change or replace the selected title.
+window.PocketSagaIcons['refresh-cw'] = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-15.219-6.219L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 15.219 6.219L21 16"/><path d="M21 21v-5h-5"/></svg>';

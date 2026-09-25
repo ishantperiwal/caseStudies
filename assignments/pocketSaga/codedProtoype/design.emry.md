@@ -119,7 +119,7 @@ The current implementation uses a shared `AmbientArtwork` / `AtmosphericBackgrou
 
 **Community, Post, New Post:** use the shared atmosphere mechanism with the relevant artwork. New Post changes its atmosphere when a title is selected. It has its own base background, so “same system” does not mean pixel-identical output.
 
-**Notification History:** intentionally uses a quiet, slightly green-black background without poster atmosphere, because it aggregates activity across titles. The notification overlay retains the existing screen behind a darkened blur.
+**Notification History:** intentionally uses a quiet, slightly green-black background without poster atmosphere, because it aggregates activity across titles. The notification overlay retains the existing screen behind a darkened blur; the device status bar, notch and home indicator stay above it.
 
 **Important implementation distinction:** in the enabled palette mode, the shared legacy veil background is transparent and the ambient wrapper no longer applies its old whole-image blur. Texture blur and brightness still apply inside it. Do not show the legacy blurred-poster configuration as though it were the current default.
 
@@ -137,12 +137,12 @@ The current implementation uses a shared `AmbientArtwork` / `AtmosphericBackgrou
 | New Post | Media selector, flexible writing area, Clip/Scene tools, community destination and Post action | Writing takes remaining space; controls remain anchored |
 | Title suggestions | Centered rows, fewer items at top for the default five-item set, search | Lightweight selection; Dark sits above paired suggestions |
 | Select community | Bottom sheet, scrollable choices, faded list boundaries | Focused selection while retaining screen context |
-| Unread notifications overlay | Title, staggered notification cards, history action, outside-dismiss | Quick triage without immediately leaving Discover |
+| Unread notifications overlay | Live count heading (3, 2, 1, then “No notifications”), staggered cards that swipe left or right to mark as read, persistent history action, outside-dismiss | Quick triage without immediately leaving Discover; dismissed cards remain in Notification History |
 | Notification History | Date headings, read/unread cards, compact metadata | Calm cross-title utility destination |
 
 ### Carousel variants
 
-Type A preserves the stacked treatment (`discover.html?carousel=a`). Type B is the default: one previous and one next card peek from the edges, side cards are smaller and darker, and the incoming card grows into the center. Type B has no added outer card shadow. Parked-artwork blur and the experimental top shine were removed; do not depict either as an accepted design feature. The active reflection is a separate depth cue.
+Type A preserves the stacked treatment (`discover.html?carousel=a`). Type B is the default: one previous and one next card peek from the edges, side cards are smaller and darker, and the incoming card grows into the center. During the vertical hero collapse, the side cards move outward as the deck scales down, clearing the viewport instead of folding toward its center. Type B has no added outer card shadow. Parked-artwork blur and the experimental top shine were removed; do not depict either as an accepted design feature. The active reflection is a separate depth cue.
 
 ## 5. The surface grammar
 
@@ -155,10 +155,11 @@ A reusable surface recipe consists of **fill + light wash + edge highlight + opt
 | Shared rim | 1px masked gradient, strongest near top-left | Directional highlight rather than a uniform bright outline |
 | Discover post | `#15191B70` ≈ 44% opacity; 16px backdrop blur; 28px radius | Content surface with title-specific atmosphere; lower-right rim accent peaks at 2.5% white |
 | Primary / prominent selection | `rgb(128 213 169 / 25%)` plus mint wash and rim; 18px blur | Write action, membership primary treatment, selected navigation and sticky tab marker |
-| Quiet selection | `rgb(178 219 194 / 14%)` plus pale mint wash | Non-sticky Discover selection; should not compete with Write |
+| Quiet selected highlight | `rgb(178 219 194 / 14%)`, pale mint wash, restrained rim and shadow; 18px blur | Undocked Discover “For you” selection; shows which feed is active without reading as a button to press |
+| Medium mint action | `rgb(120 169 138 / 10%)`, localized upper-left reflection, brighter directional rim and inset depth; 20px blur | Empty “Choose a title” control on New Post and “Show notification history” in the unread overlay; tactile glass for a navigation action without strong-mint emphasis |
 | Sticky tab base | `rgb(35 39 37 / 78%)` | Stable neutral protection under the travelling mint marker |
 | Comment composer | `rgb(38 46 43 / 48%)`; 22px blur | Persistent input over scrolling content; fill strengthens on focus |
-| Community destination | `rgb(43 49 47 / 76%)`; brighter directional rim | Secondary action that needs more separation; 18px left padding |
+| Dense neutral | `rgb(43 49 47 / 76%)`, brighter neutral wash and directional rim; 18px blur | “Choose a group” in the New Post footer; a clear destination action without mint selection emphasis. Shown as a generic material in Prism |
 | Read notification | White gradient 4% → 2.5% | Quiet but still visibly bounded |
 | Unread notification | Mint gradient `#BDE0CA26` → `#BDE0CA0D` ≈ 15% → 5% | Activity emphasis, with avatar badge and content hierarchy |
 | Notification scrim | Black 55% + 16px backdrop blur | Modal focus over the existing screen |
@@ -327,10 +328,24 @@ Confirm the main comparison titles, choose whether the deck presents Type B alon
 
 A separate [visual playground](../design%20system/index.html) now accompanies this brief. Its [README](../design%20system/README.md) records the full view inventory, implementation parameters, controls and outstanding findings.
 
-Views: Material, Background, Shapes, Color, Spacing & roundness, Font & typography, and Avatars. Presentation copy stays minimal. Shape diagrams use actual corner roles; typography uses real copy; avatars use the shared renderer. The color view separates primary mint accents from secondary like-notification feedback colors.
+Views: Material, Background, Shapes, Iconography, Patterns, Color, Spacing & roundness, Font & typography, and Avatars. Presentation copy stays minimal. Shape diagrams use actual corner roles; Iconography lists every icon from the shared app library; typography uses real copy; avatars use the shared renderer. The color view separates primary mint accents from secondary like-notification feedback colors. Patterns demonstrates changed-value feedback with a simple group-selection example.
 
 Material construction is now **Fill → Tint → Wash & blur → Edge → Feedback**. It starts fully enabled; Fill is permanent. Selecting a step applies its predecessors; selecting the current step again returns to Fill. The centered neutral metaball controls connect only completed steps, with equally bright completed labels. Background construction has a separate fully-off state.
 
 The playground fixes material blur at 18px, with 1.25 saturation on strong mint. It uses the shared blurred artwork atmosphere rather than a sharp wallpaper. This can make the additional surface blur hard to perceive, since detail is already softened. The wash itself is not blurred.
 
 **Unresolved:** mint wash gradients dim centrally and brighten again toward the bottom, producing a visible diagonal trough. A smoother one-way fade was discussed, not implemented. Material recipes remain locally copied from the prototype, so this playground does not enforce app-wide consistency automatically.
+
+
+## Changed-value feedback: light sweep and gentle pulse
+
+After a picker selection changes a control on the underlying screen, a soft light sweep and a small scale pulse identify the updated value. This is an acknowledgement of a change, not a success message or a general attention animation.
+
+- Start 80ms into picker dismissal so feedback is already underway as the screen is revealed.
+- Sweep for 1.1s with cubic-bezier(.6,0,.25,1): a broad white band peaking at 9% opacity, falling through 3% shoulders to transparent, softened with 5px blur and clipped to the control’s corners.
+- In parallel, scale from 1 to 1.012 and back to 1 over 1.1s, peaking at 36% progress with cubic-bezier(.4,0,.2,1). Scale the title and its clear action together; reserve space around the surface to avoid clipping. Do not shift layout.
+- Stagger multiple changed controls by 90ms. For title selection, highlight the title, a group selection cleared by that title change, and the Post button only if its availability changes. For group selection, highlight the group control and Post only if its availability changes.
+- Do not replay on dismissal, unchanged selections, typing, or unrelated controls. Avoid pulsing the whole screen or the writing area.
+- Skip both effects under reduced motion. Keep controls interactive and preserve keyboard focus. Cancel active pulses when the view is destroyed.
+
+Implemented for changed selections in the New Post title and group pickers. The existing inline-card expansion remains a separate transition; it does not gain an additional pulse. The Patterns view of Prism demonstrates the same timing on a simple group control. Apply this pattern to picker-driven value changes, rather than automatically animating every control.

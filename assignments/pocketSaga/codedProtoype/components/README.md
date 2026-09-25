@@ -2,6 +2,8 @@
 
 Open `../community.html` directly. No install, build step, or local server is required. Google Fonts needs an internet connection; system fonts are the fallback.
 
+The product term is **group/groups** in all visible copy. Legacy filenames, CSS classes, data fields and route/event keys still use `community` for compatibility.
+
 ## Files
 
 - `app-data.js`: shared JSON-compatible catalog for people, media, communities, posts, comments and watch history.
@@ -14,6 +16,7 @@ Open `../community.html` directly. No install, build step, or local server is re
 - `icons.js`: shared original SVG icon definitions.
 - `assets/`: local artwork (URLs in page data are relative to the screen HTML) (one image reused across the background, community, and attachment).
 - `preview.js`: mounts the configured page.
+- `home.js`, `home.css`, `home-data.js`, `home-preview.js`: Home tab (`home.html`). Its data is the `home` block in `app-data.js` (featured title, continue-watching entries with an optional community prompt, suggestions) plus the shared watch history, resolved by `PocketSagaData.home()`.
 
 ## Create another context
 
@@ -51,7 +54,7 @@ The screen keeps a fixed 412:896 aspect ratio. The preview scales the entire dev
 
 `PocketSagaMotion.scrollHeader({ scroller, navigation, titleTrigger, actionTrigger, title, actionSlot, duration: .18 })` reveals the compact title after the community name passes the app bar and reveals its circular filter action after the Posts toolbar passes it. The top-right navigation slot can hold another screen’s primary action. The helper returns a cleanup function and respects reduced motion.
 
-Community scrolling is native. Discover separately scales/fades the carousel, greeting and utilities and snaps its intro at a 35% threshold; `collapseCarousel` and `dockTabs` manage this behavior. Filters stay in the native layout until they align with a separate fixed row; visibility, accessibility and focus switch at that boundary, with selection shared between both rows. The snap endpoint matches the handoff position. A viewport mask and soft top blur activate only after docking. The Discover hero ambience also fades vertically toward the filters and feed. Header thresholds use rendered bounds to account for phone scaling and browser zoom; resizing recalculates them. Hidden actions are inert and removed from the accessibility tree.
+Community scrolling is native. Discover separately scales/fades the carousel, greeting and utilities and snaps its intro at a 35% threshold; `collapseCarousel` and `dockTabs` manage this behavior. The slide deck sends its side cards outward during hero collapse; on a return to full visibility, they retain a small amount of speed-sensitive outward travel and settle elastically while the hero itself stays at full size. Filters stay in the native layout until they align with a separate fixed row; visibility, accessibility and focus switch at that boundary, with selection shared between both rows. The snap endpoint matches the handoff position. A viewport mask and soft top blur activate only after docking. The Discover hero ambience also fades vertically toward the filters and feed. Header thresholds use rendered bounds to account for phone scaling and browser zoom; resizing recalculates them. Hidden actions are inert and removed from the accessibility tree.
 
 
 ## Automatic media treatment
@@ -68,8 +71,9 @@ Entry points wait for cached analysis before mounting to avoid a treatment flash
 - Post-card titles: 22px font / 28px line height. Post-card excerpts, community descriptions and thread replies: 22px line height. Full-post body and comment body retain their separate typography.
 - Full-post spacing: attribution → title 24px; title → body 10px.
 - Community header: group name above media metadata; total members appear in the action button, not below the title. Actions: membership, users icon + total + chevron, options.
+- Group names: one-line names keep their normal type size. When a name wraps, the group heading steps from 28px to 26px and the Your groups cards step from 14px to 13px. Compact group names inside Discover post cards stay on one line and truncate with an ellipsis; the full name remains in the accessible label and group page. “Questions Beyond the Stars” shows both treatments.
 - Your groups: users icon + online count + chevron, without a pill background. Catalog `activeMemberCount` supplies sample presence counts. Group cards use a single even translucent fill to avoid stacked gradient banding.
-- Discover Write sits to the right of Notifications. It shares the mint-glass rule in `surfaces.css` with Join community and selected bottom navigation. Preserve translucency and edge highlights; do not replace with a solid mint fill.
+- Discover Write sits to the right of Notifications. It shares the mint-glass rule in `surfaces.css` with Join group and selected bottom navigation. Preserve translucency and edge highlights; do not replace with a solid mint fill.
 - Comment translation notices are not rendered for now, though metadata is retained.
 
 For full interaction history and current constraints, read `../new chat context.md`.
@@ -86,4 +90,4 @@ For full interaction history and current constraints, read `../new chat context.
 
 - Hybrid ambience is now active: shared `AmbientArtwork` wraps the palette base and original poster texture in one layer so carousel/editor crossfades move both together. Central media-treatment ambience settings: textureOpacity .22 (further multiplied by page/card opacity), textureSaturation .45, textureBlur 28px. Texture CSS brightness .72. Actual banners/reflections unchanged. Set textureOpacity to 0 for palette-only; set ambience.enabled false and reload for the original blurred-poster mode.
 
-- Every hydrated and newly published post includes media identifier data derived from its selected movie/show. The identifier card renders only on the dedicated post page, not in Discover or community feed cards, which already identify the title in their metadata. The action is Watch with a screen icon by default, or Watch clip with a play icon when `clip` metadata exists. Optional `scene: {src, alt}` renders as a separate still image above the identifier in feeds and post detail. Clip/scene picking and playback remain prototype placeholders.
+- Every hydrated and newly published post includes media identifier data derived from its selected movie/show. The identifier card renders only on the dedicated post page, not in Discover or community feed cards, which already identify the title in their metadata. Its action uses a play icon and says Watch by default, or Watch clip when `clip` metadata exists. Optional `scene: {src, alt}` renders as a separate still image above the identifier in feeds and post detail. Clip/scene picking and playback remain prototype placeholders.

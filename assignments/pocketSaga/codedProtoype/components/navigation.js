@@ -17,8 +17,8 @@
     const status = screen.querySelector('.status-bar');
     const indicator = screen.querySelector('.home-indicator');
     const viewClass = ['discover-page', 'community-page', 'post-page'].find(name => page.classList.contains(name));
-    const feed = node('div', `navigation-feed ${viewClass}`);
-    page.classList.remove(viewClass);
+    const feed = node('div', ['navigation-feed', viewClass].filter(Boolean).join(' '));
+    if (viewClass) page.classList.remove(viewClass);
     page.classList.add('navigation-shell');
     [...screen.children].filter(child => child !== status).forEach(child => feed.append(child));
     screen.append(feed, node('div', 'navigation-home', indicator));

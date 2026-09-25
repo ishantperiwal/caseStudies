@@ -20,3 +20,8 @@ window.PocketSagaIcons.users = "<svg viewBox=\"0 0 13.99993896484375 14\" width=
 window.PocketSagaIcons["screen-play"] = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1.25" y="2" width="11.5" height="8.5" rx="1.5"/><path d="M5 12.25h4M7 10.5v1.75"/><path d="m5.75 4.25 3.5 2-3.5 2z"/></g>';
 
 window.PocketSagaIcons.bookmark = '<path d="M3 1.5h8v11L7 10l-4 2.5z" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>';
+
+// Home tab utilities and hero action.
+window.PocketSagaIcons.cast = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1.25 4.25V3.5A1.5 1.5 0 0 1 2.75 2h8.5a1.5 1.5 0 0 1 1.5 1.5v7a1.5 1.5 0 0 1-1.5 1.5H8.5"/><path d="M1.25 7.25a4.5 4.5 0 0 1 4.5 4.5M1.25 9.75a2 2 0 0 1 2 2"/><path d="M1.5 11.75h.01"/></g>';
+window.PocketSagaIcons.plus = '<path d="M7 2.25v9.5M2.25 7h9.5" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>';
+window.PocketSagaIcons.send = '<g fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.25 1.75 1.75 6.1l4.7 1.55L8 12.35l4.25-10.6Z"/><path d="m6.45 7.65 3.2-3.2"/></g>';

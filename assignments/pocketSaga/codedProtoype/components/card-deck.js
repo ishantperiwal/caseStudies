@@ -7,7 +7,7 @@
     root.dataset.variant = sliding ? 'slide' : 'stack';
     root.tabIndex = 0;
     root.setAttribute('aria-roledescription', 'carousel');
-    root.setAttribute('aria-label', 'Recently watched. Swipe or use left and right arrow keys.');
+    root.setAttribute('aria-label', 'Recently watched. Swipe, scroll horizontally, or use left and right arrow keys.');
     const live = node('span', 'deck-announcement');
     live.setAttribute('aria-live', 'polite');
     const stage = node('div', 'deck-stage');
@@ -15,7 +15,9 @@
     reflections.setAttribute('aria-hidden', 'true');
     root.append(reflections, stage, live);
     const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-    let index = 0, cards = [], gesture = null, animation = null, blockedClick = false;
+    let index = 0, cards = [], gesture = null, wheelGesture = null, wheelTimer = 0, animation = null, blockedClick = false;
+    let collapseProgress = 0, sideSpread = 0, spreadTween = null, lastCollapseTime = 0;
+    let paintedProgress = 0, paintedDrift = 0;
     const modulo = n => (n % items.length + items.length) % items.length;
     const width = () => stage.clientWidth - 64;
     const activeX = () => sliding ? 32 : 24;
@@ -31,12 +33,23 @@
       if (slot === 0) return { x: 24, y: 0, scale: 1, opacity: 1 };
       return { x: 24 + slot * 19 + w * slot * .055, y: 0, scale: 1 - slot * .055, opacity: slot > 2 ? 0 : 1 - slot * .16 };
     };
-    function paint(progress = 0, drift = 0) {
+    function paint(progress = 0, drift = 0, notifyProgress = true) {
+      paintedProgress = progress;
+      paintedDrift = drift;
       for (const card of cards) {
         const a = pose(card.slot), b = pose(card.slot - Math.sign(progress));
         const t = Math.abs(progress), value = {};
         for (const key of Object.keys(a)) value[key] = a[key] + (b[key] - a[key]) * t;
         value.x += drift;
+        if (sliding && (collapseProgress || sideSpread)) {
+          // The parent hero shrinks around its center on vertical scroll. Counter
+          // that inward pull, then send the side cards farther offscreen. The
+          // separate spread can finish settling after the hero reaches full size.
+          // Deriving the offset from the interpolated pose keeps horizontal swipes smooth.
+          const rootScale = 1 - .4 * collapseProgress;
+          const offsetFromCenter = value.x + value.scale * width() / 2 - stage.clientWidth / 2;
+          value.x += offsetFromCenter * ((1 + .22 * sideSpread) / rootScale - 1);
+        }
         // On a reverse swipe, the previous card returns over the departing card.
         card.el.style.zIndex = String(progress < 0 && card.slot === -1 ? 7 : card.slot === 0 ? 6 : card.slot < 0 ? 5 + card.slot : 4 - card.slot);
         gsap.set(card.el, value);
@@ -56,7 +69,7 @@
           : focus;
         gsap.set(card.reflection, { x: value.x, y: (value.scale - 1) * 150, scale: value.scale, opacity: reflectionFocus * .28 });
       }
-      onProgress({ from: items[index], to: items[modulo(index + Math.sign(progress))], progress: Math.abs(progress) });
+      if (notifyProgress) onProgress({ from: items[index], to: items[modulo(index + Math.sign(progress))], progress: Math.abs(progress) });
     }
     function createCard(slot) {
       const item = items[modulo(index + slot)];
@@ -131,6 +144,8 @@
     };
     root.addEventListener('pointerdown', event => {
       if (event.button !== 0 || event.isPrimary === false || animation?.isActive() || event.target.closest('input,textarea')) return;
+      clearTimeout(wheelTimer);
+      if (wheelGesture) { finishWheel(); return; }
       const point = local(event);
       const now = performance.now();
       gesture = { id: event.pointerId, ...point, startX: event.clientX, time: now, samples: [{ x: event.clientX, time: now }], progress: 0, axis: null };
@@ -187,6 +202,29 @@
         if (active?.el.contains(event.target)) onCompose(items[index], active.el);
       }
     });
+    const finishWheel = () => {
+      wheelTimer = 0;
+      if (!wheelGesture) return;
+      const progress = wheelGesture.progress;
+      wheelGesture = null;
+      settle(Math.abs(progress) >= .12 ? Math.sign(progress) : 0, progress);
+    };
+    const onWheel = event => {
+      const rawDelta = Math.abs(event.deltaX) > 1 ? event.deltaX : event.shiftKey ? event.deltaY : 0;
+      const horizontal = rawDelta && (event.shiftKey || Math.abs(event.deltaX) > Math.abs(event.deltaY));
+      if (!horizontal) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (gesture || animation?.isActive()) return;
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? stage.clientWidth : 1;
+      const travel = sliding ? width() * .97 + 28 : width() * .8;
+      if (!wheelGesture) wheelGesture = { progress: 0 };
+      wheelGesture.progress = Math.max(-.96, Math.min(.96, wheelGesture.progress + rawDelta * unit / travel));
+      paint(wheelGesture.progress);
+      clearTimeout(wheelTimer);
+      wheelTimer = setTimeout(finishWheel, 140);
+    };
+    root.addEventListener('wheel', onWheel, { passive: false });
     root.addEventListener('keydown', event => {
       if (event.target !== root || !['ArrowLeft','ArrowRight'].includes(event.key)) return;
       event.preventDefault();
@@ -196,7 +234,38 @@
     syncSelection();
     const observer = new ResizeObserver(() => { if (!gesture && !animation?.isActive()) paint(); });
     observer.observe(stage);
-    return { element: root, destroy() { animation?.kill(); observer.disconnect(); } };
+    return {
+      element: root,
+      setCollapseProgress(progress) {
+        const next = Math.max(0, Math.min(1, progress));
+        if (next === collapseProgress) return;
+        const previous = collapseProgress;
+        const now = performance.now();
+        const expandingSpeed = next < previous && lastCollapseTime
+          ? (previous - next) / Math.max(16, now - lastCollapseTime)
+          : 0;
+        lastCollapseTime = now;
+        collapseProgress = next;
+        spreadTween?.kill();
+        spreadTween = null;
+        if (sliding && !reduced.matches && next === 0 && previous > 0) {
+          // Keep a little outward travel at the fully visible pose. A fast
+          // return carries more momentum, then crosses the resting position
+          // once before settling; a slow return is almost imperceptible.
+          sideSpread = Math.min(.34, Math.max(previous, expandingSpeed * 105));
+          const spread = { value: sideSpread };
+          spreadTween = gsap.timeline({
+            onUpdate: () => { sideSpread = spread.value; paint(paintedProgress, paintedDrift, false); },
+            onComplete: () => { sideSpread = 0; spreadTween = null; paint(paintedProgress, paintedDrift, false); }
+          }).to(spread, { value: -Math.min(.1, sideSpread * .32), duration: .26, ease: 'power2.out' })
+            .to(spread, { value: 0, duration: .32, ease: 'back.out(1.2)' });
+        } else {
+          sideSpread = next;
+        }
+        paint(paintedProgress, paintedDrift, false);
+      },
+      destroy() { animation?.kill(); spreadTween?.kill(); clearTimeout(wheelTimer); root.removeEventListener('wheel', onWheel); observer.disconnect(); }
+    };
   }
   window.PocketSagaDeck = { CardDeck };
 })();

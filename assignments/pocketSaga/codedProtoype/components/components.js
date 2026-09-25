@@ -108,10 +108,18 @@
     return frame;
   }
   function CommunityHeader(community, labels, emit) {
+    const online = Math.max(0, Number(community.activeMemberCount) || 0).toLocaleString();
+    const countFace = value => node('span', 'membership-count-face', [Icon('users'), node('span', 'membership-count-label', value), Icon('chevron-down')]);
+    const memberCount = node('span', 'membership-count-track', [
+      countFace(community.members),
+      countFace(`${online} online`),
+      countFace(community.members)
+    ]);
+    memberCount.setAttribute('aria-hidden', 'true');
     return node('section', 'community-header', [
       node('div', 'community-identity', [community.artwork && Artwork(community.artwork, 'community-artwork'), node('div', 'community-titles', [node('h1', 'community-name', community.name), SeparatedMeta(community.context, 'community-context', 'p')])]),
       node('p', 'community-description', community.description),
-      node('div', 'membership-actions', [Action({ label: community.joined ? labels.joined : labels.join, icon: community.joined ? 'check' : null, className: `membership-action${community.joined ? '' : ' membership-join'} tap-feedback`, onClick: () => emit('membership', { community }) }), Action({ label: `${community.members} members`, icon: 'users', className: 'membership-action membership-count tap-feedback', children: [community.members, Icon('chevron-down')], onClick: () => emit('members', { community }) }), Action({ label: 'Community options', icon: 'ellipsis', className: 'round-action', children: '', onClick: () => emit('options', { community }) })])
+      node('div', 'membership-actions', [Action({ label: community.joined ? labels.joined : labels.join, icon: community.joined ? 'check' : null, className: `membership-action${community.joined ? '' : ' membership-join'} tap-feedback`, onClick: () => emit('membership', { community }) }), Action({ label: `${community.members} members, ${online} online now`, className: 'membership-action membership-count tap-feedback', children: memberCount, onClick: () => emit('members', { community }) }), Action({ label: 'Group options', icon: 'ellipsis', className: 'round-action', children: '', onClick: () => emit('options', { community }) })])
     ]);
   }
   function Composer(viewer, label, emit) {
@@ -122,7 +130,7 @@
     input.rows = 1;
     input.placeholder = placeholder;
     input.setAttribute('aria-label', placeholder);
-    const send = Action({ label: 'Send', className: 'message-send', children: 'Send' });
+    const send = Action({ label: 'Send', icon: 'send', className: 'message-send tap-feedback', children: '' });
     send.type = 'submit';
     send.disabled = true;
     input.addEventListener('input', () => { send.disabled = !input.value.trim(); });
@@ -135,7 +143,7 @@
     return node('div', 'author-meta', [Avatar(post.author), node('div', 'author-details', [node('span', 'author-name', post.author.name), SeparatedMeta([post.time, post.type], 'post-time')])]);
   }
   function MediaAttachment(attachment, post, emit) {
-    return node('div', 'media-attachment', [attachment.artwork && Artwork(attachment.artwork, 'attachment-artwork'), node('div', 'attachment-details', [node('p', 'attachment-title', attachment.title), SeparatedMeta(attachment.subtitle, 'attachment-subtitle', 'p')]), Action({ label: attachment.action || 'Open', icon: attachment.kind === 'clip' ? 'play' : 'screen-play', className: 'attachment-action', onClick: () => emit('attachment', { post, attachment }) })]);
+    return node('div', 'media-attachment', [attachment.artwork && Artwork(attachment.artwork, 'attachment-artwork'), node('div', 'attachment-details', [node('p', 'attachment-title', attachment.title), SeparatedMeta(attachment.subtitle, 'attachment-subtitle', 'p')]), Action({ label: attachment.action || 'Open', icon: 'play', className: 'attachment-action', onClick: () => emit('attachment', { post, attachment }) })]);
   }
   function SceneAttachment(scene) {
     return scene?.src ? Artwork(scene.src, 'post-scene-image', scene.alt || 'Attached scene') : null;
@@ -198,7 +206,7 @@
       handlers[action]?.(detail);
       page.dispatchEvent(new CustomEvent('community-action', { bubbles: true, detail: { action, ...detail } }));
     };
-    const labels = { composer: 'Write in this community…', posts: 'Posts', sort: 'Recent first', joined: 'Joined', join: 'Join community', empty: 'No posts yet.', ...data.labels };
+    const labels = { composer: 'Write in this group…', posts: 'Posts', sort: 'Recent first', joined: 'Joined', join: 'Join group', empty: 'No posts yet.', ...data.labels };
     const navigation = node('nav', 'page-navigation', [Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }), node('span', 'screen-navigation-title compact-community-title', data.community.name), node('div', 'navigation-action-slot', Action({ label: labels.sort, icon: 'list-filter', className: 'round-action compact-sort-action', children: '', onClick: () => emit('sort', {}) }))]);
     const intro = node('div', 'community-intro', [CommunityHeader(data.community, labels, emit), Composer(data.viewer, labels.composer, emit)]);
     const toolbar = FeedToolbar(labels, emit);
@@ -207,12 +215,35 @@
     ]);
     feed.tabIndex = 0;
     feed.setAttribute('role', 'region');
-    feed.setAttribute('aria-label', `${data.community.name} community feed`);
+    feed.setAttribute('aria-label', `${data.community.name} group feed`);
     page = PhoneFrame({ device: data.device, background: data.community.background, content: feed });
     page.classList.add('community-page');
     page.querySelector('.phone-screen').append(navigation);
     for (const key of ['accent', 'text', 'muted', 'body', 'background']) if (data.theme?.[key]) page.style.setProperty(`--${key}`, data.theme[key]);
     return page;
+  }
+  function watchGroupNameWrapping(page) {
+    let frame = 0, disposed = false;
+    const update = () => {
+      frame = 0;
+      if (disposed) return;
+      for (const title of page.querySelectorAll('.community-name, .group-name')) {
+        if (!title.getClientRects().length) continue;
+        title.classList.remove('is-two-line');
+        const range = document.createRange();
+        range.selectNodeContents(title);
+        const lines = new Set([...range.getClientRects()].filter(rect => rect.width && rect.height).map(rect => Math.round(rect.top)));
+        title.classList.toggle('is-two-line', lines.size > 1);
+      }
+    };
+    const schedule = () => { if (!disposed && !frame) frame = requestAnimationFrame(update); };
+    const changes = new MutationObserver(schedule);
+    changes.observe(page, { subtree: true, childList: true, characterData: true, attributes: true, attributeFilter: ['hidden'] });
+    const resize = new ResizeObserver(schedule);
+    resize.observe(page.querySelector('.phone-screen'));
+    document.fonts?.ready.then(schedule);
+    schedule();
+    return () => { disposed = true; cancelAnimationFrame(frame); changes.disconnect(); resize.disconnect(); };
   }
   const mountedPreviews = new WeakMap();
   function mountPage(target, page, setup = () => () => {}) {
@@ -235,8 +266,9 @@
     const observer = new ResizeObserver(fit);
     observer.observe(stage);
     observer.observe(page);
+    const stopWatchingNames = watchGroupNameWrapping(page);
     const cleanup = setup(page);
-    mountedPreviews.set(target, () => { page.dispatchEvent(new Event('preview-unmount')); observer.disconnect(); window.visualViewport?.removeEventListener('resize', fit); mobile.removeEventListener('change', fit); cleanup?.(); });
+    mountedPreviews.set(target, () => { page.dispatchEvent(new Event('preview-unmount')); observer.disconnect(); stopWatchingNames(); window.visualViewport?.removeEventListener('resize', fit); mobile.removeEventListener('change', fit); cleanup?.(); });
     fit();
     return page;
   }

@@ -15,12 +15,15 @@
   .page-navigation { top: calc(env(safe-area-inset-top) + 12px); }
   .discover-scroll { padding-top: calc(env(safe-area-inset-top) + 96px); padding-bottom: calc(env(safe-area-inset-bottom) + 110px); }
   .create-post-scroll { padding-top: calc(env(safe-area-inset-top) + 88px); padding-bottom: calc(max(12px, env(safe-area-inset-bottom)) + 68px); }
+  .create-post-page.is-writing-focused .create-post-scroll { padding-bottom: max(12px, env(safe-area-inset-bottom)); }
   .post-detail { margin-top: calc(env(safe-area-inset-top) + 88px); }
   .notifications-scroll { padding-top: calc(env(safe-area-inset-top) + 81px); padding-bottom: calc(env(safe-area-inset-bottom) + 32px); }
-  .feed-scroll:not(.discover-scroll) { -webkit-mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); }
+  .feed-scroll:not(.discover-scroll, .home-scroll) { -webkit-mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 25px), black calc(env(safe-area-inset-top) + 100px)); }
   .discover-scroll.has-docked-tabs { --header-feather: linear-gradient(to bottom, transparent env(safe-area-inset-top), black calc(env(safe-area-inset-top) + 15px)); }
   .screen-top-blur { top: 0; height: calc(env(safe-area-inset-top) + 100px); }
   .discover-page .screen-top-blur { height: calc(env(safe-area-inset-top) + 110px); }
+  .home-scroll { padding-top: calc(env(safe-area-inset-top) + 68px); padding-bottom: calc(env(safe-area-inset-bottom) + 110px); scroll-padding-top: calc(env(safe-area-inset-top) + 68px); -webkit-mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 48px), black calc(env(safe-area-inset-top) + 64px)); mask-image: linear-gradient(to bottom, transparent calc(env(safe-area-inset-top) + 48px), black calc(env(safe-area-inset-top) + 64px)); }
+  .home-page .screen-top-blur { height: calc(env(safe-area-inset-top) + 64px); }
   .bottom-navigation-area { padding-bottom: max(12px, env(safe-area-inset-bottom)); height: calc(110px + env(safe-area-inset-bottom)); }
   .post-fixed-composer, .thread-composer, .create-publish-bar { bottom: max(12px, env(safe-area-inset-bottom)); }
   .notifications-overlay { padding-top: calc(env(safe-area-inset-top) + 24px); padding-bottom: max(16px, env(safe-area-inset-bottom)); }

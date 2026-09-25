@@ -13,25 +13,33 @@ function load(localStorage) {
 test('every post resolves its own author, community, media and comments', () => {
   const { store, catalog } = load();
   for (const records of [catalog.people, catalog.media, catalog.communities, catalog.posts]) assert.equal(new Set(records.map(r => r.id)).size, records.length);
+  const postTypes = new Set(['Thought', 'Theory', 'Question', 'Review']);
   for (const record of catalog.posts) {
+    assert(postTypes.has(record.type));
     const view = store.post(record.id);
     assert.equal(view.post.title, record.title);
     assert.equal(view.post.author.id, record.authorId);
     assert.equal(view.community.id, record.communityId);
     assert.equal(view.post.commentCount, view.comments.length);
     assert.equal(view.background, catalog.media.find(m => m.id === record.mediaId).artwork);
-    assert(fs.existsSync(path.join(root, view.background)));
+    assert(fs.existsSync(path.join(root, view.background.split(/[?#]/)[0])));
   }
   for (const group of catalog.communities) assert(store.community(group.id).posts.every(post => post.communityId === group.id));
+  for (const group of catalog.communities) {
+    const title = catalog.media.find(item => item.id === group.mediaId);
+    assert.equal(store.community(group.id).community.context, `${title.title} · ${title.mediaType === 'movie' ? 'Movie' : 'TV series'}`);
+  }
   assert(store.discover().yourPosts.every(post => post.author.id === catalog.viewerId));
   assert.throws(() => store.post('missing'), /Unknown post/);
 });
 test('publishing feeds every relevant adapter without changing seed data', () => {
   const { store, catalog } = load();
-  const post = store.publish({ id: 'new-post', group: 'earth', mediaId: 'interstellar', title: 'A new thought', body: 'First\n\nSecond', likes: 0, comments: 0 });
+  const post = store.publish({ id: 'new-post', group: 'earth', mediaId: 'interstellar', title: 'A new theory', type: 'Theory', body: 'First\n\nSecond', likes: 0, comments: 0 });
   assert.equal(store.post(post.id).post.paragraphs.length, 2);
+  assert.equal(store.post(post.id).post.type, 'Theory');
   assert.equal(store.community('earth').posts[0].id, post.id);
   assert.equal(store.discover().posts[0].id, post.id);
+  assert.equal(store.discover().posts[0].type, 'Theory');
   assert(store.discover().yourPosts.some(p => p.id === post.id));
   assert(!catalog.posts.some(p => p.id === post.id));
 });

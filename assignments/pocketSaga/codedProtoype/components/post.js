@@ -16,15 +16,37 @@
       const count = item.likes + Number(liked) - Number(Boolean(item.liked));
       button.setAttribute('aria-pressed', String(liked));
       button.setAttribute('aria-label', `${liked ? 'Unlike' : 'Like'}, ${count} likes`);
-      button.querySelector('.like-count').textContent = count;
+      updateLikeCount(button, count);
       PocketSagaMotion.animateLike(button, liked);
       emit('like', { item, liked, count });
     } });
     button.setAttribute('aria-pressed', String(liked));
     return button;
   }
+  const widthAnimations = new WeakMap();
+  function updateLikeCount(button, count) {
+    const label = button.querySelector('.like-count');
+    if (!button.classList.contains('detail-pill')) { label.textContent = count; return; }
+    const startWidth = button.offsetWidth;
+    widthAnimations.get(button)?.cancel();
+    button.style.removeProperty('width');
+    label.textContent = count;
+    const endWidth = button.offsetWidth;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || Math.abs(endWidth - startWidth) < 1) return;
+    button.style.width = `${startWidth}px`;
+    const animation = button.animate([
+      { width: `${startWidth}px` }, { width: `${endWidth}px` }
+    ], { duration: 240, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards' });
+    widthAnimations.set(button, animation);
+    animation.onfinish = () => {
+      if (widthAnimations.get(button) !== animation) return;
+      button.style.removeProperty('width');
+      animation.cancel();
+      widthAnimations.delete(button);
+    };
+  }
   function PostActions(post, emit) {
-    return node('div', 'post-detail-actions', [LikeButton(post, emit, 'detail-pill'), Action({ label: 'Share', icon: 'share-2', className: 'detail-pill', onClick: () => emit('share', { post }) }), SaveButton(post, 'detail-pill')]);
+    return node('div', 'post-detail-actions', [LikeButton(post, emit, 'detail-pill tap-feedback'), Action({ label: 'Share', icon: 'share-2', className: 'detail-pill tap-feedback', onClick: () => emit('share', { post }) }), SaveButton(post, 'detail-pill tap-feedback')]);
   }
   function CommentCard(comment, emit) {
     const card = node('article', 'comment-card', [
