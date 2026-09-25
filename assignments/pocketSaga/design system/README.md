@@ -107,3 +107,5 @@ Previous edit scripts accidentally overwrote playground.css with JavaScript. Use
 The mint washes still have a diagonal brightness trough: the 155-degree gradient fades down and brightens again toward the bottom. The user noticed a dark diagonal band. A one-way fade was discussed but **has not been implemented or approved as a change**. Preserve that distinction in future work.
 
 The playground contains locally copied recipes and proposed semantic groupings. Do not describe it as a fully enforced app-wide design system. Verify consequential visual changes in the browser, including construction selection, toggling, reset and layout.
+
+- Navigation order update: Iconography follows Avatars, immediately before App. Sidebar, narrow-screen menu and scroll-connected view order share the menu DOM order.
