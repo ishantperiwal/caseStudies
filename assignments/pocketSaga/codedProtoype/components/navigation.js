@@ -40,7 +40,7 @@
         cleanup = () => {};
       } else if (kind === 'create-post') {
         const selected = createPostData.media.find(item => item.id === token.split(':')[1]) || null;
-        const view = PocketSagaCreatePost.CreatePostPage(createPostData, selected);
+        const view = PocketSagaCreatePost.CreatePostPage(createPostData, selected, {}, token.split(':')[3] || null);
         element = view.element;
         cleanup = view.destroy;
       } else {
@@ -124,12 +124,12 @@
         .to(next.element, { xPercent: 0, scale: 1, opacity: 1, filter: 'blur(0px)', duration, ease }, 0)
         .to(previous.element, { xPercent: forward ? -14 : 100, opacity: forward ? .72 : 1, duration, ease }, 0);
     }
-    function navigate(kind, sourcePost, media = null, source = null) {
+    function navigate(kind, sourcePost, media = null, source = null, initialGroup = null) {
       if (kind === 'community' && !communityData) return;
       if (animation?.isActive()) return;
       if (kind === 'create-post' && !window.PocketSagaCreatePost) return;
       const id = sourcePost?.id || (kind === 'post' ? postData.post.id : communityData?.community.id);
-      const token = kind === 'notifications' ? 'notifications' : kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}` : `${kind}:${id}`;
+      const token = kind === 'notifications' ? 'notifications' : kind === 'create-post' ? `create-post:${media?.id || 'none'}:${Date.now()}-${++draftSequence}${initialGroup ? `:${initialGroup.id}` : ''}` : `${kind}:${id}`;
       const path = [...current.path, token];
       // Reopening a record gets fresh store data; ancestors stay mounted for Back.
       const stale = routes.get(path.join('/'));
@@ -155,7 +155,7 @@
         closeNotifications = PocketSagaNotifications.OpenUnread(screen, { onPost: post => navigate('post', post), onHistory: () => navigate('notifications') });
       }
       else if (action === 'community') navigate('community', group || community);
-      else if (action === 'create-post') navigate('create-post', null, media, source);
+      else if (action === 'create-post') navigate('create-post', null, media, source, group);
       else if (action === 'publish') {
         page.dispatchEvent(new CustomEvent('draft-published', { detail: { post } }));
         // Replace the editor with the post, retaining its parent for Back.
@@ -174,7 +174,7 @@
       if (kind === 'notifications') return Boolean(window.PocketSagaNotifications);
       if (kind === 'post') return !id || PocketSagaData.hasPost(id);
       if (kind === 'community') return !id || PocketSagaData.hasCommunity(id);
-      return Boolean(window.PocketSagaCreatePost) && /^create-post(?::[a-z0-9_-]+:[0-9-]+)?$/.test(token);
+      return Boolean(window.PocketSagaCreatePost) && /^create-post(?::[a-z0-9_-]+:[0-9-]+(?::[a-z0-9_-]+)?)?$/.test(token);
     };
     const readPath = () => {
       const saved = history.state?.pocketSagaRoutes;

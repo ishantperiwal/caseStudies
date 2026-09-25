@@ -1,0 +1,18 @@
+.translation-control { display:flex; align-items:center; flex-wrap:wrap; gap:0 8px; margin-top:0; min-height:22px; font:500 11px/18px Manrope,sans-serif; }
+.translation-source { color:var(--muted, #9ba8a1); }
+.translation-action { position:relative; display:inline-flex; align-items:center; min-height:22px; padding:2px 0; border:0; border-radius:6px; background:transparent; color:#bdd8c7; font:600 11px/18px Manrope,sans-serif; cursor:pointer; }
+.translation-action:focus-visible { color:#e0eee5; outline:none; }
+.translation-status { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+
+.comment-card > .translation-control { margin-top:-5px; margin-bottom:-5px; }
+
+.translation-separator { color:var(--muted, #9ba8a1); }
+.post-card[data-translated] > .post-copy { margin-bottom:-8px; }
+.comment-card > .translation-control { margin-bottom:-9px; }
+/* Discover needs separation between translation and the following author row. */
+.discover-post[data-translated] > .post-copy { margin-bottom:0; }
+/* Match Discover's 12px separation above and below translation metadata. */
+.discover-post .translation-control { margin-top:6px; }
+[data-translation-demo] { cursor:default; }
+[data-translation-demo] button:disabled { opacity:1; cursor:default; pointer-events:none; }
+.translation-demo-save { margin-left:auto; display:inline-flex; align-items:center; }

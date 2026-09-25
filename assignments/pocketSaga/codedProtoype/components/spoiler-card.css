@@ -1,0 +1,106 @@
+.spoiler-preview-scroll { padding: 137px 16px 88px; gap: 0; -webkit-mask-image: none; mask-image: none; }
+.spoiler-preview-page { --background: #080a0b; }
+.spoiler-preview-page > .phone-screen > .atmosphere { display: none; }
+.phone-case .spoiler-preview-heading { margin-bottom: 8px; color: var(--text); font: 500 30px/1.1 Newsreader, Georgia, serif; }
+.phone-case .spoiler-preview-intro { margin-bottom: 23px; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.spoiler-component-feed { gap: 16px; }
+.spoiler-preview-normal-card { flex: none; }
+.spoiler-preview-community-link { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; color: var(--accent); }
+.spoiler-preview-community-link .icon { width: 14px; height: 14px; }
+
+.spoiler-card { position: relative; isolation: isolate; overflow: hidden; border-radius: 28px; padding: 20px 20px 10px; background-color: #15191b70; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
+.spoiler-card-conceal { position: relative; min-height: 218px; margin: 0 -20px -10px; overflow: visible; }
+.spoiler-card-sensitive { display: flex; flex-direction: column; gap: 12px; min-height: 218px; padding: 0 20px 20px; transition: filter .26s ease, opacity .26s ease; }
+.spoiler-card[data-revealed="false"] .spoiler-card-sensitive {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  filter: blur(11px);
+  opacity: .68;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 28px, #000 100%);
+  user-select: none;
+  pointer-events: none;
+}
+.spoiler-card-group-row { margin-bottom: 4px; }
+.spoiler-card-community-context { display: inline-flex; align-items: center; gap: 6px; min-width: 0; max-width: 100%; color: var(--accent); }
+.spoiler-card-community-context .icon { width: 14px; height: 14px; }
+.spoiler-card-sensitive > .author-meta { margin: 0; }
+.spoiler-card-sensitive > .reaction-bar { margin-top: 2px; }
+.spoiler-card-sensitive > .reaction-bar > .save-post { margin-left: auto; }
+
+.spoiler-card-cover { position: absolute; inset: -14px 0 -8px; z-index: 1; display: flex; align-items: center; justify-content: center; padding: 22px 20px; text-align: center; background: radial-gradient(ellipse 68% 48% at center, rgb(8 10 11 / 48%), rgb(8 10 11 / 18%) 48%, transparent 80%); }
+.spoiler-card-cover[hidden] { display: none; }
+.spoiler-card-cover-content { display: flex; flex-direction: column; align-items: center; gap: 12px; transform: translateY(-10px); }
+.spoiler-card-safe-artwork { width: 50px; height: 68px; border-radius: 8px; object-fit: cover; }
+.spoiler-card-safe-label { color: var(--white); font-size: 12px; line-height: 18px; font-weight: 600; }
+.spoiler-card-toggle { min-height: 44px; border: 0; border-radius: 22px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; color: var(--text); font: 600 12px Manrope, system-ui, sans-serif; cursor: pointer; box-sizing: border-box; }
+.spoiler-card-reveal { width: auto; padding: 0 16px; }
+.spoiler-card-reveal .spoiler-eye-icon { width: 17px; height: 17px; color: var(--accent); }
+.spoiler-card-reveal:focus-visible, .spoiler-card-hide:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.spoiler-card-hide { width: 100%; margin: 12px 0 0; padding: 0 18px; color: #eef2e9; background-color: rgb(178 219 194 / 4%); background-image: var(--surface-light); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.spoiler-card-toggle::after { content: ''; position: absolute; inset: 0; border-radius: inherit; padding: 1px; pointer-events: none; background: var(--surface-edge); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.spoiler-card-hide .spoiler-eye-icon { width: 17px; height: 17px; color: #eef2e9; }
+
+@media (prefers-reduced-motion: reduce) { .spoiler-card-sensitive { transition: none; } }
+
+/* The standalone card does not inherit .post-card's pseudo-element setup. */
+.phone-case .spoiler-card::after {
+  content: ''; position: absolute; inset: 0; z-index: 4;
+  border-radius: inherit; padding: 1px; pointer-events: none;
+  background: var(--surface-edge);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.phone-case .spoiler-card { padding: 20px 20px 10px; height: 242px; flex: none; overflow-anchor: none; }
+.spoiler-card-conceal { min-height: 0; margin: 0 -20px; }
+.spoiler-card-sensitive,
+.spoiler-card[data-revealed="false"] .spoiler-card-sensitive {
+  position: relative; inset: auto; overflow: visible; padding-bottom: 0;
+  transition: none; -webkit-mask-image: none; mask-image: none;
+}
+.spoiler-card[data-revealed="false"] .spoiler-card-sensitive { transform: translateY(6px); }
+.spoiler-card-cover { inset: 0 0 auto; height: 188px; padding: 0 20px 44px; pointer-events: none; }
+.spoiler-card-cover-content { transform: none; }
+.spoiler-card[data-revealed="true"] .spoiler-card-cover { opacity: 0; }
+.phone-case .spoiler-card > .spoiler-card-toggle {
+  position: absolute; z-index: 3; top: 152px; left: calc(50% - 91px);
+  width: 182px; height: 44px; margin: 0; white-space: nowrap;
+  transition: background-color .38s ease;
+}
+.spoiler-card[data-revealed="true"] > .spoiler-card-toggle { background-color: rgb(178 219 194 / 4%); background-image: var(--surface-light); color: #eef2e9; }
+.spoiler-card[data-revealed="true"] .spoiler-eye-icon { color: #eef2e9; }
+.spoiler-card-toggle:focus-visible { outline: none; }
+
+/* Group cards retain their native neutral surface, author-first order and insets. */
+.phone-case .spoiler-card-group {
+  padding: 16px 16px 6px; border-radius: var(--radius-card);
+  background: var(--surface-light), var(--surface);
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  display: block;
+}
+.spoiler-card-group .spoiler-card-conceal { margin: 0 -16px; }
+.spoiler-card-group .spoiler-card-sensitive { padding: 0 16px; }
+.spoiler-card-group .spoiler-card-sensitive > .author-meta { margin-bottom: 4px; }
+.spoiler-card-group .spoiler-card-sensitive > .reaction-bar { margin-top: 0; }
+.spoiler-card-group .spoiler-card-cover { top: 0; height: 98px; padding: 0 16px 44px; }
+.phone-case .spoiler-card-group { height: 154px; }
+.phone-case .spoiler-card-group > .spoiler-card-toggle { top: 70px; }
+
+/* Settled disclosure uses normal flow: content, 12px gap, button, matching inset.
+   Explicit geometry exists only for the duration of the disclosure animation. */
+.phone-case .spoiler-card[data-revealed="true"] {
+  height: auto; padding-bottom: var(--spoiler-bottom-inset);
+}
+.phone-case .spoiler-card[data-revealed="true"] > .spoiler-card-toggle {
+  position: relative; top: auto; left: auto; width: 100%; height: auto;
+  min-height: 44px; margin-top: 12px; white-space: normal;
+}
+.phone-case .spoiler-card .spoiler-card-sensitive { min-height: 0; }
+.phone-case .spoiler-card[data-animating] > .spoiler-card-toggle {
+  position: absolute; margin: 0;
+}
+
+/* A disclosure grows downward; never anchor scrolling to a following post. */
+.feed-scroll:has(.spoiler-card) { overflow-anchor: none; }

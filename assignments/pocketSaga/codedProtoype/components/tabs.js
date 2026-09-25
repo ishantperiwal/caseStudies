@@ -12,6 +12,7 @@
     const entryBlur = {};
     const views = {};
     const select = destination => {
+      if (destination === 'Profile') return;
       if (!order.includes(destination)) { views[active].toast(`${destination} will be connected later.`); return; }
       if (destination === active) return;
       const direction = Math.sign(order.indexOf(destination) - order.indexOf(active));

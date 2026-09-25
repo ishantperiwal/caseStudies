@@ -1,6 +1,6 @@
 # Design-system playground
 
-Updated 23 September 2026. The overall history (what was built, tried and rejected, user preferences) lives in the "Latest handoff" section of [new chat context.md](../codedProtoype/new%20chat%20context.md); this README is the detailed parameter reference. This is a visual presentation aid and material exploration beside the prototype, not a complete migration of the app to new tokens.
+Updated 25 September 2026. Start with the [PocketSaga documentation hub](../README.md). The overall history (what was built, tried and rejected, user preferences) lives in the "Latest handoff" section of [new chat context.md](../codedProtoype/new%20chat%20context.md); this README is the detailed parameter reference. This is a visual presentation aid and material exploration beside the prototype, not a complete migration of the app to new tokens.
 
 Open `http://127.0.0.1:5500/assignments/pocketSaga/design%20system/index.html` using the existing local server. The presentation rationale and semantic proposals live in [design.emry.md](../codedProtoype/design.emry.md); the project handoff lives in [new chat context.md](../codedProtoype/new%20chat%20context.md).
 

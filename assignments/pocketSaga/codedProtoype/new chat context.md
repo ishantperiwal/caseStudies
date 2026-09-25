@@ -2,6 +2,26 @@
 
 Read this first, then inspect the implementation. This records current behavior and user preferences; later user instructions take precedence. Keep it updated when screens, shared patterns, or navigation change.
 
+## Start here — required references
+
+The [PocketSaga documentation hub](../README.md) defines the reading order and source-of-truth boundaries. Before creating or restyling UI, read the [Prism design-system technical reference](../design%20system/README.md) and reuse the closest implementation documented in the [prototype component reference](components/README.md). The visual/product rationale lives in [design.emry.md](design.emry.md); isolated unfinished work lives in [component-explorations.md](component-explorations.md).
+
+Design-system use is the default, including during fast iteration. Name the intended material before styling a new control; material and geometry are separate decisions. Do not invent a one-off fill, border or shadow when an existing material role fits.
+
+### Minimum design-system context
+
+| Material name | Use it for | Current implementation examples |
+| --- | --- | --- |
+| **Neutral mint** | Quiet supporting surfaces and low-emphasis actions | Supporting surfaces; Hide spoiler |
+| **Dense neutral** | Destination/selection controls needing clear separation without active mint emphasis | Choose a group; Post type |
+| **Highlight mint** | Persistent selected or joined state | Undocked active filter; selected picker option |
+| **Medium mint** | Inviting choose/reveal/continue actions | Choose a title; Show notification history; View potential spoiler |
+| **Strong mint** | Primary action or strongest active destination | Join group; Write; Play; bottom-navigation and docked-filter selection |
+
+The material name includes fill, wash, directional rim, blur, saturation and feedback—not just a color. Exact recipes live in [`design system/material.css`](../design%20system/material.css); app mappings live primarily in [`components/surfaces.css`](components/surfaces.css), with Dense neutral in [`components/create-post.css`](components/create-post.css). Prism's recipes are reference specimens and are not automatically synchronized with the app, so prefer an existing app selector when one exists.
+
+Use Newsreader for editorial headings and Manrope for UI/body. Start from the 4/6/8/12/16/20/24/32 spacing scale and the documented radius anchors: 14 composer, 16 group inset, 18 clickable selection, 20 standard card, 24 hero/thread, 28 Discover post, fully rounded pills and 50% circles. All tappable elements use whole-container `.tap-feedback` (`.985` press over `85ms`) unless a documented moving-selection pattern owns the feedback. Preserve keyboard behavior and reduced-motion handling.
+
 
 ## Latest handoff — Prism design-system playground (23 September 2026)
 
@@ -314,3 +334,27 @@ Floating suggestion surfaces use a subtle 4% white fill. Their results container
 - Hero carousel horizontal scrolling: `card-deck.js` now consumes horizontal-dominant `wheel` input (plus Shift+wheel), maps accumulated delta to the same live `paint(progress)` path as pointer swipes, and settles after 140ms of gesture quiet. Momentum belongs to one bounded gesture, vertical wheel input remains native, and handled horizontal events stop before Discover’s vertical collapse listener. The accessible carousel label now mentions horizontal scrolling; syntax and all 10 tests pass.
 
 - Navigation label correction: the bottom tab is “Community” (its existing route key), while the feed’s “Your groups,” group picker and all group entities keep “group” language. The bottom-right pale haze seen on the empty editor was the hardware frame’s bright `#484d49` gradient stop showing through the antialiased rounded inner corner, not the bottom progressive blur or disabled Post button. The shared frame stop is now `#303531`; browser checks on the standalone editor and the in-app Community → New post route confirmed a darker corner while preserving the frame rim.
+
+- Ongoing standalone component work is indexed in [component-explorations.md](component-explorations.md). Start there before changing the spoiler-card preview or beginning the queued translation and RTL demonstrations. The current spoiler card is intentionally isolated from the real For You feed and design-system visualization until its concealed state, revealed state and transition are approved.
+
+- Community/Discover greeting trial: the shared 24px Ishant avatar appears inline between “Hi,” and “Ishant” in the Community tab header only. It is decorative within the heading, so accessibility still announces the greeting once. Home and the other screens are unchanged.
+
+- Profile remains a visible bottom-navigation placeholder. Tapping it keeps the existing icon/text press feedback but performs no navigation, moves no selection highlight and shows no “connected later” toast, from either Home or Community and in the standalone previews.
+
+- Save is now part of the shared `PostCard` reaction row for catalog-backed posts, including group pages. Discover no longer appends a second Save button. It uses the existing saved-post store, persistence, labels and feedback, aligned to the trailing edge. Standalone synthetic preview posts without a store record omit Save.
+
+- Spoiler integration approved for isolated group-feed mock examples only, never For You. `spoiler-card.js`/`.css` centralize the two variants; `spoiler-demo.js` owns separate sample copy and placement for Winden Theories (the first For You card’s group), Dark, and Beyond Earth. `CommunityPage` invokes the optional installer once. No catalog/store entries or route/save/reaction connections are created; only reveal/hide is interactive. See component-explorations.md for details.
+
+- Group composer now opens the existing New Post route with the group's media and group preselected. The optional group ID is carried in the draft route token and validated against the media in the editor. The picker includes the currently selected group even if unjoined; entering the editor never changes membership. Standalone group/post entry points load the editor dependencies too. Browser checked Winden Theories → preselected Dark/Winden Theories → Close back to the group; existing tests pass.
+
+- Group feed toolbar now has For you / All posts chips using shared glass-choice material, with the existing sort action on the right. Selection updates locally and emits feed-filter; both modes currently show the same prototype dataset. No recommendation engine is connected.
+
+- Group feed chips were rejected and removed. Restored the simple Posts heading, trailing sort action, and original toolbar-to-post spacing.
+
+- Translation exploration now has an isolated three-context preview: `translation-component-preview.html` (Discover), `?variant=group`, and `?variant=comment`. Optional inline translation and See original use fixed Spanish/English sample copy. See component-explorations.md; main app remains unchanged.
+
+- Translation mock inserts approved: one separate For You card, group cards beside existing spoilers (Winden Theories/Dark/Beyond Earth), and a translated comment on the first For You post. Shared translation-card assets serve both preview and optional translation-demo installer. Mocks have no navigation or store connections; only translation toggles act. See component-explorations.md.
+
+- Greeting avatar hidden: Discover now shows plain “Hi, Ishant” text. Notification dismissal now removes the card once and animates remaining rows/history via 300ms position transforms instead of height/padding collapse, avoiding minimum-height snaps and repeated layout. Swipe geometry uses local pixels at phone-preview scale. Entrance uses a shorter 320ms staggered translate/fade without per-card filter animation. Swipe and keyboard dismissal browser checked.
+
+- Notification history material trial: Show notification history now uses Prism Highlight mint (14% fill, pale directional wash/rim, 18px blur and restrained shadow), replacing Medium mint. Geometry and tap feedback remain unchanged.

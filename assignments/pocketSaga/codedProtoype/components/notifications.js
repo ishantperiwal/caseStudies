@@ -42,9 +42,13 @@
     const background = [...screen.children].map(element => [element, element.inert]);
     background.forEach(([element]) => { element.inert = true; });
     let closed = false, removed = false, exitAnimation = null;
+    const settleAnimations = new Map();
+    const previewScale = () => overlay.getBoundingClientRect().width / overlay.offsetWidth || 1;
     function remove(restoreFocus = true) {
       if (removed) return;
       removed = true;
+      settleAnimations.forEach(animation => animation.cancel());
+      settleAnimations.clear();
       document.removeEventListener('keydown', onKey);
       overlay.remove();
       background.forEach(([element, inert]) => { element.inert = inert; });
@@ -54,6 +58,8 @@
       if (closed || removed) return;
       closed = true;
       overlay.inert = true;
+      settleAnimations.forEach(animation => animation.cancel());
+      settleAnimations.clear();
       const finish = () => { remove(restoreFocus); afterClose(); };
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) { finish(); return; }
       const cards = [...list.children].reverse();
@@ -92,15 +98,16 @@
       function makeSwipeGhost() {
         const cardRect = card.getBoundingClientRect();
         const overlayRect = overlay.getBoundingClientRect();
+        const scale = previewScale();
         swipeGhost = card.cloneNode(true);
         swipeGhost.classList.add('notification-swipe-ghost');
         swipeGhost.setAttribute('aria-hidden', 'true');
         swipeGhost.inert = true;
         swipeGhost.style.animation = 'none';
-        swipeGhost.style.left = `${cardRect.left - overlayRect.left}px`;
-        swipeGhost.style.top = `${cardRect.top - overlayRect.top}px`;
-        swipeGhost.style.width = `${cardRect.width}px`;
-        swipeGhost.style.height = `${cardRect.height}px`;
+        swipeGhost.style.left = `${(cardRect.left - overlayRect.left) / scale}px`;
+        swipeGhost.style.top = `${(cardRect.top - overlayRect.top) / scale}px`;
+        swipeGhost.style.width = `${cardRect.width / scale}px`;
+        swipeGhost.style.height = `${cardRect.height / scale}px`;
         overlay.append(swipeGhost);
         card.style.opacity = '0';
       }
@@ -143,17 +150,36 @@
         }
         if (swipeGhost) { swipeGhost.remove(); swipeGhost = null; }
         if (!card.isConnected) return;
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          const style = getComputedStyle(card);
-          card.style.overflow = 'hidden';
-          const collapse = card.animate([
-            { height: `${card.offsetHeight}px`, marginBottom: style.marginBottom, paddingTop: style.paddingTop, paddingBottom: style.paddingBottom },
-            { height: '0px', marginBottom: '0px', paddingTop: '0px', paddingBottom: '0px' }
-          ], { duration: 180, easing: 'ease-in-out', fill: 'forwards' });
-          await collapse.finished.catch(() => {});
-        }
         const wasFocused = document.activeElement === card;
+        const survivors = [...list.children].filter(element => element !== card);
+        const movers = [...survivors, panel.querySelector('.notifications-history')];
+        const scale = previewScale();
+        // Read the current visual positions, including any interrupted settle.
+        const canOverflow = list.scrollHeight <= list.clientHeight + 1;
+        if (canOverflow) list.style.overflow = 'visible';
+        const before = movers.map(element => element.getBoundingClientRect().top);
+        movers.forEach(element => {
+          settleAnimations.get(element)?.cancel();
+          settleAnimations.delete(element);
+          element.style.animation = 'none';
+        });
         card.remove();
+        if (!closed && !removed && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          movers.forEach((element, index) => {
+            const dy = (before[index] - element.getBoundingClientRect().top) / scale;
+            if (Math.abs(dy) < .5) return;
+            const animation = element.animate([
+              { transform: `translateY(${dy}px)` },
+              { transform: 'translateY(0)' }
+            ], { duration: 300, easing: 'cubic-bezier(.2,.7,.2,1)' });
+            settleAnimations.set(element, animation);
+            animation.finished.then(() => {
+              if (settleAnimations.get(element) === animation) settleAnimations.delete(element);
+              if (!settleAnimations.size) list.style.removeProperty('overflow');
+            }, () => {});
+          });
+        }
+        if (!settleAnimations.size) list.style.removeProperty('overflow');
         if (wasFocused && !closed && !removed) {
           (list.querySelector('.notification-item:not([data-dismissing])') || panel.querySelector('.notifications-history')).focus({ preventScroll: true });
         }
@@ -164,7 +190,7 @@
       });
       card.addEventListener('pointermove', event => {
         if (!gesture || event.pointerId !== gesture.id) return;
-        const dx = event.clientX - gesture.x, dy = event.clientY - gesture.y;
+        const dx = (event.clientX - gesture.x) / previewScale(), dy = (event.clientY - gesture.y) / previewScale();
         if (!gesture.swiping) {
           if (Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
           if (Math.abs(dy) >= Math.abs(dx)) { gesture = null; return; }
@@ -181,7 +207,7 @@
       });
       card.addEventListener('pointerup', event => {
         if (!gesture || event.pointerId !== gesture.id) return;
-        const dx = event.clientX - gesture.x;
+        const dx = (event.clientX - gesture.x) / previewScale();
         const swiping = gesture.swiping;
         const speed = Math.abs(dx) / Math.max(1, performance.now() - gesture.time);
         gesture = null;
@@ -203,7 +229,7 @@
     }
     unread.forEach((item, index) => {
       const card = Card(item, post => { close(false, () => onPost(post)); });
-      card.style.setProperty('--notification-delay', `${60 + Math.min(index, 6) * 65}ms`);
+      card.style.setProperty('--notification-delay', `${40 + Math.min(index, 6) * 40}ms`);
       enableSwipeDismiss(card, item);
       list.append(card);
     });

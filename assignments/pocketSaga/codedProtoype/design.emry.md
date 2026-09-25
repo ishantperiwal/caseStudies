@@ -6,6 +6,8 @@ Design rationale, pattern inventory, and presentation brief · 22 September 2026
 
 Use this as the source brief for a future visual presentation, not as a claim that the prototype is a finished design system. It records the current implementation, proposes semantic token names, and identifies decisions that still need validation. Proposed names below are documentation proposals, not newly implemented CSS variables. No application styles were changed for this audit.
 
+For implementation, begin with the [PocketSaga documentation hub](../README.md) and use the [Prism design-system technical reference](../design%20system/README.md) for exact material, geometry, typography, spacing and motion values. This document explains the intended visual character and product reasoning; it does not replace those technical references.
+
 The review covers Discover, its four tabs, carousel variants, Community, Post and comments, reply threads, New Post and its selection sheets, the notification overlay, and Notification History. It is based on the current source and the screenshots and iteration history in this task. It is not a fresh visual verification of every screen, device, and interaction state.
 
 ## 1. The central idea: borrow the atmosphere

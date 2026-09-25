@@ -149,7 +149,7 @@
     if (!reduced.matches && keyboard) animation.from(keyboard, { y: 60, opacity: 0, duration: .38, ease: 'power3.out' }, 0);
     return { destroy() { animation?.kill(); overflowObserver?.disconnect(); overlay.remove(); background.forEach(([element, inert]) => { element.inert = inert; }); }, get closed() { return closed; } };
   }
-  function CreatePostPage(data, initialMedia = null, handlers = {}) {
+  function CreatePostPage(data, initialMedia = null, handlers = {}, initialGroupId = null) {
     let page, picker, toastTimer, selectionMotion, submitted = false;
     let writingField = null;
     let writingKeyboard;
@@ -163,7 +163,7 @@
     };
     const updatePulses = new Map();
     let media = data.media.find(item => item.id === initialMedia?.id) || null;
-    let group = null;
+    let group = data.groups.find(item => item.id === initialGroupId && item.mediaId === media?.id) || null;
     let postType = postTypes[0];
     let typeSelection;
     let highlightedTypeId = postType.id;
@@ -313,7 +313,7 @@
       try { recent = JSON.parse(localStorage.getItem('pocketsaga-recent-post-groups') || '[]'); } catch {}
       if (!Array.isArray(recent)) recent = [];
       const rank = item => item.id === group?.id ? 0 : recommended.includes(item.id) ? 1 : recent.includes(item.id) ? 2 : 3;
-      const choices = data.groups.filter(item => item.joined).sort((a, b) => {
+      const choices = data.groups.filter(item => item.joined || item.id === group?.id).sort((a, b) => {
         const priority = rank(a) - rank(b);
         return priority || (rank(a) === 2 ? recent.indexOf(a.id) - recent.indexOf(b.id) : 0);
       }).map(item => ({ ...item, title: item.name, subtitle: `${item.members} members${recommended.includes(item.id) ? ' · Recommended' : ''}` }));

@@ -41,9 +41,9 @@
 .notifications-history .icon { width: 14px; height: 14px; rotate: -90deg; }
 .notifications-unread-panel .notifications-empty { padding: 40px 20px; }
 @keyframes notification-overlay-in { from { opacity: 0; } to { opacity: 1; } }
-.notifications-unread-list .notification-item, .notifications-overlay-title, .notifications-history, .notifications-unread-panel .notifications-empty { animation: notification-card-in .42s cubic-bezier(.2,.7,.2,1) var(--notification-delay, 0ms) backwards; }
-.notifications-history { --notification-delay: 210ms; }
-@keyframes notification-card-in { from { opacity: 0; transform: translateY(-24px); filter: blur(8px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+.notifications-unread-list .notification-item, .notifications-overlay-title, .notifications-history, .notifications-unread-panel .notifications-empty { animation: notification-card-in .32s cubic-bezier(.2,.7,.2,1) var(--notification-delay, 0ms) backwards; }
+.notifications-history { --notification-delay: 140ms; }
+@keyframes notification-card-in { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { .notifications-overlay, .notifications-unread-panel, .notifications-unread-list .notification-item, .notifications-overlay-title, .notifications-history, .notifications-unread-panel .notifications-empty { animation: none; } }
 
 .notifications-overlay-title { font-family: Newsreader, Georgia, serif; font-size: 20px; line-height: 26px; font-weight: 500; text-align: center; flex-shrink: 0; }

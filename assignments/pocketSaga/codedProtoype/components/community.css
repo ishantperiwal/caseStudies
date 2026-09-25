@@ -217,3 +217,6 @@ body { margin: 0; min-height: 100svh; padding: 28px 12px; display: grid; place-i
 
 /* Use the app’s pressed states instead of the browser’s rectangular tap flash. */
 .phone-case { -webkit-tap-highlight-color: transparent; }
+
+/* Shared feed cards keep Save at the trailing edge of the reaction row. */
+.post-card > .reaction-bar > .save-post { margin-left: auto; }

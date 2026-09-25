@@ -103,7 +103,7 @@
     ]);
     const navigation = handlers.navigationArea || PocketSagaDiscover.BottomNavigation((action, detail) => {
       if (detail.destination === 'Community') location.href = 'discover.html';
-      else if (detail.destination !== 'Home') toast(`${detail.destination} will be connected later.`);
+      else if (!['Home', 'Profile'].includes(detail.destination)) toast(`${detail.destination} will be connected later.`);
     }, data.viewer, 'Home');
     page.querySelector('.phone-screen').append(header, ...(handlers.navigationArea ? [] : [navigation]), announce);
     selection = PocketSagaMotion.selectionHighlight(track, filterButtons.slice(0, filters.length));

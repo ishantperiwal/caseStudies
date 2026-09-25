@@ -4,6 +4,15 @@ Open `../community.html` directly. No install, build step, or local server is re
 
 The product term is **group/groups** in all visible copy. Legacy filenames, CSS classes, data fields and route/event keys still use `community` for compatibility.
 
+## Documentation map
+
+- [Design rationale and intended visual character](../design.emry.md) — the product/design “vibe,” semantic proposals and presentation framing.
+- [Prism design-system technical documentation](../../design%20system/README.md) — the implemented playground, exact material recipes, view inventory, controls, sizes and motion parameters.
+- [Current project handoff](../new%20chat%20context.md) — implementation history, accepted decisions, rejected experiments and the latest cross-links.
+- [Ongoing component explorations](../component-explorations.md) — standalone work that has not yet been integrated into the app or Prism.
+
+Use this README for the prototype’s technical composition and shared component APIs. Use the Prism README for the design-system playground’s implementation details.
+
 ## Files
 
 - `app-data.js`: shared JSON-compatible catalog for people, media, communities, posts, comments and watch history.

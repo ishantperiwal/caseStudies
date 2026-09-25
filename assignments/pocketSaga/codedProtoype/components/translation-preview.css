@@ -1,0 +1,7 @@
+.translation-preview-tools { position:fixed; top:32px; left:32px; max-width:240px; font:12px/1.6 Manrope,sans-serif; color:#a5b2aa; }
+.translation-preview-label { color:#e0e8e3; font-weight:600; }
+.translation-preview-nav { display:flex; flex-direction:column; gap:8px; }
+.translation-preview-nav a { color:inherit; text-decoration:none; padding:8px 0; }
+.translation-preview-nav a[aria-current] { color:#d7ecdf; text-decoration:underline; text-underline-offset:5px; }
+.translation-preview-note { font-size:11px; opacity:.7; }
+@media(max-width:850px) { .translation-preview-tools { position:relative; top:auto; left:auto; max-width:none; padding:12px 16px; } .translation-preview-nav { flex-direction:row; gap:20px; } .translation-preview-label,.translation-preview-note { margin:0; } body { overflow:auto; } }

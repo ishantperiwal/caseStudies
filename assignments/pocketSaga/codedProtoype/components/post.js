@@ -104,7 +104,7 @@
       const comment = { id: `local-comment-${Date.now()}`, author: data.viewer, time: 'Just now', body, likes: 0 };
       page.querySelector('.comment-list').prepend(CommentCard(comment, emit));
       post.commentCount += 1;
-      page.querySelector('.comments-heading').textContent = `${post.commentCount} ${post.commentCount === 1 ? 'Comment' : 'Comments'}`;
+      page.querySelector('.comments-heading').textContent = `${post.commentCount + Number(page.dataset.translationCommentCount || 0)} Comments`;
       input.value = '';
       composer.querySelector('.message-send').disabled = true;
       emit('send-comment', { comment });
@@ -116,6 +116,7 @@
       Action({ label: 'Post options', icon: 'ellipsis', className: 'round-action post-options', children: '', onClick: () => emit('options', { post }) })
     ]));
     pageEmitters.set(page, emit);
+    window.PocketSagaTranslationDemo?.insertComment(page, data);
     return page;
   }
   function paginateComments(page, data, handlers = {}) {

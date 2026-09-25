@@ -170,7 +170,9 @@
     return node('footer', 'reaction-bar', [like, Action({ label: `${post.comments ?? 0} comments`, icon: 'message-circle', children: String(post.comments ?? 0), onClick: () => emit('comments', { post }) })]);
   }
   function PostCard(post, context, emit) {
-    const el = node('article', 'post-card', [AuthorMeta(post), node('div', 'post-copy', [node('h3', 'post-title', post.title), node('p', 'post-body', post.body)]), SceneAttachment(post.scene), ReactionBar(post, emit)]);
+    const reactions = ReactionBar(post, emit);
+    if (PocketSagaData.hasPost(post.id)) reactions.append(SaveButton(post));
+    const el = node('article', 'post-card', [AuthorMeta(post), node('div', 'post-copy', [node('h3', 'post-title', post.title), node('p', 'post-body', post.body)]), SceneAttachment(post.scene), reactions]);
     el.dataset.postId = post.id;
     el.tabIndex = 0;
     el.setAttribute('role', 'link');
@@ -208,7 +210,7 @@
     };
     const labels = { composer: 'Write in this group…', posts: 'Posts', sort: 'Recent first', joined: 'Joined', join: 'Join group', empty: 'No posts yet.', ...data.labels };
     const navigation = node('nav', 'page-navigation', [Action({ label: 'Go back', icon: 'arrow-left', className: 'round-action', children: '', onClick: () => emit('back', {}) }), node('span', 'screen-navigation-title compact-community-title', data.community.name), node('div', 'navigation-action-slot', Action({ label: labels.sort, icon: 'list-filter', className: 'round-action compact-sort-action', children: '', onClick: () => emit('sort', {}) }))]);
-    const intro = node('div', 'community-intro', [CommunityHeader(data.community, labels, emit), Composer(data.viewer, labels.composer, emit)]);
+    const intro = node('div', 'community-intro', [CommunityHeader(data.community, labels, emit), Composer(data.viewer, labels.composer, () => emit('create-post', { media: { id: data.community.mediaId }, group: data.community }))]);
     const toolbar = FeedToolbar(labels, emit);
     const feed = node('div', 'feed-scroll', [intro, toolbar,
       node('section', 'post-list', data.posts.length ? data.posts.map(post => PostCard(post, data.community.context, emit)) : node('p', 'empty-feed', labels.empty))
@@ -218,6 +220,8 @@
     feed.setAttribute('aria-label', `${data.community.name} group feed`);
     page = PhoneFrame({ device: data.device, background: data.community.background, content: feed });
     page.classList.add('community-page');
+    window.PocketSagaSpoilerDemo?.insert(page, data);
+    window.PocketSagaTranslationDemo?.insertGroup(page, data);
     page.querySelector('.phone-screen').append(navigation);
     for (const key of ['accent', 'text', 'muted', 'body', 'background']) if (data.theme?.[key]) page.style.setProperty(`--${key}`, data.theme[key]);
     return page;

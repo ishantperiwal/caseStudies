@@ -83,7 +83,6 @@
         emit(action, detail);
       });
       card.classList.add('discover-post');
-      card.querySelector('.reaction-bar').append(SaveButton(post));
       const artwork = post.artwork || group?.artwork;
       if (artwork) {
         PocketSagaMedia.apply(card, artwork);
@@ -131,6 +130,7 @@
         if (activeTab === 'Saved' && savedTabPosts === null) savedTabPosts = PocketSagaData.savedPosts();
         const posts = activeTab === 'Saved' ? savedTabPosts : activeTab === 'Your posts' ? [...localPosts, ...ownPosts] : [...localPosts, ...data.posts];
         list.replaceChildren(...(posts.length ? posts.map(renderPost) : [node('p', 'empty-feed', activeTab === 'Saved' ? 'Save posts to revisit them here.' : 'Your thoughts belong here. Write about something you’ve watched.')]));
+        if (activeTab === 'For you') window.PocketSagaTranslationDemo?.insertDiscover(list, data, renderPost);
       }
     }
     function compose(item = null, source = null) {
@@ -240,13 +240,13 @@
     };
     scroller.addEventListener('scroll', scheduleAtmosphere, { passive: true });
     updateAtmosphere();
-    const greeting = node('h1', '', 'Hi, ' + data.viewer.name);
+    const greeting = node('h1', 'discover-greeting', `Hi, ${data.viewer.name}`);
     const headingSlot = node('div', 'discover-heading-slot', [greeting, fixedTabs]);
     const notificationCount = PocketSagaNotifications.unreadCount();
     const badge = node('span', 'notification-count', notificationCount ? String(notificationCount) : '');
     badge.hidden = notificationCount === 0;
     const header = node('header','page-navigation discover-navigation',[headingSlot,node('div','discover-utilities',[Action({label:notificationCount ? `Notifications, ${notificationCount} unread` : 'Notifications',icon:'bell',className:'round-action',children:badge,onClick:()=>emit('notifications')}),Action({label:'Create a post',icon:'square-pen',className:'round-action discover-write',children:'',onClick:()=>compose()})])]);
-    page.querySelector('.phone-screen').append(header, BottomNavigation((action,detail)=>{ emit(action,detail); if(handlers.navigate)return; if(detail.destination==='Home')location.href='home.html'; else if(detail.destination!=='Community')toast(`${detail.destination} will be connected later.`); }, data.viewer), announce);
+    page.querySelector('.phone-screen').append(header, BottomNavigation((action,detail)=>{ emit(action,detail); if(handlers.navigate)return; if(detail.destination==='Home')location.href='home.html'; else if(!['Community', 'Profile'].includes(detail.destination))toast(`${detail.destination} will be connected later.`); }, data.viewer), announce);
     const undockTabs = PocketSagaMotion.dockTabs({ scroller, anchor: tabAnchor, tabs, fixedTabs, slot: headingSlot, greeting, utilities: header.querySelector('.discover-utilities'), headerManaged: true });
     const stopCarouselCollapse = PocketSagaMotion.collapseCarousel({ scroller, carousel: deck.element, anchor: tabAnchor, slot: headingSlot, tabs: [tabs, fixedTabs], headerElements: [greeting, header.querySelector('.discover-utilities')], onCollapse: progress => deck.setCollapseProgress(progress) });
     const stopAutoHide = PocketSagaMotion.autoHideNavigation({ scroller, navigation: page.querySelector('.bottom-navigation-area') });
