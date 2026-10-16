@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Scene Preview</title>
+<style>
+    /* Live preview + scrubber for the scenes in this folder. It drives each scene's seek(t)
+       directly, so what you see here is exactly what render.mjs captures.
+       Needs a local server (same-origin iframe), e.g. python3 -m http.server from the repo root.
+       URL hash keeps scene + time: preview.html#construct@2.35 */
+    :root { --bg: #0f1418; --panel: #161d22; --line: #263139; --text: #dbe4ea; --mute: #7d8b95; --accent: #4ea3ff; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [hidden] { display: none !important; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Inter", sans-serif; }
+    body { display: grid; grid-template-rows: auto 1fr auto; }
+
+    header { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--line); background: var(--panel); }
+    header h1 { font-size: 13px; font-weight: 600; margin-right: auto; }
+    select, button, label.chk { font: inherit; color: var(--text); background: #1f282f; border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+    button:hover, select:hover { border-color: #3a4852; }
+    button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+    label.chk { display: inline-flex; align-items: center; gap: 6px; }
+    a { color: var(--mute); }
+
+    main { position: relative; overflow: hidden; display: grid; place-items: center; padding: 16px; }
+    #frameWrap { position: relative; box-shadow: 0 0 0 1px var(--line), 0 20px 60px rgba(0,0,0,0.5); }
+    #scene { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; border: 0; transform-origin: 0 0; background: #fff; }
+    #hoverHint { position: absolute; right: 10px; bottom: 10px; padding: 4px 8px; border-radius: 4px; background: rgba(0,0,0,0.55); color: #fff; font-size: 12px; pointer-events: none; }
+    #loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--mute); background: var(--bg); }
+
+    footer { padding: 10px 16px 14px; border-top: 1px solid var(--line); background: var(--panel); }
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .row + .row { margin-top: 10px; }
+    #time { font: 600 14px/1 ui-monospace, SFMono-Regular, Menlo, monospace; min-width: 190px; }
+    #time small { color: var(--mute); font-weight: 400; }
+    .spacer { flex: 1; }
+    .keys { color: var(--mute); font-size: 12px; }
+
+    #track { position: relative; height: 56px; flex: 1 1 300px; cursor: pointer; user-select: none; }
+    #track .rail { position: absolute; left: 0; right: 0; top: 38px; height: 6px; border-radius: 3px; background: #26323a; }
+    #track .fill { position: absolute; left: 0; top: 38px; height: 6px; border-radius: 3px; background: var(--accent); }
+    #track .head { position: absolute; top: 32px; width: 2px; height: 18px; margin-left: -1px; background: #fff; }
+    #track .mk { position: absolute; top: 0; transform: translateX(-1px); padding-left: 5px; border-left: 1px solid #4a5963; height: 46px; line-height: 14px;
+        font-size: 11px; color: var(--mute); white-space: nowrap; }
+    #track .mk.low { padding-top: 15px; }
+    #track .mk:hover { color: var(--text); border-color: var(--text); }
+</style>
+</head>
+<body>
+<header>
+    <h1>Scene preview</h1>
+    <select id="pick">
+        <option value="construct">Construct loop (zapp-construct.html)</option>
+        <option value="motion">Showcase (zapp-motion.html)</option>
+    </select>
+    <label class="chk" title="Show the final still and only play while the cursor is over the frame, like the hover thumbnail"><input type="checkbox" id="thumb" /> Thumbnail mode</label>
+    <a id="open" target="_blank">Open scene ↗</a>
+</header>
+
+<main id="main">
+    <div id="frameWrap">
+        <iframe id="scene" title="Scene"></iframe>
+        <div id="hoverHint" hidden>Hover to play</div>
+        <div id="loading">Loading…</div>
+    </div>
+</main>
+
+<footer>
+    <div class="row">
+        <div id="time">0.000s <small>· frame 0</small></div>
+        <div id="track"><div class="rail"></div><div class="fill"></div><div class="head"></div></div>
+    </div>
+    <div class="row">
+        <button id="play" title="Space">▶ Play</button>
+        <button id="prev" title="←">‹ Frame</button>
+        <button id="next" title="→">Frame ›</button>
+        <button id="start" title="Home">⏮</button>
+        <button id="end" title="End">⏭</button>
+        <span style="width:12px"></span>
+        <button class="spd" data-s="0.25">0.25×</button>
+        <button class="spd" data-s="0.5">0.5×</button>
+        <button class="spd on" data-s="1">1×</button>
+        <label class="chk"><input type="checkbox" id="loop" checked /> Loop (holds the still 1s)</label>
+        <span class="spacer"></span>
+        <span class="keys">Space play · ←/→ frame · Shift+←/→ 0.5s · Home/End</span>
+    </div>
+</footer>
+
+<script>
+const SCENES = {
+    construct: { file: "zapp-construct.html" },
+    motion: { file: "zapp-motion.html", note: "The phone screens are the live prototypes: they play in real time and don't rewind when you scrub." },
+};
+const FPS = 60, HOLD = 1;
+const $ = id => document.getElementById(id);
+const iframe = $("scene"), track = $("track");
+
+let key = "construct", win = null, duration = 1, t = 0, playing = false, speed = 1, last = 0, held = 0;
+
+function parseHash() {
+    const [k, at] = location.hash.slice(1).split("@");
+    return { k: SCENES[k] ? k : "construct", at: at !== undefined ? +at : null };
+}
+function writeHash() { history.replaceState(null, "", `#${key}@${t.toFixed(3)}`); }
+
+function load(k, at) {
+    key = k; $("pick").value = k;
+    playing = false; updatePlay();
+    win = null; $("loading").hidden = false;
+    $("loading").textContent = SCENES[k].note ? "Loading… " + SCENES[k].note : "Loading…";
+    $("open").href = SCENES[k].file;
+    iframe.src = SCENES[k].file + "?render";
+    iframe.onload = () => {
+        const w = iframe.contentWindow;
+        const ready = () => {
+            if (typeof w.seek !== "function" || w.READY === false) { requestAnimationFrame(ready); return; }
+            win = w; duration = w.DURATION || 1;
+            buildMarkers(w.MARKERS || []);
+            $("loading").hidden = true;
+            go(at ?? ($("thumb").checked ? duration : 0));
+        };
+        ready();
+    };
+}
+
+function go(nt) {
+    t = Math.min(duration, Math.max(0, nt));
+    if (win) win.seek(t);
+    const pct = (t / duration) * 100;
+    track.querySelector(".fill").style.width = pct + "%";
+    track.querySelector(".head").style.left = pct + "%";
+    $("time").innerHTML = `${t.toFixed(3)}s <small>· frame ${Math.round(t * FPS)} / ${Math.round(duration * FPS)}</small>`;
+    writeHash();
+}
+
+function buildMarkers(list) {
+    track.querySelectorAll(".mk").forEach(m => m.remove());
+    list.forEach((m, i) => {
+        const el = document.createElement("div");
+        el.className = "mk" + (i % 2 ? " low" : ""); el.textContent = m.label;
+        el.style.left = (m.t / duration) * 100 + "%";
+        el.addEventListener("pointerdown", e => { e.stopPropagation(); go(m.t); });
+        track.append(el);
+    });
+}
+
+function tick(now) {
+    if (playing && win) {
+        const dt = Math.min(0.1, (now - last) / 1000) * speed;
+        if (t >= duration) {
+            held += dt;
+            if (!$("loop").checked) { playing = false; updatePlay(); }
+            else if (held >= HOLD) { held = 0; go(0); }
+        } else go(t + dt);
+    }
+    last = now;
+    requestAnimationFrame(tick);
+}
+function updatePlay() { $("play").textContent = playing ? "❚❚ Pause" : "▶ Play"; $("play").classList.toggle("on", playing); }
+function toggle(force) {
+    playing = force ?? !playing;
+    if (playing && t >= duration && !$("loop").checked) go(0);
+    held = 0; updatePlay();
+}
+
+/* Scrubbing */
+let scrubbing = false;
+const scrubTo = e => { const r = track.getBoundingClientRect(); go(((e.clientX - r.left) / r.width) * duration); };
+track.addEventListener("pointerdown", e => { scrubbing = true; toggle(false); track.setPointerCapture(e.pointerId); scrubTo(e); });
+track.addEventListener("pointermove", e => { if (scrubbing) scrubTo(e); });
+track.addEventListener("pointerup", () => { scrubbing = false; });
+
+/* Controls */
+$("play").onclick = () => toggle();
+$("prev").onclick = () => { toggle(false); go(Math.round(t * FPS - 1) / FPS); };
+$("next").onclick = () => { toggle(false); go(Math.round(t * FPS + 1) / FPS); };
+$("start").onclick = () => go(0);
+$("end").onclick = () => { toggle(false); go(duration); };
+document.querySelectorAll(".spd").forEach(b => b.onclick = () => {
+    speed = +b.dataset.s;
+    document.querySelectorAll(".spd").forEach(x => x.classList.toggle("on", x === b));
+});
+$("pick").onchange = e => load(e.target.value, 0);
+addEventListener("keydown", e => {
+    if (e.target.tagName === "SELECT") return;
+    const step = e.shiftKey ? 0.5 : 1 / FPS;
+    if (e.code === "Space") { e.preventDefault(); toggle(); }
+    else if (e.key === "ArrowLeft") { toggle(false); go(e.shiftKey ? t - step : Math.round(t * FPS - 1) / FPS); }
+    else if (e.key === "ArrowRight") { toggle(false); go(e.shiftKey ? t + step : Math.round(t * FPS + 1) / FPS); }
+    else if (e.key === "Home") go(0);
+    else if (e.key === "End") { toggle(false); go(duration); }
+});
+
+/* Thumbnail mode: rest on the final still, play from 0 while hovered */
+const wrap = $("frameWrap");
+$("thumb").onchange = e => {
+    $("hoverHint").hidden = !e.target.checked;
+    toggle(false); go(e.target.checked ? duration : 0);
+};
+wrap.addEventListener("mouseenter", () => { if ($("thumb").checked) { go(0); toggle(true); } });
+wrap.addEventListener("mouseleave", () => { if ($("thumb").checked) { toggle(false); go(duration); } });
+
+/* Fit the 1920×1080 frame into the available space */
+function fit() {
+    const m = $("main"), pad = 32;
+    const k = Math.min((m.clientWidth - pad) / 1920, (m.clientHeight - pad) / 1080);
+    wrap.style.width = 1920 * k + "px"; wrap.style.height = 1080 * k + "px";
+    iframe.style.transform = `scale(${k})`;
+}
+addEventListener("resize", fit); fit();
+
+const h = parseHash();
+load(h.k, h.at);
+addEventListener("hashchange", () => {
+    const n = parseHash();
+    if (n.k !== key) load(n.k, n.at); else if (n.at !== null && Math.abs(n.at - t) > 1e-3) go(n.at);
+});
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planet Pop</title>
+<link rel="icon" href="data:,">
+<style>
+  html, body { margin: 0; height: 100%; background: #050811; }
+  canvas { display: block; width: 100vw; height: 100vh; object-fit: contain; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/*
+ * Planet Pop — 2s Kurzgesagt-style motion study.
+ *
+ * Contract: window.draw({ ctx, width, height, t }) with t in seconds [0, 2].
+ * Pure and idempotent — every value below is a constant or a function of t.
+ * No animation loop lives in this file; an external stepper calls draw().
+ *
+ * Timeline
+ *   0.00–0.60  singularity charges, stars sparkle in, planet springs 0 → 1.2 → settle, cyan shockwave
+ *   0.60–1.20  orbital ring sweeps in (behind → in front), atmosphere snaps on, satellites bounce in
+ *   1.20–2.00  planet floats (sin(t·4)·8px), atmospheric rim pulses
+ */
+(() => {
+  'use strict';
+
+  // ---------- constants ----------
+  const W = 1920, H = 1080;
+  const PI = Math.PI, TAU = PI * 2;
+  const R = 190;                       // planet radius at scale 1
+
+  const C = Object.freeze({
+    bgInner: '#0d1326', bgOuter: '#050811',
+    coral: '#ff5e3a', sun: '#ffcc00', cyan: '#00f0ff', plum: '#4a154b',
+    // derived tints of the core palette
+    coralLight: '#ff7a4d', amber: '#ff9a2e', ember: '#e8452f',
+    sunDeep: '#e6a400', craterFloor: '#ec5234', craterWall: '#b8303a',
+    star: '#ffffff', starCool: '#c4f9ff', starWarm: '#fff0b0',
+  });
+
+  // light comes from the upper-left
+  const LD = Object.freeze({ x: -0.62, y: -0.785 });
+  const LIGHT_ANGLE = Math.atan2(LD.y, LD.x);
+
+  const TILT = 0.3;                    // camera elevation over the planet's equator
+  const RING = Object.freeze({ rx: 1.9, ry: 0.44, rot: -0.24, start: 0.32 * PI });
+
+  // ---------- pure helpers ----------
+  const clamp01 = x => (x < 0 ? 0 : x > 1 ? 1 : x);
+  const lerp = (a, b, p) => a + (b - a) * p;
+  const prog = (t, t0, t1) => clamp01((t - t0) / (t1 - t0));
+  const smoothstep = p => p * p * (3 - 2 * p);
+  const easeOutCubic = p => 1 - Math.pow(1 - p, 3);
+  const easeInCubic = p => p * p * p;
+  const easeInOutCubic = p => (p < 0.5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+  const easeOutBack = (p, s = 1.70158) => 1 + (s + 1) * Math.pow(p - 1, 3) + s * Math.pow(p - 1, 2);
+  const easeOutBounce = p => {
+    const n = 7.5625, d = 2.75;
+    if (p < 1 / d) return n * p * p;
+    if (p < 2 / d) { const q = p - 1.5 / d; return n * q * q + 0.75; }
+    if (p < 2.5 / d) { const q = p - 2.25 / d; return n * q * q + 0.9375; }
+    const q = p - 2.625 / d; return n * q * q + 0.984375;
+  };
+  const overshoot = p => Math.sin(p * PI * 0.7) * 1.2;
+  const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const mod = (a, n) => ((a % n) + n) % n;
+
+  const RGB = Object.freeze(Object.fromEntries(Object.entries(C).map(([k, hex]) => {
+    const v = parseInt(hex.slice(1), 16);
+    return [k, Object.freeze([(v >> 16) & 255, (v >> 8) & 255, v & 255])];
+  })));
+  const rgba = (name, a) => { const c = RGB[name]; return `rgba(${c[0]},${c[1]},${c[2]},${clamp01(a)})`; };
+
+  // ---------- timeline ----------
+  // Planet scale: the brief's overshoot curve (0.15–0.60s), then a damped spring that
+  // matches its value and velocity at 0.60s and comes to rest at exactly 1.0.
+  const POP_T0 = 0.15, POP_T1 = 0.60;
+  const S0 = overshoot(1);
+  const V0 = 1.2 * 0.7 * PI * Math.cos(0.7 * PI) / (POP_T1 - POP_T0);
+  const SPRING_K = 10, SPRING_W = 18;
+  const SPRING_A = S0 - 1;
+  const SPRING_B = (V0 + SPRING_K * SPRING_A) / SPRING_W;
+
+  const planetScale = t => {
+    if (t < POP_T0) return 0;
+    if (t <= POP_T1) return overshoot(prog(t, POP_T0, POP_T1));
+    const u = t - POP_T1;
+    return 1 + Math.exp(-SPRING_K * u) * (SPRING_A * Math.cos(SPRING_W * u) + SPRING_B * Math.sin(SPRING_W * u));
+  };
+
+  const scene = t => {
+    const bob = Math.sin(t * 4) * 8 * smoothstep(prog(t, 0.8, 1.2));
+    const atmIn = prog(t, 0.62, 0.95);
+    const pulseW = smoothstep(prog(t, 1.15, 1.4));
+    return {
+      t,
+      s: planetScale(t),
+      cx: W / 2,
+      cy: H / 2 + bob,
+      ringP: easeOutCubic(prog(t, 0.6, 1.05)),
+      ringScale: lerp(0.72, 1, easeOutBack(prog(t, 0.6, 1.0))),
+      atm: easeOutCubic(atmIn),
+      atmScale: lerp(0.82, 1, easeOutBack(atmIn)),
+      pulse: pulseW * (0.5 - 0.5 * Math.cos(TAU * 1.5 * (t - 1.2))),
+      spin: t * 0.55,
+    };
+  };
+
+  // ---------- shared path builders ----------
+  // Region inside the current clip but outside a circle — the "cut" crescent.
+  const lune = (ctx, ox, oy, rr, extent) => {
+    ctx.beginPath();
+    ctx.rect(-extent, -extent, extent * 2, extent * 2);
+    ctx.moveTo(ox + rr, oy);
+    ctx.arc(ox, oy, rr, 0, TAU);
+  };
+
+  const fourPointStar = (ctx, s) => {
+    const k = s * 0.14;
+    ctx.beginPath();
+    ctx.moveTo(0, -s);
+    ctx.quadraticCurveTo(k, -k, s, 0);
+    ctx.quadraticCurveTo(k, k, 0, s);
+    ctx.quadraticCurveTo(-k, k, -s, 0);
+    ctx.quadraticCurveTo(-k, -k, 0, -s);
+    ctx.closePath();
+  };
+
+  // Projection of a latitude circle under the camera tilt: an ellipse whose
+  // lower arc is the visible (front) side.
+  const latEllipse = beta => ({
+    cy: -R * Math.sin(beta) * Math.cos(TILT),
+    a: R * Math.cos(beta),
+    b: R * Math.cos(beta) * Math.sin(TILT),
+  });
+
+  const bandPath = (ctx, north, south) => {
+    const e1 = latEllipse(north), e2 = latEllipse(south), X = R * 1.3;
+    ctx.beginPath();
+    ctx.moveTo(-X, e1.cy);
+    ctx.lineTo(-e1.a, e1.cy);
+    ctx.ellipse(0, e1.cy, e1.a, e1.b, 0, PI, 0, true);
+    ctx.lineTo(X, e1.cy);
+    ctx.lineTo(X, e2.cy);
+    ctx.lineTo(e2.a, e2.cy);
+    ctx.ellipse(0, e2.cy, e2.a, e2.b, 0, 0, PI, false);
+    ctx.lineTo(-X, e2.cy);
+    ctx.closePath();
+  };
+
+  const capPath = (ctx, south) => {
+    const e = latEllipse(south), X = R * 1.3;
+    ctx.beginPath();
+    ctx.moveTo(-X, -X);
+    ctx.lineTo(-X, e.cy);
+    ctx.lineTo(-e.a, e.cy);
+    ctx.ellipse(0, e.cy, e.a, e.b, 0, PI, 0, true);
+    ctx.lineTo(X, e.cy);
+    ctx.lineTo(X, -X);
+    ctx.closePath();
+  };
+
+  // ---------- layers ----------
+  const drawBackground = ctx => {
+    ctx.save();
+    const g = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, Math.hypot(W, H) / 2);
+    g.addColorStop(0, C.bgInner);
+    g.addColorStop(1, C.bgOuter);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  };
+
+  const NEBULAE = Object.freeze([
+    { x: 0.16, y: 0.22, r: 560, c: 'plum', a: 0.38 },
+    { x: 0.88, y: 0.82, r: 640, c: 'plum', a: 0.32 },
+    { x: 0.80, y: 0.14, r: 420, c: 'cyan', a: 0.045 },
+    { x: 0.10, y: 0.90, r: 380, c: 'coral', a: 0.05 },
+  ]);
+
+  const drawNebulae = (ctx, t) => {
+    ctx.save();
+    const fade = easeOutCubic(prog(t, 0, 0.9));
+    NEBULAE.forEach((n, i) => {
+      const x = n.x * W + Math.sin(t * 0.6 + i * 1.7) * 14;
+      const y = n.y * H + Math.cos(t * 0.5 + i * 2.3) * 10;
+      const g = ctx.createRadialGradient(x, y, 0, x, y, n.r);
+      g.addColorStop(0, rgba(n.c, n.a * fade));
+      g.addColorStop(1, rgba(n.c, 0));
+      ctx.fillStyle = g;
+      ctx.fillRect(x - n.r, y - n.r, n.r * 2, n.r * 2);
+    });
+    ctx.restore();
+  };
+
+  const STAR_COUNT = 200;
+  const STAR_COLORS = Object.freeze(['star', 'starCool', 'starWarm']);
+
+  const drawStars = (ctx, t) => {
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    // rotational drift: swings in from a small offset, then keeps creeping
+    ctx.rotate(-0.07 * (1 - easeOutCubic(prog(t, 0, 0.9))) + t * 0.018);
+    for (let i = 0; i < STAR_COUNT; i++) {
+      const hx = hash(i * 7.13), hy = hash(i * 3.71 + 2), hs = hash(i * 1.97 + 5);
+      const hp = hash(i * 9.1 + 1), hd = hash(i * 2.2 + 3);
+      const x = (hx - 0.5) * 2080, y = (hy - 0.5) * 1240;
+      const delay = hd * 0.45;
+      const appear = prog(t, delay, delay + 0.4);
+      if (appear <= 0) continue;
+      const twinkle = 0.5 + 0.5 * Math.sin(t * (3 + hp * 5) + hp * TAU);
+      const color = STAR_COLORS[Math.floor(hash(i * 4.3 + 8) * 3)];
+
+      ctx.save();
+      ctx.translate(x, y);
+      if (hs > 0.62) {
+        // 4-point diamond cross star
+        const big = hs > 0.9;
+        const size = (big ? 9 + hp * 10 : 3.5 + hp * 4) * easeOutBack(appear) * (0.82 + 0.18 * twinkle);
+        const a = easeOutCubic(appear) * (0.6 + 0.4 * twinkle);
+        if (big) {
+          const g = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2.4);
+          g.addColorStop(0, rgba(color, 0.28 * a));
+          g.addColorStop(1, rgba(color, 0));
+          ctx.fillStyle = g;
+          ctx.fillRect(-size * 2.4, -size * 2.4, size * 4.8, size * 4.8);
+        }
+        ctx.rotate((hp - 0.5) * 0.3 + t * 0.25 * (hp > 0.5 ? 1 : -1));
+        fourPointStar(ctx, size);
+        ctx.fillStyle = rgba(color, a);
+        ctx.fill();
+      } else {
+        const r = 0.7 + hs * 1.6;
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, TAU);
+        ctx.fillStyle = rgba(color, easeOutCubic(appear) * (0.35 + 0.4 * twinkle));
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+  };
+
+  const drawSingularity = (ctx, t) => {
+    const charge = easeInCubic(prog(t, 0, POP_T0));
+    const collapse = easeOutCubic(prog(t, POP_T0, 0.34));
+    const k = lerp(0.18, 1, charge) * (1 - collapse) * (1 + 0.06 * Math.sin(t * 70));
+    if (k <= 0.001) return;
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, 150 * k);
+    g.addColorStop(0, rgba('star', 0.9));
+    g.addColorStop(0.18, rgba('cyan', 0.55));
+    g.addColorStop(0.5, rgba('plum', 0.25));
+    g.addColorStop(1, rgba('plum', 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, 150 * k, 0, TAU);
+    ctx.fill();
+
+    ctx.rotate(t * 2.4);
+    fourPointStar(ctx, 120 * k);
+    ctx.fillStyle = rgba('starCool', 0.9);
+    ctx.fill();
+    ctx.rotate(PI / 4);
+    fourPointStar(ctx, 55 * k);
+    ctx.fillStyle = rgba('cyan', 0.8);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(0, 0, 9 * k, 0, TAU);
+    ctx.fillStyle = C.star;
+    ctx.fill();
+    ctx.restore();
+  };
+
+  const drawAmbientGlow = (ctx, st) => {
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    const k = Math.min(st.s, 1.2);
+    const r = R * 3.3 * k * (1 + 0.05 * st.pulse);
+    const g = ctx.createRadialGradient(LD.x * R * 0.35 * k, LD.y * R * 0.35 * k, 0, 0, 0, r);
+    g.addColorStop(0, rgba('sun', 0.32));
+    g.addColorStop(0.28, rgba('coral', 0.17));
+    g.addColorStop(0.62, rgba('plum', 0.14));
+    g.addColorStop(1, rgba('plum', 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  // Ring bands are fully opaque so the front pass can repaint over the back pass
+  // without any visible seam.
+  const RING_BANDS = Object.freeze([
+    { k: 1.085, w: 5, c: C.coral },
+    { k: 1.0, w: 18, c: C.sun },
+    { k: 0.978, w: 5, c: C.sunDeep },
+    { k: 0.915, w: 4, c: C.cyan },
+  ]);
+
+  const ringSweep = st => [RING.start, RING.start + TAU * st.ringP];
+
+  const drawRing = (ctx, st, pass) => {
+    if (st.ringP <= 0) return;
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    ctx.scale(st.s, st.s);
+    if (pass === 'front') {
+      // only the near half, and only where it overlaps the planet + atmosphere
+      ctx.beginPath();
+      ctx.arc(0, 0, R * 1.75, 0, TAU);
+      ctx.clip();
+    }
+    ctx.rotate(RING.rot);
+    if (pass === 'front') {
+      ctx.beginPath();
+      ctx.rect(-R * 3, 0, R * 6, R * 3);
+      ctx.clip();
+    }
+    const [a0, a1] = ringSweep(st);
+    const rs = st.ringScale;
+    ctx.lineCap = st.ringP < 1 ? 'round' : 'butt';
+    RING_BANDS.forEach(b => {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, R * RING.rx * b.k * rs, R * RING.ry * b.k * rs, 0, a0, a1);
+      ctx.strokeStyle = b.c;
+      ctx.lineWidth = b.w;
+      ctx.stroke();
+    });
+    ctx.restore();
+  };
+
+  const DUST_COUNT = 72;
+
+  const drawDust = (ctx, st, pass) => {
+    if (st.ringP <= 0) return;
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    ctx.scale(st.s, st.s);
+    ctx.rotate(RING.rot);
+    const sweep = TAU * st.ringP;
+    for (let j = 0; j < DUST_COUNT; j++) {
+      const h1 = hash(j * 5.1 + 11), h2 = hash(j * 2.7 + 4), h3 = hash(j * 8.3 + 9);
+      const th = (j / DUST_COUNT) * TAU + (h1 - 0.5) * 0.14 + st.t * (0.38 + h2 * 0.1);
+      const depth = Math.sin(th);
+      if ((pass === 'front') !== (depth > 0)) continue;
+      const rel = mod(th - RING.start, TAU);
+      if (rel > sweep) continue;
+      const reveal = easeOutBack(clamp01((sweep - rel) / 0.5));
+      const k = (j % 2 ? 1.17 : 0.84) + (h3 - 0.5) * 0.06;
+      const x = R * RING.rx * k * st.ringScale * Math.cos(th);
+      const y = R * RING.ry * k * st.ringScale * Math.sin(th);
+      const r = (1.4 + h2 * 2.6) * reveal * (0.85 + 0.15 * depth);
+      ctx.beginPath();
+      ctx.arc(x, y, Math.max(r, 0), 0, TAU);
+      ctx.fillStyle = rgba(h3 > 0.7 ? 'sun' : h3 > 0.35 ? 'cyan' : 'starCool', 0.55 + 0.4 * depth);
+      ctx.fill();
+    }
+    ctx.restore();
+  };
+
+  const SATELLITES = Object.freeze([
+    { th: 0.30 * PI, kind: 'moon', size: 24, d: 0.70 },
+    { th: 0.78 * PI, kind: 'gem', size: 17, d: 0.80 },
+    { th: 1.12 * PI, kind: 'probe', size: 12, d: 0.90 },
+    { th: 1.78 * PI, kind: 'shard', size: 17, d: 1.00 },
+  ]);
+
+  const drawMoon = ctx => {
+    const g = ctx.createRadialGradient(0, 0, 0.6, 0, 0, 2.4);
+    g.addColorStop(0, rgba('sun', 0.35));
+    g.addColorStop(1, rgba('sun', 0));
+    ctx.fillStyle = g;
+    ctx.fillRect(-2.4, -2.4, 4.8, 4.8);
+    ctx.beginPath();
+    ctx.arc(0, 0, 1, 0, TAU);
+    ctx.fillStyle = C.sun;
+    ctx.fill();
+    ctx.clip();
+    ctx.beginPath();
+    ctx.arc(0.28, 0.1, 0.2, 0, TAU);
+    ctx.fillStyle = C.sunDeep;
+    ctx.fill();
+    lune(ctx, LD.x * 0.42, LD.y * 0.42, 1, 2);
+    ctx.fillStyle = rgba('coral', 0.85);
+    ctx.fill('evenodd');
+    lune(ctx, LD.x * 0.2, LD.y * 0.2, 1, 2);
+    ctx.fillStyle = rgba('plum', 0.55);
+    ctx.fill('evenodd');
+  };
+
+  const drawGem = (ctx, t) => {
+    ctx.rotate(Math.sin(t * 3) * 0.25);
+    ctx.beginPath();
+    ctx.moveTo(0, -1.25); ctx.lineTo(0.8, 0); ctx.lineTo(0, 1.25); ctx.lineTo(-0.8, 0);
+    ctx.closePath();
+    ctx.fillStyle = C.cyan;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0, -1.25); ctx.lineTo(0.8, 0); ctx.lineTo(0, 1.25);
+    ctx.closePath();
+    ctx.fillStyle = rgba('plum', 0.55);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-0.8, 0); ctx.lineTo(0, 1.25); ctx.lineTo(0.8, 0);
+    ctx.closePath();
+    ctx.fillStyle = rgba('plum', 0.25);
+    ctx.fill();
+  };
+
+  const drawProbe = (ctx, t) => {
+    ctx.rotate(-0.35 + Math.sin(t * 2.2) * 0.2);
+    ctx.fillStyle = C.sunDeep;
+    ctx.fillRect(-1.7, -0.08, 3.4, 0.16);
+    [-1, 1].forEach(side => {
+      ctx.fillStyle = C.cyan;
+      ctx.fillRect(side > 0 ? 0.85 : -2.35, -0.55, 1.5, 1.1);
+      ctx.fillStyle = rgba('plum', 0.5);
+      ctx.fillRect(side > 0 ? 0.85 : -2.35, 0, 1.5, 0.55);
+    });
+    ctx.fillStyle = C.coralLight;
+    ctx.fillRect(-0.62, -0.62, 1.24, 1.24);
+    ctx.beginPath();
+    ctx.moveTo(0.62, -0.62); ctx.lineTo(0.62, 0.62); ctx.lineTo(-0.62, 0.62);
+    ctx.closePath();
+    ctx.fillStyle = rgba('plum', 0.5);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(0, -0.62, 0.22, PI, TAU);
+    ctx.fillStyle = C.sun;
+    ctx.fill();
+  };
+
+  const drawShard = (ctx, t) => {
+    ctx.rotate(-t * 1.4);
+    const pts = [0, 1, 2].map(i => [Math.cos(-PI / 2 + i * TAU / 3), Math.sin(-PI / 2 + i * TAU / 3)]);
+    ctx.beginPath();
+    pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+    ctx.closePath();
+    ctx.fillStyle = C.coral;
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]); ctx.lineTo(pts[1][0], pts[1][1]); ctx.lineTo(0, 0);
+    ctx.closePath();
+    ctx.fillStyle = rgba('sun', 0.55);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(pts[1][0], pts[1][1]); ctx.lineTo(pts[2][0], pts[2][1]); ctx.lineTo(0, 0);
+    ctx.closePath();
+    ctx.fillStyle = rgba('plum', 0.6);
+    ctx.fill();
+  };
+
+  const SAT_DRAW = Object.freeze({ moon: drawMoon, gem: drawGem, probe: drawProbe, shard: drawShard });
+
+  const drawSatellites = (ctx, st, pass) => {
+    const cosR = Math.cos(RING.rot), sinR = Math.sin(RING.rot);
+    SATELLITES.forEach(sat => {
+      const e = prog(st.t, sat.d, sat.d + 0.5);
+      if (e <= 0) return;
+      const th = sat.th + st.t * 0.18;
+      const depth = Math.sin(th);
+      if ((pass === 'front') !== (depth > 0)) return;
+      const lx = R * RING.rx * st.ringScale * Math.cos(th);
+      const ly = R * RING.ry * st.ringScale * Math.sin(th);
+      const drop = (1 - easeOutBounce(e)) * -150;
+      const px = st.cx + (lx * cosR - ly * sinR) * st.s;
+      const py = st.cy + (lx * sinR + ly * cosR) * st.s + drop;
+      const sz = sat.size * st.s * (0.8 + 0.2 * depth) * easeOutBack(clamp01(e * 1.8), 2.4);
+      if (sz <= 0.01) return;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.rotate((1 - easeOutCubic(e)) * 1.6);
+      ctx.scale(sz, sz);
+      SAT_DRAW[sat.kind](ctx, st.t);
+      ctx.restore();
+    });
+  };
+
+  const drawAtmosphere = (ctx, st) => {
+    if (st.atm <= 0) return;
+    const k = st.atmScale, A = st.atm, boost = 1 + 0.55 * st.pulse;
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    ctx.scale(st.s, st.s);
+
+    const g = ctx.createRadialGradient(LD.x * R * 0.1, LD.y * R * 0.1, R * 0.95, 0, 0, R * 1.6 * k);
+    g.addColorStop(0, rgba('cyan', 0.3 * A * boost));
+    g.addColorStop(0.45, rgba('cyan', 0.1 * A * boost));
+    g.addColorStop(1, rgba('cyan', 0));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 1.6 * k, 0, TAU);
+    ctx.fill();
+
+    // flat shield band, two-tone: dim everywhere, brighter on the lit side
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 1.085 * k, 0, TAU);
+    ctx.fillStyle = rgba('cyan', 0.16 * A);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(LD.x * R * 0.42, LD.y * R * 0.42, R * 1.1 * k, 0, TAU);
+    ctx.clip();
+    ctx.beginPath();
+    ctx.arc(0, 0, R * 1.085 * k, 0, TAU);
+    ctx.fillStyle = rgba('cyan', 0.2 * A * boost);
+    ctx.fill();
+    ctx.restore();
+  };
+
+  const CRATERS = Object.freeze([
+    [0.2, 0.18, 30], [1.25, -0.22, 22], [2.35, 0.72, 17], [3.2, -0.5, 34],
+    [4.3, 0.12, 27], [5.25, -0.12, 16], [0.85, 0.8, 13], [5.85, 0.46, 21], [3.9, -0.78, 15],
+  ]);
+
+  const drawCraters = (ctx, spin) => {
+    const cT = Math.cos(TILT), sT = Math.sin(TILT);
+    CRATERS.forEach(([lon, lat, r]) => {
+      const lam = lon + spin;
+      const x = Math.cos(lat) * Math.sin(lam);
+      const y = Math.sin(lat);
+      const z = Math.cos(lat) * Math.cos(lam);
+      const y2 = y * cT - z * sT;
+      const z2 = y * sT + z * cT;
+      if (z2 < 0.03) return;
+      const sx = R * x, sy = -R * y2;
+      const rot = Math.atan2(-y2, x);
+      ctx.save();
+      ctx.globalAlpha = smoothstep(clamp01(z2 / 0.3));
+      ctx.beginPath();
+      ctx.ellipse(sx, sy, r * z2, r, rot, 0, TAU);
+      ctx.fillStyle = C.craterWall;
+      ctx.fill();
+      ctx.clip();
+      // lit floor shifted away from the light leaves a shadowed wall on the light side
+      ctx.beginPath();
+      ctx.ellipse(sx - LD.x * r * 0.32, sy - LD.y * r * 0.32, r * z2, r, rot, 0, TAU);
+      ctx.fillStyle = C.craterFloor;
+      ctx.fill();
+      ctx.restore();
+    });
+  };
+
+  const drawPlanet = (ctx, st) => {
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    ctx.scale(st.s, st.s);
+
+    ctx.beginPath();
+    ctx.arc(0, 0, R, 0, TAU);
+    ctx.fillStyle = C.coral;
+    ctx.fill();
+    ctx.clip();
+
+    // surface bands
+    ctx.save();
+    capPath(ctx, 0.98); ctx.fillStyle = C.coralLight; ctx.fill();
+    bandPath(ctx, 0.62, 0.42); ctx.fillStyle = C.sun; ctx.fill();
+    bandPath(ctx, 0.24, 0.1); ctx.fillStyle = C.amber; ctx.fill();
+    bandPath(ctx, -0.3, -0.38); ctx.fillStyle = C.sun; ctx.fill();
+    bandPath(ctx, -0.64, -0.9); ctx.fillStyle = C.ember; ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    drawCraters(ctx, st.spin);
+    ctx.restore();
+
+    // ring's cast shadow across the near hemisphere
+    if (st.ringP > 0) {
+      ctx.save();
+      ctx.translate(-LD.x * R * 0.11, -LD.y * R * 0.11);
+      ctx.rotate(RING.rot);
+      ctx.beginPath();
+      ctx.rect(-R * 3, 0, R * 6, R * 3);
+      ctx.clip();
+      const [a0, a1] = ringSweep(st);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, R * RING.rx * st.ringScale, R * RING.ry * st.ringScale, 0, a0, a1);
+      ctx.strokeStyle = rgba('plum', 0.42);
+      ctx.lineWidth = 26;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // atmosphere scattering just inside the limb
+    if (st.atm > 0) {
+      ctx.save();
+      const g = ctx.createRadialGradient(0, 0, R * 0.86, 0, 0, R);
+      g.addColorStop(0, rgba('cyan', 0));
+      g.addColorStop(1, rgba('cyan', 0.26 * st.atm * (1 + 0.5 * st.pulse)));
+      ctx.fillStyle = g;
+      ctx.fillRect(-R, -R, R * 2, R * 2);
+      ctx.restore();
+    }
+
+    // two-tone cut shading: mid crescent, then a deeper one inside it
+    ctx.save();
+    lune(ctx, LD.x * R * 0.36, LD.y * R * 0.36, R, R * 2);
+    ctx.fillStyle = rgba('plum', 0.66);
+    ctx.fill('evenodd');
+    lune(ctx, LD.x * R * 0.19, LD.y * R * 0.19, R, R * 2);
+    ctx.fillStyle = rgba('plum', 0.72);
+    ctx.fill('evenodd');
+    ctx.restore();
+
+    // lit-edge highlight crescent
+    ctx.save();
+    lune(ctx, -LD.x * R * 0.09, -LD.y * R * 0.09, R, R * 2);
+    ctx.fillStyle = rgba('starWarm', 0.26);
+    ctx.fill('evenodd');
+    ctx.restore();
+
+    ctx.restore();
+  };
+
+  const drawRimLight = (ctx, st) => {
+    if (st.atm <= 0) return;
+    ctx.save();
+    ctx.translate(st.cx, st.cy);
+    ctx.scale(st.s, st.s);
+    ctx.lineCap = 'round';
+    const glow = st.atm * (0.75 + 0.6 * st.pulse);
+    // stacked arcs taper the rim toward its ends
+    [[1.25, 3, 0.22], [0.9, 4.5, 0.26], [0.55, 6, 0.3]].forEach(([span, w, a]) => {
+      ctx.beginPath();
+      ctx.arc(0, 0, R * 1.012, LIGHT_ANGLE - span, LIGHT_ANGLE + span);
+      ctx.strokeStyle = rgba('starCool', a * glow);
+      ctx.lineWidth = w;
+      ctx.stroke();
+    });
+    // a single light sweep travelling across the lit rim during the float
+    const p = prog(st.t, 1.25, 1.9);
+    if (p > 0 && p < 1) {
+      const c = LIGHT_ANGLE - 1.35 + 2.7 * easeInOutCubic(p);
+      ctx.beginPath();
+      ctx.arc(0, 0, R * 1.03, c - 0.2, c + 0.2);
+      ctx.strokeStyle = rgba('star', 0.85 * Math.sin(PI * p));
+      ctx.lineWidth = 5;
+      ctx.stroke();
+    }
+    ctx.restore();
+  };
+
+  const drawShockwave = (ctx, t) => {
+    if (t < POP_T0) return;
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+
+    const fp = prog(t, POP_T0, 0.45);
+    if (fp < 1) {
+      const r = lerp(R * 0.3, R * 2.4, easeOutCubic(fp));
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, r);
+      const a = Math.pow(1 - fp, 2);
+      g.addColorStop(0, rgba('star', 0.75 * a));
+      g.addColorStop(0.35, rgba('cyan', 0.35 * a));
+      g.addColorStop(1, rgba('cyan', 0));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, TAU);
+      ctx.fill();
+    }
+
+    [[POP_T0, 0.8, 880, 4.5, 1], [0.22, 0.85, 620, 2, 0.45]].forEach(([t0, t1, rMax, w, aMax]) => {
+      const p = prog(t, t0, t1);
+      if (p <= 0 || p >= 1) return;
+      ctx.beginPath();
+      ctx.arc(0, 0, lerp(12, rMax, easeOutCubic(p)), 0, TAU);
+      ctx.strokeStyle = rgba('cyan', (1 - p) * aMax);
+      ctx.lineWidth = lerp(w, 1, p);
+      ctx.stroke();
+    });
+    ctx.restore();
+  };
+
+  const drawVignette = ctx => {
+    ctx.save();
+    const g = ctx.createRadialGradient(W / 2, H / 2, H * 0.42, W / 2, H / 2, W * 0.62);
+    g.addColorStop(0, 'rgba(2,4,10,0)');
+    g.addColorStop(1, 'rgba(2,4,10,0.55)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  };
+
+  // ---------- entry point ----------
+  window.draw = function ({ ctx, width, height, t }) {
+    const time = Math.min(2, Math.max(0, +t || 0));
+    ctx.save();
+    ctx.setTransform(width / W, 0, 0, height / H, 0, 0);
+    ctx.globalAlpha = 1;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+    ctx.lineJoin = 'round';
+    ctx.clearRect(0, 0, W, H);
+
+    const st = scene(time);
+
+    drawBackground(ctx);
+    drawNebulae(ctx, time);
+    drawStars(ctx, time);
+    drawSingularity(ctx, time);
+
+    if (st.s > 0.001) {
+      drawAmbientGlow(ctx, st);
+      drawRing(ctx, st, 'back');
+      drawDust(ctx, st, 'back');
+      drawSatellites(ctx, st, 'back');
+      drawAtmosphere(ctx, st);
+      drawPlanet(ctx, st);
+      drawRimLight(ctx, st);
+      drawRing(ctx, st, 'front');
+      drawDust(ctx, st, 'front');
+      drawSatellites(ctx, st, 'front');
+    }
+
+    drawShockwave(ctx, time);
+    drawVignette(ctx);
+    ctx.restore();
+  };
+})();
+
+// ---------- standalone host (not part of the render contract) ----------
+// Renders one frame on load (?t=1.5 to choose which) and redraws on
+// postMessage({ type: 'draw', t }) so preview.html can step it externally.
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  const render = t => window.draw({ ctx, width: canvas.width, height: canvas.height, t });
+  const q = parseFloat(new URLSearchParams(location.search).get('t'));
+  render(Number.isFinite(q) ? q : 1.5);
+  window.addEventListener('message', e => {
+    if (e.data && e.data.type === 'draw') render(+e.data.t);
+  });
+  if (window.parent !== window) window.parent.postMessage({ type: 'ready' }, '*');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "zapp-motion-studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "Zapp Account/video",
+        "run",
+        "dev"
+      ],
+      "port": 5174,
+      "autoPort": true
+    },
+    {
+      "name": "ipl-motion-studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "IPL Themification/video",
+        "run",
+        "dev"
+      ],
+      "port": 5175,
+      "env": {
+        "PORT": "5175"
+      }
+    },
+    {
+      "name": "motion-ops-studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "Motion Ops/video",
+        "run",
+        "dev"
+      ],
+      "port": 5176,
+      "env": {
+        "PORT": "5176"
+      }
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Planet Pop Preview</title>
+<link rel="icon" href="data:,">
+<style>
+  :root {
+    --bg: #05070d; --panel: #0b1020; --line: #1b2340; --text: #cfd8f2; --dim: #6a7496;
+    --accent: #00f0ff; --warm: #ffcc00; --coral: #ff5e3a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  body { display: grid; grid-template-rows: 1fr auto; }
+  .stage { position: relative; overflow: hidden; }
+  iframe { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; border: 0;
+    transform-origin: 0 0; background: #050811; }
+  .bar { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: var(--panel);
+    border-top: 1px solid var(--line); flex-wrap: wrap; }
+  button, select { background: #121a33; color: var(--text); border: 1px solid var(--line); border-radius: 6px;
+    font: inherit; padding: 6px 10px; cursor: pointer; }
+  button:hover { border-color: var(--accent); }
+  button.primary { min-width: 72px; color: #04121a; background: var(--accent); border-color: var(--accent); font-weight: 600; }
+  .track { position: relative; flex: 1 1 320px; min-width: 200px; padding-bottom: 14px; }
+  input[type=range] { width: 100%; accent-color: var(--accent); margin: 0; }
+  .tick { position: absolute; bottom: 0; transform: translateX(-50%); color: var(--dim); font-size: 10px; white-space: nowrap; }
+  .tick::before { content: ''; position: absolute; left: 50%; top: -6px; width: 1px; height: 5px; background: var(--dim); }
+  .readout { min-width: 190px; font-variant-numeric: tabular-nums; }
+  .readout b { color: var(--warm); font-weight: 600; }
+  label { color: var(--dim); display: flex; align-items: center; gap: 6px; }
+  .hint { color: var(--dim); margin-left: auto; }
+</style>
+</head>
+<body>
+<div class="stage" id="stage"><iframe id="scene" src="planet.html?t=0" title="Planet Pop"></iframe></div>
+<div class="bar">
+  <button class="primary" id="play">Play</button>
+  <button id="prev" title="Previous frame (←)">◀︎ 1f</button>
+  <button id="next" title="Next frame (→)">1f ▶︎</button>
+  <div class="track">
+    <input type="range" id="scrub" min="0" max="120" step="1" value="0" aria-label="Frame">
+    <span class="tick" style="left:7.5%">0.15 pop</span>
+    <span class="tick" style="left:30%">0.60 ring</span>
+    <span class="tick" style="left:60%">1.20 float</span>
+  </div>
+  <div class="readout" id="readout"></div>
+  <label><input type="checkbox" id="loop" checked> loop</label>
+  <label>speed
+    <select id="speed"><option value="0.25">0.25×</option><option value="0.5">0.5×</option><option value="1" selected>1×</option></select>
+  </label>
+  <span class="hint">space · ← →</span>
+</div>
+<script>
+  const FPS = 60, DURATION = 2, LAST = FPS * DURATION;
+  const $ = id => document.getElementById(id);
+  const frameEl = $('scene'), stage = $('stage'), scrub = $('scrub');
+  let t = 0, playing = false, last = 0;
+
+  const phase = t => (t < 0.6 ? 'singularity & pop' : t < 1.2 ? 'ring & atmosphere' : 'settle & float');
+
+  const show = () => {
+    frameEl.contentWindow.postMessage({ type: 'draw', t }, '*');
+    const f = Math.round(t * FPS);
+    scrub.value = f;
+    $('readout').innerHTML = `f <b>${String(f).padStart(3, '0')}</b>/${LAST} · <b>${t.toFixed(2)}s</b> · ${phase(t)}`;
+  };
+
+  const fit = () => {
+    const k = Math.min(stage.clientWidth / 1920, stage.clientHeight / 1080);
+    frameEl.style.transform = `scale(${k}) translate(-50%, -50%)`;
+  };
+
+  const setPlaying = on => {
+    playing = on;
+    $('play').textContent = on ? 'Pause' : 'Play';
+    if (on) { if (t >= DURATION) t = 0; last = performance.now(); requestAnimationFrame(tick); }
+  };
+
+  const tick = now => {
+    if (!playing) return;
+    t += ((now - last) / 1000) * +$('speed').value;
+    last = now;
+    if (t >= DURATION) {
+      if ($('loop').checked) t %= DURATION;
+      else { t = DURATION; show(); setPlaying(false); return; }
+    }
+    show();
+    requestAnimationFrame(tick);
+  };
+
+  const step = d => { setPlaying(false); t = Math.min(LAST, Math.max(0, Math.round(t * FPS) + d)) / FPS; show(); };
+
+  $('play').onclick = () => setPlaying(!playing);
+  $('prev').onclick = () => step(-1);
+  $('next').onclick = () => step(1);
+  scrub.oninput = () => { setPlaying(false); t = +scrub.value / FPS; show(); };
+  addEventListener('keydown', e => {
+    if (e.target.tagName === 'SELECT') return;
+    if (e.code === 'Space') { e.preventDefault(); setPlaying(!playing); }
+    if (e.code === 'ArrowLeft') step(-1);
+    if (e.code === 'ArrowRight') step(1);
+  });
+  addEventListener('message', e => { if (e.data && e.data.type === 'ready') { show(); setPlaying(true); } });
+  addEventListener('resize', fit);
+  fit();
+</script>
+</body>
+</html>

@@ -5,3 +5,6 @@
 .translation-preview-nav a[aria-current] { color:#d7ecdf; text-decoration:underline; text-underline-offset:5px; }
 .translation-preview-note { font-size:11px; opacity:.7; }
 @media(max-width:850px) { .translation-preview-tools { position:relative; top:auto; left:auto; max-width:none; padding:12px 16px; } .translation-preview-nav { flex-direction:row; gap:20px; } .translation-preview-label,.translation-preview-note { margin:0; } body { overflow:auto; } }
+
+/* Typography trial confined to the standalone comment screen. */
+.manrope-heading-trial :is(.post-detail-title, .post-navigation-title, .comments-heading) { font-family: Manrope, sans-serif; font-weight: 600; }

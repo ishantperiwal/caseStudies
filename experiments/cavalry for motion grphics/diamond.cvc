@@ -1,0 +1,16 @@
+{
+ "activeComp": "",
+ "labelColors": "Pastel",
+ "nodeMeta": [
+  {
+   "children": [ "compNode#1" ],
+   "nodeId": "asset#1"
+  }
+ ],
+ "other": {
+  "viewport": { "backgroundMode": 0, "rulers": {} }
+ },
+ "referenceData": {},
+ "resourceType": "cavalry.component.export",
+ "version": "1.0.72"
+}

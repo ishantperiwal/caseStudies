@@ -1,5 +1,5 @@
 {
-  "version": "2.18",
+  "version": "2.19",
   "children": [
     {
       "type": "frame",
@@ -32,8 +32,7 @@
           "x": 0,
           "y": 6
         },
-        "blur": 18,
-        "spread": -8
+        "blur": 18
       },
       "gap": 4,
       "padding": 6,
@@ -43064,8 +43063,7 @@
           "x": 0,
           "y": 6
         },
-        "blur": 18,
-        "spread": -8
+        "blur": 18
       },
       "justifyContent": "center",
       "alignItems": "center",
@@ -43081,6 +43079,76 @@
           "fill": "#BDE0CA"
         }
       ]
+    },
+    {
+      "id": "BfShR",
+      "type": "ref",
+      "ref": "POlwl",
+      "name": "Component · Post icon",
+      "x": 574,
+      "y": -160,
+      "descendants": {
+        "yjMGl": {
+          "name": "Post icon glyph",
+          "icon": "file-text"
+        }
+      }
+    },
+    {
+      "id": "EqGj9",
+      "type": "ref",
+      "ref": "POlwl",
+      "name": "Component · Question post icon",
+      "x": 658,
+      "y": -160,
+      "descendants": {
+        "yjMGl": {
+          "name": "Question post glyph",
+          "icon": "circle-help"
+        }
+      }
+    },
+    {
+      "id": "hAlLy",
+      "type": "ref",
+      "ref": "POlwl",
+      "name": "Component · Discussion post icon",
+      "x": 742,
+      "y": -160,
+      "descendants": {
+        "yjMGl": {
+          "name": "Discussion post glyph",
+          "icon": "messages-square"
+        }
+      }
+    },
+    {
+      "id": "eZUJi",
+      "type": "ref",
+      "ref": "POlwl",
+      "name": "Component · Poll post icon",
+      "x": 826,
+      "y": -160,
+      "descendants": {
+        "yjMGl": {
+          "name": "Poll post glyph",
+          "icon": "chart-bar"
+        }
+      }
+    },
+    {
+      "id": "I2Z9aG",
+      "type": "ref",
+      "ref": "POlwl",
+      "name": "Component · Announcement post icon",
+      "x": 910,
+      "y": -160,
+      "descendants": {
+        "yjMGl": {
+          "name": "Announcement post glyph",
+          "icon": "megaphone"
+        }
+      }
     }
   ],
   "variables": {

@@ -1,0 +1,13 @@
+{
+  "name": "zapp-motion-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "render": "node render.mjs",
+    "render:construct": "node render.mjs zapp-construct.html zapp-construct.mp4"
+  },
+  "dependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "puppeteer-core": "^24.0.0"
+  }
+}

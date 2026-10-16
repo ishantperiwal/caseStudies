@@ -362,3 +362,5 @@ Floating suggestion surfaces use a subtle 4% white fill. Their results container
 - Bottom navigation shadow trial: increased outer black shadow opacity from 32% to 40% (`#00000066`), preserving the -2px upward offset, 24px blur and inset highlights.
 
 - Stronger bottom-navigation shadow trial rejected; restored the original `0 -2px 24px #00000052` outer shadow (32% opacity).
+
+- Full-post body paragraph gap reduced from 24px to 12px; body font size and line height remain unchanged.

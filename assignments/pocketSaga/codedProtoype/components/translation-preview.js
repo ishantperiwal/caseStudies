@@ -23,6 +23,7 @@ PocketSagaMedia.ready.then(() => {
     const post = feed.posts.find(p => p.context?.includes('Interstellar')) || feed.posts[0];
     const data = structuredClone(PocketSagaData.post(post.id));
     page = PocketSagaPost.PostPage(data);
+    page.classList.add('manrope-heading-trial');
     attach(page.querySelector('.comment-card'), commentOriginal, commentEnglish, true);
   } else {
     const data = structuredClone(PocketSagaData.discover());

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zapp Account Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+    /* 10s, 1920×1080 showcase. Everything on this page is a pure function of t via seek(t).
+       Open directly to watch it play (reload to replay); render.mjs drives it frame by frame. */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0d1418; }
+    body { font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+
+    #stage {
+        position: absolute; left: 0; top: 0;
+        width: 1920px; height: 1080px;
+        overflow: hidden;
+        transform-origin: 0 0;
+        background: #f3f7fb;
+    }
+    .abs { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+
+    .blob { border-radius: 50%; filter: blur(40px); }
+    #blobA { width: 1300px; height: 1300px; background: radial-gradient(circle, #cfe6ff 0%, rgba(207,230,255,0) 68%); }
+    #blobB { width: 900px; height: 900px; background: radial-gradient(circle, #ffe1e2 0%, rgba(255,225,226,0) 66%); }
+    #blobC { width: 1000px; height: 1000px; background: radial-gradient(circle, #d9f7ee 0%, rgba(217,247,238,0) 66%); }
+    #grid {
+        width: 1920px; height: 1080px;
+        background-image: radial-gradient(rgba(34,79,114,0.16) 1.2px, transparent 1.4px);
+        background-size: 32px 32px;
+        -webkit-mask-image: radial-gradient(ellipse 70% 70% at 60% 50%, #000 0%, transparent 75%);
+                mask-image: radial-gradient(ellipse 70% 70% at 60% 50%, #000 0%, transparent 75%);
+    }
+
+    /* Logo intro */
+    .streak { height: 6px; border-radius: 6px; background: linear-gradient(90deg, rgba(237,28,36,0), #ed1c24 70%, #ff6b70); }
+    #logo { width: 640px; height: 127px; transform-origin: 0 50%; }
+    #logo img { width: 100%; height: 100%; display: block; }
+    #tagline { width: 340px; height: 30px; transform-origin: 0 0; }
+    #tagline img { width: 100%; height: 100%; display: block; }
+
+    /* Phones */
+    #phones { width: 1920px; height: 1080px; perspective: 2200px; }
+    .phone { width: 376px; height: 796px; margin: -398px 0 0 -188px; transform-origin: 50% 50%; }
+    .device {
+        width: 100%; height: 100%; border-radius: 48px; background: #0d1418; padding: 8px;
+        box-shadow:
+            0 0 0 1.5px #2b3a44 inset,
+            0 3px 6px rgba(15,30,45,0.16),
+            0 40px 90px -24px rgba(24,52,78,0.55),
+            0 90px 140px -60px rgba(24,52,78,0.35);
+    }
+    .screen { position: relative; width: 360px; height: 780px; border-radius: 40px; overflow: hidden; background: #fff; }
+    .screen iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; pointer-events: none; }
+    .glare {
+        position: absolute; inset: 0; border-radius: 40px; pointer-events: none;
+        background: linear-gradient(115deg, rgba(255,255,255,0) 40%, rgba(255,255,255,0.22) 48%, rgba(255,255,255,0) 56%);
+        background-size: 300% 100%;
+    }
+    .floor { width: 340px; height: 50px; margin: 0 0 0 -170px; border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(24,52,78,0.28), rgba(24,52,78,0)); }
+
+    /* Copy */
+    .copy { left: 160px; top: 0; width: 760px; }
+    .eyebrow { display: flex; align-items: center; gap: 16px; font-size: 22px; font-weight: 700;
+        letter-spacing: 0.16em; text-transform: uppercase; color: #224f72; height: 30px; }
+    .eyebrow .bar { width: 44px; height: 4px; border-radius: 4px; background: #ed1c24; transform-origin: 0 50%; }
+    .eyebrow .lbl { overflow: hidden; }
+    .eyebrow .lbl span { display: inline-block; }
+    .title { margin-top: 26px; font-size: 104px; line-height: 1.02; font-weight: 800; letter-spacing: -0.035em; color: #172f40; }
+    .title .line { display: block; overflow: hidden; padding: 0 0 0.08em; margin-bottom: -0.06em; }
+    .title .w { display: inline-block; white-space: pre; }
+    .title .accent { color: #2a77c9; }
+    .sub { margin-top: 30px; font-size: 30px; line-height: 1.4; font-weight: 500; color: #5a7184; max-width: 600px; }
+
+    #counter { left: 160px; top: 930px; display: flex; gap: 12px; align-items: center; }
+    #counter .seg { width: 56px; height: 5px; border-radius: 5px; background: rgba(34,79,114,0.14); overflow: hidden; }
+    #counter .seg i { display: block; height: 100%; width: 100%; background: #224f72; transform-origin: 0 50%; transform: scaleX(0); }
+
+    #flash { width: 1920px; height: 1080px; background: #fff; opacity: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage">
+    <div id="blobA" class="abs blob"></div>
+    <div id="blobB" class="abs blob"></div>
+    <div id="blobC" class="abs blob"></div>
+    <div id="grid" class="abs"></div>
+
+    <div id="streaks"></div>
+
+    <div id="phones" class="abs"></div>
+
+    <div id="copies"></div>
+    <div id="counter" class="abs"></div>
+
+    <div id="logo" class="abs"><img src="../../Zapp%20Account/prototypes/zapp-home/assets/header-logo.svg" alt="Zapp Account" /></div>
+    <div id="tagline" class="abs"><img src="../../Zapp%20Account/prototypes/carousel/assets/zapp-tagline.svg" alt="For all your payments" /></div>
+
+    <div id="flash" class="abs"></div>
+</div>
+
+<script>
+const DURATION = 10;
+const RENDER = new URLSearchParams(location.search).has("render");
+const PROTO = "../../Zapp%20Account/prototypes/";
+
+/* ---------- math ---------- */
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, p) => a + (b - a) * p;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const E = {
+    outExpo: p => p >= 1 ? 1 : 1 - Math.pow(2, -10 * p),
+    inOutQuint: p => p < 0.5 ? 16 * p ** 5 : 1 - Math.pow(-2 * p + 2, 5) / 2,
+    inOutCubic: p => p < 0.5 ? 4 * p ** 3 : 1 - Math.pow(-2 * p + 2, 3) / 2,
+    inCubic: p => p ** 3,
+    outBack: p => { const c = 1.5; return 1 + (c + 1) * Math.pow(p - 1, 3) + c * Math.pow(p - 1, 2); },
+};
+// piecewise keyframes: [[t, v], ...]
+function kf(t, keys, ease = E.inOutCubic) {
+    if (t <= keys[0][0]) return keys[0][1];
+    for (let i = 1; i < keys.length; i++) {
+        if (t <= keys[i][0]) {
+            const [t0, v0] = keys[i - 1], [t1, v1] = keys[i];
+            return lerp(v0, v1, ease((t - t0) / (t1 - t0)));
+        }
+    }
+    return keys[keys.length - 1][1];
+}
+const $ = id => document.getElementById(id);
+const set = (el, tf, op) => { el.style.transform = tf; if (op !== undefined) el.style.opacity = op; };
+
+/* ---------- scenes ---------- */
+const SCENES = [
+    { src: "intro-animation/embed.html", start: 1.5, freeze: 3.65,
+      eyebrow: "Meet Zapp Account", title: ["Your wallet,", "<a>upgraded.</a>"],
+      sub: "PayZapp Wallet grows into a full payments account.", in: 2.05, out: 3.7 },
+    { src: "carousel/embed.html", start: 2.1,
+      eyebrow: "Pay anywhere", title: ["Swipe, scan", "or <a>tap.</a>"],
+      sub: "UPI, QR and bank transfers from a single balance.", in: 4.0, out: 5.5 },
+    { src: "video-kyc/embed.html", start: 3.6,
+      eyebrow: "Unlock more", title: ["Verified in", "<a>minutes.</a>"],
+      sub: "Quick PAN and Video KYC, right inside the app.", in: 5.8, out: 7.2 },
+    { src: "zapp-home/embed.html", start: 0,
+      eyebrow: "Your home base", title: ["Payments in", "<a>one second.</a>"],
+      sub: "Scan, send and tap to pay. No PIN needed.", in: 7.55, out: 8.6 },
+];
+const BALANCE_REVEAL_AT = 7.7;
+
+/* ---------- build DOM ---------- */
+const phonesEl = $("phones"), copiesEl = $("copies"), counterEl = $("counter");
+const phones = SCENES.map((s, i) => {
+    const floor = document.createElement("div");
+    floor.className = "abs floor";
+    const ph = document.createElement("div");
+    ph.className = "abs phone";
+    ph.innerHTML = `<div class="device"><div class="screen"><iframe scrolling="no" tabindex="-1" data-start="${s.start}" data-freeze="${s.freeze ?? ""}"></iframe><div class="glare"></div></div></div>`;
+    phonesEl.append(floor, ph);
+    const iframe = ph.querySelector("iframe");
+    // Render mode: preload everything; render.mjs holds each frame's clock at 0 until its start.
+    if (RENDER) iframe.src = PROTO + s.src;
+    return { ph, floor, iframe, glare: ph.querySelector(".glare"), loaded: RENDER };
+});
+
+const copies = SCENES.map(s => {
+    const c = document.createElement("div");
+    c.className = "abs copy";
+    const words = s.title.map(line => {
+        const accent = line.match(/<a>(.*)<\/a>/);
+        const parts = line.replace(/<\/?a>/g, "\u0000").split("\u0000");
+        let html = "";
+        parts.forEach((p, idx) => {
+            const cls = idx === 1 && accent ? "w accent" : "w";
+            p.split(/(?<= )/).filter(Boolean).forEach(w => { html += `<span class="${cls}">${w}</span>`; });
+        });
+        return `<span class="line">${html}</span>`;
+    }).join("");
+    c.innerHTML = `<div class="eyebrow"><span class="bar"></span><span class="lbl"><span>${s.eyebrow}</span></span></div>
+        <div class="title">${words}</div><div class="sub">${s.sub}</div>`;
+    copiesEl.append(c);
+    return { el: c, bar: c.querySelector(".bar"), lbl: c.querySelector(".lbl span"),
+             words: [...c.querySelectorAll(".w")], sub: c.querySelector(".sub") };
+});
+
+SCENES.forEach(() => { const s = document.createElement("div"); s.className = "seg"; s.innerHTML = "<i></i>"; counterEl.append(s); });
+const segs = [...counterEl.querySelectorAll("i")];
+
+const streaks = [0, 1, 2, 3].map(i => {
+    const s = document.createElement("div");
+    s.className = "abs streak";
+    s.style.width = [520, 760, 380, 600][i] + "px";
+    $("streaks").append(s);
+    return s;
+});
+
+/* ---------- per-frame ---------- */
+let revealed = false;
+
+function seek(t) {
+    // Background drift
+    set($("blobA"), `translate(${1250 - 650 + Math.sin(t * 0.5) * 60}px, ${-120 + Math.cos(t * 0.4) * 40}px)`);
+    set($("blobB"), `translate(${-260 + Math.cos(t * 0.6) * 50}px, ${520 + Math.sin(t * 0.5) * 40}px)`);
+    set($("blobC"), `translate(${kf(t, [[0, 400], [10, 900]], p => p)}px, ${-500 + Math.sin(t * 0.3) * 30}px)`);
+    set($("grid"), `translate(${-t * 6}px, 0)`);
+
+    // Speed streaks across the logo
+    streaks.forEach((s, i) => {
+        const a = 0.02 + i * 0.07, p = prog(t, a, a + 0.65);
+        const x = lerp(-800, 2100, E.inOutCubic(p));
+        const y = 470 + [0, 44, 96, 134][i];
+        set(s, `translate(${x}px, ${y}px) scaleY(${[1, 0.6, 0.8, 0.45][i]})`, p > 0 && p < 1 ? Math.sin(p * Math.PI) : 0);
+    });
+
+    // Logo: wipe-in center → dock top-left → return center for outro
+    const logo = $("logo"), tag = $("tagline");
+    const rev = E.outExpo(prog(t, 0.22, 0.9));
+    logo.style.clipPath = `inset(-10% ${100 - rev * 100}% -10% 0)`;
+    const dock = E.inOutQuint(prog(t, 1.45, 2.15));
+    const back = E.inOutQuint(prog(t, 8.75, 9.5));
+    const lx = lerp(lerp(640, 160, dock), 960 - 0.62 * 320, back);
+    const ly = lerp(lerp(440 - 30 * (1 - rev), 96, dock), 868, back);
+    const ls = lerp(lerp(lerp(1.08, 1, rev), 0.36, dock), 0.62, back);
+    set(logo, `translate(${lx}px, ${ly}px) scale(${ls})`);
+
+    const tagIn = E.outExpo(prog(t, 0.65, 1.2)) * (1 - E.inCubic(prog(t, 1.35, 1.65)));
+    const tagOut = E.outExpo(prog(t, 9.25, 9.8));
+    const tagP = Math.max(tagIn, tagOut);
+    const outro = t >= 5;
+    set(tag, `translate(${outro ? 960 - 340 * 0.4 : 790}px, ${(outro ? 990 : 600) + (1 - tagP) * 18}px) scale(${outro ? 0.8 : 1})`, tagP);
+
+    // Phones: a camera that pans across a row, then pulls back into a lineup
+    const focus = kf(t, [[0, 0], [3.75, 0], [4.3, 1], [5.5, 1], [6.05, 2], [7.2, 2], [7.75, 3]], E.inOutQuint);
+    const out = E.inOutQuint(prog(t, 8.6, 9.45));
+    phones.forEach((p, i) => {
+        const rise = E.outExpo(prog(t, 1.5 + i * 0.08, 2.5 + i * 0.08));
+        const d = i - focus, ad = Math.abs(d);
+        const camX = 1260 + d * 480;
+        const camS = 1 - 0.18 * Math.min(1, ad);
+        const camR = -16 * clamp(d, -1, 1);
+        const camO = d < 0 ? clamp(1 + d * 1.7) : clamp(1.6 - ad * 0.6);
+        const floatY = Math.sin(t * 1.6 + i) * 6;
+        const camY = 540 + (1 - rise) * 900 + floatY;
+
+        const rowX = 960 + (i - 1.5) * 380;
+        const rowY = 470 + Math.sin(t * 2.2 + i * 0.9) * 8 * out;
+        const rowS = 0.66;
+
+        const x = lerp(camX, rowX, out), y = lerp(camY, rowY, out);
+        const s = lerp(camS, rowS, out), r = lerp(camR, 0, out);
+        const o = lerp(camO * clamp(rise * 3), 1, out);
+        set(p.ph, `translate(${x}px, ${y}px) rotateY(${r}deg) scale(${s})`, o);
+        set(p.floor, `translate(${x}px, ${y + 398 * s + 18}px) scale(${s})`, o * 0.9);
+        p.glare.style.backgroundPosition = `${lerp(120, -20, prog(t, 1.9 + i * 1.75, 3.0 + i * 1.75))}% 0`;
+        p.ph.style.zIndex = Math.round(10 - ad * 2);
+
+        if (!p.loaded && t >= SCENES[i].start - 0.4) { p.iframe.src = PROTO + SCENES[i].src; p.loaded = true; }
+    });
+
+    // Copy blocks
+    copies.forEach((c, i) => {
+        const s = SCENES[i];
+        const exit = E.inCubic(prog(t, s.out, s.out + 0.3));
+        c.el.style.visibility = t < s.in - 0.05 || t > s.out + 0.35 ? "hidden" : "visible";
+        c.el.style.transform = `translate(0, ${300 - exit * 40}px)`;
+        c.el.style.opacity = 1 - exit;
+        c.bar.style.transform = `scaleX(${E.outExpo(prog(t, s.in, s.in + 0.5))})`;
+        c.lbl.style.transform = `translateY(${(1 - E.outExpo(prog(t, s.in + 0.05, s.in + 0.6))) * 110}%)`;
+        c.words.forEach((w, k) => {
+            const p = E.outExpo(prog(t, s.in + 0.08 + k * 0.05, s.in + 0.78 + k * 0.05));
+            w.style.transform = `translateY(${(1 - p) * 105}%) rotate(${(1 - p) * 4}deg)`;
+        });
+        const sp = E.outExpo(prog(t, s.in + 0.3, s.in + 1.0));
+        set(c.sub, `translateY(${(1 - sp) * 24}px)`, sp);
+    });
+
+    // Progress counter
+    const cIn = E.outExpo(prog(t, 2.0, 2.6)) * (1 - E.inCubic(prog(t, 8.55, 8.85)));
+    set(counterEl, `translateY(${(1 - cIn) * 20}px)`, cIn);
+    segs.forEach((g, i) => {
+        const s = SCENES[i];
+        g.style.transform = `scaleX(${prog(t, s.in - 0.05, (SCENES[i + 1] || { in: 8.6 }).in - 0.05)})`;
+    });
+
+    // Soft white flash on the very first frames
+    $("flash").style.opacity = 1 - E.outExpo(prog(t, 0, 0.35));
+
+    // Fire the Home balance reveal once
+    if (!revealed && t >= BALANCE_REVEAL_AT) {
+        revealed = true;
+        phones[3].iframe.contentWindow?.postMessage({ type: "zapp-home:balance-reveal" }, "*");
+    }
+}
+window.seek = seek;
+window.DURATION = DURATION;
+window.MARKERS = [{ t: 0, label: "Logo" }, ...SCENES.map(s => ({ t: s.in, label: s.eyebrow })), { t: 8.6, label: "Lineup" }];
+
+/* ---------- preview playback ---------- */
+function fit() {
+    const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    const st = $("stage");
+    st.style.transform = `translate(${(innerWidth - 1920 * k) / 2}px, ${(innerHeight - 1080 * k) / 2}px) scale(${k})`;
+}
+if (!RENDER) {
+    addEventListener("resize", fit); fit();
+    const t0 = new URLSearchParams(location.search).get("t");
+    if (t0 !== null) { seek(+t0); }
+    else {
+        document.fonts.ready.then(() => {
+            const start = performance.now();
+            const loop = now => { const t = (now - start) / 1000; seek(Math.min(t, DURATION)); if (t < DURATION) requestAnimationFrame(loop); };
+            requestAnimationFrame(loop);
+        });
+    }
+    addEventListener("keydown", e => { if (e.key === "r") location.reload(); });
+} else {
+    seek(0);
+}
+</script>
+</body>
+</html>

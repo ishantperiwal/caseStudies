@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Zapp Construct</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+    /* Hover-preview loop: the Zapp Home screen builds itself inside a 3D phone while the camera
+       glides down it close-up, then pulls back and settles. The last frame is the still/poster.
+       Pure function of t via seek(t). Open directly to watch (r to replay); render.mjs exports it. */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0d1418; }
+    body { font-family: 'Inter', -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+
+    #stage {
+        position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden;
+        transform-origin: 0 0; perspective: 2200px; perspective-origin: 50% 50%;
+        background: radial-gradient(120% 120% at 50% 0%, #f4f8fc 0%, #e6eef6 60%, #d9e4ee 100%);
+    }
+    .blob { position: absolute; border-radius: 50%; filter: blur(50px); }
+    #blobA { width: 1400px; height: 1400px; left: 700px; top: -500px; background: radial-gradient(circle, #cfe6ff 0%, rgba(207,230,255,0) 68%); }
+    #blobB { width: 1000px; height: 1000px; left: -300px; top: 420px; background: radial-gradient(circle, #ffe1e2 0%, rgba(255,225,226,0) 66%); }
+    #blobC { width: 1000px; height: 1000px; left: 1250px; top: 450px; background: radial-gradient(circle, #d9f7ee 0%, rgba(217,247,238,0) 66%); }
+
+    #world { position: absolute; left: 960px; top: 540px; width: 0; height: 0; transform-style: preserve-3d; }
+    #phone { position: absolute; left: -192px; top: -402px; width: 384px; height: 804px; transform-style: preserve-3d; }
+    #slabs { position: absolute; inset: 0; transform-style: preserve-3d; }
+    #floorShadow {
+        position: absolute; left: -192px; top: -402px; width: 384px; height: 804px; border-radius: 60px;
+        background: rgba(18, 40, 62, 0.42); filter: blur(46px);
+    }
+
+    /* Casing: stacked slabs give the body real thickness when the camera tilts. */
+    .slab { position: absolute; inset: 0; border-radius: 58px;
+        background: linear-gradient(140deg, #8e9aa3 0%, #4a5660 22%, #2a343c 55%, #1a2228 100%); }
+    .slab .btn { position: absolute; width: 8px; border-radius: 4px; background: linear-gradient(90deg, #3b4750, #77838c); }
+    .bezel { position: absolute; inset: 0; border-radius: 58px; background: #090d10;
+        box-shadow: inset 0 0 0 2px #8a96a0, inset 0 0 0 3.5px #2a343c, inset 0 0 0 5px #090d10; }
+
+    #screen { position: absolute; left: 12px; top: 12px; width: 360px; height: 780px; transform-style: preserve-3d; }
+    .scr-bg { position: absolute; inset: 0; border-radius: 46px; overflow: hidden; background: #fff; }
+    .scr-bg .top-wash {
+        position: absolute; left: 50%; transform: translateX(-50%);
+        top: -164px; width: 346.56px; height: 470px; border-radius: 40px;
+        background: linear-gradient(180deg, rgba(234,246,255,0) 53%, rgba(234,246,255,0.7) 77%);
+    }
+    .scr-bg .off { position: absolute; left: 0; right: 0; bottom: 0; background: #05080b; }
+    .scr-bg .scanline { position: absolute; left: 0; right: 0; height: 90px; margin-top: -90px;
+        background: linear-gradient(180deg, rgba(120,190,255,0) 0%, rgba(120,190,255,0.55) 85%, #e6f4ff 100%); }
+    .scr-grid { position: absolute; inset: 0; border-radius: 46px; overflow: hidden; pointer-events: none;
+        background-image:
+            linear-gradient(90deg, rgba(42,119,201,0.07) 0 1px, transparent 1px),
+            linear-gradient(0deg, rgba(42,119,201,0.07) 0 1px, transparent 1px);
+        background-size: 24px 24px; background-position: 12px 6px; }
+    .scr-grid .col { position: absolute; top: 0; bottom: 0; width: 1px; background: rgba(237,28,36,0.25); }
+
+    .island { position: absolute; left: 123px; top: 11px; width: 114px; height: 33px; border-radius: 20px; background: #000; }
+    .home-ind { position: absolute; left: 113px; top: 765px; width: 134px; height: 5px; border-radius: 3px; background: #11181d; }
+    .glare { position: absolute; inset: 0; border-radius: 46px; pointer-events: none;
+        background: linear-gradient(118deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.5) 45%, rgba(255,255,255,0) 60%);
+        background-size: 320% 100%; mix-blend-mode: screen; }
+
+    .ghost { position: absolute; border: 1.5px dashed rgba(42,119,201,0.55); background: rgba(228,243,255,0.55); }
+    .ghost.bar { border: 0; background: #e4f3ff; border-radius: 6px; }
+
+    /* Pieces: the real Zapp Home UI, one absolutely-positioned layer per element. */
+    .pc { position: absolute; }
+    .pc img { display: block; }
+    .sb-time { left: 18px; top: 18px; width: 54px; text-align: center; font-weight: 600; font-size: 15px; line-height: 18px; letter-spacing: -0.16px; color: #000; }
+    .sb-icons { left: 271px; top: 20px; width: 67px; height: 11.5px; }
+    .back { left: 27px; top: 65px; width: 18px; height: 18px; }
+    .logo { left: 116.3px; top: 65px; width: 122.1px; height: 24.1px; }
+    .earn-pill { right: 24px; top: 62px; height: 29px; display: inline-flex; align-items: center; gap: 6px; padding: 0 10px 0 6px;
+        background: #ffeecd; border: 1.5px solid #eed3bf; border-radius: 20px; }
+    .earn-pill .lbl { font-weight: 700; font-size: 16px; line-height: 1.2; color: #6a3619; }
+    .earn-pill img { width: 16px; height: 16px; transform: translateY(-1px); }
+
+    .waves { left: 6.72px; top: 156px; width: 346.56px; height: 90px; overflow: hidden; }
+    .waves .w { position: absolute; top: 0; width: 190px; height: 80px; }
+    .waves .w.l { left: -24px; transform: scale(-1.2, 1.2); }
+    .waves .w.r { right: -24px; transform: scale(1.2, -1.2); }
+    .amount { left: 110px; top: 133px; width: 140px; display: flex; justify-content: center; align-items: baseline;
+        font-weight: 800; color: #161b21; line-height: 1; font-variant-numeric: tabular-nums; }
+    .amount .r { font-size: 28px; }
+    .amount .p { font-size: 20px; color: rgba(34,79,114,0.35); }
+    .add-money { left: 106.5px; top: 176.5px; width: 147px; height: 40px; background: #224f72; border-radius: 24px;
+        display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff; font-weight: 700; font-size: 14px; }
+    .add-money img { width: 12px; height: 12px; }
+    .auto-load { left: 113px; top: 226px; width: 134px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 3px 0; }
+    .auto-load img { width: 16px; height: 14.16px; }
+    .auto-load span { font-weight: 700; font-size: 12px; color: #224f72; }
+
+    .aicon { top: 276px; width: 60px; height: 60px; border-radius: 21px; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .aicon .tile { width: 52px; height: 52px; border-radius: 17px; background: #e4f3ff; border: 2px solid #c4e6ff; }
+    .glyph { width: 25.2px; height: 25.2px; }
+    .alabel { top: 344px; width: 73px; font-weight: 600; font-size: 12px; line-height: 16px; color: #434343; text-align: center; }
+
+    .pinless { left: 24px; top: 392px; width: 310px; height: 54px; background: #d9f7ee; border-radius: 16px;
+        display: flex; align-items: center; gap: 8px; padding: 10px; }
+    .pinless .spark { width: 24px; height: 24px; flex: none; }
+    .pinless p { font-weight: 700; font-size: 12px; line-height: 1.4; color: #27755e; }
+    .pinless .pointer { position: absolute; left: 50px; top: -11px; width: 19px; height: 16.5px; }
+
+    .qicon { top: 463.83px; width: 56px; height: 48px; background: #e4f3ff; border-radius: 16px; }
+    .qglyph { width: 21.6px; height: 21.6px; }
+    .qlabel { top: 517.83px; width: 54px; font-weight: 500; font-size: 12px; line-height: 16px; color: #224f72; text-align: center; }
+
+    .account-id { left: 0; top: 573px; width: 360px; display: flex; align-items: center; justify-content: center; }
+    .account-id .line { width: 41px; height: 1.5px; }
+    .account-id .line.l { background: linear-gradient(90deg, rgba(196,230,255,0) 0%, #c4e6ff 100%); }
+    .account-id .line.r { background: linear-gradient(90deg, #c4e6ff 0%, rgba(196,230,255,0) 100%); }
+    .account-id .pill { display: flex; align-items: center; gap: 6px; padding: 6px 16px; white-space: nowrap; }
+    .account-id .k { font-weight: 600; font-size: 12px; letter-spacing: 0.48px; color: rgba(34,79,114,0.5); }
+    .account-id .v { font-weight: 700; font-size: 12px; letter-spacing: 0.48px; color: #224f72; }
+    .account-id img { width: 5px; height: 8px; }
+
+    .rw-head { left: 22px; top: 619.34px; width: 316px; height: 24px; display: flex; align-items: center; justify-content: space-between; }
+    .rw-head .ttl { font-weight: 700; font-size: 12px; letter-spacing: 2.16px; color: #748897; text-transform: uppercase; }
+    .rate-pill { background: #e4f3ff; border-radius: 15px; height: 24px; display: flex; align-items: center; gap: 2px; padding: 0 10px; }
+    .rate-pill img { width: 10px; height: 10px; }
+    .rate-pill span { font-weight: 700; font-size: 12px; color: #224f72; }
+    .celebrate { left: 22px; top: 654.34px; width: 316px; height: 54px; background: #fff4dc; border-radius: 16px;
+        display: flex; align-items: center; gap: 13px; padding: 10px 16px 10px 14px; }
+    .celebrate .ic { width: 22.56px; height: 22.56px; flex: none; }
+    .celebrate p { font-size: 12px; color: #875c34; line-height: 1.4; flex: 1; font-weight: 500; }
+    .celebrate p b { font-weight: 700; }
+    .celebrate .chev { width: 8px; height: 8px; flex: none; }
+
+    /* Cards run off the bottom of the screen; fade them out where the glass ends. */
+    .rcard, .ghost.fadeout { -webkit-mask-image: linear-gradient(180deg, #000 0, #000 26px, transparent 56px);
+                                    mask-image: linear-gradient(180deg, #000 0, #000 26px, transparent 56px); }
+    .rcard { top: 724.34px; width: 150px; height: 129px; border-radius: 18px; }
+    .rcard .bg { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); }
+    .rcard .inner { position: absolute; left: 21px; top: 19px; width: 110px; display: flex; flex-direction: column; gap: 8px; }
+    .rcard .row { display: flex; align-items: center; gap: 4px; }
+    .rcard .amt { font-weight: 700; font-size: 14px; line-height: 1.2; color: #533a86; }
+    .rcard .row img { width: 16px; height: 16px; }
+    .rcard .div { height: 1px; width: 110px; background: rgba(83,58,134,0.18); }
+    .rcard .sub { font-weight: 500; font-size: 12px; line-height: 1.3; color: rgba(83,58,134,0.69); }
+</style>
+</head>
+<body>
+<div id="stage">
+    <div id="blobA" class="blob"></div>
+    <div id="blobB" class="blob"></div>
+    <div id="blobC" class="blob"></div>
+
+    <div id="world">
+        <div id="floorShadow"></div>
+        <div id="phone">
+            <div id="slabs"></div>
+            <div class="bezel"></div>
+            <div id="screen">
+                <div class="scr-bg"><div class="top-wash"></div><div class="off"></div><div class="scanline"></div></div>
+                <div class="scr-grid"><div class="col" style="left:22px"></div><div class="col" style="left:338px"></div><div class="col" style="left:180px"></div></div>
+
+                <!-- pieces: data-t = landing time, data-z = resting height, data-sh = shadow, data-g = ghost -->
+                <div class="pc sb-time" data-t="0.42" data-z="1" data-g="bar">9:41</div>
+                <img class="pc sb-icons" data-t="0.5" data-z="1" src="A/statusbar-right.svg" alt="" />
+                <img class="pc back" data-t="0.62" data-z="1" data-sh="drop" src="A/ic-back.svg" alt="" />
+                <img class="pc logo" data-t="0.74" data-z="2" data-sh="drop" data-g="bar" src="A/header-logo.svg" alt="" />
+                <div class="pc earn-pill" data-t="0.86" data-z="3" data-sh="box" data-g="box"><img src="A/reward-minimal.svg" alt="" /><span class="lbl">7</span></div>
+
+                <div class="pc waves" data-t="1.05" data-z="0.8" data-fly="0"><div class="w l"></div><div class="w r"></div></div>
+                <div class="pc amount" data-t="1.0" data-z="2" data-g="bar"><span class="r">₹0</span><span class="p">.00</span></div>
+                <div class="pc add-money" data-t="1.2" data-z="5" data-sh="box" data-g="box"><img src="A/ic-plus.svg" alt="" />Add Money</div>
+                <div class="pc auto-load" data-t="1.32" data-z="1" data-g="bar"><img src="A/ic-autoload.svg" alt="" /><span>Setup Auto-Load</span></div>
+
+                <div class="pc aicon" style="left:53px" data-t="1.5" data-z="4" data-sh="box" data-g="box"><div class="tile"></div></div>
+                <div class="pc aicon" style="left:150px" data-t="1.62" data-z="4" data-sh="box" data-g="box"><div class="tile"></div></div>
+                <div class="pc aicon" style="left:247px" data-t="1.74" data-z="4" data-sh="box" data-g="box"><div class="tile"></div></div>
+                <img class="pc glyph" style="left:71.4px;top:293.4px;width:23.2px;height:23.2px" data-t="1.72" data-z="9" data-sh="drop" data-icon src="A/ic-scan-glyph.svg" alt="" />
+                <img class="pc glyph" style="left:167.4px;top:293.4px" data-t="1.84" data-z="9" data-sh="drop" data-icon src="A/ic-send-glyph.svg" alt="" />
+                <img class="pc glyph" style="left:260.6px;top:292.8px;width:30.9px;height:26.5px" data-t="1.96" data-z="9" data-sh="drop" data-icon src="A/ic-transfer-glyph.svg" alt="" />
+                <div class="pc alabel" style="left:46.5px" data-t="1.62" data-z="1" data-g="bar">Scan and Pay</div>
+                <div class="pc alabel" style="left:143.5px" data-t="1.74" data-z="1" data-g="bar">Send Money<br>to Anyone</div>
+                <div class="pc alabel" style="left:240.5px" data-t="1.86" data-z="1" data-g="bar">Transfer to Account</div>
+
+                <div class="pc pinless" data-t="2.1" data-z="3" data-sh="box" data-g="box">
+                    <img class="pointer" src="A/banner-pointer.svg" alt="" />
+                    <img class="spark" src="A/ic-sparkle.svg" alt="" />
+                    <p>Scan any QR, for faster and secure payments</p>
+                </div>
+
+                <div class="pc qicon" style="left:25.15px" data-t="2.24" data-z="3" data-sh="box" data-g="box"></div>
+                <div class="pc qicon" style="left:109.82px" data-t="2.34" data-z="3" data-sh="box" data-g="box"></div>
+                <div class="pc qicon" style="left:194.49px" data-t="2.44" data-z="3" data-sh="box" data-g="box"></div>
+                <div class="pc qicon" style="left:279.16px" data-t="2.54" data-z="3" data-sh="box" data-g="box"></div>
+                <img class="pc qglyph" style="left:42.35px;top:477.03px" data-t="2.44" data-z="8" data-sh="drop" data-icon src="A/ic-payment-history.svg" alt="" />
+                <img class="pc qglyph" style="left:127.02px;top:477.03px" data-t="2.54" data-z="8" data-sh="drop" data-icon src="A/ic-tappay.svg" alt="" />
+                <img class="pc qglyph" style="left:211.69px;top:477.03px" data-t="2.64" data-z="8" data-sh="drop" data-icon src="A/ic-view-card.svg" alt="" />
+                <img class="pc qglyph" style="left:296.36px;top:477.03px" data-t="2.74" data-z="8" data-sh="drop" data-icon src="A/ic-manage-account.svg" alt="" />
+                <div class="pc qlabel" style="left:26.15px" data-t="2.36" data-z="1" data-g="bar">Payment<br>History</div>
+                <div class="pc qlabel" style="left:110.82px" data-t="2.46" data-z="1" data-g="bar">Tap and<br>Pay</div>
+                <div class="pc qlabel" style="left:195.49px" data-t="2.56" data-z="1" data-g="bar">View Card</div>
+                <div class="pc qlabel" style="left:280.16px" data-t="2.66" data-z="1" data-g="bar">Manage<br>Account</div>
+
+                <div class="pc account-id" data-t="2.78" data-z="1">
+                    <div class="line l"></div>
+                    <div class="pill"><span class="k">Your Zapp Account ID</span><span class="v">9343876654@pzw</span><img src="A/ic-chevron-right-sm.svg" alt="" /></div>
+                    <div class="line r"></div>
+                </div>
+
+                <div class="pc rw-head" data-t="2.92" data-z="1" data-g="bar"><span class="ttl">Rewards</span><div class="rate-pill"><img src="A/reward-minimal.svg" alt="" /><span>1 = ₹1</span></div></div>
+                <div class="pc celebrate" data-t="3.06" data-z="3" data-sh="box" data-g="box">
+                    <img class="ic" src="A/ic-celebrate.svg" alt="" />
+                    <p>You have earned cashpoints on <b>90% of your transactions</b></p>
+                    <img class="chev" src="A/ic-chev8.svg" alt="" />
+                </div>
+                <div class="pc rcard" style="left:22px" data-t="3.2" data-z="3" data-sh="drop" data-g="box">
+                    <img class="bg" src="A/reward-card-purple.svg" alt="" />
+                    <div class="inner"><div class="row"><span class="amt">Earn 51</span><img src="A/coin-16.svg" alt="" /></div><div class="div"></div><div class="sub">On making 5 transactions using Zapp Account</div></div>
+                </div>
+                <div class="pc rcard" style="left:188px" data-t="3.32" data-z="3" data-sh="drop" data-g="box">
+                    <img class="bg" src="A/reward-card-purple.svg" alt="" />
+                    <div class="inner"><div class="row"><span class="amt">Earn 23</span><img src="A/coin-16.svg" alt="" /></div><div class="div"></div><div class="sub">On broadband bill payment</div></div>
+                </div>
+
+                <div class="island"></div>
+                <div class="home-ind"></div>
+                <div class="glare"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
+<script>
+const DURATION = 6;
+window.READY = false;   // render.mjs waits for fonts + Lottie
+const RENDER = new URLSearchParams(location.search).has("render");
+const ASSETS = "../../Zapp%20Account/prototypes/zapp-home/assets/";
+document.querySelectorAll("img[src^='A/']").forEach(img => { img.src = ASSETS + img.getAttribute("src").slice(2); });
+
+/* ---------- math ---------- */
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, p) => a + (b - a) * p;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const outExpo = p => p >= 1 ? 1 : 1 - Math.pow(2, -10 * p);
+const outQuart = p => 1 - Math.pow(1 - p, 4);
+const inOutCubic = p => p < 0.5 ? 4 * p ** 3 : 1 - Math.pow(-2 * p + 2, 3) / 2;
+const spring = p => p >= 1 ? 1 : 1 - Math.exp(-5 * p) * Math.cos(7 * p);   // ~10% overshoot, settles by p=1
+const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const $ = s => document.querySelector(s);
+
+/* ---------- casing ---------- */
+const SLABS = 18, DEPTH = 1.25;
+const slabsEl = $("#slabs");
+for (let i = 1; i <= SLABS; i++) {
+    const s = document.createElement("div");
+    s.className = "slab";
+    s.style.transform = `translateZ(${-i * DEPTH}px)`;
+    if (i > 4 && i < SLABS - 3) {
+        s.innerHTML = `<i class="btn" style="left:-4px;top:150px;height:30px"></i><i class="btn" style="left:-4px;top:205px;height:56px"></i>
+            <i class="btn" style="left:-4px;top:272px;height:56px"></i><i class="btn" style="right:-4px;top:220px;height:90px"></i>`;
+    }
+    slabsEl.append(s);
+}
+$("#floorShadow").style.transform = `translate3d(34px, 46px, ${-SLABS * DEPTH - 70}px)`;
+$(".bezel").style.transform = "translateZ(0px)";
+$("#screen").style.transform = "translateZ(3px)";
+$(".scr-bg").style.transform = "translateZ(0px)";
+$(".scr-grid").style.transform = "translateZ(0.5px)";
+$(".island").style.transform = "translateZ(12px)";
+$(".home-ind").style.transform = "translateZ(12px)";
+$(".glare").style.transform = "translateZ(13px)";
+
+/* ---------- pieces + ghosts ---------- */
+const screenEl = $("#screen");
+const pieces = [...document.querySelectorAll(".pc")].map((el, i) => {
+    const d = el.dataset;
+    const icon = d.icon !== undefined;
+    return {
+        el, land: +d.t, rest: +(d.z || 1), sh: d.sh || "none", g: d.g, fly: d.fly !== "0",
+        z0: icon ? 420 : (d.g === "box" ? 320 : 220) + hash(i) * 80,
+        dx: (hash(i + 1) - 0.5) * 70, dy: (hash(i + 2) - 0.5) * 60 - 20,
+        rx: (hash(i + 3) - 0.5) * 40, rz: (hash(i + 4) - 0.5) * (icon ? 70 : 20),
+    };
+});
+
+function buildGhosts() {
+    pieces.forEach(p => {
+        if (!p.g) return;
+        const el = p.el, cs = getComputedStyle(el);
+        const g = document.createElement("div");
+        g.className = "ghost" + (p.g === "bar" ? " bar" : "") + (el.classList.contains("rcard") ? " fadeout" : "");
+        const inset = p.g === "bar" ? 2 : 0;
+        Object.assign(g.style, {
+            left: el.offsetLeft + inset + "px", top: el.offsetTop + inset + "px",
+            width: el.offsetWidth - inset * 2 + "px", height: el.offsetHeight - inset * 2 + "px",
+            borderRadius: p.g === "bar" ? "6px" : cs.borderRadius,
+        });
+        screenEl.insertBefore(g, el);
+        p.ghost = g;
+    });
+}
+
+/* ---------- waves (Lottie stepped by t) ---------- */
+const waves = [];
+if (window.lottie) {
+    document.querySelectorAll(".waves .w").forEach(container => {
+        waves.push(window.lottie.loadAnimation({ container, renderer: "svg", loop: true, autoplay: false,
+            path: ASSETS + "waveSlowed.json", rendererSettings: { preserveAspectRatio: "xMidYMid meet" } }));
+    });
+}
+
+/* ---------- camera: Catmull-Rom through keys [t, rotX, rotZ, rotY, scale, focusX, focusY] ---------- */
+const CAM = [
+    [0.0, 58, -40, 4, 2.55, 40, -300],
+    [1.2, 54, -35, 2, 2.2, 10, -175],
+    [2.35, 51, -32, 0, 2.05, -5, 40],
+    [3.35, 49, -30, -2, 1.95, -10, 230],
+    [4.55, 40, -30, 0, 1.36, 0, 14],
+    [6.0, 37, -28, 0, 1.32, 0, 4],
+    [6.0, 37, -28, 0, 1.32, 0, 4],
+];
+function cam(t) {
+    let i = 0;
+    while (i < CAM.length - 2 && t > CAM[i + 1][0]) i++;
+    const p0 = CAM[Math.max(0, i - 1)], p1 = CAM[i], p2 = CAM[i + 1], p3 = CAM[Math.min(CAM.length - 1, i + 2)];
+    const u = clamp((t - p1[0]) / (p2[0] - p1[0] || 1));
+    return p1.map((_, k) => {
+        if (k === 0) return t;
+        const a = p0[k], b = p1[k], c = p2[k], d = p3[k];
+        return 0.5 * (2 * b + (-a + c) * u + (2 * a - 5 * b + 4 * c - d) * u * u + (-a + 3 * b - 3 * c + d) * u * u * u);
+    });
+}
+
+/* ---------- per-frame ---------- */
+const amountR = $(".amount .r"), amountP = $(".amount .p");
+const offEl = $(".scr-bg .off"), scanEl = $(".scr-bg .scanline"), gridEl = $(".scr-grid"), glareEl = $(".glare");
+
+function seek(t) {
+    const [, rx, rz, ry, s, fx, fy] = cam(t);
+    $("#world").style.transform = `scale(${s}) rotateX(${rx}deg) rotateZ(${rz}deg) rotateY(${ry}deg) translate3d(${-fx}px, ${-fy}px, 0)`;
+
+    // Power-on sweep, construction grid, glass sheen
+    const on = inOutCubic(prog(t, 0.0, 0.42));
+    offEl.style.top = on * 780 + "px";
+    scanEl.style.top = on * 780 + "px";
+    scanEl.style.opacity = on > 0 && on < 1 ? 1 : 0;
+    gridEl.style.opacity = prog(t, 0.15, 0.45) * (1 - prog(t, 3.5, 4.4));
+    glareEl.style.backgroundPosition = `${lerp(110, -10, inOutCubic(prog(t, 4.2, 5.6)))}% 0`;
+    glareEl.style.opacity = 0.9;
+
+    pieces.forEach((p, i) => {
+        const dur = 0.72;
+        const a = prog(t, p.land - dur, p.land);
+        const sp = spring(a);
+        const lift = p.fly ? p.z0 * (1 - outQuart(a)) : 0;
+        const z = p.rest + lift;
+        const q = t - p.land;
+        const bump = q > 0 ? 1 + 0.045 * Math.exp(-q * 9) * Math.cos(q * 26) : 1;
+        const k = p.fly ? 1 - sp : 0;
+        p.el.style.transform = `translate3d(${p.dx * k}px, ${p.dy * k}px, ${z}px) rotateX(${p.rx * k}deg) rotateZ(${p.rz * k}deg) scale(${bump})`;
+        p.el.style.opacity = clamp(a / 0.12);
+        const h = p.fly ? lift / p.z0 : 0;
+        if (p.sh === "box") {
+            p.el.style.boxShadow = `0 ${3 + h * 46}px ${8 + h * 70}px rgba(25,55,85,${0.12 + h * 0.06})`;
+        } else if (p.sh === "drop") {
+            p.el.style.filter = `drop-shadow(0 ${1.5 + h * 30}px ${2 + h * 24}px rgba(25,55,85,${0.16 + h * 0.08}))`;
+        }
+        if (p.ghost) {
+            const gIn = Math.max(0.3 + i * 0.012, p.land - 1.0);
+            const gp = outExpo(prog(t, gIn, gIn + 0.35)) * (1 - prog(t, p.land - 0.12, p.land + 0.18));
+            p.ghost.style.opacity = gp;
+            p.ghost.style.transform = `translateZ(1px) scale(${lerp(0.94, 1, gp)})`;
+        }
+    });
+
+    // Balance counts up as it lands
+    const cents = Math.round(24306 * outExpo(prog(t, 0.95, 2.0)));
+    amountR.textContent = "₹" + Math.floor(cents / 100);
+    amountP.textContent = "." + String(cents % 100).padStart(2, "0");
+
+    // Waves fade in and keep flowing
+    $(".waves").style.opacity = 0.65 * prog(t, 0.9, 1.4);
+    waves.forEach(w => { if (w.isLoaded) w.goToAndStop((t * 60) % w.totalFrames, true); });
+}
+window.seek = seek;
+window.DURATION = DURATION;
+window.MARKERS = [
+    { t: 0, label: "Power on" }, { t: 0.42, label: "Header" }, { t: 1.0, label: "Balance" },
+    { t: 1.5, label: "Actions" }, { t: 2.1, label: "Quick" }, { t: 2.92, label: "Rewards" },
+    { t: 3.4, label: "Pull back" }, { t: 4.6, label: "Settle" },
+];
+
+/* ---------- preview playback ---------- */
+function fit() {
+    const k = Math.min(innerWidth / 1920, innerHeight / 1080);
+    $("#stage").style.transform = `translate(${(innerWidth - 1920 * k) / 2}px, ${(innerHeight - 1080 * k) / 2}px) scale(${k})`;
+}
+document.fonts.ready.then(() => {
+    buildGhosts();
+    if (RENDER) {
+        seek(0);
+        Promise.all(waves.map(w => w.isLoaded ? 0 : new Promise(r => w.addEventListener("DOMLoaded", r)))).then(() => { window.READY = true; });
+        return;
+    }
+    addEventListener("resize", fit); fit();
+    const t0 = new URLSearchParams(location.search).get("t");
+    if (t0 !== null) { seek(+t0); return; }
+    let start = performance.now();
+    const loop = now => {
+        let t = (now - start) / 1000;
+        if (t > DURATION + 1) { start = now; t = 0; }   // hold the still for 1s, then loop
+        seek(Math.min(t, DURATION));
+        requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+});
+addEventListener("keydown", e => { if (e.key === "r") location.reload(); });
+</script>
+</body>
+</html>

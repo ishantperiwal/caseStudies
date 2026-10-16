@@ -177,3 +177,5 @@ Feeds containing a spoiler disable native scroll anchoring so the browser cannot
 Browser checked the For You card's inert body and working translation toggle, the first post's extra comment, and Winden Theories with adjacent spoiler/translation cards. Existing 10 tests pass.
 
 - The inserted translated comment uses a mock-only author, Mateo R., with the amber avatar, distinct from Lucía M.’s existing English comment.
+
+- Typography trial: only the standalone translation comment preview uses Manrope Semibold (600) for its post title, navigation title and comments heading. Existing sizes, body typography and all main-app screens remain unchanged.
