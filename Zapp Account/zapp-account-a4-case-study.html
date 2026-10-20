@@ -47,7 +47,6 @@
             }
         }
     </style>
-    <script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Case Study: Zapp Account Revamp</title>
@@ -58,7 +57,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Inter:wght@400;500;600;700&amp;family=Playpen+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -533,6 +531,141 @@
         .b-cum .bento-kicker { color: #1a5f67; }
         .b-cum .bento-num { color: #1a5f67; font-size: 2.3rem; line-height: 1.1; }
         .b-cum .bento-cap { color: #2a5560; }
+
+        /* ── Floating 3D phone in the hero results cell ──────────────────────
+           The device shell from the Motion Studio film (video/runtime/kits/device.js):
+           a phone with real thickness built from flat CSS 3D faces, an orthographic
+           view, a flat white sticker outline, and the real Zapp Account home screen
+           as live HTML (not a screenshot). The geometry is built at runtime by
+           setupPhone3d() inside a [data-runtime-only] layer, so Save never
+           writes it into the file. The screenshot below it is the no-JS fallback. */
+        .phone3d { --z3d-x: 50%; --z3d-y: 50%; --z3d-s: 0.6; --z3d-px: 0deg; --z3d-py: 0deg; }
+        .results-phone3d { position: absolute; inset: 0; z-index: 5; pointer-events: none; }
+        .results-phone3d-fallback { position: absolute; width: 52%; top: 1rem; right: 1.5rem; }
+        .results-phone3d-fallback img { width: 100%; height: auto; display: block; }
+        .results-phone3d:has(.dv-layer) .results-phone3d-fallback { display: none; }
+        .phone3d .dv-layer { position: absolute; inset: 0; filter: url(#z3dSticker); }
+        /* Hero: the same phone, larger, with the film's opening shot. The layer is
+           oversized so the sticker-outline filter region covers the whole arrival path. */
+        .hero-phone3d { position: relative; z-index: 1; width: 100%; aspect-ratio: 590 / 900; max-height: 560px; }
+        .hero-phone3d .dv-layer { inset: -30% -60% -70% -30%; filter: url(#z3dStickerL); }
+        /* Arrival: slides up from the bottom right with one full turn, and lands. */
+        .phone3d .dv-arrive { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
+        .hero-phone3d .dv-arrive { transform: translate3d(260px, 760px, 0) rotateZ(18deg) rotateY(-360deg); opacity: 0; }
+        .hero-phone3d.is-arrived .dv-arrive { transform: none; opacity: 1;
+            transition: transform 1.7s cubic-bezier(0.22, 0.6, 0.3, 1) 0.25s, opacity 0.35s ease-out 0.25s; }
+        .hero-phone3d .dv-phone { animation-delay: 1.95s; }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-phone3d .dv-arrive { transform: none; opacity: 1; transition: none; }
+        }
+        .phone3d .dv-persp { position: absolute; inset: 0; perspective: none; }
+        .phone3d .dv-world { position: absolute; left: var(--z3d-x); top: var(--z3d-y); width: 0; height: 0; transform-style: preserve-3d;
+            /* three-quarter camera, plus a small lean toward the cursor */
+            transform: scale(var(--z3d-s)) rotateX(calc(14deg + var(--z3d-py))) rotateZ(9deg) rotateY(calc(-26deg + var(--z3d-px)));
+            transition: transform 900ms cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .phone3d .dv-phone { position: absolute; left: -192px; top: -402px; width: 384px; height: 804px; transform-style: preserve-3d;
+            animation: z3d-float 9s ease-in-out infinite; }
+        .phone3d.is-paused .dv-phone { animation-play-state: paused; }
+        @keyframes z3d-float {
+            0%, 100% { transform: translate3d(0, 0, 0) rotateY(-6deg) rotateX(2deg); }
+            50%      { transform: translate3d(0, -16px, 0) rotateY(8deg) rotateX(-2deg); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .phone3d .dv-phone { animation: none; }
+            .phone3d .dv-world { transition: none; }
+        }
+        .phone3d .dv-phone * { box-sizing: border-box; }
+        .phone3d .dv-slabs { position: absolute; inset: 0; transform-style: preserve-3d; }
+        /* rings, not solid plates: nothing solid sits behind the screen for the 3D sort to misplace */
+        .phone3d .dv-slab, .phone3d .dv-bezel { -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+        .phone3d .dv-slab { position: absolute; inset: 0; border-radius: 58px; background: #2B353E; padding: 26px; }
+        .phone3d .dv-wall { position: absolute; backface-visibility: hidden; background: #2B353E; }
+        .phone3d .dv-wall i { position: absolute; display: block; background: #4A5661; }
+        .phone3d .dv-btn { position: absolute; transform-style: preserve-3d; }
+        .phone3d .dv-btn i { position: absolute; inset: 0; display: block; }
+        .phone3d .dv-btn b { position: absolute; left: 0; top: 0; display: block; background: #1E262D; }
+        .phone3d .dv-btn .groove { inset: -1.5px; background: #151C22; }
+        .phone3d .dv-btn .cap { background: #5A6672; }
+        .phone3d .dv-bezel { position: absolute; inset: 0; border-radius: 58px; background: #090D10; padding: 14px;
+            box-shadow: inset 0 0 0 2px #8A96A0, inset 0 0 0 3.5px #2A343C, inset 0 0 0 5px #090D10; }
+        .phone3d .dv-back { position: absolute; inset: 0; border-radius: 58px; backface-visibility: hidden; transform-style: preserve-3d;
+            background: linear-gradient(150deg, #5D6A75 0%, #2E3942 40%, #1B232A 100%); box-shadow: inset 0 0 0 2px #7D8994; }
+        .phone3d .dv-bump { position: absolute; left: 24px; top: 24px; width: 88px; height: 158px; transform-style: preserve-3d; }
+        .phone3d .dv-xw { position: absolute; left: 0; top: 0; display: block; }
+        .phone3d .dv-bump > .dv-xw { background: #6B7782; }
+        .phone3d .dv-bump .cap { position: absolute; inset: 0; border-radius: 44px; background: #56636F; box-shadow: inset 0 0 0 1.5px #7C8893; }
+        .phone3d .dv-lens { position: absolute; left: 12px; width: 64px; height: 64px; transform-style: preserve-3d; }
+        .phone3d .dv-lens > .dv-xw { background: #6E7984; }
+        .phone3d .dv-lens .glass { position: absolute; inset: 0; border-radius: 50%; background: #0E1318; box-shadow: inset 0 0 0 5px #9AA4AE, inset 0 0 0 11px #161D23; }
+        .phone3d .dv-flash { position: absolute; left: 128px; top: 76px; width: 18px; height: 18px; border-radius: 50%; background: #CFC6AE; box-shadow: inset 0 0 0 2px #8D8672; }
+        .phone3d .dv-glass { position: absolute; left: 12px; top: 12px; width: 360px; height: 780px; transform-style: preserve-3d; }
+        .phone3d .dv-screen { position: absolute; inset: 0; border-radius: 46px; overflow: hidden; background: #fff; }
+        .phone3d .dv-island { position: absolute; left: 123px; top: 11px; width: 114px; height: 33px; border-radius: 20px; background: #15191D; }
+        .phone3d .dv-island::after { content: ''; position: absolute; right: 11px; top: 11.5px; width: 10px; height: 10px; border-radius: 50%; background: #1C232B; }
+        .phone3d .dv-home { position: absolute; left: 113px; top: 763px; width: 134px; height: 7px; border-radius: 4px; background: rgba(17, 24, 29, .45); }
+
+        /* The real Zapp Account home (positions from the Figma file, via the film) */
+        .z3d-ui { position: absolute; inset: 0; font-family: -apple-system, 'SF Pro Text', system-ui, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #161B21;
+            letter-spacing: normal; line-height: normal; text-align: left; }   /* reset what the page body sets */
+        .z3d-ui .rs { font-family: 'Inter', sans-serif; }   /* ₹ only: the system rupee is a different shape (as in the film) */
+        .z3d-ui .pc { position: absolute; }
+        .z3d-ui img { display: block; max-width: none; }
+        .z3d-ui .top-wash { position: absolute; left: 7px; top: -164px; width: 346.56px; height: 470px; border-radius: 40px; background: linear-gradient(180deg, rgba(234,246,255,0) 53%, rgba(234,246,255,.7) 77%); }
+        .z3d-ui .sb-time { left: 18px; top: 18px; width: 54px; text-align: center; font-weight: 600; font-size: 15px; line-height: 18px; color: #000; }
+        .z3d-ui .sb-icons { left: 271px; top: 20px; width: 67px; height: 11.5px; }
+        .z3d-ui .back { left: 27px; top: 65px; width: 18px; height: 18px; }
+        .z3d-ui .logo { left: 116.3px; top: 65px; width: 122.1px; height: 24.1px; }
+        .z3d-ui .earn-pill { right: 22px; top: 64px; height: 25px; display: inline-flex; align-items: center; gap: 5px; padding: 0 4px 0 8px; background: #FFEECD; border: 1.5px solid #EED3BF; border-radius: 20px; }
+        .z3d-ui .earn-pill .lbl { font-weight: 700; font-size: 13px; line-height: 1.2; color: #6A3619; }
+        .z3d-ui .earn-pill img { width: 14px; height: 14px; }
+        .z3d-ui .waves { left: 6.72px; top: 160px; width: 346.56px; height: 69px; }
+        .z3d-ui .waves img { width: 100%; height: 100%; }
+        .z3d-ui .waves.is-lottie { top: 156px; height: 90px; overflow: hidden; }
+        .z3d-ui .waves .w { position: absolute; top: 0; width: 190px; height: 80px; }
+        .z3d-ui .waves .w.l { left: -24px; transform: scale(-1.2, 1.2); }
+        .z3d-ui .waves .w.r { right: -24px; transform: scale(1.2, -1.2); }
+        .z3d-ui .amount { left: 100px; top: 133px; width: 160px; display: flex; justify-content: center; align-items: baseline; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; letter-spacing: -1.2px; }
+        .z3d-ui .amount .r { font-size: 28px; } .z3d-ui .amount .p { font-size: 20px; color: rgba(34,79,114,.35); }
+        .z3d-ui .add-money { left: 106.5px; top: 176.5px; width: 147px; height: 40px; background: #224F72; border-radius: 24px; display: flex; align-items: center; justify-content: center; gap: 8px; color: #fff; font-weight: 700; font-size: 14px; letter-spacing: -0.3px; }
+        .z3d-ui .add-money img { width: 12px; height: 12px; }
+        .z3d-ui .auto-load { left: 113px; top: 226px; width: 134px; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 3px 0; }
+        .z3d-ui .auto-load img { width: 16px; height: 14.16px; } .z3d-ui .auto-load span { font-weight: 700; font-size: 12px; color: #224F72; }
+        .z3d-ui .aicon { top: 276px; width: 60px; height: 60px; border-radius: 21px; background: #fff; display: flex; align-items: center; justify-content: center; }
+        .z3d-ui .aicon .tile { width: 52px; height: 52px; border-radius: 17px; background: #E4F3FF; border: 2px solid #C4E6FF; }
+        .z3d-ui .glyph { top: 293.4px; width: 25.2px; height: 25.2px; }
+        .z3d-ui .alabel { top: 339px; width: 73px; font-weight: 600; font-size: 12px; line-height: 16px; color: #434343; text-align: center; }
+        .z3d-ui .badge { position: absolute; top: -3px; left: 50%; transform: translateX(-50%); padding: 0 4px; height: 16px; background: #D9F7EE; border: 1px solid #AEE5D5; border-radius: 5px; display: flex; align-items: center; font-weight: 600; font-size: 9px; line-height: 16px; color: #406D60; text-transform: uppercase; white-space: nowrap; }
+        .z3d-ui .pinless { left: 24px; top: 392px; width: 310px; height: 54px; background: #D9F7EE; border-radius: 16px; display: flex; align-items: center; gap: 8px; padding: 10px; }
+        .z3d-ui .pinless .spark { width: 24px; height: 24px; flex: none; }
+        .z3d-ui .pinless .pointer { position: absolute; left: 50px; top: -11px; width: 19px; height: 16.5px; }
+        .z3d-ui .pinless p { margin: 0; font-weight: 700; font-size: 12px; line-height: 1.4; color: #27755E; } .z3d-ui .pinless p .light { font-weight: 500; }
+        .z3d-ui .qicon { top: 463.83px; width: 56px; height: 48px; background: #E4F3FF; border-radius: 16px; }
+        .z3d-ui .qglyph { top: 477.03px; width: 21.6px; height: 21.6px; }
+        .z3d-ui .qlabel { top: 514px; width: 54px; font-weight: 500; font-size: 12px; line-height: 16px; color: #224F72; text-align: center; }
+        .z3d-ui .account-id { left: 0; top: 573px; width: 360px; display: flex; align-items: center; justify-content: center; }
+        .z3d-ui .account-id .line { width: 41px; height: 1.5px; }
+        .z3d-ui .account-id .line.l { background: linear-gradient(90deg, rgba(196,230,255,0) 0%, #C4E6FF 100%); }
+        .z3d-ui .account-id .line.r { background: linear-gradient(90deg, #C4E6FF 0%, rgba(196,230,255,0) 100%); }
+        .z3d-ui .account-id .pill { display: flex; align-items: center; gap: 6px; padding: 6px 16px; white-space: nowrap; }
+        .z3d-ui .account-id .k { font-weight: 600; font-size: 12px; letter-spacing: .48px; color: rgba(34,79,114,.5); }
+        .z3d-ui .account-id .v { font-weight: 700; font-size: 12px; letter-spacing: .48px; color: #224F72; }
+        .z3d-ui .account-id img { width: 5px; height: 8px; }
+        .z3d-ui .rw-head { left: 22px; top: 619.34px; width: 316px; height: 24px; display: flex; align-items: center; justify-content: space-between; }
+        .z3d-ui .rw-head .ttl { font-weight: 700; font-size: 12px; letter-spacing: 2.16px; color: #748897; text-transform: uppercase; }
+        .z3d-ui .rate-pill { background: #E4F3FF; border-radius: 15px; height: 24px; display: flex; align-items: center; gap: 2px; padding: 0 10px; }
+        .z3d-ui .rate-pill img { width: 10px; height: 10px; } .z3d-ui .rate-pill span { font-weight: 700; font-size: 12px; color: #224F72; }
+        .z3d-ui .celebrate { left: 22px; top: 654.34px; width: 316px; height: 54px; background: #FFF4DC; border-radius: 16px; display: flex; align-items: center; gap: 13px; padding: 10px 16px 10px 14px; }
+        .z3d-ui .celebrate .ic { width: 22.56px; height: 22.56px; flex: none; }
+        .z3d-ui .celebrate p { margin: 0; font-size: 12px; color: #875C34; line-height: 1.4; flex: 1; font-weight: 500; } .z3d-ui .celebrate p b { font-weight: 700; }
+        .z3d-ui .celebrate .chev { width: 8px; height: 8px; flex: none; }
+        .z3d-ui .rcard { top: 724.34px; width: 150px; height: 129px; border-radius: 18px; }
+        .z3d-ui .rcard .bg { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); }
+        .z3d-ui .rcard .inner { position: absolute; left: 21px; top: 19px; width: 110px; display: flex; flex-direction: column; gap: 8px; }
+        .z3d-ui .rcard .row { display: flex; align-items: center; gap: 4px; }
+        .z3d-ui .rcard .amt { font-weight: 700; font-size: 14px; line-height: 1.2; color: #533A86; }
+        .z3d-ui .rcard .row img { width: 16px; height: 16px; }
+        .z3d-ui .rcard .div { height: 1px; width: 110px; background: rgba(83,58,134,.18); }
+        .z3d-ui .rcard .sub { font-weight: 500; font-size: 12px; line-height: 1.3; color: rgba(83,58,134,.69); }
         /* Wide spend/load cells */
         .b-spend .bento-num,
         .b-load .bento-num { font-size: 2.3rem; color: #1a5f67; }
@@ -1082,8 +1215,24 @@
            the visible (JS-pinned) phone stays aligned. Desktop only — mobile lays
            the preview out in-flow with its own spacing. */
         @media (min-width: 768px) {
-            .legacy-wallet-flow-spacer:not(.img-placeholder) {
-                margin: 1.5rem calc(-1 * var(--bleed-11)) 2.75rem 2rem;
+            /* Text | phone, with the phone vertically centred on the text beside it.
+               The phone stays inside the content column (no right bleed). Its
+               caption is pulled out of the centring box (negative bottom margin)
+               so the screen itself, not screen + caption, sits on the centre line. */
+            .side-preview-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                align-items: center;
+            }
+            .side-preview-row > .side-preview-text {
+                grid-column: 1;
+                grid-row: 1;
+            }
+            .side-preview-row > .legacy-wallet-flow-spacer:not(.img-placeholder) {
+                grid-column: 2;
+                grid-row: 1;
+                float: none;
+                margin: 0 0 -2.75rem 3.5rem;
             }
         }
 
@@ -1317,10 +1466,18 @@
                 clip-path: inset(1px 0 0 0);
             }
 
+            /* Trims the 1px top edge; opened out to the sides so the side buttons
+               show. The clip would cut the body's box-shadow into a hard rectangle,
+               so these phones drop it and take a drop-shadow on the wrapper instead
+               (it follows the clipped, rounded outline). */
             .execution-phone-frame > .legacy-wallet-device,
             .execution-phone-state > .legacy-wallet-device,
             .execution-phone-state.is-highlight-clipped > .legacy-wallet-device {
-                clip-path: inset(1px round 2.2rem);
+                clip-path: inset(1px -8px 0 -8px round 2.2rem);
+                box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.85), inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10);
+            }
+            .execution-journey-phone {
+                filter: drop-shadow(0 6px 8px rgba(15, 23, 32, 0.14)) drop-shadow(0 22px 26px rgba(15, 23, 32, 0.16));
             }
 
             .rebrand-phone-placeholder[data-hover-pan-zoom].is-hover-zoomed .legacy-wallet-device,
@@ -1329,31 +1486,67 @@
             }
         }
 
+        /* Phone body (every 2D mock on the page). Built like a real phone, front-on:
+           a thin brushed-metal rim (the gradient border), a deep black bezel with a soft
+           top-left catch-light, side buttons, and a contact shadow so it sits on the page.
+           The rim replaces 1.5px of the old 0.55rem bezel, so the screen size is unchanged. */
         .legacy-wallet-device {
-            background: linear-gradient(145deg, #303033 0%, #1d1d1f 36%, #161617 100%);
+            --phone-rim: linear-gradient(140deg, #b9bfc6 0%, #5d636b 22%, #2c3035 48%, #6f767e 74%, #a7adb4 100%);
+            background:
+                linear-gradient(150deg, #26282b 0%, #111213 38%, #0b0c0d 100%) padding-box,
+                var(--phone-rim) border-box;
+            border: 1.5px solid transparent;
             border-radius: 2.2rem;
-            padding: 0.55rem;
+            padding: calc(0.55rem - 1.5px);
             position: relative;
-            /* Subtle top-left shine so the bezel reads like a real phone body. */
             box-shadow:
-                inset 1px 1px 1.5px rgba(255, 255, 255, 0.18),
-                inset 0 0 0 1px rgba(255, 255, 255, 0.04),
-                inset -1px -1.5px 2px rgba(0, 0, 0, 0.45);
+                inset 0 0 0 1px rgba(0, 0, 0, 0.85),            /* rim → bezel seam */
+                inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10),
+                0 1px 1px rgba(15, 23, 32, 0.10),
+                0 10px 22px -10px rgba(15, 23, 32, 0.32),
+                0 28px 48px -24px rgba(15, 23, 32, 0.30);
         }
 
+        /* Phones inside .rebrand-phone-viewport (carousel, rebrand screens): the
+           viewport clips to its box, which chopped the body's shadow into a dark
+           rectangle at the corners. These keep only the inset (bezel) shadows and
+           take a drop-shadow on the wrapper, outside the clip, which follows the
+           phone's rounded outline. */
+        .rebrand-phone-viewport > .legacy-wallet-device {
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 0, 0, 0.85),
+                inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10);
+        }
+        .rebrand-phone-placeholder {
+            filter: drop-shadow(0 6px 8px rgba(15, 23, 32, 0.14)) drop-shadow(0 20px 22px rgba(15, 23, 32, 0.14));
+        }
+
+        /* Side buttons: action + volume on the left, power on the right (metal, with
+           a highlight on the outer face). Hidden where a parent clips the body. */
+        .legacy-wallet-device::after,
         .legacy-wallet-device::before {
             content: "";
             position: absolute;
-            top: 0.85rem;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 26%;
-            aspect-ratio: 3.15 / 1;
-            background: #050505;
-            border-radius: 999px;
-            z-index: 1;
-            /* Notch hidden on trial; remove this line to bring it back. */
-            display: none;
+            width: 3px;
+            background: linear-gradient(90deg, #4b5057, #22252a);
+        }
+        .legacy-wallet-device::after {
+            left: -4px;
+            top: 17%;
+            height: 23%;
+            border-radius: 2px 0 0 2px;
+            /* three pills from one element: action (short), volume up, volume down */
+            -webkit-mask: linear-gradient(#000 0 14%, transparent 14% 26%, #000 26% 60%, transparent 60% 68%, #000 68% 100%);
+                    mask: linear-gradient(#000 0 14%, transparent 14% 26%, #000 26% 60%, transparent 60% 68%, #000 68% 100%);
+            box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.22);
+        }
+        .legacy-wallet-device::before {
+            right: -4px;
+            top: 26%;
+            height: 12%;
+            border-radius: 0 2px 2px 0;
+            background: linear-gradient(270deg, #4b5057, #22252a);
+            box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.22);
         }
 
         .legacy-wallet-screen {
@@ -1379,7 +1572,12 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.16);
+            /* glass: a hairline where the display meets the bezel, a soft shadow along
+               the bottom, and a faint diagonal sheen across the top-left */
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 0, 0, 0.35),
+                inset 0 -4px 8px rgba(0, 0, 0, 0.14);
+            background: linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 22%, rgba(255, 255, 255, 0) 38%);
             pointer-events: none;
             z-index: 6;
         }
@@ -2702,18 +2900,14 @@
         }
 
         .persona-id-shell {
-            /* The card stack is 21.5rem wide inside this 12rem track, so it overhangs
-               to the right. Growing the track with --pull drags the cards back inward
-               as the content column widens (the track is right-anchored, so a wider
-               track starts further left). Going through the grid — rather than nudging
-               the cards with a transform — means the 5rem column-gap is preserved
-               automatically, so the cards can never collide with the copy. Capped at
-               6rem so the card column never eats too much of the text column. */
-            --persona-inset: min(var(--pull), 6rem);
+            /* The card column is exactly as wide as the card stack, so the front
+               card's right edge sits on the content column edge (no overhang).
+               The gap is the 3.5rem used beside the PayZapp phone plus ~1.25rem for
+               the cards fanned out behind, so the visible clearance matches. */
             display: grid;
-            grid-template-columns: 1fr calc(12rem + var(--persona-inset));
+            grid-template-columns: minmax(0, 1fr) 21.5rem;
             grid-template-rows: auto auto;
-            column-gap: 5rem;
+            column-gap: 4.75rem;
             row-gap: 0;
             position: relative;
             margin-top: 1.25rem;
@@ -2731,7 +2925,7 @@
             top: 50%;
             width: 21.5rem;
             margin: 0;
-            transform: translateX(-0.75rem) translateY(-50%);
+            transform: translateY(-50%);
             isolation: isolate;
             perspective: 900px;
             cursor: pointer;
@@ -3092,8 +3286,6 @@
             display: grid;
             grid-template-columns: repeat(5, minmax(0, 1fr));
             gap: 1.5rem;
-            margin-left:  calc(-1 * var(--bleed-7));
-            margin-right: calc(-1 * var(--bleed-7));
         }
 
         .kyc-step-card {
@@ -3617,174 +3809,6 @@
         @media (max-width: 767px) {
             .direction-screen-item { flex-basis: 100%; max-width: 18rem; }
         }
-
-        .sticky-note {
-            position: absolute;
-            width: 220px;
-            background-color: #fff1a8;
-            padding: 1.25rem;
-            font-family: var(--font-sticky);
-            font-size: 1rem;
-            line-height: 1.4;
-            color: #1a1a1a;
-            border: 1px solid rgba(96, 72, 8, 0.16);
-            box-shadow: 2px 7px 16px rgba(0,0,0,0.075);
-            display: none;
-            pointer-events: none;
-            z-index: 50;
-
-            /* Base transform for non-animated sticky notes */
-            transform: rotate(var(--rot, 0deg));
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        /* Pop-on-expand sticky notes (Hidden / Collapsed State).
-           display:none (not just opacity) so a collapsed section's notes don't reserve
-           scroll height. These notes are position:absolute with a top offset measured
-           against the EXPANDED section; left only at opacity:0 they'd still extend the
-           document's scroll height into empty space (you'd scroll past the section into
-           a void the size of its expanded content). */
-        .sticky-note.pop-on-expand {
-            display: none;
-            opacity: 0;
-            transform: scale(0.6) rotate(var(--rot, 0deg));
-        }
-
-        .stack-section.is-expanded .sticky-note:not(.pop-on-expand) {
-            display: none;
-        }
-
-        /* Prevent pop-on-expand notes from becoming partially visible during dimming */
-        body.is-any-expanded .stack-section:not(.is-expanded) > .sticky-note.pop-on-expand {
-            opacity: 0;
-        }
-
-        /* Expanded State (Pop up animation). allow-discrete + @starting-style keep the
-           pop animation despite the display toggle (progressive enhancement; browsers
-           without support just appear/hide instantly). */
-        .stack-section.is-expanded .sticky-note.pop-on-expand {
-            display: block;
-            opacity: 1;
-            transform: scale(1) rotate(var(--rot, 0deg));
-            transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s,
-                        transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.3s,
-                        display 0.5s allow-discrete 0.3s;
-        }
-        @starting-style {
-            .stack-section.is-expanded .sticky-note.pop-on-expand {
-                opacity: 0;
-                transform: scale(0.6) rotate(var(--rot, 0deg));
-            }
-        }
-        
-        @media (min-width: 1400px) {
-            .sticky-note { display: block; }
-        }
-
-        /* ?sticky=false — forcibly hide all sticky notes regardless of other rules */
-        html.hide-sticky-notes .sticky-note {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        /* All-or-nothing clip guard: if any shown note is clipped horizontally, hide the whole set.
-           visibility (not display:none) keeps geometry measurable so notes return when there's room. */
-        body.stickies-clipped .sticky-note {
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
-
-        /* ── Sticky-note authoring (edit mode only) ── */
-        /* Normal notes are forced visible/interactive while editing, regardless of the
-           1400px display gate, so they can be placed and edited at any width. */
-        body.is-text-editing .sticky-note:not(.pop-on-expand) {
-            display: block;
-            pointer-events: auto;
-        }
-        /* pop-on-expand notes still follow the expand rules; make them editable at any
-           width once their section is expanded. */
-        body.is-text-editing .stack-section.is-expanded .sticky-note.pop-on-expand {
-            display: block;
-            pointer-events: auto;
-        }
-        body.is-text-editing .sticky-note {
-            outline: 1.5px dashed rgba(39, 71, 224, 0.35);
-            cursor: text;
-        }
-        .sticky-note.is-dragging {
-            opacity: 0.9;
-            z-index: 9998 !important;
-            transition: none !important;
-            cursor: grabbing;
-        }
-        /* Edit affordances injected at runtime; hidden by default, shown only while editing. */
-        .sticky-note-handle,
-        .sticky-note-delete,
-        .sticky-note-tilt {
-            display: none;
-            position: absolute;
-            top: -0.7rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            border-radius: 999px;
-            border: 1px solid rgba(96, 72, 8, 0.28);
-            background: #fff;
-            font-family: var(--font-display);
-            font-size: 0.85rem;
-            line-height: 1;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-            z-index: 2;
-            padding: 0;
-        }
-        body.is-text-editing .sticky-note .sticky-note-handle,
-        body.is-text-editing .sticky-note .sticky-note-delete,
-        body.is-text-editing .sticky-note .sticky-note-tilt {
-            display: flex;
-        }
-        .sticky-note-handle {
-            left: -0.7rem;
-            cursor: grab;
-            color: #60480a;
-        }
-        .sticky-note.is-dragging .sticky-note-handle { cursor: grabbing; }
-        .sticky-note-delete {
-            right: -0.7rem;
-            cursor: pointer;
-            color: #b23b2e;
-            font-weight: 700;
-        }
-        .sticky-note-delete:hover { background: #ffe9e6; }
-        .sticky-note-tilt {
-            top: auto;
-            bottom: -0.7rem;
-            left: -0.7rem;
-            cursor: pointer;
-            color: #60480a;
-        }
-        .sticky-note-tilt:hover { background: #fff6cf; }
-
-        #sticky-note-add-btn {
-            position: fixed;
-            top: 1.5rem;
-            right: 1.5rem;
-            z-index: 9999;
-            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
-            color: #fff;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            cursor: pointer;
-            font-family: var(--font-display);
-            font-size: 0.82rem;
-            font-weight: 600;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.28);
-        }
-        #sticky-note-add-btn:hover { filter: brightness(1.08); }
 
         /* ── Text Edit Mode ── */
         .is-text-editing [data-text-key] {
@@ -4664,7 +4688,7 @@
 
                     <div class="reveal-stagger reveal-stagger-2">
                     <!-- H1 — large, optically sized, two lines -->
-                    <h1 class="font-light leading-[1.02] text-ink mb-5 tracking-[-0.015em]" style="font-size: clamp(2.8rem, 6vw, 4.4rem); font-family: var(--font-display); font-variation-settings: 'opsz' 72;" data-text-key="hero-title" spellcheck="false">
+                    <h1 class="font-light leading-[1.02] text-ink mb-5 tracking-[-0.015em]" style="font-size: clamp(2.8rem, 6vw, 64px); font-family: var(--font-display); font-variation-settings: 'opsz' 72;" data-text-key="hero-title" spellcheck="false">
                         Building<br><span class="italic font-normal text-brand-500" style="font-variation-settings: 'opsz' 72;">Zapp Account</span>
                     </h1>
 
@@ -4701,8 +4725,9 @@
                 <div class="md:col-span-2 flex justify-end items-start w-full relative reveal-stagger reveal-stagger-3">
                     <div class="hero-orb hero-orb--a" aria-hidden="true"></div>
                     <div class="hero-orb hero-orb--b" aria-hidden="true"></div>
-                    <div class="editable-placeholder hero-image-float" data-placeholder-id="hero-zapp-account" data-placeholder-name="Hero Zapp Account screen" aria-label="Preview placeholder for Zapp Account screen" tabindex="-1" style="position:relative;z-index:1;width:100%;height:100%;display:flex;align-items:center;">
-                        <lottie-player src="case study assets/lottie/hero.json" background="transparent" speed="0.08" loop="" autoplay="" style="width:100%;height:auto;aspect-ratio:590/900;max-height:560px;display:block;"></lottie-player>
+                    <!-- Hero visual: the film's 3D phone (built by setupPhone3d), live Zapp UI -->
+                    <div class="phone3d hero-phone3d" data-phone3d="hero" aria-hidden="true">
+                        <svg width="0" height="0" style="position:absolute"><filter id="z3dStickerL" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="2" result="closed"></feMorphology><feMorphology in="closed" operator="dilate" radius="8" result="d"></feMorphology><feFlood flood-color="#ffffff"></feFlood><feComposite in2="d" operator="in" result="o"></feComposite><feFlood flood-color="#26313A"></feFlood><feComposite in2="closed" operator="in" result="fill"></feComposite><feMerge><feMergeNode in="o"></feMergeNode><feMergeNode in="fill"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></svg>
                     </div>
                 </div>
 
@@ -4740,8 +4765,6 @@
             <!-- Card 2: Enablers -->
             <article class="stack-section has-floating-preview">
                 <div class="section-header py-8 pl-10 pr-10">
-                    <div class="sticky-note" style="top: 2rem; left: -19.5rem; --rot: -2deg;" data-sticky-id="sticky-mqo5ovob-0">
-                        Bank wanted the rebrand for the prepaid wallet.</div>
                     <div class="flex justify-between items-start gap-4">
                         <div>
                             <h2 class="text-[13px] md:text-base font-medium text-muted mb-2 font-sans" data-text-key="enablers-kicker" spellcheck="false">What we had to do</h2>
@@ -4775,31 +4798,31 @@
                     <div class="card-body-clip" style="">
                         <div class="card-body-content px-10 pb-8 text-deep">
                         <div class="section-side-preview mb-8">
-                            <aside class="legacy-wallet-preview legacy-wallet-flow-spacer has-saved-image" data-placeholder-clone="before-payzapp-wallet" aria-hidden="true">
-                                <div class="legacy-wallet-device">
-                                    <div class="legacy-wallet-screen">
-                                        <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
-                                        <div class="legacy-wallet-bar"></div>
-                                        <div class="legacy-wallet-card">
-                                            <div class="mono text-[9px] text-muted mb-2">Virtual card</div>
-                                            <div class="font-display text-sm font-medium text-ink">PayZapp Wallet</div>
-                                            <div class="text-[11px] text-muted mt-1">Tap and pay + online</div>
-                                        </div>
-                                        <div class="legacy-wallet-grid">
-                                            <div class="legacy-wallet-tile"></div>
-                                            <div class="legacy-wallet-tile"></div>
-                                            <div class="legacy-wallet-tile"></div>
-                                            <div class="legacy-wallet-tile"></div>
+                            <div>
+                                <div class="mb-5 relative side-preview-row">
+                                <aside class="legacy-wallet-preview legacy-wallet-flow-spacer has-saved-image" data-placeholder-clone="before-payzapp-wallet" aria-hidden="true">
+                                    <div class="legacy-wallet-device">
+                                        <div class="legacy-wallet-screen">
+                                            <img class="placeholder-image-layer" alt="" src="case study assets/zapp-placeholder-before-payzapp-wallet.png">
+                                            <div class="legacy-wallet-bar"></div>
+                                            <div class="legacy-wallet-card">
+                                                <div class="mono text-[9px] text-muted mb-2">Virtual card</div>
+                                                <div class="font-display text-sm font-medium text-ink">PayZapp Wallet</div>
+                                                <div class="text-[11px] text-muted mt-1">Tap and pay + online</div>
+                                            </div>
+                                            <div class="legacy-wallet-grid">
+                                                <div class="legacy-wallet-tile"></div>
+                                                <div class="legacy-wallet-tile"></div>
+                                                <div class="legacy-wallet-tile"></div>
+                                                <div class="legacy-wallet-tile"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="text-center">
-                                    <span class="legacy-wallet-caption mono text-[10px]">Before / PayZapp Wallet</span>
-                                </div>
-                            </aside>
-
-                            <div>
-                                <div class="mb-5 relative">
+                                    <div class="text-center">
+                                        <span class="legacy-wallet-caption mono text-[10px]">Before / PayZapp Wallet</span>
+                                    </div>
+                                </aside>
+                                    <div class="side-preview-text">
                                     <h3 class="font-display text-base font-medium section-mini-heading slash-heading mb-2 text-ink" data-text-key="enablers-origin-heading" spellcheck="false">What it was before and What the bank wanted</h3>
                                     <p class="text-[15px] md:text-base mb-3" data-text-key="enablers-origin-body" spellcheck="false">Before Zapp Account, the product existed as <b>PayZapp Wallet</b>. <br>In its most complete form, it could support a wider set of payment actions. But most users only operated with MinKYC: the minimum verification needed to use PayZapp itself which offered limited options.</p>
                                     <div class="capability-comparison my-6" data-kyc-view="full">
@@ -4839,6 +4862,7 @@
                                         </ul>
                                     </div>
                                     <p class="text-[15px] md:text-base" data-text-key="enablers-origin-positioning-body" spellcheck="false">A significant share of users weren’t accessing the full PayZapp Wallet. HDFC Bank customers could unlock it with a simple 4‑digit card verification, while non‑bank customers remained restricted. The bank sought to reposition the Wallet as a discretionary digital payments account and strengthen its role within the PayZapp ecosystem. This requirement translated into two key actions: enabling non‑bank customers to access full capabilities and rebranding the Wallet as Zapp Account.</p>
+                                    </div>
                                 </div>
 
 	                                <div class="mb-5 numbered-point">
@@ -5261,7 +5285,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding2" spellcheck="false">For most users, the wallet was primarily <b>a cashpoint conversion tool </b>- cashpoints earned on offers were added as wallet balance and spent on recharges and bill payments.</p>
                                     </div>
                                     <div class="strategy-finding relative">
-                                        <div class="sticky-note pop-on-expand" style="top: -0.25rem; left: -37.1rem; --rot: -2deg;" data-sticky-id="sticky-mqo5ovoi-2">Swipe to Pay, offered by Zeta, is a quicker and safer way of authorizing payments using a single swipe. It's bound to the SIM.</div>
                                         <p class="text-[14px] md:text-[15px] leading-relaxed" data-text-key="strategy-finding1" spellcheck="false">Several wallet capabilities were less known, including Swipe to Pay (Pin-Less), Tap and Pay and the benefits users could unlock with a full KYC.</p>
                                     </div>
                                     <div class="strategy-finding">
@@ -5455,9 +5478,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div></div>
                     </div>
                 </div>
-            <div class="sticky-note pop-on-expand" style="top: 700px; left: -19.5rem; --rot: -2deg; right: auto;" data-sticky-id="sticky-mqo5ovoi-1">
-                                We also looked at international peers, like Revolut, Stripe mostly for their designs.
-                            </div><div class="sticky-note pop-on-expand" style="--rot: 2deg; top: 2151px; right: auto; left: -19.5rem;" data-sticky-id="sticky-mqo626lw-0">Most interviews were on a call and some of the were on google meet to people.</div></article>
+            </article>
 
             <!-- Card 4: Execution -->
             <article class="stack-section has-floating-preview">
@@ -5662,7 +5683,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                         </div>
                     </div>
                 </div>
-            <div class="sticky-note" style="--rot: 2deg; top: 53px; right: -19.5rem; left: auto;" data-sticky-id="sticky-mqo634yf-0">A lot of iterations that went through bank leadership.</div><div class="sticky-note pop-on-expand" style="--rot: -1.6deg; top: 393px; right: -19.5rem; left: auto;" data-sticky-id="sticky-mqo5sirz-0"><span style="font-size: 15.84px; letter-spacing: 0.18px;">These plugins were one of the ways I found to use AI meaningfully in my workflow. Walked the team through it at a dedicated AI event we ran across design functions at Zeta.</span>New note</div><div class="sticky-note pop-on-expand" style="--rot: 2deg; top: 1145px; right: auto; left: -19.5rem;" data-sticky-id="sticky-mqo5r1qf-4">One of the plugins I built was for testing different colors instantly.</div></article>
+            </article>
 
             <!-- Card 5: Impact -->
             <article class="stack-section has-floating-preview">
@@ -5718,9 +5739,54 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                     <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 65%; top: 55%; border-width: 2.5px; border-color: rgba(26, 95, 103, 0.50); "></div>
                                     <div class="absolute -translate-x-1/2 -translate-y-1/2 rounded-full border bg-[#f2f8f9] pointer-events-none z-[3] w-[8px] h-[8px]" style="left: 90%; top: 25%; border-width: 2.5px; border-color: rgba(26, 95, 103, 0.70); "></div>
 
-                                    <!-- Hero image: top-right, clipped by cell overflow-hidden -->
-                                    <div class="absolute pointer-events-none select-none" style="width: 52%; top: 1rem; right: 1.5rem; z-index: 5;">
-                                        <img src="case study assets/zapp-placeholder-impact-results-visual.png" alt="" style="width: 100%; height: auto; display: block;">
+                                    <!-- Hero visual: floating 3D phone with the live Zapp Account home (built by
+                                         setupPhone3d); the screenshot is the no-JS fallback. -->
+                                    <div class="phone3d results-phone3d pointer-events-none select-none" data-phone3d="results" aria-hidden="true">
+                                        <div class="results-phone3d-fallback">
+                                            <img src="case study assets/zapp-placeholder-impact-results-visual.png" alt="">
+                                        </div>
+                                        <svg width="0" height="0" style="position:absolute"><filter id="z3dSticker" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="c1"></feMorphology><feMorphology in="c1" operator="erode" radius="2" result="closed"></feMorphology><feMorphology in="closed" operator="dilate" radius="6" result="d"></feMorphology><feFlood flood-color="#ffffff"></feFlood><feComposite in2="d" operator="in" result="o"></feComposite><feFlood flood-color="#26313A"></feFlood><feComposite in2="closed" operator="in" result="fill"></feComposite><feMerge><feMergeNode in="o"></feMergeNode><feMergeNode in="fill"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter></svg>
+                                        <template data-phone3d-ui="">
+                                            <div class="z3d-ui">
+                                                <div class="top-wash"></div>
+                                                <div class="pc sb-time">9:41</div>
+                                                <img class="pc sb-icons" src="case study assets/zapp-3d/statusbar-right.svg" alt="">
+                                                <img class="pc back" src="case study assets/zapp-3d/ic-back.svg" alt="">
+                                                <img class="pc logo" src="case study assets/zapp-3d/header-logo.svg" alt="">
+                                                <div class="pc earn-pill"><span class="lbl">Earn</span><img src="case study assets/zapp-3d/reward-minimal.svg" alt=""></div>
+                                                <div class="pc waves"><img src="case study assets/zapp-3d/balance-waves.svg" alt=""></div>
+                                                <div class="pc amount"><span class="r"><span class="rs">₹</span>243</span><span class="p">.06</span></div>
+                                                <div class="pc add-money"><img src="case study assets/zapp-3d/ic-plus.svg" alt="">Add Money</div>
+                                                <div class="pc auto-load"><img src="case study assets/zapp-3d/ic-autoload.svg" alt=""><span>Setup Auto-Load</span></div>
+                                                <div class="pc aicon" style="left:53px"><div class="tile"></div><span class="badge">Pin-less</span></div>
+                                                <div class="pc aicon" style="left:150px"><div class="tile"></div></div>
+                                                <div class="pc aicon" style="left:247px"><div class="tile"></div><span class="badge"><span class="rs">₹</span>0 Fee</span></div>
+                                                <img class="pc glyph" style="left:71.4px;width:23.2px;height:23.2px" src="case study assets/zapp-3d/ic-scan-glyph.svg" alt="">
+                                                <img class="pc glyph" style="left:167.4px" src="case study assets/zapp-3d/ic-send-glyph.svg" alt="">
+                                                <img class="pc glyph" style="left:260.6px;top:292.8px;width:30.9px;height:26.5px" src="case study assets/zapp-3d/ic-transfer-glyph.svg" alt="">
+                                                <div class="pc alabel" style="left:46.5px">Scan and Pay</div>
+                                                <div class="pc alabel" style="left:143.5px">Send Money<br>to Anyone</div>
+                                                <div class="pc alabel" style="left:240.5px">Transfer to Account</div>
+                                                <div class="pc pinless"><img class="pointer" src="case study assets/zapp-3d/banner-pointer.svg" alt=""><img class="spark" src="case study assets/zapp-3d/ic-sparkle.svg" alt=""><p>Experience faster and secure payments <span class="light">without a PIN</span></p></div>
+                                                <div class="pc qicon" style="left:25.15px"></div>
+                                                <div class="pc qicon" style="left:109.82px"></div>
+                                                <div class="pc qicon" style="left:194.49px"></div>
+                                                <div class="pc qicon" style="left:279.16px"></div>
+                                                <img class="pc qglyph" style="left:42.35px" src="case study assets/zapp-3d/ic-payment-history.svg" alt="">
+                                                <img class="pc qglyph" style="left:127.02px" src="case study assets/zapp-3d/ic-tappay.svg" alt="">
+                                                <img class="pc qglyph" style="left:211.69px" src="case study assets/zapp-3d/ic-view-card.svg" alt="">
+                                                <img class="pc qglyph" style="left:296.36px" src="case study assets/zapp-3d/ic-manage-account.svg" alt="">
+                                                <div class="pc qlabel" style="left:26.15px">Payment<br>History</div>
+                                                <div class="pc qlabel" style="left:110.82px">Tap and<br>Pay</div>
+                                                <div class="pc qlabel" style="left:195.49px">View Card</div>
+                                                <div class="pc qlabel" style="left:280.16px">Manage<br>Account</div>
+                                                <div class="pc account-id"><div class="line l"></div><div class="pill"><span class="k">Your Zapp Account ID</span><span class="v">9343876654@pzw</span><img src="case study assets/zapp-3d/ic-chevron-right-sm.svg" alt=""></div><div class="line r"></div></div>
+                                                <div class="pc rw-head"><span class="ttl">Rewards</span><div class="rate-pill"><img src="case study assets/zapp-3d/reward-minimal.svg" alt=""><span>1 = <span class="rs">₹</span>1</span></div></div>
+                                                <div class="pc celebrate"><img class="ic" src="case study assets/zapp-3d/ic-celebrate.svg" alt=""><p>You have earned cashpoints on <b>90% of your transactions</b></p><img class="chev" src="case study assets/zapp-3d/ic-chev8.svg" alt=""></div>
+                                                <div class="pc rcard" style="left:22px"><img class="bg" src="case study assets/zapp-3d/reward-card-purple.svg" alt=""><div class="inner"><div class="row"><span class="amt">Earn 51</span><img src="case study assets/zapp-3d/coin-16.svg" alt=""></div><div class="div"></div><div class="sub">On making 5 transactions using Zapp Account</div></div></div>
+                                                <div class="pc rcard" style="left:188px"><img class="bg" src="case study assets/zapp-3d/reward-card-purple.svg" alt=""><div class="inner"><div class="row"><span class="amt">Earn 23</span><img src="case study assets/zapp-3d/coin-16.svg" alt=""></div><div class="div"></div><div class="sub">On broadband bill payment</div></div></div>
+                                            </div>
+                                        </template>
                                     </div>
                                     <div class="relative z-10 flex flex-col items-start">
                                         <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(26, 95, 103, 0.08); border-color: rgba(26, 95, 103, 0.18); color: #1a5f67; font-family: var(--font-mono);">April 2025 – September 2025</div>
@@ -10019,17 +10085,22 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
            Sets the settled state directly (no tween, no scroll anchoring) so the
            page simply loads with the section already open. */
         (function openDefaultSection() {
-            const DEFAULT_OPEN_KEY = "impact-kicker"; // "What were the results?"
-            const kicker = document.querySelector('[data-text-key="' + DEFAULT_OPEN_KEY + '"]');
-            const section = kicker && kicker.closest(".stack-section");
-            if (!section) return;
+            const DEFAULT_OPEN_KEYS = [
+                "execution-kicker", // "How did we solve it?"
+                "impact-kicker"     // "What were the results?"
+            ];
+            DEFAULT_OPEN_KEYS.forEach((key) => {
+                const kicker = document.querySelector('[data-text-key="' + key + '"]');
+                const section = kicker && kicker.closest(".stack-section");
+                if (!section) return;
 
-            section.classList.add("is-expanded");
-            const body = section.querySelector(".card-body");
-            if (body) body.style.height = "auto"; // matches the post-expand settled state
+                section.classList.add("is-expanded");
+                const body = section.querySelector(".card-body");
+                if (body) body.style.height = "auto"; // matches the post-expand settled state
+            });
 
-            // This section carries a floating phone preview, which is positioned
-            // from a measured in-flow spacer — re-measure now that it has height.
+            // These sections carry floating phone previews, which are positioned
+            // from a measured in-flow spacer — re-measure now that they have height.
             if (typeof syncFloatingPreviews === "function") syncFloatingPreviews();
             if (typeof syncExecutionFloatingPhone === "function") syncExecutionFloatingPhone();
         })();
@@ -11051,233 +11122,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             (window.__caseStudyPendingChanges || []).forEach(window.__caseStudyMarkChange);
             window.__caseStudyPendingChanges = [];
 
-            // ── Sticky-note authoring ────────────────────────────────────────────
-            (function setupStickyNotes() {
-                const GUTTER = "-19.5rem"; // shared left/right gutter offset (matches existing notes)
-                let stickySeq = 0;
-
-                function markStickyChanged(id) {
-                    if (window.__caseStudyMarkChange) window.__caseStudyMarkChange("sticky:" + id);
-                }
-
-                function ensureId(note) {
-                    if (!note.dataset.stickyId) {
-                        note.dataset.stickyId = "sticky-" + Date.now().toString(36) + "-" + (stickySeq++);
-                    }
-                    return note.dataset.stickyId;
-                }
-
-                // The .stack-section whose vertical span contains viewportY, else the nearest.
-                function hostSectionAt(viewportY) {
-                    const sections = Array.from(document.querySelectorAll(".stack-section"));
-                    let host = null, hostDist = Infinity;
-                    for (const sec of sections) {
-                        const r = sec.getBoundingClientRect();
-                        if (viewportY >= r.top && viewportY <= r.bottom) return sec;
-                        const dist = viewportY < r.top ? r.top - viewportY : viewportY - r.bottom;
-                        if (dist < hostDist) { hostDist = dist; host = sec; }
-                    }
-                    return host;
-                }
-
-                // Reparent into a section as an absolute child; snap to a gutter; auto-bind to expand.
-                function placeInSection(note, section, viewportY, grabOffset, side) {
-                    if (!section) return;
-                    const r = section.getBoundingClientRect();
-                    const top = viewportY - r.top - grabOffset;
-                    section.appendChild(note);
-                    note.style.position = "";
-                    note.style.top = Math.round(top) + "px";
-                    if (side === "left") { note.style.left = GUTTER; note.style.right = "auto"; }
-                    else { note.style.right = GUTTER; note.style.left = "auto"; }
-                    // Dropped over a currently-expanded section → only-visible-when-expanded.
-                    note.classList.toggle("pop-on-expand", section.classList.contains("is-expanded"));
-                }
-
-                function makeDraggable(note, handle) {
-                    handle.addEventListener("pointerdown", (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const noteRect = note.getBoundingClientRect();
-                        const grabOffset = e.clientY - noteRect.top;
-                        let side = note.style.left && note.style.left !== "auto" ? "left" : "right";
-                        note.classList.add("is-dragging");
-                        // Drag in viewport space for free movement, then settle into a section.
-                        // Seed the fixed coords from the current rect so the grab doesn't jump.
-                        note.style.position = "fixed";
-                        note.style.top = noteRect.top + "px";
-                        note.style.left = noteRect.left + "px";
-                        note.style.right = "auto";
-
-                        function onMove(ev) {
-                            side = ev.clientX < window.innerWidth / 2 ? "left" : "right";
-                            note.style.top = (ev.clientY - grabOffset) + "px";
-                            if (side === "left") { note.style.left = "1.5rem"; note.style.right = "auto"; }
-                            else { note.style.right = "1.5rem"; note.style.left = "auto"; }
-                        }
-                        function onUp(ev) {
-                            window.removeEventListener("pointermove", onMove);
-                            window.removeEventListener("pointerup", onUp);
-                            note.classList.remove("is-dragging");
-                            placeInSection(note, hostSectionAt(ev.clientY), ev.clientY, grabOffset, side);
-                            markStickyChanged(ensureId(note));
-                        }
-                        window.addEventListener("pointermove", onMove);
-                        window.addEventListener("pointerup", onUp);
-                    });
-                }
-
-                function decorate(note) {
-                    if (note.dataset.stickyReady === "true") return;
-                    note.dataset.stickyReady = "true";
-                    const id = ensureId(note);
-                    note.setAttribute("contenteditable", "true");
-                    note.setAttribute("spellcheck", "false");
-
-                    // Editing a note must not bubble to the section-header expand toggle.
-                    note.addEventListener("click", (e) => e.stopPropagation());
-
-                    const handle = document.createElement("span");
-                    handle.className = "sticky-note-handle";
-                    handle.textContent = "⠿";
-                    handle.title = "Drag to move";
-                    handle.setAttribute("contenteditable", "false");
-                    note.appendChild(handle);
-                    makeDraggable(note, handle);
-
-                    const del = document.createElement("button");
-                    del.type = "button";
-                    del.className = "sticky-note-delete";
-                    del.textContent = "×";
-                    del.title = "Delete note";
-                    del.setAttribute("contenteditable", "false");
-                    del.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); });
-                    del.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const sid = ensureId(note);
-                        note.remove();
-                        markStickyChanged(sid);
-                    });
-                    note.appendChild(del);
-
-                    const tilt = document.createElement("button");
-                    tilt.type = "button";
-                    tilt.className = "sticky-note-tilt";
-                    tilt.textContent = "↻";
-                    tilt.title = "Toggle tilt";
-                    tilt.setAttribute("contenteditable", "false");
-                    tilt.addEventListener("pointerdown", (e) => { e.preventDefault(); e.stopPropagation(); });
-                    tilt.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const cur = parseFloat(note.style.getPropertyValue("--rot")) || 0;
-                        note.style.setProperty("--rot", (cur < 0 ? 2 : -2) + "deg"); // −2° ⇄ +2°
-                        markStickyChanged(ensureId(note));
-                    });
-                    note.appendChild(tilt);
-
-                    note.addEventListener("input", () => markStickyChanged(id));
-                }
-
-                function createNote() {
-                    const note = document.createElement("div");
-                    note.className = "sticky-note";
-                    note.style.setProperty("--rot", "-2deg");
-                    note.appendChild(document.createTextNode("New note"));
-
-                    const centerY = window.innerHeight / 2;
-                    const host = document.querySelector(".stack-section.is-expanded") || hostSectionAt(centerY);
-                    if (host) {
-                        const r = host.getBoundingClientRect();
-                        note.style.top = Math.round(centerY - r.top) + "px";
-                        note.style.right = GUTTER;
-                        note.style.left = "auto";
-                        host.appendChild(note);
-                        note.classList.toggle("pop-on-expand", host.classList.contains("is-expanded"));
-                    } else {
-                        note.style.position = "fixed";
-                        note.style.top = centerY + "px";
-                        note.style.right = "1.5rem";
-                        document.body.appendChild(note);
-                    }
-
-                    const textNode = note.firstChild;
-                    decorate(note);
-                    markStickyChanged(ensureId(note));
-
-                    note.focus();
-                    if (textNode) {
-                        const sel = window.getSelection();
-                        const range = document.createRange();
-                        range.selectNodeContents(textNode);
-                        sel.removeAllRanges();
-                        sel.addRange(range);
-                    }
-                }
-
-                function buildAddButton() {
-                    if (document.getElementById("sticky-note-add-btn")) return;
-                    const btn = document.createElement("button");
-                    btn.type = "button";
-                    btn.id = "sticky-note-add-btn";
-                    btn.textContent = "+ Sticky note";
-                    btn.addEventListener("click", createNote);
-                    document.body.appendChild(btn);
-                }
-
-                document.querySelectorAll(".sticky-note").forEach(decorate);
-                buildAddButton();
-            })();
-
-            // ── Sticky-note clip guard ──────────────────────────────────────────
-            // All-or-nothing: if any currently-shown note is clipped by the viewport
-            // (horizontally), hide the whole set. Notes return automatically once the
-            // window is wide enough. Skipped entirely during text editing.
-            (function setupStickyClipGuard() {
-                const BUFFER = 12;
-
-                function refreshStickyClipping() {
-                    if (document.body.classList.contains("is-text-editing")) {
-                        document.body.classList.remove("stickies-clipped");
-                        return;
-                    }
-                    const notes = document.querySelectorAll(".sticky-note");
-                    const vw = window.innerWidth;
-                    let clipped = false;
-                    for (const note of notes) {
-                        if (note.offsetParent === null) continue; // display:none (collapsed section)
-                        const r = note.getBoundingClientRect();
-                        if (r.width === 0 && r.height === 0) continue;
-                        if (r.left < BUFFER || r.right > vw - BUFFER) { clipped = true; break; }
-                    }
-                    document.body.classList.toggle("stickies-clipped", clipped);
-                }
-
-                let clipRaf = null;
-                function scheduleStickyClip() {
-                    if (clipRaf) cancelAnimationFrame(clipRaf);
-                    clipRaf = requestAnimationFrame(() => { clipRaf = null; refreshStickyClipping(); });
-                }
-                window.refreshStickyClipping = refreshStickyClipping;
-                window.scheduleStickyClip = scheduleStickyClip;
-
-                scheduleStickyClip();
-                window.addEventListener("load", scheduleStickyClip);
-                window.addEventListener("resize", scheduleStickyClip);
-                if (document.fonts && document.fonts.ready) {
-                    document.fonts.ready.then(scheduleStickyClip);
-                }
-
-                // Re-check after body-class changes (section expand/collapse, edit mode),
-                // once immediately and once after the pop/accordion transition settles.
-                const bodyClassObserver = new MutationObserver(() => {
-                    scheduleStickyClip();
-                    setTimeout(refreshStickyClipping, 650);
-                });
-                bodyClassObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-            })();
-
             function getEditableFromSelection() {
                 const selection = window.getSelection();
                 if (!selection || selection.rangeCount === 0) return null;
@@ -11430,18 +11274,6 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 // Mobile static mode builds inline journey screens + captions at runtime
                 // (see setupMobileStaticMode); they are presentation, not source.
                 Array.from(clone.querySelectorAll("[data-runtime-only]")).forEach((el) => el.remove());
-
-                // Strip sticky-note edit affordances (handle/delete buttons rebuilt at runtime;
-                // only the note markup + inline position/rotation persist).
-                Array.from(clone.querySelectorAll(".sticky-note-handle, .sticky-note-delete, .sticky-note-tilt")).forEach((el) => el.remove());
-                Array.from(clone.querySelectorAll("#sticky-note-add-btn")).forEach((el) => el.remove());
-                Array.from(clone.querySelectorAll(".sticky-note")).forEach((el) => {
-                    el.classList.remove("is-dragging");
-                    el.removeAttribute("contenteditable");
-                    el.removeAttribute("spellcheck");
-                    el.removeAttribute("data-sticky-ready");
-                    el.style.removeProperty("position");
-                });
 
                 // Remove contenteditable from all text elements
                 Array.from(clone.querySelectorAll("[data-text-key]")).forEach((el) => {
@@ -19982,6 +19814,208 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             }
 
             setTimeout(revealPage, 1600);
+        })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie_light.min.js"></script>
+    <script>
+        /* Floating 3D phone in the hero results cell. Geometry ported from the Motion
+           Studio device kit (video/runtime/kits/device.js): 26 body rings + solid side
+           walls (~42px thick), extruded buttons, a raised camera island, bezel, glass.
+           Everything lives in a [data-runtime-only] layer, so Save strips it; the
+           styles are static in the page (.results-phone3d) for the same reason. */
+        (function setupPhone3d() {
+            const tpl = document.querySelector("template[data-phone3d-ui]");
+            if (!tpl) return;
+            const W = 384, H = 804, R = 58, SLABS = 26, DEPTH = 1.6, THICK = SLABS * DEPTH;
+            const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+            const node = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
+            // extrude a flat outline straight up (local z) by h: one wall facet per outline segment
+            const extrude = (parent, pts, h, z0, cls) => pts.forEach(([x0, y0], k) => {
+                const [x1, y1] = pts[(k + 1) % pts.length], dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy);
+                if (L < 0.01) return;
+                const w = node("b", cls, parent);
+                Object.assign(w.style, { width: h + "px", height: (L + 0.4) + "px", transformOrigin: "0 0",
+                    transform: `translate3d(${x0}px, ${y0}px, ${z0}px) rotateZ(${Math.atan2(-dx, dy) * 180 / Math.PI}deg) rotateY(-90deg)` });
+            });
+            const roundRect = (w, h, r, seg = 6) => {
+                const pts = [];
+                [[w - r, r, -90], [w - r, h - r, 0], [r, h - r, 90], [r, r, 180]].forEach(([cx, cy, a0]) => {
+                    for (let k = 0; k <= seg; k++) { const a = ((a0 + (90 * k) / seg) * Math.PI) / 180; pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); }
+                });
+                return pts;
+            };
+            const circle = (r, n = 28) => Array.from({ length: n }, (_, k) => [r + r * Math.cos((2 * Math.PI * k) / n), r + r * Math.sin((2 * Math.PI * k) / n)]);
+            const pill = (w, len, seg = 8) => {
+                const r = w / 2, pts = [];
+                for (let k = 0; k <= seg; k++) { const a = Math.PI + (Math.PI * k) / seg; pts.push([r + r * Math.cos(a), r + r * Math.sin(a)]); }
+                for (let k = 0; k <= seg; k++) { const a = (Math.PI * k) / seg; pts.push([r + r * Math.cos(a), len - r + r * Math.sin(a)]); }
+                return pts;
+            };
+
+            function build(host) {
+                const layer = node("div", "dv-layer", host);
+                layer.setAttribute("data-runtime-only", "");
+                const world = node("div", "dv-world", node("div", "dv-persp", layer));
+                const phone = node("div", "dv-phone", node("div", "dv-arrive", world));
+
+                // 1 body: rings back from the glass, then solid walls on the straight edges
+                const slabs = node("div", "dv-slabs", phone);
+                for (let i = 1; i <= SLABS; i++) node("div", "dv-slab", slabs).style.transform = `translateZ(${-i * DEPTH}px)`;
+                [["left", -0.2, R, THICK, H - 2 * R, "rotateY(-90deg)"], ["right", W - 0.8, R, THICK, H - 2 * R, "rotateY(90deg)"],
+                 ["top", R, 0, W - 2 * R, THICK, "rotateX(90deg)"], ["bottom", R, H, W - 2 * R, THICK, "rotateX(-90deg)"]].forEach(([side, x, y, w, h, rot]) => {
+                    const wall = node("div", "dv-wall");
+                    const vertical = side === "left" || side === "right";
+                    Object.assign(wall.style, { left: (vertical ? x - w / 2 : x) + "px", top: (vertical ? y : y - h / 2) + "px", width: w + "px", height: h + "px",
+                        transform: `translateZ(${-THICK / 2}px) ${rot}` });
+                    slabs.after(wall);
+                    if (side === "left") [34, h - 34].forEach((at) => Object.assign(node("i", "", wall).style, { left: 0, right: 0, top: (at - 3.5) + "px", height: "7px" }));
+                });
+
+                // 2 buttons: a long pill on the left, the power button on the right
+                const PILL = Math.round(THICK * 0.48), BTN_H = 3.5;
+                [["left", 176, 96], ["right", 220, 90]].forEach(([side, top, len]) => {
+                    const btn = node("div", "dv-btn", phone);
+                    Object.assign(btn.style, { left: ((side === "left" ? -0.6 : W + 0.6) - PILL / 2) + "px", top: top + "px", width: PILL + "px", height: len + "px",
+                        transform: `translateZ(${-THICK / 2}px) rotateY(${side === "left" ? -90 : 90}deg)` });
+                    const groove = node("i", "groove", btn), cap = node("i", "cap", btn);
+                    groove.style.borderRadius = (PILL / 2 + 2) + "px";
+                    Object.assign(cap.style, { borderRadius: (PILL / 2) + "px", transform: `translateZ(${BTN_H}px)` });
+                    extrude(btn, pill(PILL, len), BTN_H, 0, "");
+                });
+
+                // 3 back: plate, raised camera island, two raised lenses, flash
+                node("div", "dv-bezel", phone);
+                const back = node("div", "dv-back", phone);
+                back.style.transform = `translateZ(${-THICK - 0.5}px) rotateY(180deg)`;
+                const ISLAND = 8, LENS = 5, bump = node("div", "dv-bump", back);
+                extrude(bump, roundRect(88, 158, 44), ISLAND, 0, "dv-xw");
+                node("div", "cap", bump).style.transform = `translateZ(${ISLAND}px)`;
+                [12, 82].forEach((top) => {
+                    const lens = node("div", "dv-lens", bump); lens.style.top = top + "px";
+                    extrude(lens, circle(32), LENS, ISLAND, "dv-xw");
+                    node("div", "glass", lens).style.transform = `translateZ(${ISLAND + LENS}px)`;
+                });
+                node("div", "dv-flash", back);
+
+                // 4 front: the live UI on the glass, island and home indicator flush on top
+                const glass = node("div", "dv-glass", phone);
+                glass.style.transform = "translateZ(3px)";
+                const screen = node("div", "dv-screen", glass);
+                screen.appendChild(tpl.content.cloneNode(true));
+                // the prototype's animated waves (waveSlowed.json), mirrored left and right as in the film
+                const waves = screen.querySelector(".waves");
+                layer._anims = [];
+                if (waves && window.lottie) {
+                    waves.innerHTML = '<div class="w l"></div><div class="w r"></div>';
+                    waves.classList.add("is-lottie");
+                    waves.querySelectorAll(".w").forEach((container) => layer._anims.push(window.lottie.loadAnimation({
+                        container, renderer: "svg", loop: true, autoplay: !reduce.matches,
+                        path: "case study assets/zapp-3d/waveSlowed.json",
+                        rendererSettings: { preserveAspectRatio: "xMidYMid meet" },
+                    })));
+                }
+                node("div", "dv-island", glass).style.transform = "translateZ(1.5px)";
+                node("div", "dv-home", glass).style.transform = "translateZ(1.5px)";
+                return layer;
+            }
+
+            // Results cell: right side, top edge just inside the cell, bottom running
+            // off (the cell clips). The turned phone's footprint is measured, not
+            // guessed, so it fits between the numbers (~28px clear) and the cell's
+            // right edge at any camera angle; on narrow (mobile) cards it keeps its
+            // size and peeks in from the right edge instead of running over the text.
+            function reach(host, layer, x, s) {
+                // left/right extent of the phone from its centre, per unit of scale
+                const world = layer.querySelector(".dv-world"), arrive = layer.querySelector(".dv-arrive");
+                world.style.transition = "none";
+                arrive.style.transition = "none"; arrive.style.transform = "none";   // measure the landed pose
+                host.style.setProperty("--z3d-s", s);
+                host.style.setProperty("--z3d-x", x + "px");
+                const lx = layer.getBoundingClientRect().left + x;
+                let l = Infinity, r = -Infinity;
+                layer.querySelectorAll(".dv-bezel, .dv-wall, .dv-slab").forEach((el) => {
+                    const b = el.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right);
+                });
+                arrive.style.transform = ""; arrive.offsetWidth; arrive.style.transition = "";
+                requestAnimationFrame(() => { world.style.transition = ""; });
+                return { left: ((lx - l) / s) * 1.1, right: ((r - lx) / s) * 1.05 };   // + room for the float's sway
+            }
+            function placeResults(host, layer, cell) {
+                const w = cell.clientWidth;
+                if (!w) return;
+                const cellLeft = cell.getBoundingClientRect().left;
+                let textR = 0;
+                cell.querySelectorAll(".bento-num, .bento-cap").forEach((el) => {
+                    const range = document.createRange(); range.selectNodeContents(el);
+                    for (const r of range.getClientRects()) textR = Math.max(textR, r.right - cellLeft);
+                });
+                const clear = textR + 28;
+                const k = reach(host, layer, w / 2, 0.5);
+                let s = Math.min(0.68, (w * 0.42) / W, (w - 8 - clear) / (k.left + k.right));
+                if (s < 0.34) s = 0.34;   // narrow card: keep the size, let the right side run off
+                const x = clear + k.left * s;
+                host.style.setProperty("--z3d-s", s.toFixed(4));
+                host.style.setProperty("--z3d-x", Math.round(x) + "px");
+                host.style.setProperty("--z3d-y", Math.round(H * s * 0.5 + w * 0.05) + "px");
+            }
+            // Hero: fit the phone to the box, centred, but never past the content
+            // column's right edge (the box itself runs to the section edge). The layer
+            // is oversized (see CSS), so positions are measured against the layer.
+            function placeHero(host, layer) {
+                const hr = host.getBoundingClientRect(), lr = layer.getBoundingClientRect();
+                if (!hr.height) return;
+                const s = Math.min((hr.height * 0.86) / H, (hr.width * 0.95) / W);
+                const main = host.closest("main");
+                const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+                const limit = main ? main.getBoundingClientRect().right - 2.5 * rem - 10 - lr.left : Infinity;   // column edge, minus the outline
+                let x = hr.left + hr.width / 2 - lr.left;
+                const k = reach(host, layer, x, s);
+                x = Math.min(x, limit - k.right * s);
+                host.style.setProperty("--z3d-s", s.toFixed(4));
+                host.style.setProperty("--z3d-x", Math.round(x) + "px");
+                host.style.setProperty("--z3d-y", Math.round(hr.top + hr.height / 2 - lr.top) + "px");
+            }
+
+            document.querySelectorAll("[data-phone3d]").forEach((host) => {
+                const layer = build(host);
+                const isHero = host.dataset.phone3d === "hero";
+                const area = isHero ? host.parentElement : (host.closest(".bento-cell") || host.parentElement);
+                const place = () => (isHero ? placeHero(host, layer) : placeResults(host, layer, area));
+                place();
+                if ("ResizeObserver" in window) new ResizeObserver(place).observe(area);
+
+                // Lean a few degrees toward the cursor while it is over the area.
+                area.addEventListener("pointermove", (e) => {
+                    if (reduce.matches || e.pointerType === "touch") return;
+                    const r = area.getBoundingClientRect();
+                    const nx = (e.clientX - r.left) / r.width - 0.5, ny = (e.clientY - r.top) / r.height - 0.5;
+                    host.style.setProperty("--z3d-px", (nx * 14).toFixed(2) + "deg");
+                    host.style.setProperty("--z3d-py", (-ny * 10).toFixed(2) + "deg");
+                });
+                area.addEventListener("pointerleave", () => {
+                    host.style.setProperty("--z3d-px", "0deg");
+                    host.style.setProperty("--z3d-py", "0deg");
+                });
+
+                // Only float while on screen.
+                if ("IntersectionObserver" in window) {
+                    new IntersectionObserver((entries) => entries.forEach((en) => {
+                        host.classList.toggle("is-paused", !en.isIntersecting);
+                        if (!reduce.matches) layer._anims.forEach((a) => (en.isIntersecting ? a.play() : a.pause()));
+                    })).observe(area);
+                }
+
+                // Hero arrival: once the page's own reveal has started, so the phone
+                // lands as the hero column fades in.
+                if (isHero) {
+                    host.classList.remove("is-arrived");
+                    const go = () => { place(); host.classList.add("is-arrived"); };   // 0.25s delay is in the CSS transition
+                    if (document.body.classList.contains("page-revealed")) go();
+                    else new MutationObserver((m, obs) => {
+                        if (document.body.classList.contains("page-revealed")) { obs.disconnect(); go(); }
+                    }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+                }
+            });
         })();
     </script>
 </body></html>
