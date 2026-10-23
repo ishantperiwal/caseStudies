@@ -447,7 +447,7 @@
         /* Bento: every number in its own right-sized box */
         .results-bento {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));   /* minmax(0): cells never push past the column */
             grid-auto-rows: minmax(7rem, auto);
             gap: 1.6rem;
             margin-bottom: 1.6rem;
@@ -705,8 +705,10 @@
         /* UPI cells: same number size as the wide cells, caption on one line */
         .b-p2p .bento-num,
         .b-p2m .bento-num { font-size: 37px; }
-        .b-p2p .bento-cap,
-        .b-p2m .bento-cap { white-space: nowrap; }
+        @media (min-width: 760px) {
+            .b-p2p .bento-cap,
+            .b-p2m .bento-cap { white-space: nowrap; }
+        }
         /* Split cell for Auto-Load */
         .bento-autoload-inner {
             display: grid;
@@ -761,8 +763,8 @@
             position: relative;
             background: #eaeaea;
             color: hsl(var(--accent-h), 12%, 55%);
-            border: 3.5px solid #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            border: 3.5px solid color-mix(in srgb, #ffffff 55%, var(--color-bg));   /* = the card's fill (55% white over the page) */
+            box-shadow: none;
             transition: all 0.3s ease;
         }
         .avatar-item + .avatar-item {
@@ -815,6 +817,24 @@
             justify-content: space-between;
         }
         
+        @media (max-width: 767px) {
+            .results-bento { gap: 1rem; }
+            .results-bento > .bento-cell { min-width: 0; }
+            /* Leaderboard: no bars on phones, just rank, name and value */
+            .results-leaderboard .results-rank-row { grid-template-columns: 28px minmax(0, 1fr) auto; }   /* beats the later base rule */
+            .results-leaderboard .results-rank-val { justify-self: end; text-align: right; }
+            .results-rank-track { display: none; }
+            /* Growth card: narrower text column so the 3D phone (placed right of the text) fits */
+            .b-cum .bento-num { font-size: 28px; }
+            /* Small stat cells: match the growth card's figure size */
+            .b-spend .bento-num, .b-load .bento-num,
+            .b-p2p .bento-num, .b-p2m .bento-num { font-size: 28px; }
+            .b-cum .bento-cap { max-width: 6.5rem; font-size: 13px; margin-top: 0.4rem; }   /* air between figure and caption */
+            /* "As of" callout: real breathing room between the two figures */
+            .results-today-callout { gap: 1.25rem; padding: 1.75rem 1.25rem 1.5rem; }
+            .results-ranking-container { gap: 2rem; }   /* room for the "as of" badge riding the second card's top edge */
+        }
+
         .results-today-k {
             font-family: var(--font-mono);
             font-size: 10px;
@@ -4887,6 +4907,21 @@
         .cs-nav-card.is-next .cs-nav-chev { right: -40px; transform: translate(-10px, -50%); }
         .cs-nav-card:hover .cs-nav-chev, .cs-nav-card:focus-visible .cs-nav-chev { opacity: 1; transform: translate(0, -50%); }
         @media (prefers-reduced-motion: reduce) { .cs-nav-chev { transition: opacity 0.2s ease; } }
+        /* Phones: one card per row inside the 16px gutter, preview on top, text below, left-aligned */
+        @media (max-width: 767px) {
+            .cs-nav { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; padding: 2.5rem 16px 3.5rem; }
+            .cs-thanks { padding: 0 16px; }   /* the last section's own bottom padding (~48px) is the gap above */
+            .cs-nav-card, .cs-nav-card.is-next {
+                flex-direction: column; align-items: stretch; gap: 0.85rem;
+                padding: 0.75rem 0.75rem 1rem; text-align: left; min-width: 0;
+            }
+            .cs-nav-media { width: 100%; max-width: none; }
+            .cs-nav-card.is-next .cs-nav-text { align-items: flex-start; }
+            .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-start; }
+            .cs-nav-text { padding: 0 0.25rem; }
+            .cs-nav-title { max-width: none; font-size: 17px; }
+            .cs-nav-chev { display: none; }
+        }
     </style>
 </head>
 <body class="" unresolved>
@@ -20304,7 +20339,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 const clear = textR + 28;
                 const k = reach(host, layer, w / 2, 0.5);
                 let s = Math.min(0.68, (w * 0.42) / W, (w - 8 - clear) / (k.left + k.right));
-                if (s < 0.34) s = 0.34;   // narrow card: keep the size, let the right side run off
+                if (s < 0.3) s = 0.3;   // narrow card: keep a floor on size, let the right side run off
                 const x = clear + k.left * s;
                 host.style.setProperty("--z3d-s", s.toFixed(4));
                 host.style.setProperty("--z3d-x", Math.round(x) + "px");

@@ -1372,6 +1372,21 @@
         .cs-nav-card.is-next .cs-nav-chev { right: -40px; transform: translate(-10px, -50%); }
         .cs-nav-card:hover .cs-nav-chev, .cs-nav-card:focus-visible .cs-nav-chev { opacity: 1; transform: translate(0, -50%); }
         @media (prefers-reduced-motion: reduce) { .cs-nav-chev { transition: opacity 0.2s ease; } }
+        /* Phones: one card per row inside the 16px gutter, preview on top, text below, left-aligned */
+        @media (max-width: 767px) {
+            .cs-nav { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; padding: 2.5rem 16px 3.5rem; }
+            .cs-thanks { padding: 0 16px; }   /* the last section's own bottom padding (~48px) is the gap above */
+            .cs-nav-card, .cs-nav-card.is-next {
+                flex-direction: column; align-items: stretch; gap: 0.85rem;
+                padding: 0.75rem 0.75rem 1rem; text-align: left; min-width: 0;
+            }
+            .cs-nav-media { width: 100%; max-width: none; }
+            .cs-nav-card.is-next .cs-nav-text { align-items: flex-start; }
+            .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-start; }
+            .cs-nav-text { padding: 0 0.25rem; }
+            .cs-nav-title { max-width: none; font-size: 17px; }
+            .cs-nav-chev { display: none; }
+        }
 
         /* ── Hero: Motion Cards in 3D (one card leads, the rest fan out behind it) ── */
         .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.5rem; }
