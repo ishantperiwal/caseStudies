@@ -12,4 +12,5 @@ Static portfolio site (branch `gh-pages`, published by GitHub Pages). Each case 
 - Every studio command takes the same `--project`, the notes watcher included:
   `node motion-studio/tools/wait-for-notes.mjs --project "<case>/film"`,
   `npm --prefix motion-studio run render -- <scene> --frames 0 --project "<case>/film"`.
-- New case study: `npm --prefix motion-studio run new-scene -- <id> --project "<case>/film"`, and add a launch entry.
+- New case study: `npm --prefix motion-studio run new-scene -- <id> --project "<case>/film"` creates the folder and its
+  `RUN-STUDIO.md`; then add a launch entry (next free port).
