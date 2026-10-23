@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zapp Account – Familiar by design</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","roughjs":"/vendor/roughjs/bundled/rough.esm.js","pixi.js":"/vendor/pixi.js/dist/pixi.mjs","three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<style>
+  :root { --navy: #1E3A5F; --red: #E3262D; --orange: #F2711C; --ink: #16212C; }
+  #stage { --stage-bg: #EEF3F9; font-family: -apple-system, 'SF Pro Display', system-ui; color: var(--ink); }
+  #bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 60% 40%, #FAFCFF 0%, #EEF3F9 55%, #DFE7F1 100%); }
+  #drift { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; }
+  #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+
+  /* a phone rig: perspective box centred on the phone; the phone keeps its lifted layers in 3D */
+  .rig { position: absolute; left: 753px; top: 106px; width: 414px; height: 868px; perspective: 2200px; }
+  .phone { position: absolute; inset: 0; transform-style: preserve-3d; }
+  .shell { position: absolute; inset: 0; border-radius: 62px; background: #121C26; box-shadow: 0 0 0 2px #2A3A48 inset, 0 60px 100px -40px rgba(16,36,64,.55); }
+  .screen { position: absolute; left: 12px; top: 12px; width: 390px; height: 844px; border-radius: 50px; overflow: hidden; background: #fff; }
+  .screen img { position: absolute; left: 0; width: 390px; }
+  .veil { position: absolute; inset: 0; background: rgba(12, 24, 40, .48); }
+  .lift { position: absolute; background-repeat: no-repeat; background-size: 390px auto; }
+  .lift .ring { position: absolute; inset: -6px; border: 3px solid var(--orange); }
+
+  /* kinetic type (screen space) */
+  #type { position: absolute; inset: 0; z-index: 55; pointer-events: none; }
+  .kt { position: absolute; left: 110px; max-width: 620px; font: 800 76px/1.04 -apple-system, 'SF Pro Display', system-ui; letter-spacing: -2px; color: var(--ink); }
+  .kt .w { display: inline-block; }
+  .kt .w i { display: inline-block; font-style: normal; }
+  .kt .hl { position: relative; display: inline-block; color: var(--orange); }
+  .kt .sq { position: absolute; left: -2%; bottom: -14px; width: 104%; height: 22px; overflow: visible; }
+  .kt .sq path { fill: none; stroke: var(--orange); stroke-width: 6; stroke-linecap: round; }
+  .kt.sub { font-size: 50px; letter-spacing: -1px; font-weight: 750; color: #3A4A5C; }
+
+  #wash { position: absolute; inset: 0; z-index: 40; background: #fff; }
+  #end { position: absolute; inset: 0; z-index: 50; background: radial-gradient(120% 90% at 50% 40%, #FAFCFF 0%, #EEF3F9 60%, #DFE7F1 100%); }
+  .mark { position: absolute; left: 960px; top: 470px; font: italic 900 150px/1 -apple-system, 'SF Pro Display', system-ui; letter-spacing: -3px; white-space: nowrap; }
+  .mark i { display: inline-block; font-style: inherit; }
+  .mark .r { color: var(--red); } .mark .n { color: var(--navy); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="drift">
+    <div id="cam"></div>
+  </div>
+  <div id="wash"></div>
+  <div id="end" data-name="End card"><div id="endMark" class="mark" data-name="Wordmark"></div></div>
+  <div id="type"></div>
+</div>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

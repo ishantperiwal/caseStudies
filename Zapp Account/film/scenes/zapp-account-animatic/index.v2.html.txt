@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zapp Account – Motion piece</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","roughjs":"/vendor/roughjs/bundled/rough.esm.js","pixi.js":"/vendor/pixi.js/dist/pixi.mjs","three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<style>
+  :root { --navy: #1E3A5F; --red: #E3262D; --blue: #2F80ED; --orange: #F2711C; --coin: #F6B23C; --ink: #16212C; }
+  #stage { --stage-bg: #F4F7FB; font-family: -apple-system, 'SF Pro Display', system-ui; color: var(--ink); }
+  #drift { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; transform-origin: 960px 540px; }
+  #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; }
+  #cam > * { position: absolute; left: 0; top: 0; }
+  #world { overflow: visible; }
+  #fx { width: 1920px; height: 1080px; pointer-events: none; }
+
+  /* ranking bars (content coords) */
+  .bar { width: 380px; border-radius: 28px 28px 0 0; background: #D9E2EC; transform-origin: 50% 100%; }
+  .bar.zapp { background: linear-gradient(var(--navy), #2C5687); }
+  .rank { width: 380px; text-align: center; font: 800 96px/1 -apple-system, system-ui; color: #AEBBC9; }
+  .rank.zapp { color: var(--orange); font-size: 150px; }
+
+  /* phone (content coords; centre 960,540) */
+  #phoneWrap { left: 760px; top: 130px; width: 400px; height: 820px; perspective: 1800px; }
+  #phone { position: absolute; inset: 0; border-radius: 58px; background: #14202B; padding: 12px; box-shadow: 0 50px 90px -30px rgba(20,40,70,.45), 0 0 0 2px #2A3A48 inset; }
+  .screen { position: relative; width: 376px; height: 796px; border-radius: 46px; overflow: hidden; background: linear-gradient(#E1EFFF 0, #F2F8FF 300px, #fff 430px); }
+  .screen > * { position: absolute; }
+  #back { left: 24px; top: 46px; font: 600 26px/1 system-ui; color: var(--navy); }
+  #coinPill { right: 18px; top: 46px; height: 32px; padding: 0 12px 0 6px; border-radius: 16px; background: #FDE9C8; display: flex; align-items: center; gap: 6px; font: 700 17px/1 system-ui; color: #7A4A0C; }
+  #coinPill i { width: 22px; height: 22px; border-radius: 50%; background: var(--coin); box-shadow: inset 0 0 0 2px #D48A12; }
+  #bal { left: 0; right: 0; top: 136px; text-align: center; font: 800 54px/1 -apple-system, system-ui; letter-spacing: -1.5px; color: var(--ink); }
+  #bal small { font-size: 30px; color: #9AAABB; letter-spacing: 0; }
+  #addBtn { left: 93px; top: 222px; width: 190px; height: 54px; border-radius: 27px; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font: 700 21px/1 system-ui; }
+  #autoIc { left: 104px; top: 292px; width: 24px; height: 24px; font: 700 22px/24px system-ui; text-align: center; color: var(--navy); }
+  #autoTx { left: 134px; top: 295px; font: 650 18px/1 system-ui; color: var(--navy); }
+  #actCard { left: 20px; top: 384px; width: 336px; height: 104px; border-radius: 20px; background: #EEF6FF; box-shadow: inset 0 0 0 1.5px #CFE2F7; }
+  .tile { top: 356px; width: 68px; height: 68px; border-radius: 20px; background: #E6F1FF; box-shadow: inset 0 0 0 1.5px #9CC3EA; display: flex; align-items: center; justify-content: center; font: 700 30px/1 system-ui; color: var(--navy); }
+  .ghost { top: 363px; width: 54px; height: 54px; border-radius: 16px; background: var(--blue); }
+  .lbl { width: 110px; text-align: center; font: 600 13.5px/1.25 system-ui; color: #2B3B4B; }
+  .glbl { top: 428px; width: 90px; text-align: center; font: 600 12px/1.25 system-ui; color: #2B3B4B; }
+  .lock { top: 344px; width: 30px; height: 30px; border-radius: 50%; background: var(--navy); box-shadow: 0 0 0 3px #fff; display: flex; align-items: center; justify-content: center; font: 700 14px/1 system-ui; color: #fff; }
+  .sc { top: 520px; width: 52px; height: 52px; border-radius: 16px; background: #E6F1FF; box-shadow: inset 0 0 0 1.5px #B9D6F5; }
+  .sclbl { top: 580px; width: 90px; text-align: center; font: 600 12px/1.25 system-ui; color: var(--navy); }
+  #rwLbl { left: 26px; top: 640px; font: 700 13px/1 system-ui; letter-spacing: 2.5px; color: #7F8A96; }
+  #rw { left: 22px; top: 662px; width: 332px; height: 62px; border-radius: 18px; background: #FFF3DC; box-shadow: inset 0 0 0 1.5px #F0D29B; }
+  #rw i { position: absolute; left: 22px; top: 18px; width: 210px; height: 10px; border-radius: 5px; background: #EBC88E; }
+  #rw b { position: absolute; left: 22px; top: 36px; width: 140px; height: 10px; border-radius: 5px; background: #F2D7A8; }
+
+  /* wordmark */
+  .mark { font: italic 900 150px/1 -apple-system, 'SF Pro Display', system-ui; letter-spacing: -3px; white-space: nowrap; }
+  .mark i { display: inline-block; font-style: inherit; }
+  .mark .r { color: var(--red); } .mark .n { color: var(--navy); }
+  #mark { left: 960px; top: 540px; }
+
+  /* kinetic type (screen space) */
+  #type { position: absolute; inset: 0; z-index: 55; pointer-events: none; }
+  .kt { position: absolute; max-width: 1000px; font: 800 76px/1.04 -apple-system, 'SF Pro Display', system-ui; letter-spacing: -2px; color: var(--ink); }
+  .kt .w { display: inline-block; }
+  .kt .w i { display: inline-block; font-style: normal; }
+  .kt .hl { position: relative; display: inline-block; color: var(--orange); }
+  .kt .sq { position: absolute; left: -2%; bottom: -14px; width: 104%; height: 22px; overflow: visible; }
+  .kt .sq path { fill: none; stroke: var(--orange); stroke-width: 6; stroke-linecap: round; }
+  .num { position: absolute; font: 900 190px/1 -apple-system, system-ui; letter-spacing: -6px; color: var(--orange); }
+
+  #end { position: absolute; inset: 0; z-index: 50; background: #F4F7FB; }
+  #endMark { position: absolute; left: 960px; top: 500px; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="drift">
+    <div id="cam">
+      <div id="bars"></div>
+      <svg id="world" width="1920" height="1080" viewBox="0 0 1920 1080"></svg>
+      <div id="phoneWrap" data-name="Phone">
+        <div id="phone">
+          <div class="screen">
+            <div id="back">←</div>
+            <div id="coinPill" data-name="Cashpoints"><i></i>7</div>
+            <div id="bal" data-name="Balance"></div>
+            <div id="addBtn" data-name="Add Money">+ Add Money</div>
+            <div id="autoIc" data-name="Auto-Load icon">↻</div>
+            <div id="autoTx" data-name="Auto-Load">Setup Auto-Load</div>
+            <div id="actCard"></div>
+            <div class="ghost" style="left:25px"></div><div class="ghost" style="left:113px"></div><div class="ghost" style="left:209px"></div><div class="ghost" style="left:297px"></div>
+            <div class="glbl" style="left:7px">Scan any QR</div><div class="glbl" style="left:95px">Pay Anyone</div><div class="glbl" style="left:191px">Bank Transfer</div><div class="glbl" style="left:279px">Check Balance</div>
+            <div class="tile" style="left:50px" data-name="Scan and Pay">⌗</div><div class="tile" style="left:154px" data-name="Send Money">↗</div><div class="tile" style="left:258px" data-name="Transfer">⇥</div>
+            <div class="lbl" style="left:29px;top:438px">Scan<br>and Pay</div><div class="lbl" style="left:133px;top:438px">Send Money<br>to Anyone</div><div class="lbl" style="left:237px;top:438px">Transfer to<br>Account</div>
+            <div class="lock" style="left:104px">🔒︎</div><div class="lock" style="left:208px">🔒︎</div><div class="lock" style="left:312px">🔒︎</div>
+            <div class="sc" style="left:32px"></div><div class="sc" style="left:120px"></div><div class="sc" style="left:206px"></div><div class="sc" style="left:292px"></div>
+            <div class="sclbl" style="left:13px">Payment<br>History</div><div class="sclbl" style="left:101px">Tap and<br>Pay</div><div class="sclbl" style="left:187px">View Card</div><div class="sclbl" style="left:273px">Manage<br>Account</div>
+            <div id="rwLbl">REWARDS</div>
+            <div id="rw"><i></i><b></b></div>
+          </div>
+        </div>
+      </div>
+      <canvas id="fx" width="3840" height="2160"></canvas>
+      <div id="mark" class="mark" data-name="Wordmark"></div>
+    </div>
+  </div>
+  <div id="end" data-name="End card"><div id="endMark" class="mark"></div></div>
+  <div id="type"></div>
+</div>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

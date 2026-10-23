@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IPL Themification – Film</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","lottie-web":"/vendor/lottie-web/build/player/esm/lottie_svg.min.js","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<style>
+  @font-face { font-family: 'InterLocal'; font-weight: 400; src: url(/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'InterLocal'; font-weight: 800; src: url(/vendor/@fontsource/inter/files/inter-latin-800-normal.woff2) format('woff2'); }
+  /* ground from the IPL case-study cover: warm tan, lighter grid lines */
+  #stage { --stage-bg: #E1BB98; }
+  /* the grid lies on the wall's plane, so it takes the same angle */
+  #grid { position: absolute; left: -4500px; top: -4500px; width: 9000px; height: 9000px; background-color: #E1BB98;
+    background-image: linear-gradient(90deg, #E8CBB1 0 var(--line), transparent var(--line)), linear-gradient(0deg, #E8CBB1 0 var(--line), transparent var(--line));
+    background-size: var(--cell) var(--cell); background-position: var(--ox) var(--oy); }
+  /* two layers seen through the same camera: the ground, and the phones (their own layer, so the sticker outline
+     traces only the phones' silhouettes, thickness included) */
+  #ground, #cam, #camFocus, #shadows { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-origin: 0 0; }   /* the camera's view, as a 2D transform (scene.js) */
+  #outline { position: absolute; inset: 0; filter: url(#stickerF); }
+  #outline2 { position: absolute; inset: 0; }   /* phones here carry their own outline (+ blur): scene.js */
+  #rest, #shadowsWrap { position: absolute; inset: 0; }
+  /* the shadow a lifted phone leaves on the wall */
+  .lift-sh { position: absolute; left: 0; top: 0; width: 300px; height: 620px; border-radius: 40px; background: rgba(40, 24, 10, .45); filter: blur(22px); display: none; }
+  /* a phone: an extruded dark body (no buttons), the real screen on its face */
+  .ph { position: absolute; left: 0; top: 0; width: 300px; height: 620px; }
+  .ph .thick { position: absolute; inset: 0; border-radius: 40px; background: #2B353E; }   /* the body: its box-shadows are the slabs */
+  .ph .face { position: absolute; inset: 0; border-radius: 40px; background: #090D10; box-shadow: inset 0 0 0 1.6px #4A5560, inset 0 0 0 2.7px #232C33, inset 0 0 0 3.9px #090D10; }   /* the Thumbnail explainer's bezel: near-black with a fine metal rim */
+  .ph .scr { position: absolute; left: 9px; top: 9px; right: 9px; bottom: 9px; border-radius: 32px; overflow: hidden; background: #fff;
+    clip-path: inset(1.5px round 30.5px); }   /* everything on the screen is trimmed to one edge, 1.5px in, so it blends into the bezel (no white hairline, no steps) */
+  /* status bar (30 px, clear of the island) above the screen's content */
+  .ph .sbar { position: absolute; left: 0; top: 0; width: 100%; height: 31px; z-index: 2; }   /* 1 px over the content below, so no seam shows between them */
+  .ph .sbar b { position: absolute; left: 30px; top: 11px; font: 600 12px/14px -apple-system, 'SF Pro Text', system-ui; color: #000; letter-spacing: -.1px; }
+  .ph .sbar img { position: absolute; right: 22px; top: 13px; width: 52px; height: 9px; }
+  .ph .sbar.light b { color: #fff; } .ph .sbar.light img { filter: invert(1); }
+  .ph .body { position: absolute; left: 0; top: 30px; right: 0; bottom: 0; overflow: hidden; background: #fff; }
+  .ph .body > * { position: absolute; left: 0; top: 0; width: 100%; }
+  .ph .scr img { display: block; }
+  .ph .isl { position: absolute; left: 50%; top: 18px; width: 78px; height: 22px; margin-left: -39px; border-radius: 12px; background: #15191D; }
+  .lot { height: 100%; }
+  @font-face { font-family: 'InterLocal'; font-weight: 500; src: url(/vendor/@fontsource/inter/files/inter-latin-500-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'InterLocal'; font-weight: 600; src: url(/vendor/@fontsource/inter/files/inter-latin-600-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'InterLocal'; font-weight: 700; src: url(/vendor/@fontsource/inter/files/inter-latin-700-normal.woff2) format('woff2'); }
+
+  /* PayZapp home, built from Figma (Handoffs › 768:2236). Laid out at the design's 360 px width, scaled to the
+     screen (282 px). Positions and type are the design's; the slot at the top holds the IPL spotlight banner. */
+  .hm { width: 360px !important; height: 730px; transform: scale(calc(282 / 360)); transform-origin: 0 0; overflow: hidden; background: #fff;
+    font-family: 'InterLocal', system-ui; -webkit-font-smoothing: antialiased; }
+  .hm * { position: absolute; margin: 0; box-sizing: border-box; }
+  .hm img { display: block; max-width: none; }
+  .hm .t { line-height: 1.4; white-space: nowrap; }
+  .hm .h16 { font-size: 16px; font-weight: 600; color: #222; }
+  .hm .link { font-size: 14px; font-weight: 500; color: #1d86ff; }
+  .hm .lbl { font-size: 12px; font-weight: 500; color: #444; text-align: center; white-space: normal; line-height: 1.4; }
+  .hm .tb { top: 21px; width: 34px; height: 34px; border-radius: 10px; background: rgba(26, 60, 99, .12); }
+  .hm .tb img { left: 5px; top: 5px; width: 24px; height: 24px; }
+  .hm .sheet { left: 0; top: 224px; width: 360px; height: 1904px; background: #fff; border-radius: 20px 20px 0 0; }
+  .hm .anc { width: 48px; height: 73px; }
+  .hm .tile { left: 0; top: 0; width: 48px; height: 48px; border-radius: 14px; border: 4px solid #677fff; background-origin: border-box;
+    background-image: radial-gradient(circle 44px at 37px 6px, #677fff 0%, #4b82ff 24.9%, #2e84ff 49.9%, #4facff 100%); }
+  .hm .tile.w { border-color: #6797ff; background: #fff; }
+  .hm .tile img { left: 8px; top: 8px; width: 24px; height: 24px; }   /* 24 px icon centred in the 40 px inside the border */
+  .hm .anc .lbl { top: 56px; left: 50%; transform: translateX(-50%); white-space: nowrap; }   /* line breaks as in the design */
+  .hm .biller { width: 48px; height: 73px; }
+  .hm .biller .pic { left: 0; top: 0; width: 48px; height: 48px; border-radius: 12px; border: .5px solid #e5e5e5; overflow: hidden; }
+  .hm .biller .lbl, .hm .cat .lbl { left: 50%; transform: translateX(-50%); white-space: nowrap; }
+  .hm .biller .lbl { top: 56px; }
+  .hm .cat { width: 52px; height: 77px; }
+  .hm .cat .bub { left: 0; top: 0; width: 52px; height: 52px; border-radius: 47.25px; background: #e7f4ff; }
+  .hm .cat .bub img { left: 13px; top: 13px; width: 26px; height: 26px; }
+  .hm .cat .lbl { top: 60px; }
+  .hm .nav { left: 0; bottom: -4px; width: 360px; height: 112px; }
+  /* a screen's name + what it shows, beside the phone in focus, in the wall's perspective */
+  .slbl { position: absolute; left: 0; top: 0; transform-origin: 0 0; width: max-content; color: #fff; opacity: 0; white-space: nowrap;
+    padding: 18px 26px 22px; border-radius: 20px; background: rgba(10, 14, 20, .7); box-shadow: 0 8px 0 rgba(10, 14, 20, .35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }   /* a dark frosted container with a sharp drop shadow, for legibility */
+  @font-face { font-family: 'FrauncesLocal'; font-weight: 600; src: url(/vendor/@fontsource/fraunces/files/fraunces-latin-600-normal.woff2) format('woff2'); }
+  .slbl b { display: block; font: 600 54px/1.12 'FrauncesLocal', Georgia, serif; letter-spacing: -0.5px; text-shadow: 0 4px 0 rgba(12, 18, 26, .55); }   /* Fraunces: the case study's display face; a sharp drop shadow so it reads over the wall */
+  .slbl span { display: block; margin-top: 10px; font: 600 19px/1.35 'ManropeLocal', 'InterLocal', system-ui; color: rgba(255,255,255,.78); white-space: normal; width: 300px; }
+  @font-face { font-family: 'ManropeLocal'; font-weight: 600; src: url(/vendor/@fontsource/manrope/files/manrope-latin-600-normal.woff2) format('woff2'); }
+  @font-face { font-family: 'ManropeLocal'; font-weight: 800; src: url(/vendor/@fontsource/manrope/files/manrope-latin-800-normal.woff2) format('woff2'); }
+  .runs-txt { top: auto !important; bottom: 26px; left: 16px !important; width: auto !important; }
+  .runs-txt b { display: block; font: 800 20px/0.95 'InterLocal', system-ui; color: #fff; text-transform: uppercase; }
+  .runs-txt span { display: block; max-width: 60%; margin-top: 8px; font: 400 10px/1.5 'InterLocal', system-ui; color: #C2D4F0; opacity: .75; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="groundWrap" style="position:absolute;inset:0;overflow:hidden" data-name="Ground (blurs with the wall)"><div id="ground"><div id="grid" data-name="Grid"></div></div></div><div id="rest" data-name="Wall (blurs while a phone is lifted)"><div id="shadowsWrap"><div id="shadows" data-name="Lift shadows"></div></div><div id="outline" data-name="White outline"><div id="cam" data-name="Wall"></div></div></div><div id="dim" style="position:absolute;inset:0;background:#000;opacity:0;pointer-events:none" data-name="Dim behind the lifted phone"></div><div id="outline2" data-name="Lifted phone"><div id="camFocus" data-name="Lifted"></div></div><div id="labels" style="position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0" data-name="Screen labels"></div><div id="introWrap" style="position:absolute;inset:0" data-name="Intro pair"><div id="intro" style="position:absolute;left:0;top:0;width:0;height:0;transform-origin:0 0"></div></div></div>
+<svg width="0" height="0" style="position:absolute"><filter id="stickerF" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="c1"/><feMorphology in="c1" operator="erode" radius="2" result="closed"/><feMorphology in="closed" operator="dilate" radius="6" result="d"/><feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="o"/><feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge></filter></svg>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

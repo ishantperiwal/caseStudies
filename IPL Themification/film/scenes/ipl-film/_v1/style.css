@@ -1,0 +1,85 @@
+/* Look: the "Thumbnail explainer" theme (navy tile wall, flat white sticker outline, orthographic camera). */
+#stage { --stage-bg: #1C3954; font-family: -apple-system, 'SF Pro Text', system-ui; -webkit-font-smoothing: antialiased; }
+#bg { position: absolute; inset: 0; background: #1C3954; }
+#grid { position: absolute; left: -4500px; top: -4500px; width: 9000px; height: 9000px; background-color: #1F3D5C;
+  background-image: linear-gradient(90deg, #335A80 0 6px, transparent 6px), linear-gradient(0deg, #335A80 0 6px, transparent 6px);
+  background-size: 60px 60px; background-position: 57px 57px; }
+#outline { position: absolute; inset: 0; filter: url(#stickerF); }
+#vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 72% 76% at 50% 50%, rgba(31,61,92,0) 52%, rgba(31,61,92,.65) 84%, #1F3D5C 100%); }
+#persp, #persp2, #persp3 { position: absolute; inset: 0; perspective: none; }   /* orthographic camera */
+#world, #world2, #world3 { position: absolute; left: 960px; top: 600px; width: 0; height: 0; transform-style: preserve-3d; }
+#world3 { transform-style: flat; }
+
+/* ---------- phone body (from the theme) */
+#phone { position: absolute; left: -192px; top: -402px; width: 384px; height: 804px; transform-style: preserve-3d; }
+#slabs { position: absolute; inset: 0; transform-style: preserve-3d; }
+.slab { position: absolute; inset: 0; border-radius: 58px; background: #2B353E; padding: 26px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.side-wall { position: absolute; backface-visibility: hidden; background: #2B353E; }
+.side-wall .antenna { position: absolute; display: block; background: #4A5661; }
+.side-btn { position: absolute; transform-style: preserve-3d; }
+.side-btn i { position: absolute; inset: 0; display: block; }
+.side-btn .btn-wall { position: absolute; left: 0; top: 0; display: block; background: #1E262D; }
+.side-btn .groove { inset: -1.5px; background: #151C22; }
+.side-btn .cap { background: #5A6672; }
+.bezel { position: absolute; inset: 0; border-radius: 58px; background: #090D10; box-shadow: inset 0 0 0 2px #8A96A0, inset 0 0 0 3.5px #2A343C, inset 0 0 0 5px #090D10;
+  padding: 14px; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+#backplate { position: absolute; inset: 0; border-radius: 58px; backface-visibility: hidden; transform-style: preserve-3d;
+  background: linear-gradient(150deg, #5D6A75 0%, #2E3942 40%, #1B232A 100%); box-shadow: inset 0 0 0 2px #7D8994; }
+.cam-bump { position: absolute; left: 24px; top: 24px; width: 88px; height: 158px; transform-style: preserve-3d; }
+.xw { position: absolute; left: 0; top: 0; display: block; }
+.cam-bump > .xw { background: #6B7782; }
+.cam-bump .cap { position: absolute; inset: 0; border-radius: 44px; background: #56636F; box-shadow: inset 0 0 0 1.5px #7C8893; }
+.lens { position: absolute; width: 64px; height: 64px; transform-style: preserve-3d; }
+.lens > .xw { background: #6E7984; }
+.lens .glass { position: absolute; inset: 0; border-radius: 50%; background: #0E1318; box-shadow: inset 0 0 0 5px #9AA4AE, inset 0 0 0 11px #161D23; }
+.lens .glass::after { content: ''; position: absolute; left: 23px; top: 23px; width: 18px; height: 18px; border-radius: 50%; background: #1E2A44; }
+.flash { position: absolute; left: 128px; top: 76px; width: 18px; height: 18px; border-radius: 50%; background: #CFC6AE; box-shadow: inset 0 0 0 2px #8D8672; }
+
+/* ---------- screen: 360 × 780; the case-study screens are 540 wide, so everything is drawn at 2/3 */
+#screen { position: absolute; left: 12px; top: 12px; width: 360px; height: 780px; transform-style: preserve-3d; }
+.scr-bg { position: absolute; inset: 0; border-radius: 46px; background: #fff; }
+.layer { position: absolute; inset: 0; border-radius: 46px; overflow: hidden; background: #fff; }
+.layer img { position: absolute; left: 0; top: 0; width: 360px; display: block; }
+.island { position: absolute; left: 123px; top: 11px; width: 114px; height: 33px; border-radius: 20px; background: #15191D; }
+.island::after { content: ''; position: absolute; right: 11px; top: 11.5px; width: 10px; height: 10px; border-radius: 50%; background: #1C232B; }
+.home-ind { position: absolute; left: 113px; top: 763px; width: 134px; height: 7px; border-radius: 4px; background: rgba(17, 24, 29, .45); }
+
+/* home: the slot is the screen's transparent top (0–230); banners are 540×360 → 360×240 */
+#home { background: #fff; overflow: visible; }   /* the slot lifts off the glass, so this layer can't clip it */
+#home .home-img { border-radius: 0 0 46px 46px; }
+.slot { position: absolute; left: 0; top: 0; width: 360px; height: 240px; overflow: hidden; border-radius: 46px 46px 0 0; background: #EEF5FF; }
+.slot .spot { position: absolute; left: 0; top: 0; width: 360px; height: 240px; }
+#spotC { background: url(assets/Navratri.png) 0 0 / 360px auto no-repeat; }
+
+/* scanner */
+#scan .full { height: 800px; object-fit: cover; }
+#scan .lot { position: absolute; left: 0; top: -19px; width: 360px; height: 780px; }
+#scan .scan-ov { top: auto; bottom: 0; }
+/* payment success */
+#ballLottie { position: absolute; left: 0; top: 19px; width: 360px; height: 780px; transform: scale(.9); transform-origin: top center; }
+#runsLottie { position: absolute; left: 0; bottom: 0; width: 360px; height: 780px; }
+.runs-txt { position: absolute; left: 18px; right: 18px; bottom: 36px; }
+.runs-txt b { display: block; font: 800 24px/0.95 'InterLocal', system-ui; color: #fff; text-transform: uppercase; letter-spacing: .01em; }
+.runs-txt span { display: block; max-width: 65%; margin-top: 10px; font: 400 12px/1.55 'InterLocal', system-ui; color: #C2D4F0; opacity: .75; }
+#board img { height: auto; }
+
+/* ---------- number cards (from the theme): frosted box on whole grid cells, number left, chart right */
+@font-face { font-family: 'ManropeLocal'; font-weight: 700; src: url(/vendor/@fontsource/manrope/files/manrope-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'ManropeLocal'; font-weight: 800; src: url(/vendor/@fontsource/manrope/files/manrope-latin-800-normal.woff2) format('woff2'); }
+@font-face { font-family: 'InterLocal'; font-weight: 400; src: url(/vendor/@fontsource/inter/files/inter-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'InterLocal'; font-weight: 800; src: url(/vendor/@fontsource/inter/files/inter-latin-800-normal.woff2) format('woff2'); }
+.co { position: absolute; left: 0; top: 0; color: #fff; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; padding: 0 52px; }
+.co .co-bg { position: absolute; inset: 0; border-radius: 9px; background: rgba(14, 33, 52, .55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+.co .txt, .co .viz { position: relative; }
+.co .txt { width: 330px; }
+.co .num { display: block; font: 800 98px/0.9 'ManropeLocal', system-ui; letter-spacing: -2px; font-variant-numeric: tabular-nums; text-shadow: 0 2.5px 0 #0B1A2A; }
+.co .num .u { font-size: .34em; margin-left: 10px; letter-spacing: 0; color: #C4D7EA; }
+.co .lbl { display: block; margin-top: 16px; font: 700 31px/1.2 'ManropeLocal', system-ui; letter-spacing: -.1px; color: #C4D7EA; text-shadow: 0 1.5px 0 #0B1A2A; }
+/* the runs ladder: one bar per way to score (1 · 2 · 4 · 6 · 25 · 50), this card's bar fills white */
+.co .ladder { display: flex; align-items: flex-end; gap: 9px; height: 150px; }
+.co .ladder .col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.co .ladder i { display: block; width: 22px; border-radius: 4px 4px 2px 2px; background: #4A6B8C; }
+.co .ladder i.on { background: color-mix(in srgb, #fff calc(var(--fill, 0) * 100%), #4A6B8C); }
+.co .ladder span { font: 700 15px/1 'ManropeLocal', system-ui; color: #8FAACA; }
+.co .ladder .col.on span { color: #fff; }

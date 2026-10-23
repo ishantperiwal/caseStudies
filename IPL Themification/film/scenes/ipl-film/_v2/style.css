@@ -1,0 +1,80 @@
+/* Thumbnail explainer look; the screens are sketched (animatic). */
+#stage { --stage-bg: #1C3954; font-family: -apple-system, 'SF Pro Text', system-ui; -webkit-font-smoothing: antialiased; }
+#bg { position: absolute; inset: 0; background: #1C3954; }
+#grid { position: absolute; left: -4500px; top: -4500px; width: 9000px; height: 9000px; background-color: #1F3D5C;
+  background-image: linear-gradient(90deg, #335A80 0 6px, transparent 6px), linear-gradient(0deg, #335A80 0 6px, transparent 6px);
+  background-size: 60px 60px; background-position: 57px 57px; }
+#outline { position: absolute; inset: 0; filter: url(#stickerF); }
+#vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse 72% 76% at 50% 50%, rgba(31,61,92,0) 52%, rgba(31,61,92,.65) 84%, #1F3D5C 100%); }
+#persp, #persp2, #persp3 { position: absolute; inset: 0; perspective: none; }
+#world, #world2, #world3 { position: absolute; left: 960px; top: 600px; width: 0; height: 0; transform-style: preserve-3d; }
+#world3 { transform-style: flat; }
+
+/* phone body (the theme's) */
+#phone, #phoneBefore { position: absolute; left: -192px; top: -402px; width: 384px; height: 804px; transform-style: preserve-3d; }
+#slabs, .slabs { position: absolute; inset: 0; transform-style: preserve-3d; }
+.slab { position: absolute; inset: 0; border-radius: 58px; background: #2B353E; padding: 26px;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.side-wall { position: absolute; backface-visibility: hidden; background: #2B353E; }
+.side-wall .antenna { position: absolute; display: block; background: #4A5661; }
+.side-btn { position: absolute; transform-style: preserve-3d; }
+.side-btn i { position: absolute; inset: 0; display: block; }
+.side-btn .groove { inset: -1.5px; background: #151C22; }
+.side-btn .cap { background: #5A6672; }
+.side-btn > .xw { background: #1E262D; }
+.bezel { position: absolute; inset: 0; border-radius: 58px; background: #090D10; box-shadow: inset 0 0 0 2px #8A96A0, inset 0 0 0 3.5px #2A343C, inset 0 0 0 5px #090D10;
+  padding: 14px; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+#backplate, .backplate { position: absolute; inset: 0; border-radius: 58px; backface-visibility: hidden; transform-style: preserve-3d;
+  background: linear-gradient(150deg, #5D6A75 0%, #2E3942 40%, #1B232A 100%); box-shadow: inset 0 0 0 2px #7D8994; }
+.cam-bump { position: absolute; left: 24px; top: 24px; width: 88px; height: 158px; transform-style: preserve-3d; }
+.xw { position: absolute; left: 0; top: 0; display: block; }
+.cam-bump > .xw { background: #6B7782; }
+.cam-bump .cap { position: absolute; inset: 0; border-radius: 44px; background: #56636F; box-shadow: inset 0 0 0 1.5px #7C8893; }
+.lens { position: absolute; width: 64px; height: 64px; transform-style: preserve-3d; }
+.lens > .xw { background: #6E7984; }
+.lens .glass { position: absolute; inset: 0; border-radius: 50%; background: #0E1318; box-shadow: inset 0 0 0 5px #9AA4AE, inset 0 0 0 11px #161D23; }
+.flash { position: absolute; left: 128px; top: 76px; width: 18px; height: 18px; border-radius: 50%; background: #CFC6AE; }
+
+/* screen: 360 × 780, a sketch on paper */
+.screen { position: absolute; left: 12px; top: 12px; width: 360px; height: 780px; transform-style: preserve-3d; }
+.scr-bg { position: absolute; inset: 0; border-radius: 46px; overflow: hidden; background: #FBFAF6; }
+.clip { position: absolute; left: 0; top: 48px; width: 360px; height: 732px; overflow: hidden; border-radius: 0 0 46px 46px; }
+.content { position: absolute; left: 0; top: -48px; width: 360px; height: 900px; }
+.top-wash { position: absolute; left: 0; top: 0; width: 360px; height: 236px; }
+.island { position: absolute; left: 123px; top: 11px; width: 114px; height: 33px; border-radius: 20px; background: #15191D; }
+.home-ind { position: absolute; left: 113px; top: 763px; width: 134px; height: 7px; border-radius: 4px; background: rgba(17, 24, 29, .45); }
+.pc { position: absolute; }
+.pc svg, .top-wash svg { position: absolute; left: 0; top: 0; overflow: visible; }
+
+/* number cards (the theme's) */
+@font-face { font-family: 'ManropeLocal'; font-weight: 700; src: url(/vendor/@fontsource/manrope/files/manrope-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'ManropeLocal'; font-weight: 800; src: url(/vendor/@fontsource/manrope/files/manrope-latin-800-normal.woff2) format('woff2'); }
+.co { position: absolute; left: 0; top: 0; color: #fff; display: flex; align-items: center; justify-content: space-between; box-sizing: border-box; padding: 0 52px; }
+.co .co-bg { position: absolute; inset: 0; border-radius: 9px; background: rgba(14, 33, 52, .55); -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px); }
+.co .txt, .co .viz { position: relative; }
+.co .txt { width: 320px; }
+.co .viz { width: 200px; display: flex; flex-direction: column; align-items: flex-end; }
+.co .num { display: block; font: 800 98px/0.9 'ManropeLocal', system-ui; letter-spacing: -2px; color: #fff; text-shadow: 0 2.5px 0 #0B1A2A; }
+.co .num .u { font-size: .78em; margin-left: 3px; letter-spacing: 0; }
+.co .lbl { display: block; max-width: 320px; margin-top: 16px; font: 700 31px/1.2 'ManropeLocal', system-ui; color: #C4D7EA; text-shadow: 0 1.5px 0 #0B1A2A; }
+.co .tbd { position: absolute; right: 14px; top: 12px; font: 700 13px/1 'ManropeLocal', system-ui; letter-spacing: 2px; color: #F2C14E; }
+.co .viz span { display: block; font: 700 18px/1 'ManropeLocal', system-ui; color: #8FAACA; letter-spacing: 1.5px; text-transform: uppercase; }
+.co .bars { display: flex; flex-direction: row; align-items: flex-end; gap: 10px; }
+.co .bars .chev { display: block; width: 28px; height: 28px; }
+.co .bars .chev svg { width: 100%; height: 100%; display: block; fill: none; stroke: #8FAACA; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.co .bars .col { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.co .bars .bar { display: block; width: 72px; border-radius: 5px 5px 2px 2px; }
+.co .bars .bar.pre { background: #4A6B8C; } .co .bars .bar.ipl { background: #fff; }
+.co .people .group { position: relative; width: 196px; height: 128px; }
+.co .people .group .pp { position: absolute; width: 50px; height: 74px; }
+.co .people .group .p0 { left: 6px; top: 0; } .co .people .group .p1 { left: 73px; top: 0; } .co .people .group .p2 { left: 140px; top: 0; }
+.co .people .group .p3 { left: 38px; top: 54px; } .co .people .group .p4 { left: 106px; top: 54px; }
+.co .people svg { width: 100%; height: 100%; display: block; fill: #4A6B8C; stroke: #1A2D44; stroke-width: 3px; paint-order: stroke; }
+.co .people .pp.on svg { fill: color-mix(in srgb, #fff calc(var(--fill, 0) * 100%), #4A6B8C); }
+.co .viz.people { width: 236px; }
+.co:has(.people) .txt { width: 284px; }
+
+/* before / after labels */
+#baLabels { position: absolute; inset: 0; z-index: 60; pointer-events: none; }
+.ba-label { position: absolute; text-align: center; color: #fff; white-space: nowrap; }
+.ba-label b { display: block; font: 600 68px/1 -apple-system, 'SF Pro Display', system-ui; }

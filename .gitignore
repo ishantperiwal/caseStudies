@@ -3,3 +3,9 @@ Thumbs.db
 .vscode/
 .cursor/
 *~lock~
+
+# Motion Studio: the studio is its own repo (github.com/ishantperiwal/motionStudio), cloned here as motion-studio/.
+# Each case study's films live in <case>/film/ (scenes and notes tracked); renders stay on this machine.
+motion-studio/
+*/film/out/
+*/film/notes/_go.json

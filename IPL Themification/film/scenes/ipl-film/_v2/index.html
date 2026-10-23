@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IPL Themification – Animatic</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","roughjs":"/vendor/roughjs/bundled/rough.esm.js","pixi.js":"/vendor/pixi.js/dist/pixi.mjs","three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/","lottie-web":"/vendor/lottie-web/build/player/esm/lottie_svg.min.js","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="persp">
+    <div id="world">
+      <div id="grid" data-name="Grid"></div>
+    </div>
+  </div>
+  <div id="vignette" data-name="Vignette"></div>
+  <div id="persp3"><div id="world3" data-name="Number cards"></div></div>
+  <div id="outline" data-name="White outline">
+  <div id="persp2">
+    <div id="world2">
+      <div id="phone" data-name="Phone">
+        <div id="slabs" data-name="Phone body"></div>
+        <div class="bezel" data-name="Bezel"></div>
+        <div id="backplate" data-name="Back"><div class="cam-bump" data-name="Camera island"><div class="cap"></div><div class="lens" style="left:12px;top:12px"><div class="glass"></div></div><div class="lens" style="left:12px;top:82px"><div class="glass"></div></div></div><div class="flash" data-name="Flash"></div></div>
+        <div class="screen" data-name="Screen">
+          <div class="scr-bg"></div>
+          <div class="clip" data-name="Screen content"><div class="content"><div class="top-wash" data-name="IPL banner backdrop"></div></div></div>
+          <div class="island" data-name="Dynamic Island"></div>
+          <div class="home-ind" data-name="Home indicator"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<svg width="0" height="0" style="position:absolute"><filter id="stickerF" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="c1"/><feMorphology in="c1" operator="erode" radius="2" result="closed"/><feMorphology in="closed" operator="dilate" radius="9" result="d"/><feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="o"/><feFlood flood-color="#26313A"/><feComposite in2="closed" operator="in" result="fill"/><feMerge><feMergeNode in="o"/><feMergeNode in="fill"/><feMergeNode in="SourceGraphic"/></feMerge></filter></svg>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

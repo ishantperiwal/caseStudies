@@ -1,0 +1,9 @@
+{
+  "items": [
+    { "id": "v3-open", "frame": 60, "range": [0, 160], "text": "Real screens now. Open: drift along PayZapp's payment row → pull out → Wallet tile lifts → push in → HARD CUT at 124: same frame, tile is now Zapp Account." },
+    { "id": "v3-logo", "frame": 178, "range": [160, 238], "text": "Logo match cut: push into the tile's Zapp logo, cut at 178 to the same logo in the Zapp Account header, pull out." },
+    { "id": "v3-familiar", "frame": 305, "range": [238, 356], "text": "Core idea: PayZapp racks in beside it; its payment row lifts, flies over and lands on Zapp's three actions, then dissolves into them." },
+    { "id": "v3-decisions", "frame": 470, "range": [356, 758], "text": "One stop per decision, each lifting in depth while the rest dims: Cashpoints up top → Balance → Add Money (1.5×) → Auto-Load (20%) → locks → whip to the upgrade banner." },
+    { "id": "v3-end", "frame": 820, "range": [758, 950], "text": "Pull out to hero angle with results, end card." }
+  ]
+}

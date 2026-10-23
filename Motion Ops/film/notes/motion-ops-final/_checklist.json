@@ -1,0 +1,180 @@
+{
+  "items": [
+    {
+      "id": "card2-pop-zoom-slower",
+      "frame": 935,
+      "range": [
+        935,
+        990
+      ],
+      "text": "Card 2's pop is slower (16f, was 10f) and the camera's close-in on it is ~0.9 s longer (it now builds over ~f930\u2013985). Details' slide and the end move ~0.9 s later."
+    },
+    {
+      "id": "card2-marker",
+      "frame": 977,
+      "range": [
+        976,
+        1010
+      ],
+      "text": "Card 2's header gets the same marker highlight as card 1 while the camera reads it: blue blocks wipe in behind \u201cSlides Left\u201d, then \u201cPage\u201d, and wipe off to the right (~f976\u20131006)."
+    },
+    {
+      "id": "flow-centred-spread",
+      "frame": 558,
+      "region": {
+        "x": 424,
+        "y": 421,
+        "w": 1114,
+        "h": 608
+      },
+      "text": "The flow sits in the middle of the canvas now (it was low: moved up 140px), and in the whole-window view the three frames are closer together (73% spacing, centred). As the camera closes in on the plugin (~f560\u2013604) they spread out to the full spacing, so the links have room for the cards by the time one is dropped."
+    },
+    {
+      "id": "details-pullback-slower",
+      "frame": 998,
+      "range": [
+        998,
+        1040
+      ],
+      "text": "The pull back from card 2 over to Details is slower (~37f, was ~21f, f1001\u20131039); Details' slide-in follows it."
+    },
+    {
+      "id": "ending-loop",
+      "frame": 1059,
+      "range": [
+        1059,
+        1144
+      ],
+      "text": "New ending: the Figma window slides away to the left (f1094\u20131130) while the grid fades, leaving the plain ground the film opens on; it holds a beat and the last frame matches frame 0 exactly, so it loops seamlessly. Film is now 1145 frames."
+    },
+    {
+      "id": "flicker-will-change",
+      "frame": 354,
+      "range": [
+        354,
+        374
+      ],
+      "region": {
+        "x": 1334,
+        "y": 183,
+        "w": 245,
+        "h": 763
+      },
+      "text": "Flicker fixed at the source: the cards had will-change: transform, which let Chrome reuse a stale raster of each card, so a frame looked slightly different depending on what was drawn before it (115 of 126 moments in this span did). Removed: every moment now renders identically, in playback, scrubbing and export."
+    },
+    {
+      "id": "straight-to-sheet",
+      "frame": 821,
+      "range": [
+        770,
+        860
+      ],
+      "text": "No Pay ripple and no pull back to the whole step: as card 1's highlight ends (~f780) the camera goes straight across to Sending and down to its bottom (~f780\u2013842), staying close, and the sheet rises there. ~1.7 s shorter; the film is now 1103 frames."
+    },
+    {
+      "id": "sheet-hold-pullback-card2",
+      "frame": 851,
+      "range": [
+        842,
+        1015
+      ],
+      "text": "The camera holds on the bottom sheet (~f855\u2013881), then pulls back while panning right toward the second link (f881\u2013912); the dot sets off and card 2 pops in during that move (~f905). Then it closes in on card 2's header (marker highlight ~f952) and goes on to Details (~f977\u20131015)."
+    },
+    {
+      "id": "webgl-glass-in-film",
+      "frame": 80,
+      "range": [
+        14,
+        126
+      ],
+      "text": "The opening's glass panel is now the WebGL liquid-glass material (as in glass-compare): frosted, the rim refracts and lights the names behind it, soft shadow. Same placement, size, fade-in and fade-out as before; the old CSS/SVG glass is kept in the code, switched off."
+    },
+    {
+      "id": "rim-sliver-flicker",
+      "frame": 342,
+      "range": [
+        342,
+        390
+      ],
+      "region": {
+        "x": 1277,
+        "y": 167,
+        "w": 242,
+        "h": 787
+      },
+      "text": "Right-edge flicker fixed: the back half of each card's rim (in the back's yellow\u2192teal colours) peeked out as a sub-pixel sliver beside the edge and blinked frame to frame. It now wears those colours only while the back faces us (the flip still shows them); with the front facing, the rim is the card's dark edge."
+    },
+    {
+      "id": "hourglass-height",
+      "frame": 689,
+      "region": {
+        "x": 684,
+        "y": 273,
+        "w": 167,
+        "h": 559
+      },
+      "text": "The easing icon (two triangles) is shorter: now about as tall as the \u25c6 duration icon below it, on both cards."
+    },
+    {
+      "id": "canvas-backdrop",
+      "frame": 40,
+      "range": [
+        0,
+        132
+      ],
+      "text": "The ground (grid) and the names are now drawn on a canvas (same layout, motion, flash and blur as before \u2014 the SVG still computes them, hidden), and the WebGL glass reads that canvas directly: no per-frame snapshot, so scrubbing the opening shouldn't lag. Looks the same as before (only text anti-aliasing differs)."
+    },
+    {
+      "id": "hand-negative-space",
+      "frame": 433,
+      "range": [
+        433,
+        528
+      ],
+      "text": "The hand now grabs the plugin's title bar in the empty stretch between \u201cMotion Card Plugin\u201d and the \u00d7, so it no longer covers the title (the carry and the cursor's path to the easing follow it)."
+    },
+    {
+      "id": "pick-closer",
+      "frame": 583,
+      "region": {
+        "x": 936,
+        "y": 214,
+        "w": 481,
+        "h": 611
+      },
+      "text": "Closer on the plugin while the easing is picked: an extra ~30% zoom builds with the pick (~f560\u2013604) and eases back as the drag sets off, so the drag and drop framing is unchanged."
+    },
+    {
+      "id": "drop-zoom-more",
+      "frame": 651,
+      "range": [
+        651,
+        681
+      ],
+      "text": "A bit closer after the drop: the zoom onto the bottom of card 1 (and the pan up to its header that follows) is ~10% tighter (extra zoom 0.95, was 0.77)."
+    },
+    {
+      "id": "scrim-fade",
+      "frame": 806,
+      "range": [
+        840,
+        866
+      ],
+      "text": "The dim behind the bottom sheet now fades in smoothly over the sheet's rise (~f843\u2013861, a gentle in-out curve, starting a touch before the sheet) instead of snapping on with the sheet's fast curve."
+    },
+    {
+      "id": "card2-zoom-more",
+      "frame": 910,
+      "range": [
+        910,
+        955
+      ],
+      "text": "A little closer on card 2 too, to match card 1: its close-in is now +62% (was +45%) while its header is read."
+    },
+    {
+      "id": "16x10",
+      "frame": 0,
+      "text": "The film is now 1920\u00d71200 (16:10), the same as the Zapp and IPL films. Every shot is framed as before, centred, with 60 px more above and below (the aqua grid / Figma canvas extends into it)."
+    }
+  ]
+}

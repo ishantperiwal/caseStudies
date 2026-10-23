@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "id": "2026-10-15T20-25-22-okay-we-don-t-need-to-waste-our",
+      "frame": 58,
+      "range": [
+        34,
+        172
+      ],
+      "text": "One drag only: the second handle mirrors the first (S-curve). Then lines build around the curve so it becomes the top of a whole Motion Card; we pull back and its fields fill in (motion, component, easing, duration). Deck and plugin use the full card."
+    },
+    {
+      "id": "2026-10-15T20-31-55-ye-transition-thoda-achha-laga-m",
+      "frame": 252,
+      "range": [
+        236,
+        400
+      ],
+      "text": "Plugin is now a list of easings by name (as in the case study): the deck pours into it. The cursor picks “moving → slow”, drags it out and it forms a Motion Card between the two screens. Then a pull-back: the plugin slides off, Figma chrome falls away, many flows with specs popping in between screens (cards a bit larger than true scale for the thumbnail)."
+    },
+    {
+      "id": "2026-10-15T20-42-26-we-are-making-the-figma-window-a",
+      "frame": 236,
+      "range": [
+        234,
+        292
+      ],
+      "text": "New order: the deck closes, the Motion Cards plugin panel appears on its own, the cards fly into it and become the list; only then Figma draws itself around the plugin (266–292). Pick, drag and zoom-out follow, 12 frames later."
+    },
+    {
+      "id": "2026-10-15T20-54-49-ek-cheez-hai-jo-overall-bhi-dhya",
+      "frame": 232,
+      "range": [
+        214,
+        292
+      ],
+      "text": "Composition balance: as the fan collapses, the deck drifts left; the plugin appears right of centre so the two sit as a centred pair; when Figma builds, the plugin glides into its place in the window."
+    }
+  ]
+}

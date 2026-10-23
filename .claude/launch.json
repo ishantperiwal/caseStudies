@@ -6,21 +6,29 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "--prefix",
-        "Zapp Account/video",
+        "motion-studio",
         "run",
-        "dev"
+        "dev",
+        "--",
+        "--project",
+        "Zapp Account/film"
       ],
       "port": 5174,
-      "autoPort": true
+      "env": {
+        "PORT": "5174"
+      }
     },
     {
       "name": "ipl-motion-studio",
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "--prefix",
-        "IPL Themification/video",
+        "motion-studio",
         "run",
-        "dev"
+        "dev",
+        "--",
+        "--project",
+        "IPL Themification/film"
       ],
       "port": 5175,
       "env": {
@@ -32,9 +40,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "--prefix",
-        "Motion Ops/video",
+        "motion-studio",
         "run",
-        "dev"
+        "dev",
+        "--",
+        "--project",
+        "Motion Ops/film"
       ],
       "port": 5176,
       "env": {

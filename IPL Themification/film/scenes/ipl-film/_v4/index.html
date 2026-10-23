@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IPL Themification – Animatic</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","roughjs":"/vendor/roughjs/bundled/rough.esm.js","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<style>
+  #stage { --stage-bg: #FAF8F2; }
+  #cam { position: absolute; left: 0; top: 0; width: 1920px; height: 1200px; }
+  #ink { position: absolute; left: 0; top: 0; overflow: visible; }
+</style>
+</head>
+<body>
+<div id="stage"><div id="cam"><svg id="ink" width="1920" height="1200"></svg></div></div>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>glass-compare</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <canvas id="bg" width="1920" height="1080" data-name="Backdrop (grid + names)"></canvas>
+  <div class="slabShadow" id="domShadow"></div>
+  <div class="slab" id="domSlab" data-name="Glass – DOM (CSS + SVG filter)">
+    <canvas id="domBack" style="filter: url(#domRefract)"></canvas>
+    <div class="glass"></div><div class="glass spec"></div>
+  </div>
+  <canvas id="gl" width="1920" height="1080" data-name="Glass – WebGL shader"></canvas>
+  <div class="label" id="lblDom">DOM<small>CSS backdrop-filter + SVG displacement</small></div>
+  <div class="label" id="lblGl">WebGL<small>liquid-glass shader</small></div>
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="domRefract" filterUnits="userSpaceOnUse" x="-200" y="-200" width="2000" height="2000" color-interpolation-filters="sRGB">
+      <feImage id="domMap" result="raw" preserveAspectRatio="none" x="0" y="0"/>
+      <feGaussianBlur id="domSoft" in="raw" stdDeviation="3" result="map"/>
+      <feDisplacementMap id="domDisp" in="SourceGraphic" in2="map" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </svg>
+</div>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

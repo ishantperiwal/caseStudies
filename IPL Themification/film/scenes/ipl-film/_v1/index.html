@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>IPL Themification – Animatic</title>
+<script type="importmap">{"imports":{"gsap":"/vendor/gsap/index.js","gsap/":"/vendor/gsap/","roughjs":"/vendor/roughjs/bundled/rough.esm.js","pixi.js":"/vendor/pixi.js/dist/pixi.mjs","three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/","lottie-web":"/vendor/lottie-web/build/player/esm/lottie_svg.min.js","@studio/":"/runtime/"}}</script>
+<link rel="stylesheet" href="/runtime/stage.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="stage">
+  <div id="bg"></div>
+  <div id="persp">
+    <div id="world">
+      <div id="grid" data-name="Grid"></div>
+    </div>
+  </div>
+  <div id="vignette" data-name="Vignette"></div>
+  <div id="persp3"><div id="world3" data-name="Number cards"></div></div>
+  <!-- the phone lives in its own 3D layer so a 2D sticker outline can be traced around its rendered silhouette -->
+  <div id="outline" data-name="White outline">
+  <div id="persp2">
+    <div id="world2">
+      <div id="phone" data-name="Phone">
+        <div id="slabs" data-name="Phone body"></div>
+        <div class="bezel" data-name="Bezel"></div>
+        <div id="backplate" data-name="Back"><div class="cam-bump" data-name="Camera island"><div class="cap"></div><div class="lens" style="left:12px;top:12px"><div class="glass"></div></div><div class="lens" style="left:12px;top:82px"><div class="glass"></div></div></div><div class="flash" data-name="Flash"></div></div>
+        <div id="screen" data-name="Screen">
+          <div class="scr-bg"></div>
+
+          <!-- Home: the spotlight slot sits behind the home screen's transparent top -->
+          <div class="layer" id="home" data-name="Home">
+            <div class="slot" data-name="Spotlight slot">
+              <img class="spot" id="spotA" src="assets/spot-1.png" data-name="Spotlight – Cricket fever">
+              <img class="spot" id="spotB" src="assets/spot-3.png" data-name="Spotlight – #ScoreBigOn">
+              <div class="spot" id="spotC" data-name="Spotlight – Navratri"></div>
+            </div>
+            <img class="home-img" src="assets/home.png" data-name="Home screen">
+          </div>
+
+          <!-- Scanner, IPL: camera feed, the fours-and-sixes Lottie, the bottom sheet -->
+          <div class="layer" id="scan" data-name="Scanner – IPL">
+            <img class="full" src="assets/scan-bg.png">
+            <div class="lot" id="scanLottie" data-name="Fours and sixes"></div>
+            <img class="scan-ov" src="assets/scan-overlay.png" data-name="Scanner sheet">
+          </div>
+
+          <!-- Payment success: the cricket-ball tick, then the runs sheet -->
+          <div class="layer" id="success" data-name="Payment success">
+            <img class="full" src="assets/success.png">
+            <div class="lot" id="ballLottie" data-name="Cricket-ball tick"></div>
+            <div class="lot" id="runsLottie" data-name="Runs sheet"></div>
+            <div class="runs-txt" data-name="Runs scored"><b>6 Runs<br>Scored</b><span>Book flights on PayZapp Shop, get 25 runs!</span></div>
+          </div>
+
+          <!-- Leaderboard: one tall page that scrolls -->
+          <div class="layer" id="board" data-name="Leaderboard"><img id="boardImg" src="assets/leaderboard.png"></div>
+
+          <!-- the same scanner, other seasons -->
+          <div class="layer" id="diwali" data-name="Scanner – Diwali"><img class="full" src="assets/Diwali.png"></div>
+          <div class="layer" id="xmas" data-name="Scanner – Christmas"><img class="full" src="assets/Christmas.png"></div>
+
+          <div class="island" data-name="Dynamic Island"></div>
+          <div class="home-ind" data-name="Home indicator"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+<svg width="0" height="0" style="position:absolute"><filter id="stickerF" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="2" result="c1"/><feMorphology in="c1" operator="erode" radius="2" result="closed"/><feMorphology in="closed" operator="dilate" radius="9" result="d"/><feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="o"/><feFlood flood-color="#26313A"/><feComposite in2="closed" operator="in" result="fill"/><feMerge><feMergeNode in="o"/><feMergeNode in="fill"/><feMergeNode in="SourceGraphic"/></feMerge></filter></svg>
+<script type="module" src="scene.js"></script>
+</body>
+</html>

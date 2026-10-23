@@ -1,0 +1,14 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="183" height="72" viewBox="0 0 183 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path id="Subtract 1" d="M5 0.5H142.026C144.238 0.5 146.129 2.12793 146.683 4.32715C150.707 20.3107 163.048 33.0128 178.867 37.626C180.973 38.24 182.5 40.09 182.5 42.2305V71.5H0.5V5.10938C0.513778 5.08029 0.530806 5.04491 0.550781 5.00391C0.614763 4.87257 0.710239 4.6835 0.833008 4.45605C1.0792 3.99995 1.43346 3.39486 1.86914 2.79297C2.30688 2.18823 2.81469 1.60392 3.3623 1.1748C3.91213 0.743973 4.46316 0.5 5 0.5Z" fill="url(#paint0_linear_0_140)" stroke="url(#paint1_linear_0_140)"/>
+<defs>
+<linearGradient id="paint0_linear_0_140" x1="174" y1="-28.5" x2="139" y2="62.5" gradientUnits="userSpaceOnUse">
+<stop offset="0.256627" stop-color="#2C80CF"/>
+<stop offset="0.793185" stop-color="#2977C0" stop-opacity="0.25"/>
+<stop offset="1" stop-color="#2872BD" stop-opacity="0.15"/>
+</linearGradient>
+<linearGradient id="paint1_linear_0_140" x1="151.5" y1="4.00001" x2="134" y2="38.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#4385A7" stop-opacity="0.48"/>
+<stop offset="1" stop-color="white" stop-opacity="0"/>
+</linearGradient>
+</defs>
+</svg>

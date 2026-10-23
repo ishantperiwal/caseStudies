@@ -1,0 +1,15 @@
+{
+  "items": [
+    {
+      "id": "webgl-frost",
+      "frame": 53,
+      "region": {
+        "x": 1071,
+        "y": 182,
+        "w": 849,
+        "h": 898
+      },
+      "text": "The WebGL glass is frosted now: a 7px blur (48 taps, smooth) and a touch more milky tint; the rim still bends and lights the backdrop."
+    }
+  ]
+}

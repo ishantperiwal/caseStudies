@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "2026-10-23T22-52-23-the-duration-on-s",
+      "frame": 290,
+      "range": [
+        290,
+        317
+      ],
+      "text": "Before / After hold cut again: labels settle ~f262, the split now starts at f296 (was 320; originally 360), ~1.4s hold. Everything after moves up with it."
+    },
+    {
+      "id": "2026-10-23T22-57-39-bit-thicker-text",
+      "frame": 259,
+      "region": {
+        "x": 376,
+        "y": 35,
+        "w": 1222,
+        "h": 234
+      },
+      "text": "BEFORE / AFTER now bold (weight 700, was 600); spacing and centring unchanged."
+    }
+  ]
+}

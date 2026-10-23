@@ -1,0 +1,33 @@
+{
+  "items": [
+    {
+      "id": "2026-10-15T17-58-26-this-fade-in-slide-not-a-big-fan",
+      "frame": 670,
+      "range": [
+        666,
+        694
+      ],
+      "text": "Labels now fade in ~4x faster (solid in ~6 frames instead of ~27) while keeping their slow slide and settle, so there is no long see-through phase. Applies to every label."
+    },
+    {
+      "id": "2026-10-15T17-59-42-as-you-can-see-in-this-particula",
+      "frame": 690,
+      "region": {
+        "x": 119,
+        "y": 418,
+        "w": 1089,
+        "h": 649
+      },
+      "text": "Referral invite sheet no longer fades in over the nav bar: it slides up from the bottom fully solid (with the WhatsApp / Instagram row), only the dark backdrop fades. It also slides back down solid at the end."
+    },
+    {
+      "id": "2026-10-15T18-03-23-slide-in-can-be-a-little-bit-slo",
+      "frame": 690,
+      "range": [
+        671,
+        707
+      ],
+      "text": "Referral invite sheet slides up slower: 20 frames (was 12), same soft landing. (Read this as the sheet; the label slide-in is unchanged; say if you meant the label.)"
+    }
+  ]
+}
