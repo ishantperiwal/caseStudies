@@ -90,7 +90,7 @@
         }
 
         html {
-            font-size: 99%;
+            font-size: 100%;   /* 16px root: rem sizes land on whole pixels */
             overflow-y: scroll;
             overflow-x: hidden;
             scrollbar-gutter: stable;
@@ -1255,7 +1255,10 @@
             .cs-thanks { padding-top: 0; margin-top: 20px; }
             .cs-nav { padding-top: 72px; }
         }
-        .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; background: rgba(44, 38, 33, 0.12); }
+        .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; }
+        /* lines fade out towards their outer ends */
+        .cs-thanks::before { background: linear-gradient(to left, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
+        .cs-thanks::after  { background: linear-gradient(to right, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
         .cs-nav-card {
             position: relative; display: flex; flex-direction: column; gap: 0.85rem;
             padding: 1.35rem 1.5rem 1.5rem; border-radius: 0.9rem; text-decoration: none;
