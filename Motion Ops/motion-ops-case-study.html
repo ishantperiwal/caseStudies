@@ -61,6 +61,29 @@
     </script>
 
     <style>
+        /* ── Page reveal (same look as the Zapp Account case study) ──
+           A keyframe animation rather than a transition: it always plays from its
+           first frame, so the blur-fade can't be skipped. Only what is on screen at
+           load reveals (title, lead, first section): blurring every section, with
+           their videos, at once was too heavy to draw and the reveal dropped frames. */
+        @keyframes page-reveal-in {
+            from { opacity: 0; transform: translate3d(0, 16px, 0); filter: blur(10px); }
+            to   { opacity: 1; transform: translate3d(0, 0, 0);   filter: blur(0px); }
+        }
+        .reveal-stagger { opacity: 0; transform: translate3d(0, 16px, 0); filter: blur(10px); will-change: opacity, transform, filter; }
+        body.page-revealed .reveal-stagger { animation: page-reveal-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
+        body.page-revealed .reveal-stagger-1 { animation-delay: 0.04s; }
+        body.page-revealed .reveal-stagger-2 { animation-delay: 0.18s; }
+        body.page-revealed .reveal-stagger-3 { animation-delay: 0.32s; }
+        body.page-revealed .reveal-stagger-4 { animation-delay: 0.34s; }
+        body.page-revealed .reveal-stagger-5 { animation-delay: 0.44s; }
+        body.page-settled .reveal-stagger { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; will-change: auto !important; }
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-stagger { filter: none !important; transform: none !important; }
+            @keyframes page-reveal-fade { from { opacity: 0; } to { opacity: 1; } }
+            body.page-revealed .reveal-stagger { animation-name: page-reveal-fade !important; animation-duration: 0.3s !important; }
+        }
+
         html {
             font-size: 99%;
             overflow-y: scroll;
@@ -127,8 +150,8 @@
 
         .read-section {
             position: relative;
-            padding-top: 2.6rem;
-            padding-bottom: 2.6rem;
+            padding-top: 3.25rem;
+            padding-bottom: 3.25rem;
         }
         /* The section padding owns the gap between sections — a trailing image
            or caption margin should not stack on top of it. */
@@ -137,10 +160,10 @@
             font-family: var(--font-display);
             font-weight: 600;
             color: var(--color-ink);
-            font-size: 1.55rem;
+            font-size: 24px;
             line-height: 1.2;
             letter-spacing: -0.02em;
-            margin-bottom: 1rem;
+            margin-bottom: var(--heading-body-gap);
         }
         .read-section .section-summary {
             font-family: var(--font-body);
@@ -177,7 +200,7 @@
             width: 2rem;
             margin-left: -2rem;
             font-weight: 500;
-            font-size: 0.8em;
+            font-size: 14px;
             letter-spacing: 0.02em;
         }
         .read-section .slash-num { color: hsl(var(--sec-h), 14%, 38%); }
@@ -187,16 +210,16 @@
         .numbered-point:has(.slash-num) .prose-block { padding-left: 2rem; }
         .section-mini-heading {
             font-weight: 600;
-            font-size: 1.15rem;
+            font-size: 18px;
             line-height: 1.35;
             color: var(--color-ink);
             margin-top: 1.25rem;
         }
         /* Two-class selector so it outranks the inline mb-2 utility. */
-        .numbered-point .section-mini-heading { margin-bottom: 0.95rem; }
+        .numbered-point .section-mini-heading { margin-bottom: var(--heading-body-gap); }
         /* This margin collapses out through .numbered-point, so whatever precedes a
            point — prose, an image, a demo block — the gap before it is the same. */
-        .numbered-point .section-mini-heading { margin-top: 3.4rem; }
+        .numbered-point .section-mini-heading { margin-top: var(--block-gap); }
         .numbered-point { margin-bottom: var(--gap-point); }
 
         .metric-card {
@@ -232,7 +255,7 @@
         }
         .opt-title {
             display: flex; align-items: center; gap: 0.55rem;
-            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+            font-family: var(--font-display); font-size: 17px; font-weight: 600;
             color: var(--color-ink);
         }
         .opt-title svg { width: 18px; height: 18px; color: var(--color-medium); flex: none; }
@@ -240,7 +263,7 @@
         .opt-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
         .opt-tag {
             font-family: var(--font-mono);
-            font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
+            font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
             color: var(--color-muted); background: rgba(71, 71, 71, 0.035);
             border: 1px solid rgba(71, 71, 71, 0.14);
             padding: 3px 7px; border-radius: 6px;
@@ -253,7 +276,7 @@
             justify-content: center;
             gap: 0.55rem;
             font-family: var(--font-display);
-            font-size: 1rem;
+            font-size: 16px;
             font-weight: 600;
             color: hsl(var(--accent-h), 20%, 15%);
             margin: 0.5rem 0 1.75rem;
@@ -266,7 +289,7 @@
             border-radius: 6px;
             text-align: center;
         }
-        .eq-term small { display: block; font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(6,78,59,0.7); font-weight: 600; margin-top: 2px; }
+        .eq-term small { display: block; font-size: 10px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(6,78,59,0.7); font-weight: 600; margin-top: 2px; }
         .eq-sym { font-weight: 700; color: hsl(var(--accent-h), 20%, 15%); }
         .eq-total {
             border: 1px solid rgba(71,71,71,0.2);
@@ -288,7 +311,7 @@
             background: rgba(255, 255, 255, 0.55);
             padding: 1rem 1.1rem;
         }
-        .bento-num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: #1a5f67; line-height: 1.1; }
+        .bento-num { font-family: var(--font-display); font-size: 30px; font-weight: 700; color: #1a5f67; line-height: 1.1; }
         .bento-sub { font-size: 11px; color: var(--color-muted); margin-top: 0.25rem; }
         .bento-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-muted); margin-bottom: 0.35rem; }
 
@@ -314,7 +337,7 @@
             background-color: #fff1a8;
             padding: 1.1rem 1.2rem;
             font-family: var(--font-sticky);
-            font-size: 0.95rem;
+            font-size: 15px;
             line-height: 1.4;
             letter-spacing: -0.01em;
             color: #1a1a1a;
@@ -334,7 +357,7 @@
             pointer-events: none !important;
         }
 
-        .lead { font-size: 1.12rem; line-height: 1.65; color: var(--color-deep); }
+        .lead { font-size: 18px; line-height: 1.65; color: var(--color-deep); }
 
         /* ══════ Motion Ops additions ══════ */
 
@@ -370,7 +393,7 @@
            100vw - 5rem term keeps a 2.5rem gutter so it can never be clipped. */
         @media (min-width: 960px) {
             .pic.is-bleed {
-                --pic-w: min(56rem, 100vw - 5rem);
+                --pic-w: min(62rem, 100vw - 5rem);
                 width: var(--pic-w);
                 max-width: none;
                 margin-left: calc(50% - var(--pic-w) / 2);
@@ -449,13 +472,13 @@
         }
         .cap-title {
             font-family: var(--font-display);
-            font-size: 1rem; font-weight: 600; line-height: 1.25;
+            font-size: 16px; font-weight: 600; line-height: 1.25;
             letter-spacing: -0.01em;
             color: var(--color-ink);
         }
         .cap-sub {
             margin-top: 0.5rem;
-            font-size: 14.5px; line-height: 1.55;
+            font-size: 15px; line-height: 1.55;
             color: var(--color-deep);
         }
         .cap-opt {
@@ -493,7 +516,7 @@
         /* Same viewport-centred breakout as .demo, so neither image is squeezed. */
         @media (min-width: 960px) {
             .duo {
-                --duo-w: min(56rem, 100vw - 5rem);
+                --duo-w: min(62rem, 100vw - 5rem);
                 width: var(--duo-w);
                 max-width: none;
                 margin-left: calc(50% - var(--duo-w) / 2);
@@ -549,7 +572,7 @@
             background: hsl(var(--accent-h), 20%, 93%);
         }
         .pair.has-motion-card {
-            width: min(56rem, calc(100vw - 5rem));
+            width: min(62rem, calc(100vw - 5rem));
             max-width: none;
             margin-left: 50%;
             transform: translateX(-50%);
@@ -761,7 +784,7 @@
             margin-bottom: 0.5rem;
         }
         .eb-title {
-            font-family: var(--font-display); font-size: 1.3rem; font-weight: 600;
+            font-family: var(--font-display); font-size: 20px; font-weight: 600;
             letter-spacing: -0.02em; line-height: 1.2;
             color: var(--color-ink);
             margin-bottom: 0.65rem;
@@ -776,7 +799,7 @@
             border-radius: 10px;
             background: hsl(var(--accent-h), 26%, 95.5%);
             border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.18);
-            font-family: var(--font-display); font-size: 0.98rem; font-weight: 600;
+            font-family: var(--font-display); font-size: 16px; font-weight: 600;
             letter-spacing: -0.01em; color: var(--color-ink);
             text-decoration: none;
             transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
@@ -836,12 +859,12 @@
            clipped by body's overflow-x, cutting content off with no way to scroll. */
         @media (min-width: 960px) {
             .demo {
-                /* Centre on the viewport, not the reading column. Capped at 56rem —
-                   about 10% past the 51rem reading column, so it reads as a slight
+                /* Centre on the viewport, not the reading column. Capped at 62rem (the column width) —
+                   about 10% past the 57rem reading column, so it reads as a slight
                    spill rather than a full-bleed band. The 100vw - 5rem term keeps
                    at least 2.5rem of gutter, so it can never be clipped by
                    body's overflow-x. */
-                --demo-w: min(56rem, 100vw - 5rem);
+                --demo-w: min(62rem, 100vw - 5rem);
                 width: var(--demo-w);
                 margin-left: calc(50% - var(--demo-w) / 2);
                 margin-right: 0;
@@ -906,7 +929,7 @@
         .ph .ph-note { font-size: 12px; color: var(--color-muted); max-width: 26rem; line-height: 1.5; }
 
         /* Two-up neutral cards — the two initiatives, and the closing recap */
-        .init-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.75rem; }
+        .init-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin: 3.25rem auto 0; }   /* centred in the column, more air between the two */
         @media (max-width: 760px) { .init-grid { grid-template-columns: 1fr; } }
         .init-card {
             --card-h: 218;
@@ -988,11 +1011,11 @@
             }
         }
         .init-card .init-title {
-            font-family: var(--font-display); font-size: 1.28rem; font-weight: 600;
+            font-family: var(--font-display); font-size: 20px; font-weight: 600;
             letter-spacing: -0.02em; line-height: 1.22;
             color: hsl(var(--card-h), 46%, 24%); margin: 0 0 0.55rem;
         }
-        .init-card .init-body { font-size: 14.5px; line-height: 1.55; color: var(--color-deep); }
+        .init-card .init-body { font-size: 15px; line-height: 1.55; color: var(--color-deep); }
         /* ══════ Per-initiative section colour ══════
            --sec-h defaults to the page hue and is overridden on the sections
            belonging to each initiative. Anything below that reads --sec-h picks
@@ -1011,7 +1034,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 1.5rem;
-            margin-bottom: 1.4rem;
+            margin-bottom: 2rem;   /* more air between the section heading and its text */
         }
         .section-heading-row .section-kicker { margin-bottom: 0; }
         .section-heading-rule {
@@ -1054,12 +1077,12 @@
             background: rgba(255, 255, 255, 0.5);
         }
         .purpose-card svg { width: 21px; height: 21px; color: hsl(var(--accent-h), 46%, 40%); margin-bottom: 0.7rem; }
-        .purpose-card .p-title { font-family: var(--font-display); font-size: 0.98rem; font-weight: 600; color: var(--color-ink); line-height: 1.25; }
+        .purpose-card .p-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: var(--color-ink); line-height: 1.25; }
 
         /* Framework chips — the surfaces the tokens had to survive */
         .chip-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.5rem; margin: 1.9rem 0 0.5rem; }
         .chip {
-            font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.055em; text-transform: uppercase; font-weight: 500;
+            font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.055em; text-transform: uppercase; font-weight: 500;
             color: hsl(var(--accent-h), 24%, 32%); background: rgba(255, 255, 255, 0.6);
             border: 1px solid hsl(var(--accent-h), 22%, 34%, 0.2);
             padding: 0.45rem 0.8rem; border-radius: 8px;
@@ -1069,7 +1092,7 @@
             color: #fff; background: hsl(var(--sec-h), var(--sec-s), 30%);
             border-color: hsl(var(--sec-h), var(--sec-s), 30%);
         }
-        .chip-caption { font-size: 12.5px; text-align: center; color: var(--color-label); margin-top: 0.7rem; }
+        .chip-caption { font-size: 13px; text-align: center; color: var(--color-label); margin-top: 0.7rem; }
 
         /* What changed, stated as before -> after. No invented percentages. */
         .outcomes {
@@ -1089,13 +1112,13 @@
         }
         .outcome .o-stat {
             font-family: var(--font-display);
-            font-size: 1.22rem; font-weight: 600; line-height: 1.25;
+            font-size: 20px; font-weight: 600; line-height: 1.25;
             letter-spacing: -0.015em;
             color: hsl(var(--sec-h), 46%, 24%);
         }
         .outcome .o-sub {
             margin-top: 0.7rem;
-            font-size: 14.5px; line-height: 1.55;
+            font-size: 15px; line-height: 1.55;
             color: var(--color-deep);
         }
 
@@ -1213,26 +1236,262 @@
         }
 
     </style>
+
+    <style id="cs-nav-style">
+        /* Previous / next case study (shared across the three case studies; cycles
+           Zapp Account → IPL → Motion Ops → Zapp Account). Each card takes the
+           accent of the case study it links to (--nh/--ns/--nl). */
+        .cs-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.75rem 2.5rem 6rem; }
+        /* "Thank you for reading" as a separator: hairlines either side */
+        .cs-thanks { display: flex; align-items: center; gap: 1.25rem; padding: 5rem 2.5rem 0; }
+        .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; background: rgba(44, 38, 33, 0.12); }
+        .cs-nav-card {
+            position: relative; display: flex; flex-direction: column; gap: 0.85rem;
+            padding: 1.35rem 1.5rem 1.5rem; border-radius: 0.9rem; text-decoration: none;
+            border: 1px solid rgba(71, 71, 71, 0.14); background: rgba(255, 255, 255, 0.55);
+            transition: border-color .35s ease, background-color .35s ease, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+        }
+        .cs-nav-card.is-next { text-align: right; align-items: flex-end; }
+        .cs-nav-kicker {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+            color: #7A6F64; line-height: 1;
+        }
+        .cs-nav-kicker svg { width: 14px; height: 14px; flex: none; transition: transform .35s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-title {
+            font-family: 'Fraunces', serif; font-weight: 300; font-size: 23px; line-height: 1.18;
+            letter-spacing: -0.01em; color: #2C2621; font-variation-settings: 'opsz' 48; max-width: 17rem;
+        }
+        .cs-nav-title em { font-style: italic; font-weight: 400; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-card::after {   /* accent hairline along the bottom, grows on hover */
+            content: ""; position: absolute; left: 1.5rem; right: 1.5rem; bottom: -1px; height: 2px; border-radius: 2px;
+            background: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%));
+            transform: scaleX(0.12); opacity: .55; transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+        }
+        .cs-nav-card.is-prev::after { transform-origin: left; }
+        .cs-nav-card.is-next::after { transform-origin: right; }
+        .cs-nav-card:hover, .cs-nav-card:focus-visible {
+            border-color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%) / 0.35);
+            background: hsl(var(--nh) 35% 97%);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -20px hsl(var(--nh) 40% 20% / 0.45);
+            outline: none;
+        }
+        .cs-nav-card:hover::after, .cs-nav-card:focus-visible::after { transform: scaleX(1); opacity: 1; }
+        .cs-nav-card.is-prev:hover .cs-nav-kicker svg { transform: translateX(-4px); }
+        .cs-nav-card.is-next:hover .cs-nav-kicker svg { transform: translateX(4px); }
+        @media (max-width: 767px) {
+            .cs-nav { grid-template-columns: 1fr; padding: 1.5rem 1.75rem 4rem; }
+            .cs-thanks { padding: 3.5rem 1.75rem 0; }
+            .cs-nav-card.is-next { order: -1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .cs-nav-card, .cs-nav-card::after, .cs-nav-kicker svg { transition: none; }
+        }
+        /* Preview: the portfolio's startup-panel still, playing its video on hover
+           (fine pointers only; the video loads on first hover). */
+        .cs-nav-card { flex-direction: row; align-items: center; gap: 1.25rem; padding: 1rem; }
+        .cs-nav-card.is-next { flex-direction: row-reverse; align-items: center; }
+        .cs-nav-text { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; flex: 1; }
+        .cs-nav-card.is-next .cs-nav-text { align-items: flex-end; }
+        .cs-nav-media { position: relative; flex: none; width: 38%; max-width: 12rem; aspect-ratio: 16 / 10;
+            border-radius: 0.6rem; overflow: hidden; background: hsl(var(--nh) 25% 92%);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06); }
+        .cs-nav-media img, .cs-nav-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cs-nav-media img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-media video { opacity: 0; transition: opacity .45s ease; }
+        .cs-nav-media.is-playing video { opacity: 1; }
+        .cs-nav-card:hover .cs-nav-media img { transform: scale(1.04); }
+        .cs-nav-card::after { left: 1rem; right: 1rem; }
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .cs-nav-card, .cs-nav-card.is-next { flex-direction: column; align-items: stretch; }
+            .cs-nav-media { width: 100%; max-width: none; }
+        }
+        @media (max-width: 767px) {
+            .cs-nav-media { width: 38%; }
+            .cs-nav-title { font-size: 16px; }
+        }
+        /* Revision: no accent bar, arrow only (no label), title in the body sans,
+           larger preview. */
+        .cs-nav-card::after { display: none; }
+        .cs-nav-kicker svg { width: 18px; height: 18px; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-title { font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-size: 18px;
+            line-height: 1.35; letter-spacing: -0.005em; font-variation-settings: normal; max-width: 15rem; }
+        .cs-nav-title em { font-style: normal; font-weight: 600; }
+        @media (max-width: 767px) { .cs-nav-title { font-size: 16px; } }
+        .cs-nav-media { width: 52%; max-width: 17rem; }
+        @media (max-width: 767px) { .cs-nav-media { width: 46%; } }
+        .cs-nav-kicker { order: 2; }   /* arrow sits below the title, on its edge */
+        /* Title at the top of the preview, arrow at its bottom. */
+        .cs-nav-card, .cs-nav-card.is-next { align-items: stretch; }
+        .cs-nav-text { justify-content: space-between; padding: 0.2rem 0.25rem 0.15rem; }
+        /* Bottom label "← Previous" / "Next →": the caps mono style, neutral */
+        .cs-nav-kicker svg { width: 14px; height: 14px; color: currentColor; }
+        /* Tags from the portfolio's startup panel, as recessed chips under the title */
+        .cs-nav-text { gap: 0.6rem; justify-content: flex-start; }
+        .cs-nav-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.15rem; }
+        .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-end; }
+        .cs-nav-kicker { margin-top: auto; }
+        .cs-nav-tags > span {
+            font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+            line-height: 1; padding: 6px 9px; border-radius: 5.5px; white-space: nowrap;
+            color: #6f665d; background: rgba(44, 38, 33, 0.05);
+            box-shadow: inset 0 1px 2px rgba(44, 38, 33, 0.10), inset 0 0 0 1px rgba(44, 38, 33, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        /* ── Hero: Motion Cards in 3D (one card leads, the rest fan out behind it) ── */
+        .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 1.5rem; }
+        .hero-copy { padding-top: 4rem; }   /* a little air above the heading */
+        .hero-copy .lead { max-width: 25rem; }
+        .hero-cards { position: relative; width: 22rem; height: 23rem; perspective: 1400px;
+            /* blur + fade live on this flat container (the turning cards would flatten) */
+            filter: blur(0px); opacity: 1; }
+        /* Backdrop, like the Zapp hero: two soft orbs drifting behind the hand, in the
+           Motion Design Guidelines colours (the lime and the cyan of the
+           printed cards’ edge), pastel. Inside the hand, so they resolve with it. */
+        @keyframes hc-orb-drift-a {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            30%      { transform: translate(-28px, 20px) scale(1.06); }
+            60%      { transform: translate(18px, -26px) scale(0.95); }
+        }
+        @keyframes hc-orb-drift-b {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            35%      { transform: translate(26px, -22px) scale(1.08); }
+            65%      { transform: translate(-16px, 18px) scale(0.94); }
+        }
+        .hc-orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+        .hc-orb--a { width: 300px; height: 300px; top: -10px; left: -30px;
+            background: radial-gradient(circle at center, hsl(80 62% 68% / 0.40) 0%, transparent 65%);
+            filter: blur(34px); animation: hc-orb-drift-a 11s ease-in-out infinite; }
+        .hc-orb--b { width: 270px; height: 270px; bottom: -10px; right: -20px;
+            background: radial-gradient(circle at center, hsl(178 65% 60% / 0.48) 0%, transparent 65%);
+            filter: blur(38px); animation: hc-orb-drift-b 14s ease-in-out infinite; }
+        .hc-world { z-index: 1; }
+        @media (prefers-reduced-motion: reduce) { .hc-orb { animation: none; } }
+        /* Reveal, like the Zapp hero phone: out of a haze into focus */
+        .hero-cards:not(.is-dealt) { filter: blur(22px); opacity: 0; }
+        .hero-cards.is-dealt { transition: filter 1.9s cubic-bezier(0.25, 0.6, 0.3, 1) 0.25s, opacity 1.3s cubic-bezier(0.3, 0, 0.3, 1) 0.25s; }
+        .hc-world { position: absolute; left: 40%; top: 54%; width: 0; height: 0; transform-style: preserve-3d;
+            transform: rotateX(calc(20deg + var(--py, 0deg))) rotateY(calc(-36deg + var(--px, 0deg))) rotateZ(calc(9deg + var(--pz, 0deg)));   /* three-quarter view, leaning right; leans toward the cursor */
+            transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1); }
+        .hc-card { position: absolute; left: -5.75rem; top: -8.5rem; width: 11.5rem; aspect-ratio: 912 / 1350;
+            transform-style: preserve-3d;
+            transform-origin: 18% 96%;                                    /* fan from the bottom-left corner */
+            transform: translate3d(0, var(--dy, 0px), calc(var(--k) * -7px)) rotate(calc(var(--k) * 6deg + var(--dr, 0deg))); }
+        .hc-card.is-main { transform: translate3d(0, var(--dy, 0px), 4px); }
+        .hc-flip { position: absolute; inset: 0; transform-style: preserve-3d; transform: rotateY(0deg); }
+        .hc-face { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 0.5rem;
+            backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            /* the featured Motion Card's white edge (see .pair.has-motion-card .mcard-face):
+               a zero-blur ring of page colour, nudged 1px right / 2px down, so each card
+               reads cleanly against the one behind it. A gap, not a shadow. */
+            box-shadow: 1px 1.5px 0 2.5px var(--color-bg); }
+        /* Form: ~4.5px of card stock between the faces, a faint gloss and a fine bevel. */
+        .hc-back { transform: translateZ(-4.6px) rotateY(180deg); object-fit: cover; }
+        .hc-edge { position: absolute; inset: 0; border-radius: 0.5rem; pointer-events: none;
+            /* the neon edge of the printed card back, sampled from back.png:
+               lime-yellow at the top, mint through the middle, cyan at the bottom */
+            background: linear-gradient(180deg, #d2cd73 0%, #87cfac 50%, #3dd2e5 100%);
+            transform: translateZ(calc(var(--k) * -0.66px)); }
+        .hc-gloss { position: absolute; inset: 0; border-radius: 0.5rem; pointer-events: none;
+            transform: translateZ(0.3px); backface-visibility: hidden; -webkit-backface-visibility: hidden;
+            background: linear-gradient(125deg, rgba(255, 255, 255, 0.20) 0%, rgba(255, 255, 255, 0.06) 28%, rgba(255, 255, 255, 0) 46%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.14) 100%);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(0, 0, 0, 0.25); }
+
+        /* Reveal (the whole hand resolves out of a blur, above):
+           1 · the main card slides up from the bottom right, flipping face-up as it comes;
+               the rest are invisible, so it never flips through them.
+           2 · the rest slide in from the opposite side (bottom left), no flip, each
+               fading in, and settle into the fan behind it.
+           Fades use opacity only on the cards: at 1 it leaves their 3D intact. */
+        .hero-cards:not(.is-dealt) .hc-card.is-main { transform: translate3d(4.6rem, 6.4rem, 4px); }
+        .hero-cards:not(.is-dealt) .hc-card.is-main .hc-flip { transform: rotateY(180deg); }
+        .hero-cards:not(.is-dealt) .hc-card:not(.is-main) { transform: translate3d(4.6rem, 6.4rem, calc(-70px + var(--k) * -7px)) rotate(0deg); opacity: 0; filter: blur(10px); }   /* same start as the main card, set deeper so its turn never crosses them */
+        .hero-cards.is-dealt .hc-card.is-main { transition: transform 2.1s cubic-bezier(0.16, 0.7, 0.2, 1) 0.25s; }   /* paced like the Zapp hero phone */
+        .hero-cards.is-dealt .hc-card.is-main .hc-flip { transition: transform 2.1s cubic-bezier(0.16, 0.7, 0.2, 1) 0.25s; }   /* same duration and easing as the slide: one motion */
+        .hero-cards.is-dealt .hc-card:not(.is-main) {
+            /* the main card's path and easing, no flip; each fades and blurs in */
+            transition: transform 1.2s cubic-bezier(0.16, 0.7, 0.2, 1) calc(0.95s + (var(--k) - 1) * 0.12s),
+                        opacity 0.45s ease-out calc(0.95s + (var(--k) - 1) * 0.12s),
+                        filter 0.7s cubic-bezier(0.25, 0.6, 0.3, 1) calc(0.95s + (var(--k) - 1) * 0.12s);
+            filter: blur(0px);
+        }
+        /* after the deal, cards answer the cursor quickly and settle back softly */
+        .hero-cards.is-dealt.is-settled .hc-card,
+        .hero-cards.is-dealt.is-settled .hc-card:not(.is-main) { transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1); filter: none; }
+
+        /* Click to cycle: the top card slides off toward the top left, blurring and fading out;
+           the next moves up to take its place (slots are --k, so the others shift
+           forward on their own); the old top card then fades back in at the bottom. */
+        .hero-cards.is-settled { cursor: pointer; }
+        .hero-cards.is-dealt.is-settled .hc-card { transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease-out; }
+        .hero-cards.is-dealt.is-settled .hc-card.is-leaving {
+            transform: translate3d(-3.2rem, -5.4rem, 14px) rotate(-6deg);    /* off toward the top left */
+            opacity: 0; filter: blur(10px);
+            /* same duration and easing as the card sliding up into its place */
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        /* returning: starts far behind the stack, blurred and invisible ... */
+        .hero-cards.is-dealt.is-settled .hc-card.is-returning {
+            transform: translate3d(1.2rem, 2.6rem, calc(-220px + var(--k) * -7px)) rotate(calc(var(--k) * 6deg));
+            opacity: 0; filter: blur(12px); transition: none;
+        }
+        /* ... then travels forward into the bottom slot, clearing and fading in */
+        .hero-cards.is-dealt.is-settled .hc-card.is-arriving {
+            filter: blur(0px);
+            transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease-out, filter 0.7s cubic-bezier(0.25, 0.6, 0.3, 1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-cards .hc-card, .hero-cards .hc-flip, .hc-world { transition: none !important; }
+            .hero-cards, .hero-cards:not(.is-dealt) { filter: none; opacity: 1; transition: none; }
+            .hero-cards:not(.is-dealt) .hc-card.is-main { transform: translateZ(4px); }
+            .hero-cards:not(.is-dealt) .hc-card.is-main .hc-flip { transform: none; }
+            .hero-cards:not(.is-dealt) .hc-card:not(.is-main) { transform: translateZ(calc(var(--k) * -7px)) rotate(calc(var(--k) * 6deg)); opacity: 1; filter: none; }
+        }
+        @media (max-width: 767px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 0.5rem; }
+            .hero-cards { width: 100%; height: 15rem; }
+            .hc-world { left: 40%; }
+        }
+    </style>
 </head>
 <body>
 
-    <main class="relative z-[1] max-w-4xl mx-auto bg-[var(--color-bg)]">
+    <main class="relative z-[1] max-w-[62rem] mx-auto bg-[var(--color-bg)]">
 
         <!-- ───────── Hero ───────── -->
-        <section class="pt-[5.5rem] px-10">
-            <div class="pt-14 pb-10">
-                <h1 class="font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
+        <section class="pt-[2rem] px-10">
+            <div class="hero-grid pt-6 pb-10">
+            <div class="hero-copy">
+                <h1 class="reveal-stagger reveal-stagger-1 font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: round(nearest, clamp(38px, 5.5vw, 56px), 1px); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
                     Scaling motion beyond<br><span class="italic font-normal text-brand-500" style="font-variation-settings: 'opsz' 72;">individual expertise</span>
                 </h1>
-                <p class="lead max-w-2xl mb-3">
+                <p class="lead max-w-2xl mb-3 reveal-stagger reveal-stagger-2">
                     As PayZapp grew, motion became harder to manage consistently and reliably across the team.
                 </p>
+            </div>
+            <!-- Hero: Motion Cards in 3D, angled like the Zapp film's phone. One card starts
+                 face down; it flips and rises, then the rest rise from behind it and fan
+                 out to the right, each a few degrees further round. -->
+            <div class="hero-cards" aria-hidden="true">
+                <div class="hc-orb hc-orb--a"></div>
+                <div class="hc-orb hc-orb--b"></div>
+                <div class="hc-world">
+                    <div class="hc-card" style="--k: 4;"><div class="hc-flip"><img class="hc-face hc-back" src="motion%20cards/back.png" width="1368" height="2025" alt=""><i class="hc-edge" style="--k: 6;"></i><i class="hc-edge" style="--k: 5;"></i><i class="hc-edge" style="--k: 4;"></i><i class="hc-edge" style="--k: 3;"></i><i class="hc-edge" style="--k: 2;"></i><i class="hc-edge" style="--k: 1;"></i><img class="hc-face hc-front" src="motion%20cards/all%20cards/Button%20Tap.png" width="912" height="1350" alt=""><i class="hc-gloss"></i></div></div>
+                    <div class="hc-card" style="--k: 3;"><div class="hc-flip"><img class="hc-face hc-back" src="motion%20cards/back.png" width="1368" height="2025" alt=""><i class="hc-edge" style="--k: 6;"></i><i class="hc-edge" style="--k: 5;"></i><i class="hc-edge" style="--k: 4;"></i><i class="hc-edge" style="--k: 3;"></i><i class="hc-edge" style="--k: 2;"></i><i class="hc-edge" style="--k: 1;"></i><img class="hc-face hc-front" src="motion%20cards/all%20cards/Page%20Transition.png" width="912" height="1350" alt=""><i class="hc-gloss"></i></div></div>
+                    <div class="hc-card" style="--k: 2;"><div class="hc-flip"><img class="hc-face hc-back" src="motion%20cards/back.png" width="1368" height="2025" alt=""><i class="hc-edge" style="--k: 6;"></i><i class="hc-edge" style="--k: 5;"></i><i class="hc-edge" style="--k: 4;"></i><i class="hc-edge" style="--k: 3;"></i><i class="hc-edge" style="--k: 2;"></i><i class="hc-edge" style="--k: 1;"></i><img class="hc-face hc-front" src="motion%20cards/all%20cards/Pop-Up.png" width="912" height="1350" alt=""><i class="hc-gloss"></i></div></div>
+                    <div class="hc-card" style="--k: 1;"><div class="hc-flip"><img class="hc-face hc-back" src="motion%20cards/back.png" width="1368" height="2025" alt=""><i class="hc-edge" style="--k: 6;"></i><i class="hc-edge" style="--k: 5;"></i><i class="hc-edge" style="--k: 4;"></i><i class="hc-edge" style="--k: 3;"></i><i class="hc-edge" style="--k: 2;"></i><i class="hc-edge" style="--k: 1;"></i><img class="hc-face hc-front" src="motion%20cards/all%20cards/Bottom%20Sheet.png" width="912" height="1350" alt=""><i class="hc-gloss"></i></div></div>
+                    <div class="hc-card is-main" style="--k: 0;"><div class="hc-flip"><img class="hc-face hc-back" src="motion%20cards/back.png" width="1368" height="2025" alt=""><i class="hc-edge" style="--k: 6;"></i><i class="hc-edge" style="--k: 5;"></i><i class="hc-edge" style="--k: 4;"></i><i class="hc-edge" style="--k: 3;"></i><i class="hc-edge" style="--k: 2;"></i><i class="hc-edge" style="--k: 1;"></i><img class="hc-face hc-front" src="motion%20cards/all%20cards/Toast.png" width="912" height="1350" alt=""><i class="hc-gloss"></i></div></div>
+                </div>
+            </div>
+            </div>
             </div>
 
         </section>
 
         <!-- ───────── Two Initiatives ───────── -->
-        <section class="read-section px-10">
+        <section class="reveal-stagger reveal-stagger-3 read-section px-10">
             <h2 class="section-kicker">Two Initiatives</h2>
             <p class="section-summary mb-2">Over time, I took on two separate initiatives to address different parts of that problem.</p>
 
@@ -1662,12 +1921,54 @@
 
         </section>
 
-        <div class="text-center px-10 pt-8 pb-24">
-            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
+        <!-- Closing separator, above the previous / next case studies -->
+        <div class="cs-thanks">
+            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 15px;">
                 Thank you for reading
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             </div>
         </div>
+
+        <!-- Previous / next case study -->
+        <nav class="cs-nav" aria-label="More case studies">
+            <a class="cs-nav-card is-prev" aria-label="Previous case study" href="../IPL%20Themification/ipl-themification-case-study.html" style="--nh: 145; --ns: 50; --nl: 28;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/ipl.webp" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/ipl.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg><span>Previous</span></span>
+                    <span class="cs-nav-title"><em>Theming PayZapp</em> for the IPL season</span>
+                    <span class="cs-nav-tags"><span>Growth</span><span>Theming System</span></span>
+                </span>
+            </a>
+            <a class="cs-nav-card is-next" aria-label="Next case study" href="../Zapp%20Account/zapp-account-a4-case-study.html" style="--nh: 206; --ns: 54; --nl: 29;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/zapp-account.webp" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/zapp-account.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><span>Next</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    <span class="cs-nav-title">Building <em>Zapp Account</em></span>
+                    <span class="cs-nav-tags"><span>Team Lead</span><span>UX Strategy</span></span>
+                </span>
+            </a>
+        </nav>
+
+        <script>
+            /* Previous / next previews: play the case study's video while hovered. */
+            (function () {
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                document.querySelectorAll(".cs-nav-card").forEach(function (card) {
+                    var box = card.querySelector(".cs-nav-media"), v = box && box.querySelector("video");
+                    if (!v) return;
+                    v.addEventListener("playing", function () { box.classList.add("is-playing"); });
+                    card.addEventListener("pointerenter", function () {
+                        if (!v.getAttribute("src")) v.setAttribute("src", v.dataset.src);
+                        var p = v.play(); if (p && p.catch) p.catch(function () {});
+                    });
+                    card.addEventListener("pointerleave", function () {
+                        v.pause(); box.classList.remove("is-playing");
+                    });
+                });
+            })();
+        </script>
+
 
         <!--
           Sticky notes: the design language supports them (.sticky-note, and ?sticky=false
@@ -1850,4 +2151,157 @@
         })();
     </script>
 
+    <script>
+        /* Page reveal, as in the Zapp Account case study: wait for the fonts (with a
+           safety timeout), then reveal; drop the effect once it has played. */
+        (function () {
+            var revealed = false;
+            var start = performance.now();
+            function revealPage() {
+                if (revealed) return;
+                revealed = true;
+                // This page is light, so the fonts can be ready before the first frame is
+                // painted; then the hidden start state never shows and nothing animates.
+                // Wait for at least two painted frames (and ~180ms) so the blur-fade plays.
+                var wait = Math.max(0, 180 - (performance.now() - start));
+                setTimeout(function () {
+                    requestAnimationFrame(function () {
+                        requestAnimationFrame(function () {
+                            document.body.classList.add("page-revealed");
+                            setTimeout(function () { document.body.classList.add("page-settled"); }, 1700);
+                        });
+                    });
+                }, wait);
+            }
+            function prepare() {
+                var fonts = [];
+                try {
+                    fonts = [
+                        document.fonts.load("300 48px 'Fraunces'"),
+                        document.fonts.load("italic 400 48px 'Fraunces'"),
+                        document.fonts.load("400 16px 'Instrument Sans'")
+                    ];
+                    if (document.fonts && document.fonts.ready) fonts.push(document.fonts.ready);
+                } catch (e) {}
+                Promise.race([Promise.all(fonts), new Promise(function (r) { setTimeout(r, 1400); })])
+                    .then(revealPage, revealPage);
+            }
+            if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", prepare); else prepare();
+            setTimeout(revealPage, 1600);
+        })();
+    </script>
+    <script>
+        /* Hero cards: deal once the page has loaded (timings live in the CSS), then
+           answer the cursor: the hand leans toward it (like the Zapp phone), and
+           the cards nearest it are pushed down a little and fan open a little
+           wider, so the gaps open up around wherever the pointer is. */
+        (function () {
+            var hand = document.querySelector(".hero-cards");
+            if (!hand) return;
+            var world = hand.querySelector(".hc-world");
+            var cards = Array.prototype.slice.call(hand.querySelectorAll(".hc-card"));
+            var area = hand.closest("section") || hand;
+            var fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+            var reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+            // What shows of each back card is the strip along its right edge, so each
+            // card is placed by where that edge rests; the main card owns its whole face.
+            // Cards near the pointer are pushed down, and the fan opens wider from there
+            // on, so the gap appears right where the pointer is.
+            var edges = [], box = null;
+            function measure() {   // resting geometry, so moving cards never chase themselves
+                edges = cards.map(function (c) {
+                    var r = c.querySelector(".hc-front").getBoundingClientRect();
+                    return r.right - 14 + window.scrollX;
+                });
+                var rs = cards.map(function (c) { return c.querySelector(".hc-front").getBoundingClientRect(); });
+                box = { l: Math.min.apply(null, rs.map(function (r) { return r.left; })) + window.scrollX,
+                        t: Math.min.apply(null, rs.map(function (r) { return r.top; })) + window.scrollY,
+                        r: Math.max.apply(null, rs.map(function (r) { return r.right; })) + window.scrollX,
+                        b: Math.max.apply(null, rs.map(function (r) { return r.bottom; })) + window.scrollY };
+            }
+            function deal() {
+                requestAnimationFrame(function () {
+                    hand.classList.add("is-dealt");
+                    setTimeout(function () { hand.classList.add("is-settled"); measure(); }, 2700);
+                });
+            }
+            // Deal in parallel with the page reveal: start when it starts.
+            if (document.body.classList.contains("page-revealed")) deal();
+            else new MutationObserver(function (m, obs) {
+                if (document.body.classList.contains("page-revealed")) { obs.disconnect(); deal(); }
+            }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+            window.addEventListener("resize", function () { if (hand.classList.contains("is-settled")) measure(); });
+
+            var REACH = 26;    // px of influence either side of a card's resting edge
+            area.addEventListener("pointermove", function (e) {
+                if (!fine.matches || reduce.matches || !hand.classList.contains("is-settled") || !box) return;
+                // Only react around the cards themselves (their resting box plus a small
+                // margin); anywhere else in the hero, the hand stays at rest.
+                var M = 40, sx = e.clientX + window.scrollX, sy = e.clientY + window.scrollY;
+                if (sx < box.l - M || sx > box.r + M || sy < box.t - M || sy > box.b + M) { rest(); return; }
+                var hr = hand.getBoundingClientRect();
+                var nx = (e.clientX - (hr.left + hr.width / 2)) / Math.max(hr.width, 1);
+                var ny = (e.clientY - (hr.top + hr.height / 2)) / Math.max(hr.height, 1);
+                nx = Math.max(-1, Math.min(1, nx)); ny = Math.max(-1, Math.min(1, ny));
+                world.style.setProperty("--px", (nx * 5).toFixed(2) + "deg");
+                world.style.setProperty("--py", (-ny * 3.5).toFixed(2) + "deg");
+                world.style.setProperty("--pz", (nx * 1).toFixed(2) + "deg");
+
+                var px = e.clientX + window.scrollX, py = e.clientY + window.scrollY;
+                // how close the pointer is to the hand itself (1 inside, fading over 100px)
+                var ox = Math.max(box.l - px, 0, px - box.r), oy = Math.max(box.t - py, 0, py - box.b);
+                var near = Math.exp(-(ox * ox + oy * oy) / (2 * 100 * 100));
+                // fan order: main (k = 0) first, then k = 1..4
+                var order = cards.map(function (c, i) { return { c: c, i: i, k: parseFloat(c.style.getPropertyValue("--k")) || 0 }; })
+                                 .sort(function (a, b) { return a.k - b.k; });
+                var open = 0;
+                order.forEach(function (o) {
+                    var d = px - edges[o.i];
+                    if (o.k === 0 && d < 0) d = 0;          // anywhere over the main card's face
+                    var w = Math.exp(-(d * d) / (2 * REACH * REACH)) * near;
+                    open += w;                              // cards past the pointer carry the opened gap
+                    o.c.style.setProperty("--dy", (w * 8).toFixed(2) + "px");
+                    o.c.style.setProperty("--dr", (open * 2).toFixed(2) + "deg");
+                });
+            });
+            function rest() {
+                world.style.setProperty("--px", "0deg");
+                world.style.setProperty("--py", "0deg");
+                world.style.setProperty("--pz", "0deg");
+                cards.forEach(function (c) { c.style.setProperty("--dy", "0px"); c.style.setProperty("--dr", "0deg"); });
+            }
+            area.addEventListener("pointerleave", rest);
+
+            // Click to cycle through the hand.
+            var busy = false;
+            hand.addEventListener("click", function () {
+                if (busy || !hand.classList.contains("is-settled")) return;
+                busy = true;
+                rest();
+                var order = cards.slice().sort(function (a, b) {
+                    return (parseFloat(a.style.getPropertyValue("--k")) || 0) - (parseFloat(b.style.getPropertyValue("--k")) || 0);
+                });
+                var top = order[0], last = order.length - 1;
+                var quick = reduce.matches;
+                // 1 · the top card leaves; everyone else moves up a slot
+                top.classList.remove("is-main");
+                top.classList.add("is-leaving");
+                order.slice(1).forEach(function (c, i) { c.style.setProperty("--k", i); });
+                order[1].classList.add("is-main");
+                // 2 · it comes back in at the bottom of the stack
+                setTimeout(function () {
+                    top.classList.remove("is-leaving");
+                    top.classList.add("is-returning");
+                    top.style.setProperty("--k", last);
+                    void top.offsetWidth;
+                    top.classList.add("is-arriving");
+                    top.classList.remove("is-returning");
+                    setTimeout(function () {
+                        top.classList.remove("is-arriving");   // drop the zero blur so its 3D thickness returns
+                        busy = false; measure();
+                    }, quick ? 0 : 780);
+                }, quick ? 0 : 600);
+            });
+        })();
+    </script>
 </body></html>

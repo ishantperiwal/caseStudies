@@ -326,6 +326,52 @@
             display: flex; flex-direction: column; align-items: center;
         }
         .phone-col .legacy-wallet-device { width: 100%; max-width: 21.2rem; }
+        /* Phone size matched to Zapp Account's "How did we solve it?" phone (272px on
+           screen), so bezel, rim and corners read at the same scale on desktop. */
+        @media (min-width: 768px) {
+            .phone-col > .editable-placeholder { max-width: 17.2rem !important; }
+        }
+
+        /* Phone shell, matched to the Zapp Account case study: a thin brushed-metal
+           rim (gradient border), deep black bezel, side buttons, a glass hairline and
+           sheen, and a contact shadow. The rim takes 1.5px of the 0.55rem bezel, so
+           screen sizes are unchanged. */
+        .legacy-wallet-device {
+            --phone-rim: linear-gradient(140deg, #b9bfc6 0%, #5d636b 22%, #2c3035 48%, #6f767e 74%, #a7adb4 100%);
+            background:
+                linear-gradient(150deg, #26282b 0%, #111213 38%, #0b0c0d 100%) padding-box,
+                var(--phone-rim) border-box;
+            border: 1.5px solid transparent;
+            padding: calc(0.55rem - 1.5px);
+            overflow: visible;
+            box-shadow:
+                inset 0 0 0 1px rgba(0, 0, 0, 0.85),
+                inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10),
+                0 1px 2px rgba(15, 23, 32, 0.08),
+                0 10px 20px -12px rgba(15, 23, 32, 0.20);   /* one soft, tight shadow (no wide layer to band) */
+        }
+        .legacy-wallet-device::after,
+        .legacy-wallet-device::before {
+            content: ""; position: absolute; inset: auto; width: 3px; border-radius: 0;
+            box-shadow: none; z-index: auto; pointer-events: none;
+            background: linear-gradient(90deg, #4b5057, #22252a);
+        }
+        .legacy-wallet-device::after {      /* action + volume up + volume down */
+            left: -4px; top: 17%; height: 23%; border-radius: 2px 0 0 2px;
+            -webkit-mask: linear-gradient(#000 0 14%, transparent 14% 26%, #000 26% 60%, transparent 60% 68%, #000 68% 100%);
+                    mask: linear-gradient(#000 0 14%, transparent 14% 26%, #000 26% 60%, transparent 60% 68%, #000 68% 100%);
+            box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.22);
+        }
+        .legacy-wallet-device::before {     /* power */
+            right: -4px; top: 26%; height: 12%; border-radius: 0 2px 2px 0;
+            background: linear-gradient(270deg, #4b5057, #22252a);
+            box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.22);
+        }
+        .legacy-wallet-screen { border-radius: 1.75rem; }   /* as Zapp: the bezel stays even into the corners */
+        .legacy-wallet-screen::after {
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35), inset 0 -4px 8px rgba(0, 0, 0, 0.14);
+            background: linear-gradient(118deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 22%, rgba(255, 255, 255, 0) 38%);
+        }
 
         /* Side-by-side phone rows (spotlights / bottom sheets) */
         .phone-row {
@@ -564,10 +610,113 @@
             }
         }
     </style>
+
+    <style id="cs-nav-style">
+        /* Previous / next case study (shared across the three case studies; cycles
+           Zapp Account → IPL → Motion Ops → Zapp Account). Each card takes the
+           accent of the case study it links to (--nh/--ns/--nl). */
+        .cs-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.75rem 2.5rem 6rem; }
+        /* "Thank you for reading" as a separator: hairlines either side */
+        .cs-thanks { display: flex; align-items: center; gap: 1.25rem; padding: 5rem 2.5rem 0; }
+        .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; background: rgba(44, 38, 33, 0.12); }
+        .cs-nav-card {
+            position: relative; display: flex; flex-direction: column; gap: 0.85rem;
+            padding: 1.35rem 1.5rem 1.5rem; border-radius: 0.9rem; text-decoration: none;
+            border: 1px solid rgba(71, 71, 71, 0.14); background: rgba(255, 255, 255, 0.55);
+            transition: border-color .35s ease, background-color .35s ease, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+        }
+        .cs-nav-card.is-next { text-align: right; align-items: flex-end; }
+        .cs-nav-kicker {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+            color: #7A6F64; line-height: 1;
+        }
+        .cs-nav-kicker svg { width: 14px; height: 14px; flex: none; transition: transform .35s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-title {
+            font-family: 'Fraunces', serif; font-weight: 300; font-size: 23px; line-height: 1.18;
+            letter-spacing: -0.01em; color: #2C2621; font-variation-settings: 'opsz' 48; max-width: 17rem;
+        }
+        .cs-nav-title em { font-style: italic; font-weight: 400; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-card::after {   /* accent hairline along the bottom, grows on hover */
+            content: ""; position: absolute; left: 1.5rem; right: 1.5rem; bottom: -1px; height: 2px; border-radius: 2px;
+            background: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%));
+            transform: scaleX(0.12); opacity: .55; transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+        }
+        .cs-nav-card.is-prev::after { transform-origin: left; }
+        .cs-nav-card.is-next::after { transform-origin: right; }
+        .cs-nav-card:hover, .cs-nav-card:focus-visible {
+            border-color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%) / 0.35);
+            background: hsl(var(--nh) 35% 97%);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -20px hsl(var(--nh) 40% 20% / 0.45);
+            outline: none;
+        }
+        .cs-nav-card:hover::after, .cs-nav-card:focus-visible::after { transform: scaleX(1); opacity: 1; }
+        .cs-nav-card.is-prev:hover .cs-nav-kicker svg { transform: translateX(-4px); }
+        .cs-nav-card.is-next:hover .cs-nav-kicker svg { transform: translateX(4px); }
+        @media (max-width: 767px) {
+            .cs-nav { grid-template-columns: 1fr; padding: 1.5rem 1.75rem 4rem; }
+            .cs-thanks { padding: 3.5rem 1.75rem 0; }
+            .cs-nav-card.is-next { order: -1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .cs-nav-card, .cs-nav-card::after, .cs-nav-kicker svg { transition: none; }
+        }
+        /* Preview: the portfolio's startup-panel still, playing its video on hover
+           (fine pointers only; the video loads on first hover). */
+        .cs-nav-card { flex-direction: row; align-items: center; gap: 1.25rem; padding: 1rem; }
+        .cs-nav-card.is-next { flex-direction: row-reverse; align-items: center; }
+        .cs-nav-text { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; flex: 1; }
+        .cs-nav-card.is-next .cs-nav-text { align-items: flex-end; }
+        .cs-nav-media { position: relative; flex: none; width: 38%; max-width: 12rem; aspect-ratio: 16 / 10;
+            border-radius: 0.6rem; overflow: hidden; background: hsl(var(--nh) 25% 92%);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06); }
+        .cs-nav-media img, .cs-nav-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cs-nav-media img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-media video { opacity: 0; transition: opacity .45s ease; }
+        .cs-nav-media.is-playing video { opacity: 1; }
+        .cs-nav-card:hover .cs-nav-media img { transform: scale(1.04); }
+        .cs-nav-card::after { left: 1rem; right: 1rem; }
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .cs-nav-card, .cs-nav-card.is-next { flex-direction: column; align-items: stretch; }
+            .cs-nav-media { width: 100%; max-width: none; }
+        }
+        @media (max-width: 767px) {
+            .cs-nav-media { width: 38%; }
+            .cs-nav-title { font-size: 16px; }
+        }
+        /* Revision: no accent bar, arrow only (no label), title in the body sans,
+           larger preview. */
+        .cs-nav-card::after { display: none; }
+        .cs-nav-kicker svg { width: 18px; height: 18px; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-title { font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-size: 18px;
+            line-height: 1.35; letter-spacing: -0.005em; font-variation-settings: normal; max-width: 15rem; }
+        .cs-nav-title em { font-style: normal; font-weight: 600; }
+        @media (max-width: 767px) { .cs-nav-title { font-size: 16px; } }
+        .cs-nav-media { width: 52%; max-width: 17rem; }
+        @media (max-width: 767px) { .cs-nav-media { width: 46%; } }
+        .cs-nav-kicker { order: 2; }   /* arrow sits below the title, on its edge */
+        /* Title at the top of the preview, arrow at its bottom. */
+        .cs-nav-card, .cs-nav-card.is-next { align-items: stretch; }
+        .cs-nav-text { justify-content: space-between; padding: 0.2rem 0.25rem 0.15rem; }
+        /* Bottom label "← Previous" / "Next →": the caps mono style, neutral */
+        .cs-nav-kicker svg { width: 14px; height: 14px; color: currentColor; }
+        /* Tags from the portfolio's startup panel, as recessed chips under the title */
+        .cs-nav-text { gap: 0.6rem; justify-content: flex-start; }
+        .cs-nav-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.15rem; }
+        .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-end; }
+        .cs-nav-kicker { margin-top: auto; }
+        .cs-nav-tags > span {
+            font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+            line-height: 1; padding: 6px 9px; border-radius: 5.5px; white-space: nowrap;
+            color: #6f665d; background: rgba(44, 38, 33, 0.05);
+            box-shadow: inset 0 1px 2px rgba(44, 38, 33, 0.10), inset 0 0 0 1px rgba(44, 38, 33, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+    </style>
 </head>
 <body unresolved>
     <div id="page-loader"><div class="loader-ring"></div></div>
-    <main class="relative z-[1] max-w-4xl mx-auto bg-[var(--color-bg)]">
+    <main class="relative z-[1] max-w-[62rem] mx-auto bg-[var(--color-bg)]">
 
         <!-- ── Hero ── -->
         <section class="pt-[2.9rem] relative">
@@ -746,9 +895,10 @@
                     <div class="editable-placeholder has-saved-image" style="width:100%;max-width:21.2rem;">
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
-                                <div class="phone-status-bar">
+                                <div class="phone-status-bar status-bar-light" style="position: relative;">
                                     <time>9:41</time>
                                     <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+                                    <div id="referral-status-scrim" style="position: absolute; inset: 0; background: #000; opacity: 0; pointer-events: none;"></div>
                                 </div>
                                 <div class="phone-screen-content">
                                     <img class="placeholder-image-layer" loading="lazy" alt="" src="case study assets/referral.png" style="top: auto; bottom: 0; height: auto; width: 100%;">
@@ -938,12 +1088,54 @@
             </div>
         </section>
 
-        <div class="text-center px-10 pt-8 pb-24">
+        <!-- Closing separator, above the previous / next case studies -->
+        <div class="cs-thanks">
             <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
                 Thank you for reading
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
             </div>
         </div>
+
+        <!-- Previous / next case study -->
+        <nav class="cs-nav" aria-label="More case studies">
+            <a class="cs-nav-card is-prev" aria-label="Previous case study" href="../Zapp%20Account/zapp-account-a4-case-study.html" style="--nh: 206; --ns: 54; --nl: 29;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/zapp-account.webp" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/zapp-account.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg><span>Previous</span></span>
+                    <span class="cs-nav-title">Building <em>Zapp Account</em></span>
+                    <span class="cs-nav-tags"><span>Team Lead</span><span>UX Strategy</span></span>
+                </span>
+            </a>
+            <a class="cs-nav-card is-next" aria-label="Next case study" href="../Motion%20Ops/motion-ops-case-study.html" style="--nh: 218; --ns: 54; --nl: 29;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/motion-ops.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/motion-ops.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><span>Next</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    <span class="cs-nav-title">Scaling motion beyond <em>individual expertise</em></span>
+                    <span class="cs-nav-tags"><span>Design System</span><span>Internal Tooling</span></span>
+                </span>
+            </a>
+        </nav>
+
+        <script>
+            /* Previous / next previews: play the case study's video while hovered. */
+            (function () {
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                document.querySelectorAll(".cs-nav-card").forEach(function (card) {
+                    var box = card.querySelector(".cs-nav-media"), v = box && box.querySelector("video");
+                    if (!v) return;
+                    v.addEventListener("playing", function () { box.classList.add("is-playing"); });
+                    card.addEventListener("pointerenter", function () {
+                        if (!v.getAttribute("src")) v.setAttribute("src", v.dataset.src);
+                        var p = v.play(); if (p && p.catch) p.catch(function () {});
+                    });
+                    card.addEventListener("pointerleave", function () {
+                        v.pause(); box.classList.remove("is-playing");
+                    });
+                });
+            })();
+        </script>
+
 
     </main>
 
@@ -1044,6 +1236,7 @@
 
             var referralEl    = document.getElementById('referral-lottie');
             var referralScrim = document.getElementById('referral-scrim');
+            var referralStatusScrim = document.getElementById('referral-status-scrim');   // dims the status bar with the screen
             var referralSheet = document.getElementById('referral-sheet');
 
             function referralResetInstant() {
@@ -1051,7 +1244,9 @@
                 referralEl.style.transform = 'translateY(0)';
                 referralEl.style.opacity = '0';
                 referralScrim.style.transition = 'none';
+                if (referralStatusScrim) referralStatusScrim.style.transition = 'none';
                 referralScrim.style.opacity = '0';
+                if (referralStatusScrim) referralStatusScrim.style.opacity = '0';
                 referralSheet.style.transition = 'none';
                 referralSheet.style.opacity = '0';
                 void referralEl.offsetWidth; // commit without animating
@@ -1061,7 +1256,9 @@
                 referralEl.style.transition = 'opacity ' + REFERRAL_FADEIN_MS + 'ms ease-out';
                 referralEl.style.opacity = '1';
                 referralScrim.style.transition = 'opacity ' + REFERRAL_FADEIN_MS + 'ms ease-out';
+                if (referralStatusScrim) referralStatusScrim.style.transition = 'opacity ' + REFERRAL_FADEIN_MS + 'ms ease-out';
                 referralScrim.style.opacity = String(REFERRAL_SCRIM_OPACITY);
+                if (referralStatusScrim) referralStatusScrim.style.opacity = String(REFERRAL_SCRIM_OPACITY);
                 referralSheet.style.transition = 'opacity ' + REFERRAL_SHEET_MS + 'ms ease-out ' + REFERRAL_SHEET_DELAY + 'ms';
                 referralSheet.style.opacity = '1';
             }
@@ -1076,7 +1273,9 @@
                 referralEl.style.transform = 'translateY(110%)';
                 referralEl.style.opacity = '0';
                 referralScrim.style.transition = 'opacity ' + REFERRAL_EXIT_MS + 'ms ease-in';
+                if (referralStatusScrim) referralStatusScrim.style.transition = 'opacity ' + REFERRAL_EXIT_MS + 'ms ease-in';
                 referralScrim.style.opacity = '0';
+                if (referralStatusScrim) referralStatusScrim.style.opacity = '0';
             }
 
             function referralStart() {

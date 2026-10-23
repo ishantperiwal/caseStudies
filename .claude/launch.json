@@ -52,6 +52,16 @@
         "Zapp Account"
       ],
       "port": 5180
+    },
+    {
+      "name": "case-studies",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "5182"
+      ],
+      "port": 5182
     }
   ]
 }

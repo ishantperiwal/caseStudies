@@ -715,46 +715,20 @@
         .results-pictograph .pip.is-on { background: #1a5f67; }
 
         /* Large Hero Avatar Stack Infographic */
-        .results-avatar-stack {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.8rem;
-            margin-top: 0.2rem;
-        }
-        .avatar-item {
-            width: 2.3rem;
-            height: 2.3rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: #eaeaea;
-            color: hsl(var(--accent-h), 12%, 55%);
-            border: 2.2px solid #ffffff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
-        }
-        .avatar-item + .avatar-item {
-            margin-left: -0.75rem;
-        }
-        .avatar-item:nth-child(1) { z-index: 5; }
-        .avatar-item:nth-child(2) { z-index: 4; }
-        .avatar-item:nth-child(3) { z-index: 3; }
-        .avatar-item:nth-child(4) { z-index: 2; }
-        .avatar-item:nth-child(5) { z-index: 1; }
-        .avatar-item.is-active {
-            background: hsl(var(--accent-h), 25%, 93%);
-            color: #1a5f67;
-            border-color: #1a5f67;
-            box-shadow: 0 0 14px rgba(26, 95, 103, 0.22);
-            z-index: 10;
-        }
-        .results-avatar-icon {
-            width: 1.15rem;
-            height: 1.15rem;
-            stroke-width: 2.2px;
-        }
+        /* "1 in 5" figure (from the Zapp film): five filled silhouettes, three behind
+           and two in front; the one that uses Auto-Load stands in front in teal. Front
+           figures carry a thin card-coloured edge so they read in front of the back row. */
+        .results-people { position: relative; width: 6.9rem; height: 4.5rem; margin: 0.2rem 0 0.9rem; }
+        .results-people .pp { position: absolute; width: 1.75rem; height: 2.6rem; display: block; }
+        .results-people .pp svg { width: 100%; height: 100%; display: block; overflow: visible;
+            fill: hsl(190, 12%, 82%); }
+        .results-people .p0 { left: 0.1rem; top: 0; }
+        .results-people .p1 { left: 2.55rem; top: 0; }
+        .results-people .p2 { left: 5rem; top: 0; }
+        .results-people .p3 { left: 1.3rem; top: 1.85rem; }
+        .results-people .p4 { left: 3.75rem; top: 1.85rem; }
+        .results-people .p3 svg, .results-people .p4 svg { stroke: #f7f9fa; stroke-width: 3px; paint-order: stroke; }
+        .results-people .is-on svg { fill: #1a5f67; }
 
         /* "Where we are today" highlight — reads after the leaderboard */
         /* Split ranking container */
@@ -1034,19 +1008,22 @@
         }
 
         .stack-section .section-header::after {
-            content: '+';
+            /* Collapse / expand chevron: points down when closed, turns up when open. */
+            content: '';
             position: absolute;
-            top: 2rem;
+            top: 2.05rem;
             right: 2.5rem;
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            line-height: 1;
-            color: theme('colors.ink');
-            font-weight: 400;
+            width: 1.15rem;
+            height: 1.15rem;
+            background-color: #2C2621;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+                    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+            transform: rotate(0deg);
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
         }
 
         .stack-section.is-expanded .section-header::after {
-            content: '−';
+            transform: rotate(180deg);
         }
 
         .stack-section.static-section .section-header,
@@ -1474,18 +1451,13 @@
                 clip-path: inset(1px 0 0 0);
             }
 
-            /* Trims the 1px top edge; opened out to the sides so the side buttons
-               show. The clip would cut the body's box-shadow into a hard rectangle,
-               so these phones drop it and take a drop-shadow on the wrapper instead
-               (it follows the clipped, rounded outline). */
+            /* No clip on these phone bodies: the hover spotlight is rounded to the
+               phone (see .hi-spotlight), so nothing shows past the corners, and the
+               side buttons and contact shadow stay visible. */
             .execution-phone-frame > .legacy-wallet-device,
             .execution-phone-state > .legacy-wallet-device,
             .execution-phone-state.is-highlight-clipped > .legacy-wallet-device {
-                clip-path: inset(1px -8px 0 -8px round 2.2rem);
-                box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.85), inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10);
-            }
-            .execution-journey-phone {
-                filter: drop-shadow(0 6px 8px rgba(15, 23, 32, 0.14)) drop-shadow(0 22px 26px rgba(15, 23, 32, 0.16));
+                clip-path: none;
             }
 
             .rebrand-phone-placeholder[data-hover-pan-zoom].is-hover-zoomed .legacy-wallet-device,
@@ -1510,9 +1482,8 @@
             box-shadow:
                 inset 0 0 0 1px rgba(0, 0, 0, 0.85),            /* rim → bezel seam */
                 inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10),
-                0 1px 1px rgba(15, 23, 32, 0.10),
-                0 10px 22px -10px rgba(15, 23, 32, 0.32),
-                0 28px 48px -24px rgba(15, 23, 32, 0.30);
+                0 1px 2px rgba(15, 23, 32, 0.08),
+                0 10px 20px -12px rgba(15, 23, 32, 0.20);   /* one soft, tight shadow (no wide layer to band) */
         }
 
         /* Phones inside .rebrand-phone-viewport (carousel, rebrand screens): the
@@ -1526,7 +1497,7 @@
                 inset 1.5px 1.5px 2px 1px rgba(255, 255, 255, 0.10);
         }
         .rebrand-phone-placeholder {
-            filter: drop-shadow(0 6px 8px rgba(15, 23, 32, 0.14)) drop-shadow(0 20px 22px rgba(15, 23, 32, 0.14));
+            filter: drop-shadow(0 1px 1px rgba(15, 23, 32, 0.08)) drop-shadow(0 6px 10px rgba(15, 23, 32, 0.12));
         }
 
         /* Side buttons: action + volume on the left, power on the right (metal, with
@@ -3911,6 +3882,19 @@
             font-size: 0.75rem;
         }
 
+        /* Clickable timeline headings (play from here) */
+        body:not(.is-text-editing) .journey-heading-link { cursor: pointer; transition: color 0.2s ease; }
+        body:not(.is-text-editing) .journey-heading-link:hover {
+            color: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%));
+        }
+        .journey-heading-link:focus { outline: none; }
+        .journey-heading-link:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+
+        /* Journey option cards: no browser focus ring (it also fired on mouse clicks
+           and script-moved focus); the active card already shows its pressed state. */
+        .execution-journey-option:focus,
+        .execution-journey-option:focus-visible { outline: none; }
+
         /* ── Image hover highlights ── */
         .editable-placeholder { position: relative; }
 
@@ -3932,6 +3916,11 @@
                 var(--color-bg) 500%);
             z-index: 10;
             transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        /* On a phone, round the wash to the body's corners (fallback; the script then
+           clips it to the screen glass when it is shown — see clipSpotToScreen). */
+        .editable-placeholder:has(.legacy-wallet-device) > .hi-spotlight {
+            clip-path: inset(1% round 2.2rem);
         }
 
         .hi-arrow {
@@ -4660,7 +4649,110 @@
         }
 
     </style>
-<script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script></head>
+<script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script><script src="chrome-extension://liecbddmkiiihnedobmlmillhodjkdmb/js/recordConsoleEvents.js"></script>
+    <style id="cs-nav-style">
+        /* Previous / next case study (shared across the three case studies; cycles
+           Zapp Account → IPL → Motion Ops → Zapp Account). Each card takes the
+           accent of the case study it links to (--nh/--ns/--nl). */
+        .cs-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; padding: 1.75rem 2.5rem 6rem; }
+        /* "Thank you for reading" as a separator: hairlines either side */
+        .cs-thanks { display: flex; align-items: center; gap: 1.25rem; padding: 5rem 2.5rem 0; }
+        .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; background: rgba(44, 38, 33, 0.12); }
+        .cs-nav-card {
+            position: relative; display: flex; flex-direction: column; gap: 0.85rem;
+            padding: 1.35rem 1.5rem 1.5rem; border-radius: 0.9rem; text-decoration: none;
+            border: 1px solid rgba(71, 71, 71, 0.14); background: rgba(255, 255, 255, 0.55);
+            transition: border-color .35s ease, background-color .35s ease, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+        }
+        .cs-nav-card.is-next { text-align: right; align-items: flex-end; }
+        .cs-nav-kicker {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+            color: #7A6F64; line-height: 1;
+        }
+        .cs-nav-kicker svg { width: 14px; height: 14px; flex: none; transition: transform .35s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-title {
+            font-family: 'Fraunces', serif; font-weight: 300; font-size: 23px; line-height: 1.18;
+            letter-spacing: -0.01em; color: #2C2621; font-variation-settings: 'opsz' 48; max-width: 17rem;
+        }
+        .cs-nav-title em { font-style: italic; font-weight: 400; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-card::after {   /* accent hairline along the bottom, grows on hover */
+            content: ""; position: absolute; left: 1.5rem; right: 1.5rem; bottom: -1px; height: 2px; border-radius: 2px;
+            background: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%));
+            transform: scaleX(0.12); opacity: .55; transition: transform .45s cubic-bezier(.22,1,.36,1), opacity .35s ease;
+        }
+        .cs-nav-card.is-prev::after { transform-origin: left; }
+        .cs-nav-card.is-next::after { transform-origin: right; }
+        .cs-nav-card:hover, .cs-nav-card:focus-visible {
+            border-color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%) / 0.35);
+            background: hsl(var(--nh) 35% 97%);
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -20px hsl(var(--nh) 40% 20% / 0.45);
+            outline: none;
+        }
+        .cs-nav-card:hover::after, .cs-nav-card:focus-visible::after { transform: scaleX(1); opacity: 1; }
+        .cs-nav-card.is-prev:hover .cs-nav-kicker svg { transform: translateX(-4px); }
+        .cs-nav-card.is-next:hover .cs-nav-kicker svg { transform: translateX(4px); }
+        @media (max-width: 767px) {
+            .cs-nav { grid-template-columns: 1fr; padding: 1.5rem 1.75rem 4rem; }
+            .cs-thanks { padding: 3.5rem 1.75rem 0; }
+            .cs-nav-card.is-next { order: -1; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .cs-nav-card, .cs-nav-card::after, .cs-nav-kicker svg { transition: none; }
+        }
+        /* Preview: the portfolio's startup-panel still, playing its video on hover
+           (fine pointers only; the video loads on first hover). */
+        .cs-nav-card { flex-direction: row; align-items: center; gap: 1.25rem; padding: 1rem; }
+        .cs-nav-card.is-next { flex-direction: row-reverse; align-items: center; }
+        .cs-nav-text { display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; flex: 1; }
+        .cs-nav-card.is-next .cs-nav-text { align-items: flex-end; }
+        .cs-nav-media { position: relative; flex: none; width: 38%; max-width: 12rem; aspect-ratio: 16 / 10;
+            border-radius: 0.6rem; overflow: hidden; background: hsl(var(--nh) 25% 92%);
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06); }
+        .cs-nav-media img, .cs-nav-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cs-nav-media img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
+        .cs-nav-media video { opacity: 0; transition: opacity .45s ease; }
+        .cs-nav-media.is-playing video { opacity: 1; }
+        .cs-nav-card:hover .cs-nav-media img { transform: scale(1.04); }
+        .cs-nav-card::after { left: 1rem; right: 1rem; }
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .cs-nav-card, .cs-nav-card.is-next { flex-direction: column; align-items: stretch; }
+            .cs-nav-media { width: 100%; max-width: none; }
+        }
+        @media (max-width: 767px) {
+            .cs-nav-media { width: 38%; }
+            .cs-nav-title { font-size: 16px; }
+        }
+        /* Revision: no accent bar, arrow only (no label), title in the body sans,
+           larger preview. */
+        .cs-nav-card::after { display: none; }
+        .cs-nav-kicker svg { width: 18px; height: 18px; color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%)); }
+        .cs-nav-title { font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-size: 18px;
+            line-height: 1.35; letter-spacing: -0.005em; font-variation-settings: normal; max-width: 15rem; }
+        .cs-nav-title em { font-style: normal; font-weight: 600; }
+        @media (max-width: 767px) { .cs-nav-title { font-size: 16px; } }
+        .cs-nav-media { width: 52%; max-width: 17rem; }
+        @media (max-width: 767px) { .cs-nav-media { width: 46%; } }
+        .cs-nav-kicker { order: 2; }   /* arrow sits below the title, on its edge */
+        /* Title at the top of the preview, arrow at its bottom. */
+        .cs-nav-card, .cs-nav-card.is-next { align-items: stretch; }
+        .cs-nav-text { justify-content: space-between; padding: 0.2rem 0.25rem 0.15rem; }
+        /* Bottom label "← Previous" / "Next →": the caps mono style, neutral */
+        .cs-nav-kicker svg { width: 14px; height: 14px; color: currentColor; }
+        /* Tags from the portfolio's startup panel, as recessed chips under the title */
+        .cs-nav-text { gap: 0.6rem; justify-content: flex-start; }
+        .cs-nav-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.15rem; }
+        .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-end; }
+        .cs-nav-kicker { margin-top: auto; }
+        .cs-nav-tags > span {
+            font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+            line-height: 1; padding: 6px 9px; border-radius: 5.5px; white-space: nowrap;
+            color: #6f665d; background: rgba(44, 38, 33, 0.05);
+            box-shadow: inset 0 1px 2px rgba(44, 38, 33, 0.10), inset 0 0 0 1px rgba(44, 38, 33, 0.05), 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+    </style>
+</head>
 <body class="" unresolved>
 
     <!-- Vertical guide lines along content edges -->
@@ -5838,40 +5930,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 <div class="bento-cell b-autoload">
                                      <div class="flex flex-col items-start w-full">
                                          <!-- Large Hero Avatar Stack Infographic -->
-                                         <div class="results-avatar-stack" aria-hidden="true">
-                                             <!-- 1st Active Avatar with a green active checkmark badge -->
-                                             <div class="avatar-item is-active">
-                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                     <circle cx="12" cy="7" r="4"></circle>
-                                                 </svg>
-                                             </div>
-                                             <!-- Subsequent 4 cascading inactive standard avatars -->
-                                             <div class="avatar-item">
-                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                     <circle cx="12" cy="7" r="4"></circle>
-                                                 </svg>
-                                             </div>
-                                             <div class="avatar-item">
-                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                     <circle cx="12" cy="7" r="4"></circle>
-                                                 </svg>
-                                             </div>
-                                             <div class="avatar-item">
-                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                     <circle cx="12" cy="7" r="4"></circle>
-                                                 </svg>
-                                             </div>
-                                             <div class="avatar-item">
-                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                     <circle cx="12" cy="7" r="4"></circle>
-                                                 </svg>
-                                             </div>
-                                         </div>
+                                         <div class="results-people" aria-hidden="true"><i class="pp p0"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p1"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p2"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p3 is-on"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p4"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i></div>
                                          <!-- Subtext explanation -->
                                          <div class="bento-cap mt-2">
                                              <strong class="font-bold text-[#1a5f67]" style="font-size: 13px;">1 in 5</strong> <span style="color: hsl(var(--accent-h), 16%, 46%);">(20%)</span> of wallet loaders use Auto-Load
@@ -6064,12 +6123,54 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
         </div>
 
-        <div class="text-center px-10 pt-24 pb-8">
+        <!-- Closing separator, above the previous / next case studies -->
+        <div class="cs-thanks">
             <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 0.95rem;">
                 <span data-text-key="cta-line" spellcheck="false">Thank you for reading</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
             </div>
         </div>
+
+        <!-- Previous / next case study -->
+        <nav class="cs-nav" aria-label="More case studies">
+            <a class="cs-nav-card is-prev" aria-label="Previous case study" href="../Motion%20Ops/motion-ops-case-study.html" style="--nh: 218; --ns: 54; --nl: 29;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/motion-ops.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/motion-ops.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 8H3M7 4L3 8l4 4"/></svg><span>Previous</span></span>
+                    <span class="cs-nav-title">Scaling motion beyond <em>individual expertise</em></span>
+                    <span class="cs-nav-tags"><span>Design System</span><span>Internal Tooling</span></span>
+                </span>
+            </a>
+            <a class="cs-nav-card is-next" aria-label="Next case study" href="../IPL%20Themification/ipl-themification-case-study.html" style="--nh: 145; --ns: 50; --nl: 28;">
+                <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/ipl.webp" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/ipl.webm"></video></span>
+                <span class="cs-nav-text">
+                    <span class="cs-nav-kicker"><span>Next</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4"/></svg></span>
+                    <span class="cs-nav-title"><em>Theming PayZapp</em> for the IPL season</span>
+                    <span class="cs-nav-tags"><span>Growth</span><span>Theming System</span></span>
+                </span>
+            </a>
+        </nav>
+
+        <script>
+            /* Previous / next previews: play the case study's video while hovered. */
+            (function () {
+                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+                if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                document.querySelectorAll(".cs-nav-card").forEach(function (card) {
+                    var box = card.querySelector(".cs-nav-media"), v = box && box.querySelector("video");
+                    if (!v) return;
+                    v.addEventListener("playing", function () { box.classList.add("is-playing"); });
+                    card.addEventListener("pointerenter", function () {
+                        if (!v.getAttribute("src")) v.setAttribute("src", v.dataset.src);
+                        var p = v.play(); if (p && p.catch) p.catch(function () {});
+                    });
+                    card.addEventListener("pointerleave", function () {
+                        v.pause(); box.classList.remove("is-playing");
+                    });
+                });
+            })();
+        </script>
+
 
     </main>
 
@@ -8878,6 +8979,45 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 });
             });
 
+            // Timeline headings play from that point. A section heading brings the section
+            // in on its first screen; a transition heading ("To Onboarding", …) replays its
+            // tap/orchestration and then carries on into the next section on its own.
+            // Arrow keys keep stepping onward from wherever the click landed.
+            function playFromJourneyHeading(sectionEl) {
+                if (activeTransitionNode || startupTapActive) {
+                    clearTransitionAutoTimer();
+                    finishStartupSequence();
+                    activeTransitionNode = null;
+                }
+                if (sectionEl.classList.contains("is-transition-step")) {
+                    journeyEntered = true;
+                    journeyControlWasEngaged = true;
+                    const next = journeySectionSteps.find((item) => item.sectionEl === sectionEl.nextElementSibling);
+                    if (next) { enterTransitionStep(sectionEl, next); return; }
+                }
+                // A section: start on its first screen, through the same path as clicking
+                // that first card (so arrow stepping carries on exactly as it would).
+                const firstCard = sectionEl.querySelector("[data-journey-option]:not([data-transition-option])");
+                if (firstCard) firstCard.click();
+            }
+            root.querySelectorAll(".execution-journey-section > .execution-journey-section-copy > h3").forEach((heading) => {
+                const sectionEl = heading.closest(".execution-journey-section");
+                heading.classList.add("journey-heading-link");
+                heading.setAttribute("role", "button");
+                heading.setAttribute("tabindex", "0");
+                heading.addEventListener("click", (event) => {
+                    if (isEditingInteractionTarget(event.target) || document.body.classList.contains("is-text-editing")) return;
+                    playFromJourneyHeading(sectionEl);
+                });
+                heading.addEventListener("keydown", (event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    if (document.body.classList.contains("is-text-editing")) return;
+                    event.preventDefault();
+                    event.stopPropagation();
+                    playFromJourneyHeading(sectionEl);
+                });
+            });
+
             createStartupTapControls();
             document.addEventListener("pointerdown", handleStartupTapControlActivate, true);
             phone?.addEventListener("pointerdown", handleStartupTapPointerDown);
@@ -10347,6 +10487,23 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 }
             }
 
+            /* On a phone, the wash covers only the screen glass: clip it to the
+               measured screen rect (and its corner radius), so the bezel, rim and side
+               buttons are never faded. Measured each time, since the wrapper can hold
+               more than the phone (e.g. a caption) and phones may be scaled. */
+            function clipSpotToScreen(ph, spot) {
+                const screen = ph.querySelector(".legacy-wallet-screen");
+                if (!screen) return;
+                const sr = spot.getBoundingClientRect(), r = screen.getBoundingClientRect();
+                if (!sr.width || !spot.offsetWidth) return;
+                const k = spot.offsetWidth / sr.width;   // screen px → spot's own px
+                const t = (r.top - sr.top) * k, l = (r.left - sr.left) * k;
+                const b = (sr.bottom - r.bottom) * k, rt = (sr.right - r.right) * k;
+                const rad = parseFloat(getComputedStyle(screen).borderTopLeftRadius) || 0;
+                spot.style.clipPath = `inset(${t}px ${rt}px ${b}px ${l}px round ${rad}px)`;
+            }
+            window.__clipSpotToScreen = clipSpotToScreen;
+
             function showHighlight(ph) {
                 if (ph.dataset.highlightActive !== "true") return;
                 if (ph._hiHideTimer) {
@@ -10362,6 +10519,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 }
                 const dom = ensureDom(ph);
                 syncHighlight(ph);
+                clipSpotToScreen(ph, dom.spot);
                 dom.spot.classList.add("is-on");
                 dom.svg.classList.add("is-on");
                 dom.label.classList.add("is-on");
@@ -10547,6 +10705,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 ph.classList.add("is-highlight-authoring");
                 const dom = window.__highlightEnsure(ph);
                 window.__highlightSync(ph);
+                if (window.__clipSpotToScreen) window.__clipSpotToScreen(ph, dom.spot);
                 dom.spot.classList.add("is-on");
                 dom.svg.classList.add("is-on");
                 dom.label.classList.add("is-on");
