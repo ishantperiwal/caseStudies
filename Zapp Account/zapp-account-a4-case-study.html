@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" style="--accent-h: 206; --block-gap: 3.65rem; --heading-body-gap: 1.2rem; --section-heading-gap-collapsed: 0.8rem; --section-heading-gap-expanded: 0.85rem; --accent-s: 54; --accent-l: 29; --section-gap: 2.5rem; --section-separator-color: hsl(var(--accent-h) 28% 52% / 0.15); --color-bg: hsl(var(--accent-h), 30%, 97%);"><head>
 <style>
+        /* page-scale: the whole page at 90% on laptops and desktops (what 90% browser
+           zoom looks like on a 14" MacBook Pro). Phones and tablets keep full size.
+           Scripts that position things from measured rects divide by --page-zoom. */
+        @media (min-width: 1024px) { html { zoom: 0.9; } }
+
         body[unresolved] {
             opacity: 0 !important;
             pointer-events: none;
@@ -531,6 +536,15 @@
         .b-cum .bento-kicker { color: #1a5f67; }
         .b-cum .bento-num { color: #1a5f67; font-size: 2.3rem; line-height: 1.1; }
         .b-cum .bento-cap { color: #2a5560; }
+        /* Date badge sits on the top border, so the two stats centre on the full card height.
+           The card clips its phone with clip-path (not overflow) so the badge can rise above the edge. */
+        .bento-cell.b-cum { overflow: visible; clip-path: inset(-1rem 0 0 0 round 0 0 0.75rem 0.75rem); }
+        @media (min-width: 760px) {
+            .b-cum .b-cum-stats { margin-top: auto; margin-bottom: auto; }
+        }
+        /* Figures sit above the phone (z 5) */
+        .b-cum .b-cum-stats { z-index: auto; }
+        .b-cum .b-cum-stats > div { position: relative; z-index: 10; }
 
         /* ── Floating 3D phone in the hero results cell ──────────────────────
            The device shell from the Motion Studio film (video/runtime/kits/device.js):
@@ -615,7 +629,8 @@
         /* The real Zapp Account home (positions from the Figma file, via the film) */
         .z3d-ui { position: absolute; inset: 0; font-family: -apple-system, 'SF Pro Text', system-ui, 'Inter', sans-serif; -webkit-font-smoothing: antialiased; color: #161B21;
             letter-spacing: normal; line-height: normal; text-align: left; }   /* reset what the page body sets */
-        .z3d-ui .rs { font-family: 'Inter', sans-serif; }   /* ₹ only: the system rupee is a different shape (as in the film) */
+        .z3d-ui .rs { font-family: 'Inter', sans-serif; }
+        .rs-inter { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.86em; margin-right: 0.04em; }   /* Inter ₹ beside the display numerals */   /* ₹ only: the system rupee is a different shape (as in the film) */
         .z3d-ui .pc { position: absolute; }
         .z3d-ui img { display: block; max-width: none; }
         .z3d-ui .top-wash { position: absolute; left: 7px; top: -164px; width: 346.56px; height: 470px; border-radius: 40px; background: linear-gradient(180deg, rgba(234,246,255,0) 53%, rgba(234,246,255,.7) 77%); }
@@ -677,6 +692,11 @@
         /* Wide spend/load cells */
         .b-spend .bento-num,
         .b-load .bento-num { font-size: 2.3rem; color: #1a5f67; }
+        /* UPI cells: same number size as the wide cells, caption on one line */
+        .b-p2p .bento-num,
+        .b-p2m .bento-num { font-size: 2.3rem; }
+        .b-p2p .bento-cap,
+        .b-p2m .bento-cap { white-space: nowrap; }
         /* Split cell for Auto-Load */
         .bento-autoload-inner {
             display: grid;
@@ -715,20 +735,45 @@
         .results-pictograph .pip.is-on { background: #1a5f67; }
 
         /* Large Hero Avatar Stack Infographic */
-        /* "1 in 5" figure (from the Zapp film): five filled silhouettes, three behind
-           and two in front; the one that uses Auto-Load stands in front in teal. Front
-           figures carry a thin card-coloured edge so they read in front of the back row. */
-        .results-people { position: relative; width: 6.9rem; height: 4.5rem; margin: 0.2rem 0 0.9rem; }
-        .results-people .pp { position: absolute; width: 1.75rem; height: 2.6rem; display: block; }
-        .results-people .pp svg { width: 100%; height: 100%; display: block; overflow: visible;
-            fill: hsl(190, 12%, 82%); }
-        .results-people .p0 { left: 0.1rem; top: 0; }
-        .results-people .p1 { left: 2.55rem; top: 0; }
-        .results-people .p2 { left: 5rem; top: 0; }
-        .results-people .p3 { left: 1.3rem; top: 1.85rem; }
-        .results-people .p4 { left: 3.75rem; top: 1.85rem; }
-        .results-people .p3 svg, .results-people .p4 svg { stroke: #f7f9fa; stroke-width: 3px; paint-order: stroke; }
-        .results-people .is-on svg { fill: #1a5f67; }
+        .results-avatar-stack {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;   /* caption lines up with the other cells */
+            margin-top: 0;
+        }
+        .avatar-item {
+            width: 2.3rem;
+            height: 2.3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #eaeaea;
+            color: hsl(var(--accent-h), 12%, 55%);
+            border: 3.5px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+        }
+        .avatar-item + .avatar-item {
+            margin-left: -0.75rem;
+        }
+        .avatar-item:nth-child(1) { z-index: 5; }
+        .avatar-item:nth-child(2) { z-index: 4; }
+        .avatar-item:nth-child(3) { z-index: 3; }
+        .avatar-item:nth-child(4) { z-index: 2; }
+        .avatar-item:nth-child(5) { z-index: 1; }
+        .avatar-item.is-active {   /* filled teal, white line icon, no glow */
+            background: #1a5f67;
+            color: #ffffff;
+            box-shadow: none;
+            z-index: 10;
+        }
+        .results-avatar-icon {
+            width: 1.15rem;
+            height: 1.15rem;
+            stroke-width: 2.2px;
+        }
 
         /* "Where we are today" highlight — reads after the leaderboard */
         /* Split ranking container */
@@ -745,7 +790,7 @@
             border: 1px solid rgba(71, 71, 71, 0.14);
             border-radius: 0.75rem;
             background: rgba(255, 255, 255, 0.55);
-            padding: 1.35rem 1.25rem 1.25rem;
+            padding: 1.35rem 1.85rem 1.25rem;   /* sides = bottom + the Zapp row's 0.6rem bleed, so its box sits evenly inset */
         }
         
         /* Green callout card for Zapp's status today */
@@ -812,7 +857,7 @@
         }
         .results-rank-row {
             display: grid;
-            grid-template-columns: 28px 145px 1fr auto;
+            grid-template-columns: 28px 112px 1fr auto;
             align-items: center;
             gap: 0.7rem;
             border: 1px solid transparent;
@@ -821,7 +866,7 @@
             font-family: var(--font-display);
             font-weight: 700;
             font-size: 0.85rem;
-            color: #6c6c6c;
+            color: hsl(186, 10%, 45%);
             text-align: center;
         }
         .results-rank-name {
@@ -834,20 +879,21 @@
         .results-rank-track {
             height: 8px;
             border-radius: 6px;
-            background: rgba(71, 71, 71, 0.08);
+            background: hsl(186, 20%, 92%);   /* teal-tinted, not neutral grey */
             overflow: hidden;
+            margin-right: 0.85rem;   /* a little more air before the value */
         }
         .results-rank-fill {
             height: 100%;
             width: 0;
             border-radius: 6px;
-            background: rgba(71, 71, 71, 0.32);
+            background: hsl(186, 16%, 74%);
             transition: width 1.1s cubic-bezier(0.22, 0.61, 0.36, 1);
         }
         .results-rank-val {
             font-family: var(--font-mono);
             font-size: 0.78rem;
-            color: #6c6c6c;
+            color: hsl(186, 10%, 45%);
         }
         .results-rank-row.is-self {
             background: rgba(26, 95, 103, 0.08);
@@ -2030,7 +2076,7 @@
             top: calc(1.25rem + var(--timeline-dot-top) + var(--timeline-dot-border) + var(--timeline-dot-size) / 2);
             bottom: calc(-1 * var(--timeline-gap) - 1.25rem - var(--timeline-dot-top) - var(--timeline-dot-border) - var(--timeline-dot-size) / 2);
             width: 2px;
-            background: rgba(71, 71, 71, 0.18);
+            background: rgba(71, 71, 71, 0.13);
             z-index: 0;
             pointer-events: none;
         }
@@ -2042,7 +2088,7 @@
             top: calc(1.25rem + var(--timeline-dot-top) + var(--timeline-dot-border) + var(--timeline-dot-size) / 2);
             bottom: calc(-1 * var(--timeline-gap) - 1.25rem - var(--timeline-dot-top) - var(--timeline-dot-border) - var(--timeline-dot-size) / 2);
             width: 2px;
-            background: rgba(71, 71, 71, 0.45);
+            background: hsl(var(--accent-h, 14) calc(var(--accent-s, 56) * 1%) calc(var(--accent-l, 55) * 1%) / 0.45);   /* filled: the dot's blue */
             transform: scaleY(0);
             transform-origin: top center;
             transition: transform 560ms cubic-bezier(0.22, 1, 0.36, 1);
@@ -4747,7 +4793,7 @@
         /* Bottom label "← Previous" / "Next →": the caps mono style, neutral */
         .cs-nav-kicker svg { width: 14px; height: 14px; color: currentColor; }
         /* Tags from the portfolio's startup panel, as recessed chips under the title */
-        .cs-nav-text { gap: 0.6rem; justify-content: flex-start; }
+        .cs-nav-text { gap: 0.6rem; justify-content: center; }   /* title + tags centred against the preview */
         .cs-nav-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.15rem; }
         .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-end; }
         .cs-nav-kicker { margin-top: auto; }
@@ -4766,22 +4812,31 @@
         /* No Previous / Next labels: on hover a chevron slides in just outside the card's outer edge */
         .cs-nav-kicker { display: none; }
         .cs-nav-chev {
-            position: absolute; top: 50%; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
+            position: absolute; top: 50%; z-index: 2; width: 24px; height: 24px;
             display: grid; place-items: center;
-            background: rgba(255, 255, 255, 0.94);
             color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%));
-            box-shadow: 0 1px 2px rgba(20, 28, 48, 0.12), 0 6px 14px -6px rgba(20, 28, 48, 0.35);
             opacity: 0; pointer-events: none;
             transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .cs-nav-chev svg { width: 16px; height: 16px; }
-        .cs-nav-card.is-prev .cs-nav-chev { left: -48px; transform: translate(10px, -50%); }   /* outside the card, beside its outer edge */
-        .cs-nav-card.is-next .cs-nav-chev { right: -48px; transform: translate(-10px, -50%); }
+        .cs-nav-chev svg { width: 22px; height: 22px; }
+        .cs-nav-card.is-prev .cs-nav-chev { left: -40px; transform: translate(10px, -50%); }   /* outside the card, beside its outer edge */
+        .cs-nav-card.is-next .cs-nav-chev { right: -40px; transform: translate(-10px, -50%); }
         .cs-nav-card:hover .cs-nav-chev, .cs-nav-card:focus-visible .cs-nav-chev { opacity: 1; transform: translate(0, -50%); }
         @media (prefers-reduced-motion: reduce) { .cs-nav-chev { transition: opacity 0.2s ease; } }
     </style>
 </head>
 <body class="" unresolved>
+    <script>
+        /* The page is scaled with CSS zoom on laptops/desktops (see page-scale). Under
+           zoom, getBoundingClientRect / scroll / pointer values are in screen px, while
+           CSS lengths written back (style.top, --vars, heights) are in the page's own
+           px. pageZoom() converts: CSS px = screen px / pageZoom(). */
+        window.pageZoom = function () {
+            var z = parseFloat(getComputedStyle(document.documentElement).zoom);
+            return z > 0 ? z : 1;
+        };
+    </script>
+
 
     <!-- Vertical guide lines along content edges -->
     <div id="left-vertical-guide" class="fixed inset-0 pointer-events-none z-[2] flex justify-center">
@@ -5839,7 +5894,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 <img alt="Zapp Account Growth Visual" src="case study assets/zapp-placeholder-impact-results-visual.png">
                             </aside>
                             <div class="results-bento">
-                                <div class="bento-cell b-cum relative overflow-hidden">
+                                <div class="bento-cell b-cum relative">
                                     <!-- Faded Backdrop Graph -->
                                     <svg class="absolute inset-x-0 bottom-0 w-full h-full pointer-events-none select-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
                                         <defs>
@@ -5916,21 +5971,21 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                             </div>
                                         </template>
                                     </div>
-                                    <div class="relative z-10 flex flex-col items-start">
-                                        <div class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] uppercase font-mono tracking-wider font-semibold border" style="background: rgba(26, 95, 103, 0.08); border-color: rgba(26, 95, 103, 0.18); color: #1a5f67; font-family: var(--font-mono);">April 2025 – September 2025</div>
-                                    </div>
-                                    <div class="relative z-10 flex flex-col gap-3 mt-4">
+                                    <!-- Top-edge date badge overlapping the border (same as "as of February 2026") -->
+                                    <div class="b-cum-date absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none z-10" style="background: var(--color-bg); color: #1a5f67; border-radius: 4px;">April 2025 – September 2025</div>
+                                    <div class="b-cum-stats relative z-10 flex flex-col gap-4 mt-4">
                                         <div>
-                                            <div class="bento-num" data-countup="" data-to="2.1" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~2.1×</div>
+                                            <div class="bento-num" data-countup="" data-to="2.1" data-decimals="1" data-prefix="" data-suffix="×" data-counted="true">2.1×</div>
                                             <div class="bento-cap">Growth in monthly spends</div>
                                         </div>
+                                        
                                         
                                         <!-- Subtle Divider -->
                                         <div class="w-[20%]" style="height: 1.4px; background: linear-gradient(to right, rgba(26, 95, 103, 0.25), rgba(26, 95, 103, 0.00));"></div>
                                         
                                         <!-- Loads Cumulative Growth -->
                                         <div>
-                                            <div class="bento-num" data-countup="" data-to="1.5" data-decimals="1" data-prefix="~" data-suffix="×" data-counted="true">~1.5×</div>
+                                            <div class="bento-num" data-countup="" data-to="1.5" data-decimals="1" data-prefix="" data-suffix="×" data-counted="true">1.5×</div>
                                             <div class="bento-cap">Growth in monthly loads</div>
                                         </div>
                                     </div>
@@ -5948,21 +6003,52 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 <div class="bento-cell b-p2p">
                                     <span class="results-mom-badge">month on month</span>
                                     <div class="bento-num" data-countup="" data-to="25" data-prefix="+" data-suffix="%" data-counted="true">+25%</div>
-                                    <div class="bento-cap">Peer-to-peer<br>via UPI</div>
+                                    <div class="bento-cap">Peer-to-peer via UPI</div>
                                 </div>
                                 <div class="bento-cell b-p2m">
                                     <span class="results-mom-badge">month on month</span>
                                     <div class="bento-num" data-countup="" data-to="22" data-prefix="+" data-suffix="%" data-counted="true">+22%</div>
-                                    <div class="bento-cap">Peer-to-merchant<br>via UPI</div>
+                                    <div class="bento-cap">Peer-to-merchant via UPI</div>
                                 </div>
                                 <div class="bento-cell b-autoload">
                                      <div class="flex flex-col items-start w-full">
+                                         <span class="results-mom-badge">1 in every 5 Users</span>
                                          <!-- Large Hero Avatar Stack Infographic -->
-                                         <div class="results-people" aria-hidden="true"><i class="pp p0"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p1"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p2"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p3 is-on"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i><i class="pp p4"><svg viewBox="0 0 24 36"><circle cx="12" cy="7.5" r="6.5"></circle><path d="M1.5 35v-8.5C1.5 20 6 16.5 12 16.5S22.5 20 22.5 26.5V35z"></path></svg></i></div>
-                                         <!-- Subtext explanation -->
-                                         <div class="bento-cap mt-2">
-                                             <strong class="font-bold text-[#1a5f67]" style="font-size: 13px;">1 in 5</strong> <span style="color: hsl(var(--accent-h), 16%, 46%);">(20%)</span> of wallet loaders use Auto-Load
+                                         <div class="results-avatar-stack" aria-hidden="true">
+                                             <!-- 1st Active Avatar with a green active checkmark badge -->
+                                             <div class="avatar-item is-active">
+                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                     <circle cx="12" cy="7" r="4"></circle>
+                                                 </svg>
+                                             </div>
+                                             <!-- Subsequent 4 cascading inactive standard avatars -->
+                                             <div class="avatar-item">
+                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                     <circle cx="12" cy="7" r="4"></circle>
+                                                 </svg>
+                                             </div>
+                                             <div class="avatar-item">
+                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                     <circle cx="12" cy="7" r="4"></circle>
+                                                 </svg>
+                                             </div>
+                                             <div class="avatar-item">
+                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                     <circle cx="12" cy="7" r="4"></circle>
+                                                 </svg>
+                                             </div>
+                                             <div class="avatar-item">
+                                                 <svg class="results-avatar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                                     <circle cx="12" cy="7" r="4"></circle>
+                                                 </svg>
+                                             </div>
                                          </div>
+                                         <div class="bento-cap">20% of wallet loaders use Auto-Load</div>
                                      </div>
                                  </div>
                             </div>
@@ -5987,14 +6073,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                         <div class="absolute top-0 left-4 -translate-y-1/2 px-3 py-0.5 text-[9px] uppercase font-mono tracking-wider font-bold select-none" style="background: var(--color-bg); color: #1a5f67; border-radius: 4px;">as of February 2026</div>
                                         
                                         <div class="flex-1 flex flex-col justify-center">
-                                            <div class="results-today-v">~₹500 Cr</div>
+                                            <div class="results-today-v"><span class="rs-inter">₹</span>500 Cr</div>
                                             <div class="results-today-s">in Monthly Spends</div>
                                         </div>
 
-                                        <div class="w-[35%]" style="height: 1px; background: rgba(26, 95, 103, 0.18); flex-shrink: 0;"></div>
+                                        <div class="w-[55%]" style="height: 1.4px; background: linear-gradient(to right, rgba(26, 95, 103, 0.25), rgba(26, 95, 103, 0.00)); flex-shrink: 0;"></div>
                                         
                                         <div class="flex-1 flex flex-col justify-center">
-                                            <div class="results-today-v">~₹600 Cr</div>
+                                            <div class="results-today-v"><span class="rs-inter">₹</span>600 Cr</div>
                                             <div class="results-today-s">in Monthly Loads</div>
                                         </div>
                                     </div>
@@ -6165,7 +6251,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 <span class="cs-nav-chev"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5L5.5 8l4.5 4.5"/></svg></span>
                 <span class="cs-nav-media" aria-hidden="true"><img src="../shared/case-study-previews/motion-ops.jpg" alt="" loading="lazy"><video muted loop playsinline preload="none" data-src="../shared/case-study-previews/motion-ops.webm"></video></span>
                 <span class="cs-nav-text">
-                    <span class="cs-nav-title">Scaling motion beyond <em>individual expertise</em></span>
+                    <span class="cs-nav-title">Scaling motion across <em>PayZapp</em></span>
                     <span class="cs-nav-tags"><span>Design System</span><span>Internal Tooling</span></span>
                 </span>
             </a>
@@ -6546,8 +6632,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 if (!preview || !spacer) return;
 
                 const spacerRect = spacer.getBoundingClientRect();
-                preview.style.setProperty("--floating-preview-top", `${spacerRect.top}px`);
-                preview.style.setProperty("--floating-preview-left", `${spacerRect.left}px`);
+                const pz = pageZoom();
+                preview.style.setProperty("--floating-preview-top", `${spacerRect.top / pz}px`);
+                preview.style.setProperty("--floating-preview-left", `${spacerRect.left / pz}px`);
             });
 
             syncExecutionFloatingPhone();
@@ -6586,8 +6673,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             // Follows the cards group until the phone hits the viewport center, then pins until the stage releases.
             const top = Math.max(startTop, Math.min(centerTop, releaseTop));
 
-            preview.style.setProperty("--floating-preview-top", `${top}px`);
-            preview.style.setProperty("--floating-preview-left", `${spacerRect.left}px`);
+            const pz = pageZoom();
+            preview.style.setProperty("--floating-preview-top", `${top / pz}px`);
+            preview.style.setProperty("--floating-preview-left", `${spacerRect.left / pz}px`);
         }
 
         function getCardBodyClip(body) {
@@ -6601,7 +6689,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             const clip = getCardBodyClip(tween.body);
             if (clip) {
                 clip.style.height = "";
-                const clipHeight = clip.getBoundingClientRect().height;
+                const clipHeight = clip.getBoundingClientRect().height / pageZoom();
                 const bottomInset = Math.max(0, clipHeight - clippedHeight);
                 clip.style.clipPath = `inset(0 0 ${bottomInset}px 0)`;
             }
@@ -7565,7 +7653,8 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     });
                     transitionNodes.forEach((node) => {
                         node.classList.toggle("is-timeline-active", node === activeTransition);
-                        node.classList.toggle("is-timeline-complete", false);
+                        // Transitions already passed keep their connector filled.
+                        node.classList.toggle("is-timeline-complete", Boolean(activeTransition.compareDocumentPosition(node) & Node.DOCUMENT_POSITION_PRECEDING));
                         // Keep the orchestration fill only on the transition being played.
                         if (node !== activeTransition) node.classList.remove("is-orchestrating");
                     });
@@ -10169,7 +10258,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 const isExpanded = section.classList.contains("is-expanded");
                 if (shouldExpand === isExpanded) return;
 
-                const from = body.getBoundingClientRect().height;
+                const from = body.getBoundingClientRect().height / pageZoom();
                 const clip = getCardBodyClip(body);
                 const previousInlineHeight = body.style.height;
                 const previousClipHeight = clip?.style.height || "";
@@ -11351,8 +11440,9 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 markerButton.hidden = false;
                 const buttonWidth = markerButton.offsetWidth || 86;
                 const buttonHeight = markerButton.offsetHeight || 28;
-                markerButton.style.top = `${Math.max(8, rect.top - buttonHeight - 6)}px`;
-                markerButton.style.left = `${Math.max(8, Math.min(window.innerWidth - buttonWidth - 8, rect.right - buttonWidth))}px`;
+                const pz = pageZoom();
+                markerButton.style.top = `${Math.max(8, rect.top / pz - buttonHeight - 6)}px`;
+                markerButton.style.left = `${Math.max(8, Math.min(window.innerWidth / pz - buttonWidth - 8, rect.right / pz - buttonWidth))}px`;
                 markerButton.disabled = !savedTextRange || savedTextRange.collapsed || !activeEditable.contains(savedTextRange.commonAncestorContainer);
             }
 
@@ -20126,10 +20216,11 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 arrive.style.transition = "none"; arrive.style.transform = "none";   // measure the landed pose
                 host.style.setProperty("--z3d-s", s);
                 host.style.setProperty("--z3d-x", x + "px");
-                const lx = layer.getBoundingClientRect().left + x;
+                const pz = pageZoom();   // measured rects are screen px; work in the page's own px
+                const lx = layer.getBoundingClientRect().left / pz + x;
                 let l = Infinity, r = -Infinity;
                 layer.querySelectorAll(".dv-bezel, .dv-wall, .dv-slab").forEach((el) => {
-                    const b = el.getBoundingClientRect(); l = Math.min(l, b.left); r = Math.max(r, b.right);
+                    const b = el.getBoundingClientRect(); l = Math.min(l, b.left / pz); r = Math.max(r, b.right / pz);
                 });
                 arrive.style.transform = ""; arrive.offsetWidth; arrive.style.transition = "";
                 requestAnimationFrame(() => { world.style.transition = ""; });
@@ -20138,11 +20229,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             function placeResults(host, layer, cell) {
                 const w = cell.clientWidth;
                 if (!w) return;
+                const pz = pageZoom();
                 const cellLeft = cell.getBoundingClientRect().left;
                 let textR = 0;
                 cell.querySelectorAll(".bento-num, .bento-cap").forEach((el) => {
                     const range = document.createRange(); range.selectNodeContents(el);
-                    for (const r of range.getClientRects()) textR = Math.max(textR, r.right - cellLeft);
+                    for (const r of range.getClientRects()) textR = Math.max(textR, (r.right - cellLeft) / pz);
                 });
                 const clear = textR + 28;
                 const k = reach(host, layer, w / 2, 0.5);
@@ -20157,12 +20249,14 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             // column's right edge (the box itself runs to the section edge). The layer
             // is oversized (see CSS), so positions are measured against the layer.
             function placeHero(host, layer) {
-                const hr = host.getBoundingClientRect(), lr = layer.getBoundingClientRect();
+                const pz = pageZoom();
+                const toCss = (r) => ({ left: r.left / pz, top: r.top / pz, right: r.right / pz, width: r.width / pz, height: r.height / pz });
+                const hr = toCss(host.getBoundingClientRect()), lr = toCss(layer.getBoundingClientRect());
                 if (!hr.height) return;
                 const s = Math.min((hr.height * 0.86) / H, (hr.width * 0.95) / W);
                 const main = host.closest("main");
                 const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-                const limit = main ? main.getBoundingClientRect().right - 2.5 * rem - 10 - lr.left : Infinity;   // column edge, minus the outline
+                const limit = main ? main.getBoundingClientRect().right / pz - 2.5 * rem - 10 - lr.left : Infinity;   // column edge, minus the outline
                 let x = hr.left + hr.width / 2 - lr.left;
                 const k = reach(host, layer, x, s);
                 x = Math.min(x, limit - k.right * s);

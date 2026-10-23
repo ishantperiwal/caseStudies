@@ -61,6 +61,11 @@
     </script>
 
     <style>
+        /* page-scale: the whole page at 90% on laptops and desktops (what 90% browser
+           zoom looks like on a 14" MacBook Pro). Phones and tablets keep full size.
+           Scripts that position things from measured rects divide by --page-zoom. */
+        @media (min-width: 1024px) { html { zoom: 0.9; } }
+
         /* ── Page reveal (same look as the Zapp Account case study) ──
            A keyframe animation rather than a transition: it always plays from its
            first frame, so the blur-fade can't be skipped. Only what is on screen at
@@ -1334,7 +1339,7 @@
         /* Bottom label "← Previous" / "Next →": the caps mono style, neutral */
         .cs-nav-kicker svg { width: 14px; height: 14px; color: currentColor; }
         /* Tags from the portfolio's startup panel, as recessed chips under the title */
-        .cs-nav-text { gap: 0.6rem; justify-content: flex-start; }
+        .cs-nav-text { gap: 0.6rem; justify-content: center; }   /* title + tags centred against the preview */
         .cs-nav-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0.15rem; }
         .cs-nav-card.is-next .cs-nav-tags { justify-content: flex-end; }
         .cs-nav-kicker { margin-top: auto; }
@@ -1353,17 +1358,15 @@
         /* No Previous / Next labels: on hover a chevron slides in just outside the card's outer edge */
         .cs-nav-kicker { display: none; }
         .cs-nav-chev {
-            position: absolute; top: 50%; z-index: 2; width: 34px; height: 34px; border-radius: 50%;
+            position: absolute; top: 50%; z-index: 2; width: 24px; height: 24px;
             display: grid; place-items: center;
-            background: rgba(255, 255, 255, 0.94);
             color: hsl(var(--nh) calc(var(--ns) * 1%) calc(var(--nl) * 1%));
-            box-shadow: 0 1px 2px rgba(20, 28, 48, 0.12), 0 6px 14px -6px rgba(20, 28, 48, 0.35);
             opacity: 0; pointer-events: none;
             transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
         }
-        .cs-nav-chev svg { width: 16px; height: 16px; }
-        .cs-nav-card.is-prev .cs-nav-chev { left: -48px; transform: translate(10px, -50%); }   /* outside the card, beside its outer edge */
-        .cs-nav-card.is-next .cs-nav-chev { right: -48px; transform: translate(-10px, -50%); }
+        .cs-nav-chev svg { width: 22px; height: 22px; }
+        .cs-nav-card.is-prev .cs-nav-chev { left: -40px; transform: translate(10px, -50%); }   /* outside the card, beside its outer edge */
+        .cs-nav-card.is-next .cs-nav-chev { right: -40px; transform: translate(-10px, -50%); }
         .cs-nav-card:hover .cs-nav-chev, .cs-nav-card:focus-visible .cs-nav-chev { opacity: 1; transform: translate(0, -50%); }
         @media (prefers-reduced-motion: reduce) { .cs-nav-chev { transition: opacity 0.2s ease; } }
 
