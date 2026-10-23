@@ -1,0 +1,9 @@
+[submodule "IPL Themification/video"]
+	path = IPL Themification/video
+	url = https://github.com/ishantperiwal/motionStudio.git
+[submodule "Motion Ops/video"]
+	path = Motion Ops/video
+	url = https://github.com/ishantperiwal/motionStudio.git
+[submodule "Zapp Account/video"]
+	path = Zapp Account/video
+	url = https://github.com/ishantperiwal/motionStudio.git
