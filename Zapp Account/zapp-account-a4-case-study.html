@@ -549,14 +549,22 @@
            oversized so the sticker-outline filter region covers the whole arrival path. */
         .hero-phone3d { position: relative; z-index: 1; width: 100%; aspect-ratio: 590 / 900; max-height: 560px; }
         .hero-phone3d .dv-layer { inset: -30% -60% -70% -30%; filter: url(#z3dStickerL); }
-        /* Arrival: slides up from the bottom right with one full turn, and lands. */
+        /* Arrival: starts showing its back, low and out of focus; rises while it
+           turns 180° to face the viewer, resolving from a haze to sharp (blur on the
+           3D container, opacity eased alongside), like coming out of the clouds. */
         .phone3d .dv-arrive { position: absolute; left: 0; top: 0; width: 0; height: 0; transform-style: preserve-3d; }
-        .hero-phone3d .dv-arrive { transform: translate3d(260px, 760px, 0) rotateZ(18deg) rotateY(-360deg); opacity: 0; }
-        .hero-phone3d.is-arrived .dv-arrive { transform: none; opacity: 1;
-            transition: transform 1.7s cubic-bezier(0.22, 0.6, 0.3, 1) 0.25s, opacity 0.35s ease-out 0.25s; }
-        .hero-phone3d .dv-phone { animation-delay: 1.95s; }
+        .hero-phone3d .dv-arrive { transform: translate3d(0, 260px, 0) rotateY(-180deg); }
+        /* blur + opacity live on the flat container: opacity on the turning element
+           would flatten its 3D (the back would show the screen mirrored through it) */
+        .hero-phone3d .dv-persp { filter: blur(22px); opacity: 0; }
+        .hero-phone3d.is-arrived .dv-arrive { transform: none;
+            transition: transform 2.1s cubic-bezier(0.16, 0.7, 0.2, 1) 0.25s; }
+        .hero-phone3d.is-arrived .dv-persp { filter: blur(0px); opacity: 1;
+            transition: filter 1.7s cubic-bezier(0.25, 0.6, 0.3, 1) 0.25s, opacity 1.1s cubic-bezier(0.3, 0, 0.3, 1) 0.25s; }
+        .hero-phone3d .dv-phone { animation-delay: 2.35s; }
         @media (prefers-reduced-motion: reduce) {
-            .hero-phone3d .dv-arrive { transform: none; opacity: 1; transition: none; }
+            .hero-phone3d .dv-arrive { transform: none; transition: none; }
+            .hero-phone3d .dv-persp { filter: none; opacity: 1; transition: none; }
         }
         .phone3d .dv-persp { position: absolute; inset: 0; perspective: none; }
         .phone3d .dv-world { position: absolute; left: var(--z3d-x); top: var(--z3d-y); width: 0; height: 0; transform-style: preserve-3d;
