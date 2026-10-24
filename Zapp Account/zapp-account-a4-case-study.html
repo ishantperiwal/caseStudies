@@ -70,6 +70,24 @@
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        /* Phones / touch draw the 3D phone with three.js (setupPhone3d): fetch it and the screen
+           image first, ahead of the page's images, so the hero phone isn't left waiting behind them */
+        (function () {
+            const q = new URLSearchParams(location.search).get("phone3d");
+            if (q === "css" || (q !== "gl" && !matchMedia("(max-width: 767px), (pointer: coarse)").matches)) return;
+            [["modulepreload", "https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js"],
+             ["preload", "case study assets/zapp-3d/screen-home@3x.webp", "image"],
+             ["preload", "case study assets/zapp-3d/screen-home-fg@3x.webp", "image"],
+             ["preload", "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie_canvas.min.js", "script"]].forEach(([rel, href, as]) => {
+                const l = document.createElement("link");
+                Object.assign(l, { rel, href, crossOrigin: "anonymous", fetchPriority: as === "script" ? "low" : "high" });
+                if (as) l.as = as;
+                l.setAttribute("data-runtime-only", "");
+                document.head.appendChild(l);
+            });
+        })();
+    </script>
     <title>Case Study: Zapp Account Revamp</title>
     
     <!-- Importing Grotesque Fonts -->
@@ -579,6 +597,10 @@
            oversized so the sticker-outline filter region covers the whole arrival path. */
         .hero-phone3d { position: relative; z-index: 1; width: 100%; aspect-ratio: 590 / 900; max-height: 560px; }
         .hero-phone3d .dv-layer { inset: -30% -60% -70% -30%; filter: url(#z3dStickerL); }
+        /* Phones / touch: the same phone drawn by three.js on one canvas (outline included), see buildGL() */
+        html .phone3d .dv-layer.z3d-gl { filter: none; }
+        .hero-phone3d .dv-layer.z3d-gl { inset: -12% -30% -45% -12%; }
+        .phone3d .z3d-gl canvas { display: block; width: 100%; height: 100%; }
         /* Arrival: starts showing its back, low and out of focus; rises while it
            turns 180° to face the viewer, resolving from a haze to sharp (blur on the
            3D container, opacity eased alongside), like coming out of the clouds. */
@@ -20224,7 +20246,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
            walls (~42px thick), extruded buttons, a raised camera island, bezel, glass.
            Everything lives in a [data-runtime-only] layer, so Save strips it; the
            styles are static in the page (.results-phone3d) for the same reason. */
-        (function setupPhone3d() {
+        (async function setupPhone3d() {
             const tpl = document.querySelector("template[data-phone3d-ui]");
             if (!tpl) return;
             const W = 384, H = 804, R = 58, SLABS = 26, DEPTH = 1.6, THICK = SLABS * DEPTH;
@@ -20321,6 +20343,230 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 return layer;
             }
 
+            // Phones / touch: the same phone as a handful of meshes on one canvas, because the CSS
+            // phone is hundreds of 3D layers that Android Chrome can't keep up with. Same geometry
+            // and flat colours, same CSS-px camera (DOMMatrix with the CSS transform chain, y flipped),
+            // the screen a still of the live UI (screen-home@3x.webp), and the white sticker outline
+            // drawn as the phone's silhouette pushed out 16 ways in screen space, behind it.
+            function buildGL({ THREE, screen, fg, lottieCanvas }, host) {
+                const layer = node("div", "dv-layer z3d-gl", host);
+                layer.setAttribute("data-runtime-only", "");
+                layer._anims = [];
+                const canvas = node("canvas", "", node("div", "dv-persp", layer));
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);   // the device's own resolution, or the screen goes soft
+                const renderer = new THREE.WebGLRenderer({ canvas, antialias: dpr < 2.5, alpha: true, powerPreference: "low-power" });
+                renderer.setPixelRatio(dpr);
+                const scene = new THREE.Scene(), camera = new THREE.OrthographicCamera(0, 1, 0, -1, -5000, 5000);
+                const world = new THREE.Group();
+                world.matrixAutoUpdate = false;
+                scene.add(world);
+
+                const flat = (c) => new THREE.MeshBasicMaterial({ color: c });
+                // rounded rect (or ring, with an inset) centred on (cx, cy), y up
+                const rr = (w, h, r, cx = 0, cy = 0) => {
+                    const s = new THREE.Shape(), x = cx - w / 2, y = cy - h / 2;
+                    s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.absarc(x + w - r, y + r, r, -Math.PI / 2, 0);
+                    s.lineTo(x + w, y + h - r); s.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2);
+                    s.lineTo(x + r, y + h); s.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI);
+                    s.lineTo(x, y + r); s.absarc(x + r, y + r, r, Math.PI, Math.PI * 1.5);
+                    return s;
+                };
+                const ring = (w, h, r, inset, cx, cy) => { const s = rr(w, h, r, cx, cy); s.holes.push(rr(w - 2 * inset, h - 2 * inset, r - inset, cx, cy)); return s; };
+                const disc = (r, cx, cy) => { const s = new THREE.Shape(); s.absarc(cx, cy, r, 0, Math.PI * 2); return s; };
+                const ringDisc = (r0, r1, cx, cy) => { const s = disc(r1, cx, cy); s.holes.push(disc(r0, cx, cy)); return s; };
+                const solids = [];
+                const mesh = (geo, mat, parent, z = 0, solid = false) => {
+                    const m = new THREE.Mesh(geo, mat); m.position.z = z; parent.add(m);
+                    if (solid) solids.push(m);
+                    return m;
+                };
+                const extrude = (shape, depth, seg = 16) => new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: false, curveSegments: seg });
+                const flatUV = (geo, x0, y0, w, h) => {   // planar UVs over the box (x0, y0, w, h)
+                    const p = geo.attributes.position, uv = geo.attributes.uv;
+                    for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) - x0) / w, (p.getY(i) - y0) / h);
+                    return geo;
+                };
+
+                // 1 body, its front face the bezel, rim lines on top; antenna bands on the left wall
+                mesh(extrude(rr(W, H, R), THICK), [flat(0x090D10), flat(0x2B353E)], world, -THICK, true);
+                mesh(new THREE.ShapeGeometry(ring(W, H, R, 2), 16), flat(0x8A96A0), world, 0.2);
+                mesh(new THREE.ShapeGeometry(ring(W - 4, H - 4, R - 2, 1.5), 16), flat(0x2A343C), world, 0.2);
+                [92, 712].forEach((at) => {
+                    const band = mesh(new THREE.PlaneGeometry(THICK, 7), flat(0x4A5661), world, -THICK / 2);
+                    band.rotation.y = -Math.PI / 2; band.position.set(-W / 2 - 0.15, H / 2 - at, -THICK / 2);
+                });
+
+                // 2 buttons: a long pill on the left, the power button on the right
+                const PILL = Math.round(THICK * 0.48), BTN_H = 3.5;
+                [[-1, 176, 96], [1, 220, 90]].forEach(([side, top, len]) => {
+                    const at = (m, out) => { m.rotation.y = (side * Math.PI) / 2; m.position.set(side * (W / 2 + out), H / 2 - top - len / 2, -THICK / 2); };
+                    at(mesh(new THREE.ShapeGeometry(rr(PILL + 3, len + 3, PILL / 2 + 1.5), 8), flat(0x151C22), world), 0.1);
+                    at(mesh(extrude(rr(PILL, len, PILL / 2), BTN_H, 8), [flat(0x5A6672), flat(0x1E262D)], world, 0, true), 0);
+                });
+
+                // 3 back (in its own turned frame): gradient plate with rim and flash, raised camera island, two lenses
+                const back = new THREE.Group();
+                back.rotation.y = Math.PI; back.position.z = -THICK - 0.5;
+                world.add(back);
+                const plate = document.createElement("canvas");
+                plate.width = W; plate.height = H;
+                const g = plate.getContext("2d"), a = (150 * Math.PI) / 180, half = (Math.abs(W * Math.sin(a)) + Math.abs(H * Math.cos(a))) / 2;
+                const grad = g.createLinearGradient(W / 2 - Math.sin(a) * half, H / 2 + Math.cos(a) * half, W / 2 + Math.sin(a) * half, H / 2 - Math.cos(a) * half);
+                [[0, "#5D6A75"], [0.4, "#2E3942"], [1, "#1B232A"]].forEach(([o, c]) => grad.addColorStop(o, c));
+                g.fillStyle = grad; g.fillRect(0, 0, W, H);
+                g.strokeStyle = "#7D8994"; g.lineWidth = 4; g.beginPath(); g.roundRect(0, 0, W, H, R); g.stroke();
+                g.fillStyle = "#8D8672"; g.beginPath(); g.arc(137, 85, 9, 0, Math.PI * 2); g.fill();
+                g.fillStyle = "#CFC6AE"; g.beginPath(); g.arc(137, 85, 7, 0, Math.PI * 2); g.fill();
+                const plateTex = new THREE.CanvasTexture(plate);
+                plateTex.colorSpace = THREE.SRGBColorSpace;
+                mesh(flatUV(new THREE.ShapeGeometry(rr(W, H, R), 16), -W / 2, -H / 2, W, H), new THREE.MeshBasicMaterial({ map: plateTex }), back);
+                const bx = -W / 2 + 24 + 44, by = H / 2 - 24 - 79, ISLAND = 8, LENS = 5;
+                mesh(extrude(rr(88, 158, 44, bx, by), ISLAND), [flat(0x56636F), flat(0x6B7782)], back, 0, true);
+                mesh(new THREE.ShapeGeometry(ring(88, 158, 44, 1.5, bx, by), 16), flat(0x7C8893), back, ISLAND + 0.05);
+                [H / 2 - 68, H / 2 - 138].forEach((ly) => {
+                    mesh(extrude(disc(32, bx, ly), LENS, 28), [flat(0x0E1318), flat(0x6E7984)], back, ISLAND, true);
+                    mesh(new THREE.ShapeGeometry(ringDisc(27, 32, bx, ly), 28), flat(0x9AA4AE), back, ISLAND + LENS + 0.05);
+                    mesh(new THREE.ShapeGeometry(ringDisc(21, 27, bx, ly), 28), flat(0x161D23), back, ISLAND + LENS + 0.05);
+                });
+
+                // 4 front: the screen (island and home indicator are in the image), and over it the wave strip
+                // (y 156-246), redrawn as it plays: the screen under it, the waves, then what sits over them
+                const SC = 3, sharp = (map) => {   // a little sharper than the mipmaps alone: the screen is drawn small
+                    map.colorSpace = THREE.SRGBColorSpace; map.anisotropy = renderer.capabilities.getMaxAnisotropy();
+                    const m = new THREE.MeshBasicMaterial({ map });
+                    m.onBeforeCompile = (sh) => { sh.fragmentShader = sh.fragmentShader.replace("#include <map_fragment>",
+                        "vec4 sampledDiffuseColor = texture2D( map, vMapUv, -0.6 ); diffuseColor *= sampledDiffuseColor;"); };
+                    return m;
+                };
+                const screenTex = new THREE.Texture(screen);
+                screenTex.needsUpdate = true;
+                mesh(flatUV(new THREE.ShapeGeometry(rr(360, 780, 46), 16), -180, -390, 360, 780), sharp(screenTex), world, 3);
+                const strip = Object.assign(document.createElement("canvas"), { width: 360 * SC, height: 90 * SC }), sg = strip.getContext("2d");
+                const wave = Object.assign(document.createElement("canvas"), { width: 190 * SC, height: 80 * SC });
+                const stripTex = new THREE.CanvasTexture(strip);
+                mesh(new THREE.PlaneGeometry(360, 90), sharp(stripTex), world, 3.01).position.y = 390 - 156 - 45;
+                let waves = null, waveT = 0, waveAt = -1;
+                const drawStrip = () => {   // the CSS phone's two mirrored .w waves, inside .waves (left 6.72, 346.56 wide)
+                    sg.setTransform(1, 0, 0, 1, 0, 0);
+                    sg.drawImage(screen, 0, 156 * SC, strip.width, strip.height, 0, 0, strip.width, strip.height);
+                    if (waves) {
+                        sg.save(); sg.scale(SC, SC); sg.beginPath(); sg.rect(6.72, 0, 346.56, 90); sg.clip();
+                        [[6.72 - 24 + 95, -1.2, 1.2], [6.72 + 346.56 + 24 - 95, 1.2, -1.2]].forEach(([cx, sx, sy]) => {
+                            sg.save(); sg.translate(cx, 40); sg.scale(sx, sy); sg.drawImage(wave, -95, -40, 190, 80); sg.restore();
+                        });
+                        sg.restore();
+                    }
+                    sg.drawImage(fg, 0, 0, strip.width, strip.height);
+                    stripTex.needsUpdate = true;
+                };
+                drawStrip();
+                lottieCanvas.then((lottie) => {
+                    const anim = lottie.loadAnimation({ renderer: "canvas", loop: true, autoplay: false, path: "case study assets/zapp-3d/waveSlowed.json",
+                        rendererSettings: { context: wave.getContext("2d"), clearCanvas: true, preserveAspectRatio: "xMidYMid meet" } });
+                    anim.addEventListener("DOMLoaded", () => { waves = anim; waveAt = -1; layer._wake(); });
+                }, () => {});
+
+                // 5 sticker outline: every solid again, flat white, shifted 16 ways by the outline width
+                const N = 16, offs = new Float32Array(N * 2);
+                for (let k = 0; k < N; k++) { offs[2 * k] = Math.cos((2 * Math.PI * k) / N); offs[2 * k + 1] = Math.sin((2 * Math.PI * k) / N); }
+                const sil = new THREE.ShaderMaterial({
+                    uniforms: { uPx: { value: new THREE.Vector2(1, 1) }, uR: { value: host.dataset.phone3d === "hero" ? 8 : 6 } },
+                    vertexShader: "attribute vec2 aOff; uniform vec2 uPx; uniform float uR;\n" +
+                        "void main() { vec4 p = projectionMatrix * modelViewMatrix * vec4(position, 1.0); p.xy += aOff * uR * uPx * p.w; p.z = 0.9999 * p.w; gl_Position = p; }",
+                    fragmentShader: "void main() { gl_FragColor = vec4(1.0); }",
+                    depthWrite: false,
+                });
+                solids.forEach((m) => {
+                    const geo = new THREE.InstancedBufferGeometry().copy(m.geometry);
+                    geo.instanceCount = N;
+                    geo.setAttribute("aOff", new THREE.InstancedBufferAttribute(offs, 2));
+                    const twin = new THREE.Mesh(geo, sil);
+                    twin.position.copy(m.position); twin.rotation.copy(m.rotation);
+                    twin.renderOrder = -1; twin.frustumCulled = false;
+                    m.parent.add(twin);
+                });
+
+                // pose: the CSS chain (scale, camera, lean, arrival, float) on a DOMMatrix, in CSS px
+                const pose = (x, y, s, px, py, ay, ar, fy, fry, frx) => new DOMMatrix()
+                    .translateSelf(x, y).scaleSelf(s, s, s)
+                    .rotateAxisAngleSelf(1, 0, 0, 14 + py).rotateAxisAngleSelf(0, 0, 1, 9).rotateAxisAngleSelf(0, 1, 0, -26 + px)
+                    .translateSelf(0, ay).rotateAxisAngleSelf(0, 1, 0, ar)
+                    .translateSelf(0, fy).rotateAxisAngleSelf(0, 1, 0, fry).rotateAxisAngleSelf(1, 0, 0, frx);
+                // left/right extent from the centre per unit of scale, landed pose (as reach() measures the CSS phone)
+                const outline = roundRect(W, H, R);
+                layer._reach = () => {
+                    const m = pose(0, 0, 1, 0, 0, 0, 0, 0, 0, 0);
+                    let l = 0, r = 0;
+                    outline.forEach(([px, py]) => [0, -THICK].forEach((pz) => {
+                        const q = m.transformPoint(new DOMPoint(px - W / 2, py - H / 2, pz)); l = Math.min(l, q.x); r = Math.max(r, q.x);
+                    }));
+                    return { left: -l * 1.1, right: r * 1.05 };
+                };
+
+                const ease = (x1, y1, x2, y2) => (t) => {   // CSS cubic-bezier()
+                    if (t <= 0 || t >= 1) return Math.max(0, Math.min(1, t));
+                    const bz = (a, b, u) => 3 * a * u * (1 - u) * (1 - u) + 3 * b * u * u * (1 - u) + u * u * u;
+                    let lo = 0, hi = 1, u = t;
+                    for (let i = 0; i < 24; i++) { u = (lo + hi) / 2; if (bz(x1, x2, u) < t) lo = u; else hi = u; }
+                    return bz(y1, y2, u);
+                };
+                const arriveEase = ease(0.16, 0.7, 0.2, 1), floatEase = ease(0.42, 0, 0.58, 1);
+                const isHero = host.dataset.phone3d === "hero";
+                const num = (n, d) => { const v = parseFloat(host.style.getPropertyValue(n)); return isNaN(v) ? d : v; };
+                let w = 0, h = 0, lean = [0, 0], arrivedAt = 0, floatT = 0, last = 0, key = "", raf = 0;
+                const resize = () => {
+                    w = layer.clientWidth; h = layer.clientHeight;
+                    if (!w || !h) return;
+                    renderer.setSize(w, h, false);
+                    camera.right = w; camera.bottom = -h; camera.updateProjectionMatrix();
+                    sil.uniforms.uPx.value.set(2 / w, 2 / h);
+                    key = "";
+                };
+                const frame = (now) => {
+                    raf = 0;
+                    if (host.classList.contains("is-paused") || document.hidden) { last = 0; return; }
+                    raf = requestAnimationFrame(frame);
+                    const dt = last ? Math.min(now - last, 100) : 0;
+                    last = now;
+                    if (!w) return;
+                    const still = reduce.matches;
+                    // waves: the lottie at its own 60fps timeline, redrawn into the strip at ~30fps
+                    if (waves) {
+                        if (!still) waveT += dt;
+                        const fr = Math.floor((waveT * 0.06) % waves.totalFrames / 2) * 2;
+                        if (fr !== waveAt) { waveAt = fr; waves.goToAndStop(fr, true); drawStrip(); key = ""; }
+                    }
+                    // lean toward the cursor (set by the pointer handler), eased like the CSS 900ms transition
+                    const k = 1 - Math.exp(-dt / 260);
+                    lean = [lean[0] + (num("--z3d-px", 0) - lean[0]) * k, lean[1] + (num("--z3d-py", 0) - lean[1]) * k];
+                    // hero arrival: from its back, 260px low, over 2.1s after 0.25s, once the page marks it arrived
+                    let e = 1;
+                    if (isHero && !still) {
+                        if (!arrivedAt && host.classList.contains("is-arrived")) arrivedAt = now;
+                        e = arrivedAt ? arriveEase((now - arrivedAt - 250) / 2100) : 0;
+                    }
+                    // float: 9s, from where the arrival lands
+                    if (!still && e >= 1) floatT = (floatT + dt) % 9000;
+                    const ph = floatT / 4500, f = still ? 0 : ph < 1 ? floatEase(ph) : 1 - floatEase(ph - 1);
+                    const m = pose(num("--z3d-x", w / 2), num("--z3d-y", h / 2), num("--z3d-s", 0.6), lean[0], lean[1],
+                        260 * (1 - e), -180 * (1 - e), -16 * f, still ? 0 : -6 + 14 * f, still ? 0 : 2 - 4 * f);
+                    const arr = m.toFloat32Array();
+                    const next = arr.join(",");
+                    if (next === key) return;
+                    key = next;
+                    for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) if ((r === 1) !== (c === 1)) arr[c * 4 + r] = -arr[c * 4 + r];   // y down -> y up
+                    world.matrix.fromArray(arr);
+                    world.matrixWorldNeedsUpdate = true;
+                    renderer.render(scene, camera);
+                };
+                layer._wake = () => { if (!raf) raf = requestAnimationFrame(frame); };
+                document.addEventListener("visibilitychange", layer._wake);
+                if ("ResizeObserver" in window) new ResizeObserver(() => { resize(); layer._wake(); }).observe(layer);
+                resize();
+                layer._wake();
+                return layer;
+            }
+
             // Results cell: right side, top edge just inside the cell, bottom running
             // off (the cell clips). The turned phone's footprint is measured, not
             // guessed, so it fits between the numbers (~28px clear) and the cell's
@@ -20354,7 +20600,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     for (const r of range.getClientRects()) textR = Math.max(textR, (r.right - cellLeft) / pz);
                 });
                 const clear = textR + 28;
-                const k = reach(host, layer, w / 2, 0.5);
+                const k = layer._reach ? layer._reach() : reach(host, layer, w / 2, 0.5);
                 let s = Math.min(0.68, (w * 0.42) / W, (w - 8 - clear) / (k.left + k.right));
                 if (s < 0.3) s = 0.3;   // narrow card: keep a floor on size, let the right side run off
                 const x = clear + k.left * s;
@@ -20375,15 +20621,34 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 const rem = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
                 const limit = main ? main.getBoundingClientRect().right / pz - 2.5 * rem - 10 - lr.left : Infinity;   // column edge, minus the outline
                 let x = hr.left + hr.width / 2 - lr.left;
-                const k = reach(host, layer, x, s);
+                const k = layer._reach ? layer._reach() : reach(host, layer, x, s);
                 x = Math.min(x, limit - k.right * s);
                 host.style.setProperty("--z3d-s", s.toFixed(4));
                 host.style.setProperty("--z3d-x", Math.round(x) + "px");
                 host.style.setProperty("--z3d-y", Math.round(hr.top + hr.height / 2 - lr.top) + "px");
             }
 
+            // three.js on phones / touch (?phone3d=gl or =css forces either, for comparing); the CSS phone
+            // stays on desktop, and wherever WebGL 2, the module or the screen image can't load
+            const force = new URLSearchParams(location.search).get("phone3d");
+            let gl = null;
+            if (force === "gl" || (force !== "css" && lite.matches)) {
+                try {
+                    if (document.createElement("canvas").getContext("webgl2")) {
+                        const img = (src) => Object.assign(new Image(), { crossOrigin: "anonymous", fetchPriority: "high", src: "case study assets/zapp-3d/" + src });
+                        const screen = img("screen-home@3x.webp"), fg = img("screen-home-fg@3x.webp");
+                        // the waves draw with lottie's canvas build; the phone doesn't wait for it
+                        const lottieCanvas = new Promise((resolve, reject) => document.head.appendChild(Object.assign(document.createElement("script"),
+                            { src: "https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie_canvas.min.js", crossOrigin: "anonymous", onload: () => resolve(window.lottie), onerror: reject })));
+                        lottieCanvas.catch(() => {});
+                        const [THREE] = await Promise.all([import("https://cdnjs.cloudflare.com/ajax/libs/three.js/0.170.0/three.module.min.js"), screen.decode(), fg.decode()]);
+                        gl = { THREE, screen, fg, lottieCanvas };
+                    }
+                } catch (e) { gl = null; }
+            }
+
             document.querySelectorAll("[data-phone3d]").forEach((host) => {
-                const layer = build(host);
+                const layer = gl ? buildGL(gl, host) : build(host);
                 const isHero = host.dataset.phone3d === "hero";
                 const area = isHero ? host.parentElement : (host.closest(".bento-cell") || host.parentElement);
                 const place = () => (isHero ? placeHero(host, layer) : placeResults(host, layer, area));
@@ -20407,6 +20672,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 if ("IntersectionObserver" in window) {
                     new IntersectionObserver((entries) => entries.forEach((en) => {
                         host.classList.toggle("is-paused", !en.isIntersecting);
+                        if (layer._wake) layer._wake();
                         if (!reduce.matches && !lite.matches) layer._anims.forEach((a) => (en.isIntersecting ? a.play() : a.pause()));
                     })).observe(area);
                 }
