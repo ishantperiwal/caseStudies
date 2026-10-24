@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" style="--accent-h: 160; --accent-s: 54; --accent-l: 29; --color-bg: hsl(var(--accent-h), 12%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head><script>if(new URLSearchParams(window.location.search).get('sticky')==='false')document.documentElement.classList.add('hide-sticky-notes')</script>
+<html lang="en" style="--accent-h: 160; --accent-s: 54; --accent-l: 29; --color-bg: hsl(var(--accent-h), 12%, 97%); --section-separator-color: hsl(var(--accent-h), 28%, 52%, 0.15); --block-gap: 3.65rem; --heading-body-gap: 1.2rem;"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Why I built Lottiemon — A No-B.S. Lottie Animation Editor</title>
+    <title>Why I built Lottiemon: A No-B.S. Lottie Animation Editor</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;family=Playpen+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&amp;family=Instrument+Sans:ital,wght@0,400..700;1,400..700&amp;family=DM+Mono:ital,wght@0,400;0,500;1,400;1,500&amp;display=swap" rel="stylesheet">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -58,8 +58,9 @@
     </script>
 
     <style>
+
         html {
-            font-size: 99%;
+            font-size: 100%;   /* 16px root: rem sizes land on whole pixels */
             overflow-y: scroll;
             overflow-x: hidden;
             scrollbar-gutter: stable;
@@ -104,7 +105,6 @@
         :root {
             --font-display: 'Fraunces', serif;
             --font-body:    'Instrument Sans', sans-serif;
-            --font-sticky:  'Playpen Sans', cursive;
             --font-mono:    'DM Mono', monospace;
             --color-deep:   #4A4038;
             --gap-point:     2rem;
@@ -126,10 +126,10 @@
             font-family: var(--font-display);
             font-weight: 600;
             color: theme('colors.ink');
-            font-size: 1.55rem;
+            font-size: 25px;
             line-height: 1.2;
             letter-spacing: -0.02em;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;   /* a little more air between a section title and its text */
         }
         .read-section .section-summary {
             font-family: var(--font-body);
@@ -161,7 +161,7 @@
 
         .section-mini-heading {
             font-weight: 600;
-            font-size: 1.15rem;
+            font-size: 18px;
             line-height: 1.35;
             color: theme('colors.ink');
             margin-top: 1.25rem;
@@ -169,7 +169,7 @@
         .slash-num {
             color: theme('colors.medium');
             font-weight: 500;
-            font-size: 0.78em;
+            font-size: round(nearest, 0.78em, 1px);
             letter-spacing: 0.02em;
             display: inline-block;
             width: 2rem;
@@ -267,7 +267,7 @@
         }
         .opt-title {
             display: flex; align-items: center; gap: 0.55rem;
-            font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+            font-family: var(--font-display); font-size: 18px; font-weight: 600;
             color: theme('colors.ink');
         }
         .opt-title svg { width: 18px; height: 18px; color: theme('colors.medium'); flex: none; }
@@ -275,20 +275,35 @@
         .opt-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.2rem; }
         .opt-tag {
             font-family: var(--font-mono);
-            font-size: 9.5px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
+            font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 600;
             color: theme('colors.muted'); background: rgba(71, 71, 71, 0.035);
             border: 1px solid rgba(71, 71, 71, 0.14);
             padding: 3px 7px; border-radius: 6px;
         }
+        /* Options, restyled to match the old / new way cards: edge tag, icon badge, "the catch" chips */
+        .grid > .opt { overflow: visible; gap: 0; padding: 1.85rem 1.5rem 1.5rem; background: rgba(255, 255, 255, 0.65); border-color: rgba(153, 27, 27, 0.16); }
+        .opt .opt-head { position: absolute; top: 0; left: 1.25rem; transform: translateY(-50%); margin: 0; }
+        .opt .opt-kicker { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 10px; letter-spacing: 0.06em;
+            color: #8a4b47; background: #fbeceb; border: 1px solid rgba(153, 27, 27, 0.18); }
+        .opt .opt-title { gap: 0.75rem; font-size: 20px; line-height: 1.25; margin-bottom: 0.8rem; }
+        .opt .opt-title svg { width: 36px; height: 36px; padding: 8px; box-sizing: border-box; border-radius: 50%; color: #b4443e; background: #fbe9e7; }
+        .opt .opt-body { font-size: 15px; line-height: 1.6; margin-bottom: 1.15rem; }
+        .opt-catch { margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(153, 27, 27, 0.12);
+            font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #a25656; margin-bottom: 0.6rem; }
+        .opt .opt-tags { gap: 0.45rem; margin: 0; }
+        .opt .opt-tag { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-body); font-size: 13px; font-weight: 500;
+            letter-spacing: 0; text-transform: none; color: #8a2b26; background: rgba(194, 69, 63, 0.07); border: 1px solid rgba(194, 69, 63, 0.16);
+            padding: 0.3rem 0.65rem; border-radius: 999px; }
+        .opt .opt-tag::before { content: "✕"; font-size: 9px; font-weight: 700; color: #c2453f; }
 
         .impact-equation {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 0.55rem;
+            gap: 0.75rem;
             font-family: var(--font-display);
-            font-size: 1rem;
+            font-size: 16px;
             font-weight: 600;
             color: hsl(var(--accent-h), 20%, 15%);
             margin: 0.5rem 0 1.75rem;
@@ -297,77 +312,104 @@
             border: 1px solid rgba(6, 78, 59, 0.18);
             background: #edf8f1;
             color: #064e3b;
-            padding: 0.4rem 0.7rem;
-            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            border-radius: 10px;
             text-align: center;
+            width: 10.5rem;   /* the three terms share one width */
+            box-sizing: border-box;
         }
-        .eq-term small { display: block; font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(6,78,59,0.7); font-weight: 600; margin-top: 2px; }
+        .eq-term small { display: block; font-family: var(--font-body); font-size: 12px; letter-spacing: 0.01em; text-transform: none; color: rgba(6,78,59,0.75); font-weight: 500; margin-top: 3px; }   /* body sans, not the display serif */
         .eq-sym { font-weight: 700; color: hsl(var(--accent-h), 20%, 15%); }
         .eq-total {
             border: 1px solid rgba(71,71,71,0.2);
             background: rgba(255,255,255,0.6);
             color: theme('colors.ink');
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
+            padding: 0.75rem 1.1rem;
+            border-radius: 10px;
+            align-self: stretch;
+            display: flex;
+            align-items: center;
         }
 
-        .impact-bento {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0.75rem;
-        }
-        @media (max-width: 640px) { .impact-bento { grid-template-columns: 1fr; } }
-        .bento-cell {
-            border: 1px solid rgba(71, 71, 71, 0.14);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.55);
-            padding: 1rem 1.1rem;
-        }
-        .bento-num { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; color: #1a5f67; line-height: 1.1; }
-        .bento-sub { font-size: 11px; color: theme('colors.muted'); margin-top: 0.25rem; }
-        .bento-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: theme('colors.muted'); margin-bottom: 0.35rem; }
+        /* Team-scale boxes: white for the old way's cost, green for the time given back */
+        .tc-stack { display: grid; grid-auto-rows: 1fr; gap: 0.75rem; }
+        .tc-cell { display: flex; flex-direction: column; justify-content: center; padding: 0.9rem 1.1rem; border-radius: 10px;
+            border: 1px solid rgba(71, 71, 71, 0.14); background: rgba(255, 255, 255, 0.6); }
+        .tc-period { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #6B7684; margin-bottom: 0.3rem; }
+        .tc-num { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.1; color: #1a5f67; }
+        .tc-sub { font-size: 12px; margin-top: 0.25rem; color: #6B7684; }
+        .tc-back .tc-cell { background: #edf8f1; border-color: rgba(6, 78, 59, 0.2); }
+        .tc-back .tc-period, .tc-back .tc-sub { color: #2f6b55; }
+        .tc-back .tc-num { color: #064e3b; }
+        .tc-back .tc-sub { font-weight: 600; color: #1f7a56; }   /* the saving */
 
-        .twoway {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-            margin-top: 1.5rem;
+        /* Two columns: old way on the left, new way on the right. Each card sits above its three team-scale
+           boxes, so the cards align across, and so do weekly / monthly / yearly. */
+        .impact-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 1.25rem; row-gap: 1rem;
+            align-items: stretch; margin-top: 2rem; }
+        .impact-compare > .way-old   { grid-column: 1; grid-row: 1; }
+        .impact-compare > .way-new   { grid-column: 2; grid-row: 1; }
+        .impact-compare > .tc-divider { grid-column: 1 / -1; grid-row: 2; }
+        .impact-compare > .tc-lost   { grid-column: 1; grid-row: 3; }
+        .impact-compare > .tc-back   { grid-column: 2; grid-row: 3; }
+        /* Divider between the cards and the team-scale boxes: fading hairlines, a phrase in the middle */
+        .tc-divider { display: flex; align-items: center; gap: 1rem; margin: 1.1rem 0 0.35rem; }
+        .tc-divider::before, .tc-divider::after { content: ""; flex: 1; height: 1px; }
+        .tc-divider::before { background: linear-gradient(to left, rgba(71, 71, 71, 0.22), rgba(71, 71, 71, 0)); }
+        .tc-divider::after  { background: linear-gradient(to right, rgba(71, 71, 71, 0.22), rgba(71, 71, 71, 0)); }
+        .tc-divider span { padding: 0.4rem 0.95rem; border-radius: 999px; border: 1px solid rgba(71, 71, 71, 0.14); background: rgba(255, 255, 255, 0.7);
+            font-size: 14px; font-weight: 500; color: #465260; white-space: nowrap; }
+        @media (max-width: 760px) {
+            .impact-compare { grid-template-columns: minmax(0, 1fr); }
+            .impact-compare > * { grid-column: 1 !important; grid-row: auto !important; }
+            .impact-compare > .way-new { margin-top: 1.75rem; }
+            .impact-compare > .tc-divider { display: none; }
         }
-        @media (max-width: 760px) { .twoway { grid-template-columns: 1fr; } }
-        .way-card { border: 1px solid rgba(71,71,71,0.16); border-radius: 10px; padding: 1.25rem 1.35rem; }
+                .way-card { border: 1px solid rgba(71,71,71,0.16); border-radius: 10px; padding: 1.25rem 1.35rem; }
         .way-old { background: rgba(254, 226, 226, 0.24); border-color: rgba(153, 27, 27, 0.18); }
         .way-new { background: #edf8f1; border-color: rgba(6, 78, 59, 0.2); }
         .way-tag { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: 4px; margin-bottom: 0.75rem; }
         .way-old .way-tag { background: #fee2e2; color: #991b1b; }
         .way-new .way-tag { background: #c2e8d0; color: #064e3b; }
-        .step { display: flex; gap: 0.7rem; margin-bottom: 0.7rem; font-size: 14px; line-height: 1.5; }
-        .step b { font-family: var(--font-display); color: theme('colors.ink'); }
+        /* Old way / new way: the time per edit leads, a shared 40-minute bar shows where it goes */
+        .way-card { position: relative; display: flex; flex-direction: column; padding: 1.75rem 1.5rem 1.35rem; border-radius: 12px; }
+        /* Tag rides the card's top edge, on its left (like the "As of …" badges elsewhere) */
+        .way-card .way-tag { position: absolute; top: 0; left: 1.25rem; transform: translateY(-50%); margin: 0;
+            border: 1px solid currentColor; border-color: color-mix(in srgb, currentColor 22%, transparent); }
+        .way-total { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.9rem; }
+        .way-total b { font-family: var(--font-display); font-weight: 600; font-size: 44px; line-height: 1; letter-spacing: -0.02em; }
+        .way-total span { font-size: 14px; color: #6B7684; }
+        .way-old .way-total b { color: #991b1b; }
+        .way-new .way-total b { color: #064e3b; }
+        .way-bar { display: flex; gap: 3px; height: 8px; margin-bottom: 1.25rem; border-radius: 999px; overflow: hidden; }
+        .way-old .way-bar { background: rgba(153, 27, 27, 0.08); }
+        .way-new .way-bar { background: rgba(6, 78, 59, 0.08); }
+        .way-bar i { display: block; height: 100%; }
+        .way-old .way-bar i:nth-child(1) { background: #c2453f; }
+        .way-old .way-bar i:nth-child(2) { background: #dd7a70; }
+        .way-old .way-bar i:nth-child(3) { background: #ecaaa2; }
+        .way-new .way-bar i { background: #1f8a62; border-radius: 999px; }
+        .way-steps, .way-gains { list-style: none; margin: 0; padding: 0; }
+        .way-steps li { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+            padding: 0.6rem 0; border-top: 1px solid rgba(71, 71, 71, 0.1); font-size: 15px; line-height: 1.45; }
+        .way-steps li:last-child { border-bottom: 1px solid rgba(71, 71, 71, 0.1); }
+        .way-steps b { flex: none; font-family: var(--font-mono); font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+        .way-old .way-steps b { color: #991b1b; }
+        .way-new .way-steps b { color: #064e3b; }
+        .way-gains { margin-top: 1rem; }
+        .way-gains li { position: relative; padding-left: 1.6rem; margin-bottom: 0.85rem; font-size: 15px; line-height: 1.45; }
+        .way-gains li::before { content: "✓"; position: absolute; left: 0; top: 0.1rem; width: 1.1rem; height: 1.1rem; border-radius: 50%;
+            display: grid; place-items: center; font-size: 11px; font-weight: 700; color: #fff; background: #1f8a62; }
+        /* Verdict: a tinted footer band with an icon, pinned to the bottom so both cards line up */
+        .way-note { margin: auto 0 0; display: flex; align-items: center; gap: 0.7rem; min-height: 3.9rem; box-sizing: border-box;
+            padding: 0.7rem 0.9rem; border-radius: 10px; font-size: 14px; font-weight: 500; line-height: 1.45; }
+        .way-old .way-steps, .way-gains { margin-bottom: 1.25rem; }
+        .way-note svg { flex: none; width: 28px; height: 28px; padding: 6px; border-radius: 50%; box-sizing: border-box; }
+        .way-old .way-note { color: #8a2b26; background: rgba(194, 69, 63, 0.09); border: 1px solid rgba(194, 69, 63, 0.16); }
+        .way-old .way-note svg { color: #fff; background: #c2453f; }
+        .way-new .way-note { color: #064e3b; background: rgba(31, 138, 98, 0.1); border: 1px solid rgba(31, 138, 98, 0.18); }
+        .way-new .way-note svg { color: #fff; background: #1f8a62; }
 
-        .sticky-note {
-            position: absolute;
-            width: 210px;
-            background-color: #fff1a8;
-            padding: 1.1rem 1.2rem;
-            font-family: var(--font-sticky);
-            font-size: 0.95rem;
-            line-height: 1.4;
-            letter-spacing: -0.01em;
-            color: #1a1a1a;
-            border: 1px solid rgba(96, 72, 8, 0.16);
-            box-shadow: 2px 7px 16px rgba(0,0,0,0.075);
-            transform: rotate(var(--rot, 0deg));
-            z-index: 50;
-            display: none;
-        }
-        @media (min-width: 1380px) { .sticky-note { display: block; } }
-
-        /* ?sticky=false — forcibly hide all sticky notes regardless of other rules */
-        html.hide-sticky-notes .sticky-note {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
 
         .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; align-items: center; justify-content: center; margin-top: 1.75rem; }
         .url-cta {
@@ -375,7 +417,7 @@
             align-items: center;
             gap: 0.85rem;
             padding: 0.7rem 0.85rem 0.7rem 1.1rem;
-            background: #1C1815; /* was theme('colors.warm.900') — literal so it renders without the Tailwind CDN resolving theme() */
+            background: #1C1815; /* was theme('colors.warm.900'), literal so it renders without the Tailwind CDN resolving theme() */
             border: 1px solid #1C1815;
             border-radius: 12px;
             text-decoration: none;
@@ -391,14 +433,14 @@
         .url-cta .u-text { display: flex; flex-direction: row; align-items: center; gap: 0.7rem; line-height: 1; }
         .url-cta .u-label {
             font-family: var(--font-mono);
-            font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase;
+            font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
             color: rgba(255, 255, 255, 0.5);
             padding-right: 0.7rem;
             border-right: 1px solid rgba(255, 255, 255, 0.18);
         }
         .url-cta .u-url {
             font-family: var(--font-display);
-            font-size: 1.15rem; font-weight: 600; letter-spacing: -0.01em;
+            font-size: 18px; font-weight: 600; letter-spacing: -0.01em;
             color: #ffffff;
         }
         .url-cta .u-arrow {
@@ -406,14 +448,14 @@
             display: flex; align-items: center; justify-content: center;
             border-radius: 8px; margin-left: 0.35rem;
             background: rgba(255, 255, 255, 0.1);
-            color: #ffffff; font-size: 1rem;
+            color: #ffffff; font-size: 16px;
             transition: background 0.16s ease, transform 0.16s ease;
         }
         .url-cta:hover .u-arrow { background: #34d27b; color: #062c19; transform: translate(2px, -2px); }
         .url-cta.is-beta .u-dot { background: hsl(var(--accent-h), calc(var(--accent-s) * 1%), 55%); box-shadow: 0 0 0 4px hsla(var(--accent-h), calc(var(--accent-s) * 1%), 55%, 0.22); }
         .url-cta.is-beta:hover .u-arrow { background: hsl(var(--accent-h), calc(var(--accent-s) * 1%), 55%); color: #ffffff; }
 
-        .lead { font-size: 1.05rem; line-height: 1.65; color: var(--color-deep); }
+        .lead { font-size: 17px; line-height: 1.65; color: var(--color-deep); }
     </style>
 </head>
 <body>
@@ -423,22 +465,19 @@
         <!-- ───────── Hero ───────── -->
         <section class="pt-[5.5rem] px-10">
             <div class="pt-14 pb-10">
-                <h1 class="font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: clamp(2.4rem, 5.5vw, 3.8rem); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
+                <h1 class="font-light leading-[1.02] text-ink mb-4 tracking-[-0.015em]" style="font-size: round(nearest, clamp(2.4rem, 5.5vw, 3.8rem), 1px); font-family: var(--font-display); font-variation-settings: 'opsz' 72;">
                     Why I built <span class="italic font-normal text-brand-500" style="font-variation-settings: 'opsz' 72;">Lottiemon</span><br>A no-B.S. Lottie animation editor
                 </h1>
                 <p class="lead max-w-2xl mb-3">
-                    This is how I ended up building Lottiemon — a "no-B.S." web tool designed to empower quick, client-side manipulation of Lottie animations.
+                    This is how I ended up building Lottiemon, a "no-B.S." web tool designed to empower quick, client-side manipulation of Lottie animations.
                 </p>
 
             </div>
 
             <!-- Cover -->
             <div class="relative">
-                <div class="sticky-note" style="top: 26%; right: -19rem; --rot: 3deg;">
-                    I used Figma to 3D to make this image — pretty cool tool!
-                </div>
                 <div class="shot shot-free shot-bare !mt-0 mb-2">
-                    <img src="case study assets/hero-lottiemon-cover.png" alt="Lottiemon — change colours, replace assets, edit segments, crop, GIF/video export">
+                    <img src="case study assets/hero-lottiemon-cover.png" alt="Lottiemon: change colours, replace assets, edit segments, crop, GIF/video export">
                 </div>
             </div>
 
@@ -452,24 +491,21 @@
 
             <div class="prose-block max-w-2xl mb-8">
                 <p>As a product designer at Zeta, working with Lottie animations is almost a daily staple. We use them for everything from sleek loading spinners to complex hero illustrations. For a long time, our go-to for quick colour adjustments was a website called <b>drawer.design</b>. Its web previewer let us upload a Lottie JSON, listed every unique solid colour, and let us change it instantly. Sometimes we'd use it just to preview a file quickly. Super convenient.</p>
-                <p>Our workflow hit a snag when a teammate needed to recolour a loading spinner for a darker screen. We relied on drawer.design for these rapid edits — but this time the site was inaccessible, and would stay that way for the next couple of weeks. Probably a server issue, maybe maintenance.</p>
+                <p>Our workflow hit a snag when a teammate needed to recolour a loading spinner for a darker screen. We relied on drawer.design for these rapid edits, but this time the site was inaccessible, and would stay that way for the next couple of weeks. Probably a server issue, maybe maintenance.</p>
             </div>
 
             <div class="shot max-w-3xl">
-                <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">drawer.design — preview lottie</span></div>
+                <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">drawer.design · preview lottie</span></div>
                 <img src="case study assets/trigger-drawer-design.png" alt="drawer.design Preview Lottie Animation Live page with a colour editor">
             </div>
-            <div class="shot-caption">The old way — drawer.design's live preview &amp; colour editor</div>
+            <div class="shot-caption">The old way: drawer.design's live preview &amp; colour editor</div>
 
             <div class="prose-block max-w-2xl mb-5">
-                <p>With it offline, we had two ways to make the edit — neither great:</p>
+                <p>With it offline, we had two ways to make the edit, and neither was great:</p>
             </div>
 
             <div class="relative">
-            <div class="sticky-note" style="top: 34%; left: -19rem; --rot: -2.5deg;">
-                Using After Effects for a hex change was like wearing a tuxedo to a chai break.
-            </div>
-            <div class="grid sm:grid-cols-2 gap-4 max-w-3xl mb-7">
+            <div class="grid sm:grid-cols-2 gap-x-5 gap-y-8 max-w-3xl mt-8 mb-7">
                 <div class="opt">
                     <div class="opt-head">
                         <span class="opt-kicker">Option 01</span>
@@ -479,6 +515,7 @@
                         Paid / limited cloud services
                     </div>
                     <div class="opt-body">Options like LottieFiles or LottieLab exist, but come with login friction and privacy trade-offs since they're cloud-based. Even after signing up, you hit restrictive free-tier barriers.</div>
+                    <div class="opt-catch">The catch</div>
                     <div class="opt-tags">
                         <span class="opt-tag">Login wall</span>
                         <span class="opt-tag">Watermarks</span>
@@ -494,7 +531,8 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
                         After Effects
                     </div>
-                    <div class="opt-body">Incredibly time-consuming for simple tweaks — and mostly done by me, since not everyone has (or uses) an AE licence.</div>
+                    <div class="opt-body">Incredibly time-consuming for simple tweaks, and mostly done by me, since not everyone has (or uses) an AE licence.</div>
+                    <div class="opt-catch">The catch</div>
                     <div class="opt-tags">
                         <span class="opt-tag">Slow for tweaks</span>
                         <span class="opt-tag">Licence-gated</span>
@@ -512,18 +550,15 @@
 
         <!-- ───────── The Vibe Prototype ───────── -->
         <section class="read-section px-10">
-            <div class="sticky-note" style="top: 4rem; right: -16.5rem; --rot: 2deg;">
-                I used Gemini 2.5 for this, ancient times!
-            </div>
 
             <div class="section-kicker">The Vibe Prototype</div>
-            <p class="section-summary mb-7">I didn't want to go back to the "After Effects way," so I did what many of us do these days — I asked an AI to help me build it.</p>
+            <p class="section-summary mb-7">I didn't want to go back to the "After Effects way," so I did what many of us do these days: I asked an AI to help me build it.</p>
 
             <div class="prose-block max-w-2xl">
                 <p>I prompted Gemini to write a simple colour-change web tool to edit a Lottie animation and download the asset back. And just like that, I had a freshly baked service that solved the immediate crisis. It wasn't perfect, but it got the job done for that moment.</p>
-                <p>It was a good feeling to have avoided what I'd otherwise do — and it got me thinking:</p>
-                <p class="!text-[1.15rem] !leading-snug font-display text-ink !mt-9 !mb-5" style="font-weight:600;">If I could do this quickly for myself, why not build a robust, no-B.S. editing tool for the entire team?</p>
-                <p>I pushed the code to my GitHub, hosted it on GitHub Pages, and shared the URL with the team. And it made me realise how much sense it made to grow it into what I always wanted it to be — something that could solve more than just changing solid colours, one of those frequent silly problems we kept running into.</p>
+                <p>It was a good feeling to have avoided what I'd otherwise do, and it got me thinking:</p>
+                <p class="!text-[18px] !leading-snug font-display text-ink !mt-9 !mb-5" style="font-weight:600;">If I could do this quickly for myself, why not build a robust, no-B.S. editing tool for the entire team?</p>
+                <p>I pushed the code to my GitHub, hosted it on GitHub Pages, and shared the URL with the team. And it made me realise how much sense it made to grow it into what I always wanted it to be: something that could solve more than just changing solid colours, one of those frequent silly problems we kept running into.</p>
             </div>
         </section>
 
@@ -536,10 +571,10 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">01 /</span> Intelligent Colour Manipulation</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>I designed Lottiemon to group solid colours by uniqueness, giving a "first pass" at re-theming — but I also made sure each one could be changed individually. That flexibility offered far more control than our previous tools ever did.</p>
+                    <p>I designed Lottiemon to group solid colours by uniqueness, giving a "first pass" at re-theming, but I also made sure each one could be changed individually. That flexibility offered far more control than our previous tools ever did.</p>
                 </div>
                 <div class="shot max-w-3xl">
-                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — colour clusters</span></div>
+                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon · colour clusters</span></div>
                     <img src="case study assets/feature-color-manipulation.png" alt="Lottiemon colour instance clusters with a colour picker and live preview">
                 </div>
             </div>
@@ -551,23 +586,20 @@
                     <p>Developers frequently come back asking to "trim the extra negative space" or "add a bit more padding" around an animation. Historically that meant changing composition settings in After Effects. Lottiemon now has a built-in crop/expand tool to resize the canvas around the animation effortlessly.</p>
                 </div>
                 <div class="shot max-w-3xl">
-                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — crop / expand</span></div>
+                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon · crop / expand</span></div>
                     <img src="case study assets/feature-crop-expand.png" alt="Lottiemon crop and expand canvas with a dashed selection">
                 </div>
             </div>
 
             <!-- 3 -->
             <div class="numbered-point">
-                <h3 class="section-mini-heading mb-2"><span class="slash-num">03 /</span> Segment Editor — One File, Multiple Uses</h3>
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">03 /</span> Segment Editor: One File, Multiple Uses</h3>
                 <div class="prose-block max-w-2xl mb-5">
                     <p>Rather than handling five different files for a single sequence, I always suggest the team mark <b>"segments"</b> within one file. But creating those sections was hard without After Effects. So I built a simple segment editor that lets you define and test start/end frames within a single Lottie file.</p>
                 </div>
                 <div class="relative">
-                    <div class="sticky-note" style="top: 34%; left: -19rem; --rot: -2.5deg;">
-                        Segment editing is such a pain in After Effects.
-                    </div>
                     <div class="shot max-w-3xl">
-                        <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — segments</span></div>
+                        <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon · segments</span></div>
                         <img src="case study assets/feature-segment-editor.png" alt="Lottiemon segment editor showing Entry, Exit and Loop ranges on a timeline">
                     </div>
                 </div>
@@ -580,11 +612,8 @@
                     <p>To make animations scalable, we often embed images for parts of the animation (like a spotlight banner). Lottiemon lets you redesign those assets separately and replace them without ever touching the core project file.</p>
                 </div>
                 <div class="relative">
-                    <div class="sticky-note" style="top: 30%; right: -19rem; --rot: 2.5deg;">
-                        At Zeta we'd sometimes add image sequences in Lotties for raster effects — so I added a sequence replacement mechanism too.
-                    </div>
                     <div class="shot max-w-3xl">
-                        <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — asset replace</span></div>
+                        <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon · asset replace</span></div>
                         <img src="case study assets/feature-asset-replacement.png" alt="Lottiemon embedded asset list ready for replacement">
                     </div>
                 </div>
@@ -597,8 +626,8 @@
                     <p>When we make Figma prototypes, we need GIFs or videos to showcase motion. Lottiemon includes direct export so you can go from Lottie to a shareable video/GIF in seconds.</p>
                 </div>
                 <div class="shot max-w-3xl">
-                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon — export</span></div>
-                    <img src="case study assets/feature-gif-video-export.png" alt="Lottiemon GIF and video export options — resolution scale and frame rate">
+                    <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon · export</span></div>
+                    <img src="case study assets/feature-gif-video-export.png" alt="Lottiemon GIF and video export options: resolution scale and frame rate">
                 </div>
             </div>
 
@@ -606,7 +635,7 @@
             <div class="numbered-point">
                 <h3 class="section-mini-heading mb-2"><span class="slash-num">06 /</span> Flutter Preview Integration</h3>
                 <div class="prose-block max-w-2xl mb-5">
-                    <p>Working on PayZapp means working with Flutter constantly. Lottie animations often behave differently in Flutter compared to Web or native iOS/Android. So I built an integrated Flutter previewer — now, before handoff, we can verify everything looks exactly as intended in a Flutter context, preventing "it looks broken on mobile" bugs.</p>
+                    <p>Working on PayZapp means working with Flutter constantly. Lottie animations often behave differently in Flutter compared to Web or native iOS/Android. So I built an integrated Flutter previewer. Now, before handoff, we can verify everything looks exactly as intended in a Flutter context, preventing "it looks broken on mobile" bugs.</p>
                 </div>
                 <div class="shot shot-phone shot-free">
                     <img src="case study assets/feature-flutter-preview.png" alt="Lottiemon Flutter preview rendering the animation inside a phone frame">
@@ -616,17 +645,17 @@
 
             <!-- 7 -->
             <div class="numbered-point" style="margin-bottom:0;">
-                <h3 class="section-mini-heading mb-2"><span class="slash-num">07 /</span> dotLottie Support — Efficient Bundling</h3>
+                <h3 class="section-mini-heading mb-2"><span class="slash-num">07 /</span> dotLottie Support: Efficient Bundling</h3>
                 <div class="prose-block max-w-2xl">
-                    <p>Beyond standard JSON, Lottiemon fully supports the <b>.lottie</b> format for both import and export. This lets us bundle multiple animations into a single <b>.lottie</b> file — a massive win for project organisation. Instead of handing over a dozen individual files for one feature, we package everything into one lightweight container, making the developer handoff cleaner and far more manageable.</p>
+                    <p>Beyond standard JSON, Lottiemon fully supports the <b>.lottie</b> format for both import and export. This lets us bundle multiple animations into a single <b>.lottie</b> file, a massive win for project organisation. Instead of handing over a dozen individual files for one feature, we package everything into one lightweight container, making the developer handoff cleaner and far more manageable.</p>
                 </div>
             </div>
         </section>
 
         <!-- ───────── Quantifying the Impact ───────── -->
         <section class="read-section px-10">
-            <div class="section-kicker">Quantifying the Impact — Old Way vs New Way</div>
-            <p class="section-summary mb-7">Before this tool, even a minor request — changing a hex code, removing an element — triggered a long chain of communication and technical steps.</p>
+            <div class="section-kicker">Quantifying the Impact: Old Way vs New Way</div>
+            <p class="section-summary mb-7">Before this tool, even a minor request (changing a hex code, removing an element) triggered a long chain of communication and technical steps.</p>
 
             <div class="prose-block max-w-2xl mb-8">
                 <p>A roughly <b>40-minute loop</b> on every edit created a "dependency bottleneck." Here's what one request actually cost:</p>
@@ -644,47 +673,54 @@
             </div>
 
             <div class="prose-block max-w-2xl mb-6">
-                <p>A developer or designer would message the motion-design counterpart who originally created the asset. On average, a 20-minute turnaround just to sync — accounting for the receiver being in a meeting, away from their desk, or otherwise unavailable. Once picked up, the motion designer had to stop their work to boot After Effects and hunt down or recreate the files (10 min), then finally edit and export a GIF/video plus an updated JSON (10 min).</p>
-                <p>Across a team, factoring in roughly <b>10 of these requests a week</b>, the numbers add up fast:</p>
+                <p>A developer or designer would message the motion-design counterpart who originally created the asset. On average, a 20-minute turnaround just to sync, accounting for the receiver being in a meeting, away from their desk, or otherwise unavailable. Once picked up, the motion designer had to stop their work to boot After Effects and hunt down or recreate the files (10 min), then finally edit and export a GIF/video plus an updated JSON (10 min).</p>
             </div>
 
-            <div class="impact-bento mb-9">
-                <div class="bento-cell">
-                    <div class="bento-label">Weekly</div>
-                    <div class="bento-num">400 min</div>
-                    <div class="bento-sub">≈ 6.7 hours</div>
-                </div>
-                <div class="bento-cell">
-                    <div class="bento-label">Monthly</div>
-                    <div class="bento-num">~26.7h</div>
-                    <div class="bento-sub">of pure coordination overhead</div>
-                </div>
-                <div class="bento-cell">
-                    <div class="bento-label">Yearly</div>
-                    <div class="bento-num">~346h</div>
-                    <div class="bento-sub">≈ 14 full business days</div>
-                </div>
+            <div class="prose-block max-w-2xl mb-6">
+                <p>Across a team, factoring in roughly <b>10 of these requests a week</b>, here is what one edit costs each way, and what that adds up to:</p>
             </div>
-
-            <div class="twoway">
+            <!-- Two rows: each way per edit (card) beside the same way at team scale (10 edits a week) -->
+            <div class="impact-compare">
                 <div class="way-card way-old">
-                    <span class="way-tag">✕ The Old Way</span>
-                    <div class="step"><b>20m</b><span>Message the motion designer and wait for a reply.</span></div>
-                    <div class="step"><b>10m</b><span>They stop, boot After Effects, hunt down the project files.</span></div>
-                    <div class="step"><b>10m</b><span>Edit, export a GIF/video and an updated JSON.</span></div>
-                    <p class="text-[13px] text-muted mt-2 mb-0">A 40-minute dependency bottleneck on every single edit.</p>
+                        <span class="way-tag">✕ The old way</span>
+                        <div class="way-total"><b>40</b><span>min per edit</span></div>
+                        <!-- time bar: both cards share one 40-minute scale -->
+                        <div class="way-bar" aria-hidden="true"><i style="flex: 20"></i><i style="flex: 10"></i><i style="flex: 10"></i></div>
+                        <ol class="way-steps">
+                            <li><span>Message the designer, wait for a reply</span><b>20m</b></li>
+                            <li><span>They open After Effects, find the files</span><b>10m</b></li>
+                            <li><span>Edit, export a GIF/video and new JSON</span><b>10m</b></li>
+                        </ol>
+                        <p class="way-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h12M6 22h12M7 2v4l5 5 5-5V2M7 22v-4l5-5 5 5v4"/></svg><span>A dependency bottleneck on every edit.</span></p>
+                    </div>
+                <div class="tc-divider" aria-hidden="true"><span>So at 10 edits a week, it would take</span></div>
+                <div class="tc-stack tc-lost">
+                    <div class="tc-cell"><span class="tc-period">Time for 10 edits a week</span><span class="tc-num">400 min</span><span class="tc-sub">≈ 6.7 hours</span></div>
+                    <div class="tc-cell"><span class="tc-period">Time for 40 edits a month</span><span class="tc-num">~26.7h</span><span class="tc-sub">of pure coordination overhead</span></div>
+                    <div class="tc-cell"><span class="tc-period">Time for 520 edits a year</span><span class="tc-num">~346h</span><span class="tc-sub">≈ 43 eight-hour workdays</span></div>
                 </div>
                 <div class="way-card way-new">
-                    <span class="way-tag">✓ The New Way</span>
-                    <div class="step"><b>&lt;2m</b><span>The requester opens Lottiemon in the browser and makes the edit themselves.</span></div>
-                    <div class="step"><b>—</b><span>No syncing, no AE, no waiting on anyone.</span></div>
-                    <div class="step"><b>+</b><span>Everyone can now handle — and even create — their own assets.</span></div>
-                    <p class="text-[13px] mt-2 mb-0" style="color:#064e3b;">The bottleneck vanished. We reclaimed time <i>and</i> mental space.</p>
+                        <span class="way-tag">✓ The new way</span>
+                        <div class="way-total"><b>&lt;2</b><span>min per edit</span></div>
+                        <div class="way-bar" aria-hidden="true"><i style="flex: 0 0 5%"></i></div>
+                        <ol class="way-steps">
+                            <li><span>The requester edits it in Lottiemon</span><b>&lt;2m</b></li>
+                        </ol>
+                        <ul class="way-gains">
+                            <li>No syncing, no After Effects, no waiting</li>
+                            <li>Everyone edits, even creates, their own assets</li>
+                        </ul>
+                        <p class="way-note"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l2.2 6.1 6.3 1.4-5 4.1 1.6 6.4L12 17l-5.1 3.5 1.6-6.4-5-4.1 6.3-1.4z"/></svg><span>The bottleneck vanished. We reclaimed time <i>and</i> mental space.</span></p>
+                    </div>
+                <div class="tc-stack tc-back">
+                    <div class="tc-cell"><span class="tc-period">Time for 10 edits a week</span><span class="tc-num">~20 min</span><span class="tc-sub">380 min saved, ≈ 6.3 hours</span></div>
+                    <div class="tc-cell"><span class="tc-period">Time for 40 edits a month</span><span class="tc-num">~1.3h</span><span class="tc-sub">~25h saved for real design work</span></div>
+                    <div class="tc-cell"><span class="tc-period">Time for 520 edits a year</span><span class="tc-num">~17h</span><span class="tc-sub">~330h saved, ≈ 41 eight-hour workdays</span></div>
                 </div>
             </div>
 
-            <div class="prose-block max-w-2xl mt-7">
-                <p>By moving the power into the browser, we didn't just save time — we reclaimed mental space. All of us now frequently use tools like LottieLab and Jitter to <i>create</i> animations, while Lottiemon takes care of the quick edits later.</p>
+            <div class="prose-block max-w-2xl mt-8">
+                <p>By moving the power into the browser, we didn't just save time. We reclaimed mental space. All of us now frequently use tools like LottieLab and Jitter to <i>create</i> animations, while Lottiemon takes care of the quick edits later.</p>
             </div>
         </section>
 
@@ -694,8 +730,8 @@
             <p class="section-summary mb-7">The most rewarding part of this journey has been realising how much agency we have as creators.</p>
 
             <div class="prose-block max-w-2xl">
-                <p>I love that we're all so capable today. We can shape solutions to our own problems rather than searching for them elsewhere. AI has brought a significant shift in how I personally prefer to work — it lets us bridge the gap between "I wish this existed" and "here it is." It's an incredibly exciting time to be in product design.</p>
-                <p>Lottiemon has already saved us so much time and trouble of "dependency bottlenecks," and I think it could be handy for anyone else tired of the export loop — so I'm making it public. It works entirely on the client side (in your browser), making it fast, secure, and cost-effective. It's saved me and my team untold hours, since many of these tasks can now be handled by my colleagues themselves without ever depending on me.</p>
+                <p>I love that we're all so capable today. We can shape solutions to our own problems rather than searching for them elsewhere. AI has brought a significant shift in how I personally prefer to work. It lets us bridge the gap between "I wish this existed" and "here it is." It's an incredibly exciting time to be in product design.</p>
+                <p>Lottiemon has already saved us so much time and trouble of "dependency bottlenecks," and I think it could be handy for anyone else tired of the export loop, so I'm making it public. It works entirely on the client side (in your browser), making it fast, secure, and cost-effective. It's saved me and my team untold hours, since many of these tasks can now be handled by my colleagues themselves without ever depending on me.</p>
             </div>
 
             <div class="cta-row">
@@ -712,26 +748,23 @@
 
         <!-- ───────── What's Next ───────── -->
         <section class="read-section px-10">
-            <div class="sticky-note" style="top: 4rem; left: -16.5rem; --rot: -2deg;">
-                State machines in a single .lottie — interactivity without the headache.
-            </div>
 
             <div class="section-kicker">What's Next?</div>
             <p class="section-summary mb-7">I plan to maintain Lottiemon simply because I love working on it. It's incredibly fun to build things that solve real problems.</p>
 
             <div class="prose-block max-w-2xl mb-7">
-                <p>Right now I'm building a tool within Lottiemon that lets you create <b>State Machines</b> for your Lottie animations. The most recent LottieFiles release lets us package state-machine-based interactions with the animation in a single <b>dotLottie</b> file. That format might let us approach interactivity in a hassle-free, simple way for common use cases — and I've already hosted a beta branch at <b>lottiemon.xyz</b> where you can access the state machine builder.</p>
-                <p>Here's a quick demo of an animation powered by state machines — tap those buttons at the bottom when they appear.</p>
+                <p>Right now I'm building a tool within Lottiemon that lets you create <b>State Machines</b> for your Lottie animations. The most recent LottieFiles release lets us package state-machine-based interactions with the animation in a single <b>dotLottie</b> file. That format might let us approach interactivity in a hassle-free, simple way for common use cases, and I've already hosted a beta branch at <b>lottiemon.xyz</b> where you can access the state machine builder.</p>
+                <p>Here's a quick demo of an animation powered by state machines. Tap those buttons at the bottom when they appear.</p>
             </div>
 
             <div class="shot shot-free max-w-3xl">
-                <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon.xyz — state machine demo</span></div>
-                <iframe src="https://codepen.io/ishantperiwal/embed/PwzzNyq?default-tab=result&amp;theme-id=light" style="width:100%;height:680px;border:0;display:block;" loading="lazy" allowfullscreen title="State machine demo — Lottiemon"></iframe>
+                <div class="shot-bar"><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-dot"></span><span class="shot-label">lottiemon.xyz · state machine demo</span></div>
+                <iframe src="https://codepen.io/ishantperiwal/embed/PwzzNyq?default-tab=result&amp;theme-id=light" style="width:100%;height:680px;border:0;display:block;" loading="lazy" allowfullscreen title="State machine demo · Lottiemon"></iframe>
             </div>
             <div class="shot-caption">Interactive state-machine demo (beta)</div>
 
             <div class="prose-block max-w-2xl mb-2">
-                <p>Feel free to use it and let me know what you think — your feedback is super appreciated! 👏</p>
+                <p>Feel free to use it and let me know what you think. Your feedback is super appreciated! 👏</p>
             </div>
 
             <div class="cta-row">
