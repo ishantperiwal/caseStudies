@@ -281,16 +281,19 @@
             padding: 3px 7px; border-radius: 6px;
         }
         /* Options, restyled to match the old / new way cards: edge tag, icon badge, "the catch" chips */
-        .grid > .opt { overflow: visible; gap: 0; padding: 1.85rem 1.5rem 1.5rem; background: rgba(255, 255, 255, 0.65); border-color: rgba(153, 27, 27, 0.16); }
+        .grid > .opt { overflow: visible; gap: 0; padding: 1.5rem 1.5rem 1.5rem; background: rgba(255, 255, 255, 0.65); border-color: rgba(153, 27, 27, 0.16); }
         .opt .opt-head { position: absolute; top: 0; left: 1.25rem; transform: translateY(-50%); margin: 0; }
         .opt .opt-kicker { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 4px; font-size: 10px; letter-spacing: 0.06em;
             color: #8a4b47; background: #fbeceb; border: 1px solid rgba(153, 27, 27, 0.18); }
         .opt .opt-title { gap: 0.75rem; font-size: 20px; line-height: 1.25; margin-bottom: 0.8rem; }
-        .opt .opt-title svg { width: 36px; height: 36px; padding: 8px; box-sizing: border-box; border-radius: 50%; color: #b4443e; background: #fbe9e7; }
+        /* Real product icons: the cloud tools overlap like an avatar stack */
+        .opt .opt-title { flex-direction: column; align-items: flex-start; gap: 0.85rem; }   /* icons sit above the title */
+        .opt-logos { display: inline-flex; flex: none; }
+        .opt-logos img { width: 32px; height: 32px; border-radius: 9px; display: block;
+            box-shadow: 0 0 0 2.5px color-mix(in srgb, #ffffff 65%, var(--color-bg)); }   /* ring = the card's own fill, no shadow */
+        .opt-logos img + img { margin-left: -5px; }   /* a light overlap: every logo stays readable */
         .opt .opt-body { font-size: 15px; line-height: 1.6; margin-bottom: 1.15rem; }
-        .opt-catch { margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(153, 27, 27, 0.12);
-            font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #a25656; margin-bottom: 0.6rem; }
-        .opt .opt-tags { gap: 0.45rem; margin: 0; }
+        .opt .opt-tags { gap: 0.45rem; margin: auto 0 0; }
         .opt .opt-tag { display: inline-flex; align-items: center; gap: 0.35rem; font-family: var(--font-body); font-size: 13px; font-weight: 500;
             letter-spacing: 0; text-transform: none; color: #8a2b26; background: rgba(194, 69, 63, 0.07); border: 1px solid rgba(194, 69, 63, 0.16);
             padding: 0.3rem 0.65rem; border-radius: 999px; }
@@ -505,17 +508,13 @@
             </div>
 
             <div class="relative">
-            <div class="grid sm:grid-cols-2 gap-x-5 gap-y-8 max-w-3xl mt-8 mb-7">
+            <div class="grid sm:grid-cols-2 gap-5 max-w-3xl mb-7">
                 <div class="opt">
-                    <div class="opt-head">
-                        <span class="opt-kicker">Option 01</span>
-                    </div>
                     <div class="opt-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m2 2 20 20"/><path d="M5.782 5.782A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.307-.193"/><path d="M21.532 16.5A4.5 4.5 0 0 0 17.5 10h-1.79A7.008 7.008 0 0 0 10 5.07"/></svg>
+                        <span class="opt-logos" aria-hidden="true"><img src="case study assets/tools/lottiefiles.png" alt=""><img src="case study assets/tools/lottielab.png" alt=""><img src="case study assets/tools/jitter.png" alt=""></span>
                         Paid / limited cloud services
                     </div>
                     <div class="opt-body">Options like LottieFiles or LottieLab exist, but come with login friction and privacy trade-offs since they're cloud-based. Even after signing up, you hit restrictive free-tier barriers.</div>
-                    <div class="opt-catch">The catch</div>
                     <div class="opt-tags">
                         <span class="opt-tag">Login wall</span>
                         <span class="opt-tag">Watermarks</span>
@@ -524,15 +523,11 @@
                     </div>
                 </div>
                 <div class="opt">
-                    <div class="opt-head">
-                        <span class="opt-kicker">Option 02</span>
-                    </div>
                     <div class="opt-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="opt-logos" aria-hidden="true"><img src="case study assets/tools/after-effects.svg" alt=""></span>
                         After Effects
                     </div>
                     <div class="opt-body">Incredibly time-consuming for simple tweaks, and mostly done by me, since not everyone has (or uses) an AE licence.</div>
-                    <div class="opt-catch">The catch</div>
                     <div class="opt-tags">
                         <span class="opt-tag">Slow for tweaks</span>
                         <span class="opt-tag">Licence-gated</span>
