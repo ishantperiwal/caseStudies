@@ -321,6 +321,9 @@
         .phone-status-bar.status-bar-promo time { color: hsl(219, 72%, 18%); font-weight: 700; }
         .phone-status-bar.status-bar-promo [fill="white"] { fill: hsl(219, 72%, 18%); }
         .phone-status-bar.status-bar-promo [stroke="white"] { stroke: hsl(219, 72%, 18%); }
+        /* Festive scanner embeds: same 360 × 774 proportions as the screenshots they replace */
+        .scanner-embed { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 360 / 774; border: 0; display: block;
+            z-index: 1; pointer-events: none; background: #080808; }
         .phone-screen-content {
             flex: 1; position: relative; overflow: hidden;
             transition: opacity 0.35s ease;
@@ -1137,8 +1140,9 @@
                         <div class="legacy-wallet-device">
                             <div class="legacy-wallet-screen">
                                 <div class="phone-screen-content" style="background: #000000;">
-                                    <img class="placeholder-image-layer example-fade-set1" loading="lazy" alt="" src="case study assets/examples/Christmas.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 1;">
-                                    <img class="placeholder-image-layer example-fade-set1" loading="lazy" alt="" src="case study assets/examples/Diwali.png" style="top: 0; bottom: auto; height: auto; width: 100%; z-index: 1; opacity: 0;">
+                                    <!-- Animated festive scanners (prototypes/scanner: frames from the festive prototype) -->
+                                    <iframe class="scanner-embed example-fade-set1" src="prototypes/scanner/index.html?theme=christmas" title="Christmas QR scanner" loading="lazy" tabindex="-1" aria-hidden="true" style="opacity: 1;"></iframe>
+                                    <iframe class="scanner-embed example-fade-set1" src="prototypes/scanner/index.html?theme=diwali" title="Diwali QR scanner" loading="lazy" tabindex="-1" aria-hidden="true" style="opacity: 0;"></iframe>
                                 </div>
                                 <div class="phone-nav-bar"></div>
                             </div>
@@ -1517,11 +1521,25 @@
                 imgs.forEach(function (img) {
                     img.style.transition = 'opacity ' + fadeMs + 'ms ease-in-out';
                 });
-                var idx = 0;
+                var idx = 0, onScreen = true;
+                // Animated scanner embeds: only the visible one plays, and only while on screen.
+                function syncPlayback() {
+                    imgs.forEach(function (el, i) {
+                        if (el.tagName === 'IFRAME' && el.contentWindow)
+                            el.contentWindow.postMessage({ scanner: (i === idx && onScreen) ? 'play' : 'pause' }, '*');
+                    });
+                }
+                imgs.forEach(function (el) { if (el.tagName === 'IFRAME') el.addEventListener('load', syncPlayback); });
+                if ('IntersectionObserver' in window && imgs[0].tagName === 'IFRAME') {
+                    new IntersectionObserver(function (entries) {
+                        onScreen = entries[0].isIntersecting; syncPlayback();
+                    }).observe(imgs[0].parentElement);
+                }
                 setInterval(function () {
                     imgs[idx].style.opacity = '0';
                     idx = (idx + 1) % imgs.length;
                     imgs[idx].style.opacity = '1';
+                    syncPlayback();
                 }, holdMs);
             }
             crossfadeSet('.example-fade-set1', 5000, 800);

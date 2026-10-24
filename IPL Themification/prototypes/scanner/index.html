@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Festive QR scanner</title>
+<!--
+  Self-contained festive QR scanner for the IPL case study (?theme=christmas | diwali).
+  Same parts as the festive prototype's scanner (../festive, from github.com/vibhoresinghal/reel-prototypes):
+  its animated Lottie frames and player, the IPL prototype's camera photo in place of a live camera,
+  and the scanner's bottom sheet. Drawn on a 360 × 774 stage scaled to the frame's width.
+  The parent page can pause / play it: postMessage({ scanner: "pause" | "play" }).
+-->
+<style>
+  @font-face { font-family: "Inter"; font-weight: 500; src: url("../festive/assets/attention/inter-latin-500-normal.woff2") format("woff2"); }
+  @font-face { font-family: "Inter"; font-weight: 600; src: url("../festive/assets/attention/inter-latin-600-normal.woff2") format("woff2"); }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #080808; }
+  .stage { position: absolute; left: 0; top: 0; width: 360px; height: 774px; transform-origin: 0 0;
+    font-family: "Inter", system-ui, sans-serif; -webkit-font-smoothing: antialiased; overflow: hidden; }
+  .camera { position: absolute; inset: 0 0 auto; height: 560px; overflow: hidden; }
+  .camera img { width: 100%; height: 100%; object-fit: cover; object-position: center 0; display: block; transform: translateY(-19px); }
+  /* Near-black everywhere but the scan window, as in the app's Christmas scanner */
+  .shade { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  header { position: absolute; top: 20px; left: 24px; right: 24px; display: flex; justify-content: space-between; color: #fff; }
+  header svg { width: 24px; height: 24px; display: block; }
+  .frame { position: absolute; width: 270px; height: 270px; left: 45px; top: 88px; }
+  .frame svg { display: block; width: 100% !important; height: 100% !important; }
+  .torch { position: absolute; right: 16px; top: 201px; width: 40px; height: 40px; box-sizing: border-box; border-radius: 50%;
+    border: 2px solid #ffffff40; background: #ffffff26; color: #fff; display: grid; place-items: center; }
+  .torch svg { width: 20px; height: 20px; }
+  .gallery { position: absolute; left: 50%; top: 370px; transform: translateX(-50%); height: 34px; border-radius: 30px; background: #f6fcff;
+    display: flex; align-items: center; gap: 4px; padding: 0 14px; font-size: 12px; font-weight: 600; color: #252e39; white-space: nowrap; }
+  .gallery svg { width: 16px; height: 16px; }
+  .caption { position: absolute; top: 449px; width: 100%; margin: 0; text-align: center; color: #bfc2c4; font-size: 14px; font-weight: 500; }
+  .sheet { position: absolute; left: 0; bottom: 0; width: 360px; display: block; }
+
+  /* Diwali: the app's own scanner screen (single diya, string of lights) with its lights twinkling
+     and the diya flame flickering on top. The festive repo only has a different (four-diya) frame. */
+  .photo { display: none; position: absolute; inset: 0; width: 360px; height: 774px; }
+  .stage.is-photo > :not(.photo) { display: none; }
+  .stage.is-photo .photo { display: block; }
+  .photo > img { width: 100%; height: 100%; display: block; }
+  .bulb { position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%; pointer-events: none; }
+  .bulb::before, .bulb::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+  .bulb::before { background: radial-gradient(circle, rgba(18,12,4,.82) 0 28%, rgba(18,12,4,0) 70%); opacity: 0; }   /* dims the bulb */
+  .bulb::after { inset: -6px; background: radial-gradient(circle, rgba(255,226,150,.85) 0 18%, rgba(255,196,90,.35) 40%, rgba(255,196,90,0) 70%);
+    mix-blend-mode: screen; opacity: 0; }                                                                       /* extra glow */
+  /* A chase: a soft wave of light travels clockwise around the string (--d staggers each bulb) */
+  .is-playing .bulb::before { animation: bulb-dim 2.8s linear infinite; animation-delay: var(--d, 0s); }
+  .is-playing .bulb::after  { animation: bulb-glow 2.8s linear infinite; animation-delay: var(--d, 0s); }
+  @keyframes bulb-dim  { 0%, 100% { opacity: 0; } 18% { opacity: .55; } 45%, 70% { opacity: .55; } 88% { opacity: 0; } }
+  @keyframes bulb-glow { 0%, 100% { opacity: 1; } 18% { opacity: 0; } 82% { opacity: 0; } }
+  .flame { position: absolute; left: 182.7px; top: 300px; width: 20px; height: 26px; margin-left: -10px;
+    background: url("../../case study assets/examples/Diwali.png") no-repeat; background-size: 360px 774px; background-position: -172.7px -300px;
+    -webkit-mask: radial-gradient(ellipse 50% 50% at 50% 55%, #000 55%, transparent 100%); mask: radial-gradient(ellipse 50% 50% at 50% 55%, #000 55%, transparent 100%);
+    transform-origin: 50% 100%; }
+  .flame-glow { position: absolute; left: 182.7px; top: 312px; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(255,200,90,.55), rgba(255,170,60,0) 70%); mix-blend-mode: multiply; opacity: .5; }
+  .is-playing .flame { animation: flame-flicker 1.3s ease-in-out infinite; }
+  .is-playing .flame-glow { animation: glow-flicker 1.3s ease-in-out infinite; }
+  @keyframes flame-flicker { 0%, 100% { transform: scale(1, 1) skewX(0deg); } 25% { transform: scale(.94, 1.08) skewX(-3deg); }
+    50% { transform: scale(1.03, .95) skewX(2deg); } 75% { transform: scale(.97, 1.05) skewX(-1deg); } }
+  @keyframes glow-flicker { 0%, 100% { opacity: .45; transform: scale(1); } 40% { opacity: .7; transform: scale(1.12); } 70% { opacity: .5; transform: scale(.96); } }
+</style>
+</head>
+<body>
+<div class="stage" aria-label="Festive QR scanner">
+  <div class="camera"><img src="camera.jpg" alt=""><svg class="shade" viewBox="0 0 360 560" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="dim" x1="0" y1="0" x2="0" y2="560" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#000" stop-opacity=".74"/><stop offset=".35" stop-color="#000" stop-opacity=".84"/><stop offset=".7" stop-color="#000" stop-opacity=".9"/><stop offset="1" stop-color="#000" stop-opacity=".92"/></linearGradient></defs><path fill="url(#dim)" fill-rule="evenodd" d="M0 0H360V560H0Z M71 117H288V334H71Z"/></svg></div>
+  <header aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3" stroke="#252e39" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="#252e39"/></svg>
+  </header>
+  <div class="frame" id="frame"></div>
+  <div class="torch" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6c0 2-2 2-2 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10c0-2-2-2-2-4V2h12z"/><path d="M6 6h12"/><path d="M12 12v0"/></svg></div>
+  <div class="gallery" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 20c0-3.3 2.7-6 6-6s6 2.7 6 6z" opacity=".9"/><circle cx="10" cy="9" r="3"/><path d="M15 15.5c.9-.3 1.9-.5 3-.5 1.7 0 3 1.6 3 5h-4.2c-.2-1.8-.8-3.3-1.8-4.5z"/></svg>Open Gallery</div>
+  <p class="caption">Scan any QR code to pay</p>
+  <img class="sheet" src="sheet.png" alt="">
+  <div class="photo" id="photo"><img src="../../case study assets/examples/Diwali.png" alt=""><div class="flame-glow"></div><div class="flame"></div></div>
+</div>
+<script src="../festive/assets/festive/lottie.min.js"></script>
+<script>
+(function () {
+  var stage = document.querySelector(".stage");
+  function fit() { stage.style.transform = "scale(" + (window.innerWidth / 360) + ")"; }
+  window.addEventListener("resize", fit); fit();
+
+  var theme = new URLSearchParams(location.search).get("theme") === "diwali" ? "diwali" : "christmas";
+  var still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var anim = null, wantPlay = !still;
+  if (theme === "diwali") {
+    // Bulb centres measured from the screenshot (540 px wide), here at the 360 px stage scale.
+    var photo = document.getElementById("photo"), bulbs = [[82.7,98.7],[104.0,98.7],[126.0,98.7],[147.3,98.7],[169.3,98.7],[190.7,98.7],[212.0,98.7],[234.0,98.7],[255.3,98.7],[277.3,98.7],[61.3,105.3],[297.3,108.0],[52.7,123.3],[304.7,126.7],[52.7,145.3],[304.7,148.0],[52.7,166.7],[304.7,170.0],[52.7,188.7],[304.7,191.3],[52.7,210.0],[305.3,213.3],[52.7,232.0],[307.3,234.7],[52.7,253.3],[304.7,256.0],[52.7,274.7],[304.7,278.0],[52.7,296.7],[304.7,299.3],[52.7,318.0],[302.7,323.3],[64.7,340.7],[290.0,342.7],[95.3,348.0],[119.3,347.3],[144.0,348.0],[215.3,347.3],[240.0,348.0],[264.0,348.0]];
+    // Order the bulbs clockwise around the frame so the light runs along the string.
+    var cx = 180, cy = 223, n = bulbs.length, period = 2.8;
+    bulbs.sort(function (a, b) { return Math.atan2(a[1] - cy, a[0] - cx) - Math.atan2(b[1] - cy, b[0] - cx); });
+    bulbs.forEach(function (p, i) {
+      var b = document.createElement("i"); b.className = "bulb";
+      b.style.left = p[0] + "px"; b.style.top = p[1] + "px";
+      b.style.setProperty("--d", (-(n - i) / n * period).toFixed(3) + "s");
+      photo.appendChild(b);
+    });
+    stage.classList.add("is-photo");
+    var setPlay = function () { stage.classList.toggle("is-playing", wantPlay); };
+    setPlay();
+    window.addEventListener("message", function (e) {
+      if (!e.data || !e.data.scanner) return;
+      wantPlay = e.data.scanner === "play" && !still; setPlay();
+    });
+    return;
+  }
+  fetch("../festive/assets/festive/scanner.json")
+    .then(function (r) { return r.json(); })
+    .then(function (data) {
+      anim = window.lottie.loadAnimation({ container: document.getElementById("frame"), renderer: "svg", loop: true, autoplay: false, animationData: data });
+      if (wantPlay) anim.play(); else anim.goToAndStop(0, true);
+    });
+  // The case study pauses the scanner that is faded out or off screen.
+  window.addEventListener("message", function (e) {
+    if (!e.data || !e.data.scanner) return;
+    wantPlay = e.data.scanner === "play" && !still;
+    if (anim) wantPlay ? anim.play() : anim.pause();
+  });
+})();
+</script>
+</body>
+</html>
