@@ -44,6 +44,7 @@
                on every frame anything inside it moves (float, waves, arrival blur) */
             html .hero-phone3d .dv-persp, html .hero-phone3d.is-arrived .dv-persp { filter: none; }   /* html: beats the later base rules */
             html .phone3d .dv-phone { animation: none; }
+            html .phone3d .dv-layer, html .hero-phone3d .dv-layer { filter: none; }   /* no sticker outline: the SVG filter alone is too heavy here */
             html .phone3d .dv-world { transition: none; }
         }
         body.page-revealed .reveal-stagger-1 { transition-delay: 0.04s; }
