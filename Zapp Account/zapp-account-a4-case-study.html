@@ -31,6 +31,21 @@
             filter: blur(0px);
         }
 
+        /* Phones / touch: plain slide + fade. Animated blur is costly to repaint on mobile GPUs and stutters. */
+        @media (max-width: 767px), (pointer: coarse) {
+            @keyframes page-reveal-in {
+                from { opacity: 0; transform: translate3d(0, 16px, 0); }
+                to   { opacity: 1; transform: translate3d(0, 0, 0); }
+            }
+            .reveal-stagger, body.page-revealed .reveal-stagger { filter: none !important; will-change: opacity, transform; }
+        }
+        @media (max-width: 767px), (pointer: coarse) {
+            /* 3D phones hold still: the white sticker outline is an SVG filter that has to be redrawn
+               on every frame anything inside it moves (float, waves, arrival blur) */
+            html .hero-phone3d .dv-persp, html .hero-phone3d.is-arrived .dv-persp { filter: none; }   /* html: beats the later base rules */
+            html .phone3d .dv-phone { animation: none; }
+            html .phone3d .dv-world { transition: none; }
+        }
         body.page-revealed .reveal-stagger-1 { transition-delay: 0.04s; }
         body.page-revealed .reveal-stagger-2 { transition-delay: 0.14s; }
         body.page-revealed .reveal-stagger-3 { transition-delay: 0.24s; }
@@ -20213,6 +20228,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
             if (!tpl) return;
             const W = 384, H = 804, R = 58, SLABS = 26, DEPTH = 1.6, THICK = SLABS * DEPTH;
             const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+            const lite = window.matchMedia("(max-width: 767px), (pointer: coarse)");   // phones / touch: no looping motion inside the filtered phone
             const node = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
             // extrude a flat outline straight up (local z) by h: one wall facet per outline segment
             const extrude = (parent, pts, h, z0, cls) => pts.forEach(([x0, y0], k) => {
@@ -20294,7 +20310,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                     waves.innerHTML = '<div class="w l"></div><div class="w r"></div>';
                     waves.classList.add("is-lottie");
                     waves.querySelectorAll(".w").forEach((container) => layer._anims.push(window.lottie.loadAnimation({
-                        container, renderer: "svg", loop: true, autoplay: !reduce.matches,
+                        container, renderer: "svg", loop: true, autoplay: !reduce.matches && !lite.matches,
                         path: "case study assets/zapp-3d/waveSlowed.json",
                         rendererSettings: { preserveAspectRatio: "xMidYMid meet" },
                     })));
@@ -20390,7 +20406,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 if ("IntersectionObserver" in window) {
                     new IntersectionObserver((entries) => entries.forEach((en) => {
                         host.classList.toggle("is-paused", !en.isIntersecting);
-                        if (!reduce.matches) layer._anims.forEach((a) => (en.isIntersecting ? a.play() : a.pause()));
+                        if (!reduce.matches && !lite.matches) layer._anims.forEach((a) => (en.isIntersecting ? a.play() : a.pause()));
                     })).observe(area);
                 }
 

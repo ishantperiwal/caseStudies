@@ -66,6 +66,14 @@
             to   { opacity: 1; transform: translate3d(0, 0, 0);   filter: blur(0px); }
         }
         .reveal-stagger { opacity: 0; transform: translate3d(0, 16px, 0); filter: blur(10px); will-change: opacity, transform, filter; }
+        /* Phones / touch: plain slide + fade. Animated blur is costly to repaint on mobile GPUs and stutters. */
+        @media (max-width: 767px), (pointer: coarse) {
+            @keyframes page-reveal-in {
+                from { opacity: 0; transform: translate3d(0, 16px, 0); }
+                to   { opacity: 1; transform: translate3d(0, 0, 0); }
+            }
+            .reveal-stagger, body.page-revealed .reveal-stagger { filter: none !important; will-change: opacity, transform; }
+        }
         body.page-revealed .reveal-stagger { animation: page-reveal-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) both; }
         body.page-revealed .reveal-stagger-1 { animation-delay: 0.04s; }
         body.page-revealed .reveal-stagger-2 { animation-delay: 0.18s; }
