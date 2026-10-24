@@ -4738,23 +4738,6 @@
                 opacity: 1;
             }
 
-            /* Highlight callouts are hover-driven and their labels sit at
-               127–142% of the frame width, so on touch they never appear and
-               would not fit if they did. The authored highlight text is
-               surfaced as a caption instead. */
-            .execution-journey-inline-caption {
-                display: block;
-                max-width: min(74vw, 16.5rem);
-                margin: 0.6rem auto 0;
-                text-align: center;
-                font-family: var(--font-mono);
-                font-size: 10px;
-                letter-spacing: 0.05em;
-                text-transform: uppercase;
-                line-height: 1.45;
-                color: #6c6c6c;
-            }
-
             /* ── No active state on mobile ──────────────────────────────────
                The accent fill, white text, sideways nudge and the triangle
                pointing into the margin all belong to the desktop state machine,
@@ -9383,17 +9366,7 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                 }
 
                 frag.appendChild(shell);
-
-                // Highlight callouts are hover-driven and their labels sit outside the
-                // frame, so on touch they never show. Surface the authored note as a
-                // caption instead of losing it.
-                if (source.dataset.highlightActive === "true" && source.dataset.highlightText) {
-                    const caption = document.createElement("div");
-                    caption.className = "execution-journey-inline-caption";
-                    caption.dataset.runtimeOnly = "true";
-                    caption.textContent = source.dataset.highlightText;
-                    frag.appendChild(caption);
-                }
+                // Highlight callouts are hover-driven and stay desktop-only: no caption stands in for them here.
 
                 return frag;
             }
