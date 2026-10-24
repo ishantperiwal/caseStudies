@@ -596,7 +596,7 @@
         /* Hero: the same phone, larger, with the film's opening shot. The layer is
            oversized so the sticker-outline filter region covers the whole arrival path. */
         .hero-phone3d { position: relative; z-index: 1; width: 100%; aspect-ratio: 590 / 900; max-height: 560px; }
-        .hero-phone3d .dv-layer { inset: -30% -60% -70% -30%; filter: url(#z3dStickerL); }
+        .hero-phone3d .dv-layer { inset: -30% -60% -70% -30%; filter: url(#z3dStickerL); pointer-events: none; }   /* the hero sits over the row below (z-index 2): let clicks through */
         /* Phones / touch: the same phone drawn by three.js on one canvas (outline included), see buildGL() */
         html .phone3d .dv-layer.z3d-gl { filter: none; }
         .hero-phone3d .dv-layer.z3d-gl { inset: -12% -30% -45% -12%; }
@@ -4978,7 +4978,7 @@
 
 
             <!-- Hero grid: left content + right image -->
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-4 pb-0 items-stretch relative" style="z-index:1;">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-0 pl-10 pr-0 pt-4 pb-0 items-stretch relative" style="z-index:2;">
 
                 <!-- Left: headline, subtitle, stats -->
                 <div class="md:col-span-3 flex flex-col items-start text-left justify-center relative z-10 pt-10 pb-20">
