@@ -449,16 +449,27 @@
             border-radius: 0.45rem;
         }
         .plugin-layout-media { min-width: 0; width: 100%; }
+        /* The plugin video is blank for ~2.7s after the window closes (1.2s to 3.9s of each loop):
+           the plugin's icon fills that gap, fading in and out (driven by the video's time, below). */
+        .plugin-layout-media .pic { position: relative; }
+        .plugin-layout-media .pic .mc-gap { position: absolute; left: 50%; top: 50%; display: flex; flex-direction: column; align-items: center; gap: 0.7rem;
+            transform: translate(-50%, -50%) scale(0.94); opacity: 0; pointer-events: none;
+            transition: opacity 0.45s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        .plugin-layout-media .pic .mc-gap img { width: 3.5rem; height: 3.5rem; max-width: none; border-radius: 0.85rem; display: block; }
+        .plugin-layout-media .pic .mc-gap span { font-family: var(--font-display); font-size: 16px; font-weight: 600; color: #fff; white-space: nowrap; letter-spacing: -0.01em; }
+        .plugin-layout-media .pic .mc-gap.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         .plugin-layout-media .pic { max-width: none; margin: 0 auto; }
         @media (max-width: 700px) {
             .plugin-layout {
                 grid-template-columns: 1fr;
                 align-items: stretch;
-                gap: 1.25rem;
+                gap: 2rem;   /* more air between the text and the media below it */
                 margin-top: 2.8rem;
                 padding: 1.35rem;
             }
             .plugin-layout-media { max-width: 21rem; margin-inline: auto; }
+            /* Phone: the plugin icon sits above the title, left-aligned */
+            .plugin-layout-copy .section-mini-heading { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
         }
 
                 .duo {
@@ -1074,10 +1085,13 @@
             .section-heading-row {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 0.55rem;
+                gap: 0.85rem;   /* tag sits clear of the heading */
             }
             .section-heading-rule { display: none; }
             .section-heading-row .section-eyebrow { order: -1; align-self: flex-start; }
+            /* ...as a light outlined tag: stroke only, no fill */
+            .section-heading-row .section-eyebrow { padding: 0.3rem 0.6rem 0.26rem; border: 1px solid hsl(var(--sec-h), 40%, 35%, 0.35);
+                border-radius: 5px; background: none; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; }
         }
 
         /* Purpose of motion — four small cards */
@@ -1507,9 +1521,11 @@
             .hero-cards:not(.is-dealt) .hc-card:not(.is-main) { transform: translateZ(calc(var(--k) * -7px)) rotate(calc(var(--k) * 6deg)); opacity: 1; filter: none; }
         }
         @media (max-width: 767px) {
-            .hero-grid { grid-template-columns: 1fr; gap: 0.5rem; }
-            .hero-cards { width: 100%; height: 15rem; }
-            .hc-world { left: 40%; }
+            .hero-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .hero-grid.pb-10 { padding-bottom: 0.5rem; }   /* beats the Tailwind utility */
+            .hero-copy { padding-top: 1.25rem; }   /* the section already pads the top on phones */
+            .hero-cards { width: 100%; height: 22rem; }   /* tall enough for the whole fan, so it can't run into the next heading */
+            .hc-world { left: 40%; top: 44%; }
         }
     </style>
 </head>
@@ -1725,7 +1741,8 @@
 
                 <div class="plugin-layout-media">
                     <div class="pic is-clip">
-                        <video src="assets/motioncard.mp4" width="322" height="472" autoplay muted loop playsinline preload="metadata" aria-label="The plugin's easing picker: acceleration presets listed by name, with slow_moving selected and described"></video>
+                        <video class="mc-video" src="assets/motioncard.mp4" width="322" height="472" autoplay muted loop playsinline preload="metadata" aria-label="The plugin's easing picker: acceleration presets listed by name, with slow_moving selected and described"></video>
+                        <div class="mc-gap" aria-hidden="true"><img src="assets/icon.png" width="64" height="64" alt=""><span>Motion Card Plugin</span></div>
                     </div>
                 </div>
             </div>
@@ -2361,4 +2378,18 @@
             });
         })();
     </script>
+<script>
+/* Motion Card video: show the plugin icon over its blank stretch (1.2s to ~3.5s of each loop) */
+(function () {
+    var v = document.querySelector(".mc-video"), icon = document.querySelector(".mc-gap");
+    if (!v || !icon) return;
+    function tick() {
+        var t = v.currentTime;
+        icon.classList.toggle("is-on", t >= 1.25 && t < 3.45);   /* fades out before the content returns at 3.9s */
+        if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick);
+    }
+    if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(tick);
+    else v.addEventListener("timeupdate", tick);
+})();
+</script>
 </body></html>
