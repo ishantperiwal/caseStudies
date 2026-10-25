@@ -215,6 +215,11 @@
         }
         @media (min-width: 768px) { .section-summary { font-size: 24px; } }
         .section-body-copy { font-size: 18px; line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 1.25rem; }
+        /* Phones: body text at 15px and summaries at 16px, matching the other case studies */
+        @media (max-width: 767px) {
+            html .section-body-copy { font-size: 15px; letter-spacing: 0; }
+            html .section-summary { font-size: 16px; }
+        }
         .section-mini-heading { font-family: var(--font-display); font-size: 21px; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-ink); margin-top: 1.5rem; }
         .numbered-point { margin-bottom: 2rem; }
         .num-label {

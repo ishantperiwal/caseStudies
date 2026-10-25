@@ -149,6 +149,11 @@
             margin-bottom: var(--gap-paragraph);
             color: var(--color-deep);
         }
+        /* Phones: body text at 15px and summaries at 16px, matching the other case studies */
+        @media (max-width: 767px) {
+            html .prose-block p { font-size: 15px; }
+            html .read-section .section-summary { font-size: 16px; }
+        }
         .prose-block p:last-child { margin-bottom: 0; }
         .prose-block b { color: theme('colors.ink'); font-weight: 600; }
 

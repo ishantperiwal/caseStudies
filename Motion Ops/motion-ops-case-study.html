@@ -197,6 +197,11 @@
             color: var(--color-deep);
         }
         .prose-block p:last-child { margin-bottom: 0; }
+        /* Phones: body text at 15px and summaries at 16px, matching the Zapp case study */
+        @media (max-width: 767px) {
+            html .prose-block p, html .plugin-layout-copy .prose-block p, html .eb-body p { font-size: 15px; }   /* html: beats later rules */
+            html .read-section .section-summary { font-size: 16px; }
+        }
         .prose-block b { color: var(--color-ink); font-weight: 600; }
 
         .mono {
