@@ -197,11 +197,11 @@
             color: var(--color-deep);
         }
         .prose-block p:last-child { margin-bottom: 0; }
-        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 24px line spacing); the summary runs straight into the body here, so it takes the body size */
+        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 25px line spacing); the summary runs straight into the body here, so it takes the body size */
         @media (max-width: 767px) {
-            html .prose-block p, html .plugin-layout-copy .prose-block p, html .eb-body p { font-size: 15px; line-height: 1.6; }   /* html: beats later rules */
-            html .read-section .section-summary { font-size: 15px; line-height: 1.6; }
-            html .init-card .init-body, html .cap-sub, html .outcome .o-sub { line-height: 1.6; }
+            html .prose-block p, html .plugin-layout-copy .prose-block p, html .eb-body p { font-size: 15px; line-height: 25px; }   /* html: beats later rules */
+            html .read-section .section-summary { font-size: 15px; line-height: 25px; }
+            html .init-card .init-body, html .cap-sub, html .outcome .o-sub { line-height: 25px; }
             html .section-kicker { font-size: 18px; line-height: 1.15; }
             html .section-mini-heading { font-weight: 500; }
             html .lead { font-size: 16px; line-height: 1.625; }

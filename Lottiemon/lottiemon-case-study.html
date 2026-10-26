@@ -149,11 +149,15 @@
             margin-bottom: var(--gap-paragraph);
             color: var(--color-deep);
         }
-        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 24px line spacing); the summary runs straight into the body here, so it takes the body size */
+        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 25px line spacing); the summary runs straight into the body here, so it takes the body size */
         @media (max-width: 767px) {
-            html .prose-block p { font-size: 15px; line-height: 1.6; }
-            html .read-section .section-summary { font-size: 15px; line-height: 1.6; }
-            html .way-steps li, html .way-gains li { line-height: 1.6; }
+            html .prose-block p { font-size: 15px; line-height: 25px; }
+            html .read-section .section-summary { font-size: 15px; line-height: 25px; }
+            html .way-steps li, html .way-gains li, html .opt .opt-body { line-height: 25px; }
+            /* Numbered headings: wide enough a gutter for "01 /"; flex drops the space after it so the title lines up with the body */
+            html .numbered-point .section-mini-heading { display: flex; align-items: baseline; padding-left: 2.25rem; }
+            html .numbered-point .prose-block { padding-left: 2.25rem; }
+            html .slash-num { flex: none; width: 2.25rem; margin-left: -2.25rem; }
             html .section-kicker { font-size: 18px; line-height: 1.15; }
             html .section-mini-heading { font-weight: 500; }
             html .lead { font-size: 16px; line-height: 1.625; }

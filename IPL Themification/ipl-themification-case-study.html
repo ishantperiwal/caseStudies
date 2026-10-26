@@ -215,12 +215,13 @@
         }
         @media (min-width: 768px) { .section-summary { font-size: 24px; } }
         .section-body-copy { font-size: 18px; line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 1.25rem; }
-        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 24px line spacing); the summary runs straight into the body here, so it takes the body size */
+        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 25px line spacing); the summary runs straight into the body here, so it takes the body size */
         @media (max-width: 767px) {
             html .section-kicker { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; color: var(--color-ink); }
-            html .section-summary { font-size: 15px; line-height: 1.6; }
+            html .section-summary { font-size: 15px; line-height: 25px; }
             html .section-mini-heading { font-size: 18px; font-weight: 500; line-height: 1.35; }
-            html .section-body-copy { font-size: 15px; line-height: 1.6; letter-spacing: 0; }
+            html .section-body-copy { font-size: 15px; line-height: 25px; letter-spacing: 0; }
+            html .campaign-card > div > p { line-height: 25px; }
         }
         .section-mini-heading { font-family: var(--font-display); font-size: 21px; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-ink); margin-top: 1.5rem; }
         .numbered-point { margin-bottom: 2rem; }
@@ -438,7 +439,7 @@
                flex basis now live in .phone-row above instead of inline styles,
                which is what forced the overrides in the original port. */
             div.phone-row {
-                --slide: min(80vw, 18rem);
+                --slide: 15rem;   /* the phone preview width used across the case studies */
                 left: auto; transform: none; width: auto; max-width: none;
                 /* 3rem gives the same 48px above-gap the single-phone sections
                    get, whose copy adds its own 0.75rem margin-bottom. */
@@ -629,7 +630,7 @@
                small for the one screen a section is built around. */
             .two-col-aside > .phone-col,
             .phone-col:only-child {
-                width: min(84vw, 19rem);
+                width: 15rem;
                 margin-left: auto;
                 margin-right: auto;
             }

@@ -1781,7 +1781,7 @@
         @media (max-width: 767px) {
             .legacy-wallet-preview {
                 float: none;
-                max-width: 16rem;
+                max-width: 15rem;
                 width: auto;
                 margin: 1.25rem 0 0;
             }
@@ -4291,8 +4291,13 @@
         @media (max-width: 767px) {
             /* Hero title at 40px on phones, the same as the other case studies (!important: beats the inline clamp) */
             main h1[data-text-key="hero-title"] { font-size: 40px !important; }
-            /* 15px text at 24px line spacing (1.6), the same as the other case studies */
-            main p.text-\[15px\], main p.md\:text-\[15px\], main .execution-option-body, main .value-prop-points li { line-height: 24px; }
+            /* 15px text at 25px line spacing, the same as the other case studies */
+            main p.text-\[15px\], main p.md\:text-\[15px\], main .execution-option-body, main .value-prop-points li { line-height: 25px; }
+            /* Numbered headings hang the "01 /" in the gutter, so the title (wrapped
+               lines included) lines up with its body. Flex drops the space after the number. */
+            main .numbered-point { --numbered-point-indent: 2.25rem; }
+            main .numbered-point > h3:has(> .num-label) { display: flex; align-items: baseline; padding-left: var(--numbered-point-indent); }
+            main .numbered-point > h3 > .num-label { flex: none; width: var(--numbered-point-indent); margin-left: calc(-1 * var(--numbered-point-indent)); margin-right: 0; }
             :root {
                 --content-w:   100vw;
                 --content-pad: 1.25rem;
@@ -4539,14 +4544,14 @@
             }
 
             /* Fixed-width slides: without this they either stretch to the track or
-               collapse to content. min() keeps the authored 17rem cap on a larger
-               phone while leaving a peek of the next slide on a small one. */
+               collapse to content. */
             main .rebrand-phone-grid > *,
             main .direction-screens > * {
                 flex: 0 0 auto;
-                /* Matches the IPL tracks. Still leaves ~34px of the next slide
-                   visible at 375px, which is the only affordance these carry. */
-                width: min(80vw, 18rem);
+                /* 15rem: every screen preview in the case studies is 240px wide on
+                   phones, so a phone fits comfortably in the viewport, and the next
+                   slide peeks well into view. */
+                width: 15rem;
                 max-width: none;
                 scroll-snap-align: center;
             }
@@ -4709,10 +4714,8 @@
             .execution-journey-inline-screen {
                 display: block;
                 width: 100%;
-                /* The option card's content box is ~279px at 375px, so 16.5rem sits
-                   inside it with room to spare. Was 13.5rem, which left the screen
-                   looking undersized against the copy it illustrates. */
-                max-width: min(74vw, 16.5rem);
+                /* 15rem, the phone preview width used across the case studies. */
+                max-width: 15rem;
                 margin: 2.25rem auto 0.25rem;   /* clear of the step copy above */
             }
 
@@ -4803,6 +4806,16 @@
                nothing (the state machine they drove is off). */
             .execution-journey-option {
                 cursor: default;
+            }
+
+            /* A card ends at its own bottom padding. The last block's margin was
+               stacking on top of it: up to 122px of blank card under a phone. */
+            main .card-body-content > :last-child,
+            main .card-body-content > :last-child > div:last-child > .numbered-point:last-child {
+                margin-bottom: 0 !important;
+            }
+            main .execution-journey-section:last-of-type {
+                padding-bottom: 0;
             }
         }
 
