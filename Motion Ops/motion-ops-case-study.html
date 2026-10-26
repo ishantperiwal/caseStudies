@@ -702,6 +702,10 @@
                 padding-inline: 2.5rem;
                 scroll-padding-inline: 2.5rem;
                 overflow-x: auto;
+                /* overflow-x: auto makes the y axis scrollable too; the tilting,
+                   flipping motion card must never give a touch drag something to
+                   scroll vertically (the Zapp carousels clipped that way). */
+                overflow-y: hidden;
                 overscroll-behavior-x: contain;
                 scroll-snap-type: x mandatory;
                 scrollbar-width: none;
