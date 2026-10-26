@@ -4917,7 +4917,7 @@
         .cs-nav-title { font-family: 'Instrument Sans', sans-serif; font-weight: 500; font-size: 18px;
             line-height: 1.35; letter-spacing: -0.005em; font-variation-settings: normal; max-width: 15rem; }
         .cs-nav-title em { font-style: normal; font-weight: 600; }
-        @media (max-width: 767px) { .cs-nav-title { font-size: 16px; } }
+        @media (max-width: 767px) { .cs-nav-title { font-size: 16px; } .cs-nav-title em { color: inherit; font-weight: inherit; } }   /* phones: plain titles */
         .cs-nav-media { width: 52%; max-width: 17rem; }
         @media (max-width: 767px) { .cs-nav-media { width: 46%; } }
         .cs-nav-kicker { order: 2; }   /* arrow sits below the title, on its edge */
@@ -6416,21 +6416,48 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
         </nav>
 
         <script>
-            /* Previous / next previews: play the case study's video while hovered. */
+            /* Previous / next previews: play the case study's video while hovered.
+               Phones have no hover, so there it plays while the card is on screen. */
             (function () {
-                if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
                 if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+                var hover = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 768px)").matches;
+                function load(v) {
+                    if (!v.getAttribute("src")) { v.preload = "auto"; v.setAttribute("src", v.dataset.src); }
+                }
+                function play(v) {
+                    load(v);
+                    var p = v.play(); if (p && p.catch) p.catch(function () {});
+                }
+                function stop(v, box) { v.pause(); box.classList.remove("is-playing"); }
+                /* Phones: fetch the video a little before the card arrives, play it
+                   once the card is mostly on screen. */
+                var io = !hover && "IntersectionObserver" in window;
+                var near = io && new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) { load(e.target.querySelector("video")); near.unobserve(e.target); }
+                    });
+                }, { rootMargin: "0px 0px 600px 0px" });
+                var seen = io && new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        var v = e.target.querySelector("video");
+                        if (e.isIntersecting) play(v); else stop(v, e.target);
+                    });
+                }, { threshold: 0.6 });
                 document.querySelectorAll(".cs-nav-card").forEach(function (card) {
                     var box = card.querySelector(".cs-nav-media"), v = box && box.querySelector("video");
                     if (!v) return;
-                    v.addEventListener("playing", function () { box.classList.add("is-playing"); });
-                    card.addEventListener("pointerenter", function () {
-                        if (!v.getAttribute("src")) v.setAttribute("src", v.dataset.src);
-                        var p = v.play(); if (p && p.catch) p.catch(function () {});
+                    /* The still stays up until the video has actually drawn a frame,
+                       so a slow load never swaps it for a blank box. */
+                    v.addEventListener("playing", function () {
+                        if (v.requestVideoFrameCallback) v.requestVideoFrameCallback(function () {
+                            if (!v.paused) box.classList.add("is-playing");
+                        });
+                        else box.classList.add("is-playing");
                     });
-                    card.addEventListener("pointerleave", function () {
-                        v.pause(); box.classList.remove("is-playing");
-                    });
+                    if (seen) { near.observe(box); seen.observe(box); return; }
+                    if (!hover) return;
+                    card.addEventListener("pointerenter", function () { play(v); });
+                    card.addEventListener("pointerleave", function () { stop(v, box); });
                 });
             })();
         </script>
