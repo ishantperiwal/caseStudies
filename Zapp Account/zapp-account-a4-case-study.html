@@ -4289,6 +4289,10 @@
 
            Presentation only — no authored copy is changed here. */
         @media (max-width: 767px) {
+            /* Hero title at 40px on phones, the same as the other case studies (!important: beats the inline clamp) */
+            main h1[data-text-key="hero-title"] { font-size: 40px !important; }
+            /* 15px text at 24px line spacing (1.6), the same as the other case studies */
+            main p.text-\[15px\], main p.md\:text-\[15px\], main .execution-option-body, main .value-prop-points li { line-height: 24px; }
             :root {
                 --content-w:   100vw;
                 --content-pad: 1.25rem;
@@ -4783,6 +4787,15 @@
                and the dots in step. */
             .execution-journey-section {
                 --timeline-gap: 3rem;
+            }
+
+            /* The journey timeline (dots and the line joining them) tracks the
+               floating phone on desktop; with no phone to track it is just a dot
+               in the gutter. */
+            .execution-journey-section-copy::before,
+            .execution-journey-section::before,
+            .execution-journey-section::after {
+                display: none;
             }
 
             /* Options are cards on desktop; on mobile they carry a screen, so

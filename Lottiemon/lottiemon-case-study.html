@@ -149,10 +149,15 @@
             margin-bottom: var(--gap-paragraph);
             color: var(--color-deep);
         }
-        /* Phones: body text at 15px and summaries at 16px, matching the other case studies */
+        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 24px line spacing); the summary runs straight into the body here, so it takes the body size */
         @media (max-width: 767px) {
-            html .prose-block p { font-size: 15px; }
-            html .read-section .section-summary { font-size: 16px; }
+            html .prose-block p { font-size: 15px; line-height: 1.6; }
+            html .read-section .section-summary { font-size: 15px; line-height: 1.6; }
+            html .way-steps li, html .way-gains li { line-height: 1.6; }
+            html .section-kicker { font-size: 18px; line-height: 1.15; }
+            html .section-mini-heading { font-weight: 500; }
+            html .lead { font-size: 16px; line-height: 1.625; }
+            html h1 { font-size: 40px !important; }   /* !important: beats the inline clamp */
         }
         .prose-block p:last-child { margin-bottom: 0; }
         .prose-block b { color: theme('colors.ink'); font-weight: 600; }

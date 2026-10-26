@@ -215,10 +215,12 @@
         }
         @media (min-width: 768px) { .section-summary { font-size: 24px; } }
         .section-body-copy { font-size: 18px; line-height: 1.7; letter-spacing: 0.3px; margin-bottom: 1.25rem; }
-        /* Phones: body text at 15px and summaries at 16px, matching the other case studies */
+        /* Phones: type scale matches the Zapp case study (section title 18px, sub-heading 18px, body 15px at 24px line spacing); the summary runs straight into the body here, so it takes the body size */
         @media (max-width: 767px) {
-            html .section-body-copy { font-size: 15px; letter-spacing: 0; }
-            html .section-summary { font-size: 16px; }
+            html .section-kicker { font-family: var(--font-display); font-size: 18px; font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; color: var(--color-ink); }
+            html .section-summary { font-size: 15px; line-height: 1.6; }
+            html .section-mini-heading { font-size: 18px; font-weight: 500; line-height: 1.35; }
+            html .section-body-copy { font-size: 15px; line-height: 1.6; letter-spacing: 0; }
         }
         .section-mini-heading { font-family: var(--font-display); font-size: 21px; font-weight: 600; margin-bottom: 0.75rem; color: var(--color-ink); margin-top: 1.5rem; }
         .numbered-point { margin-bottom: 2rem; }
@@ -519,12 +521,11 @@
             div.hero-visual { order: -1; justify-content: flex-start; }
             div.hero-visual-frame { height: auto; justify-content: flex-start; align-items: flex-start; }
             img.hero-logo { width: 7rem; margin-top: 0; }
-            /* Bigger than the 2.4rem clamp floor. Sized off the available width
-               (viewport minus the 2.5rem gutters) rather than raw vw, because the
-               gutter is fixed: 0.128 of that width is the largest size at which
-               the italic "Theming PayZapp" still holds one line, verified from
-               320px up. The 2.75rem cap takes over around 430px. */
-            h1.hero-title { font-size: min(calc((100vw - 3.5rem) * 0.128), 3rem); }
+            /* 40px on phones, the same as the other case studies. Below ~370px it
+               shrinks with the available width (viewport minus the 2.5rem gutters):
+               0.128 of that width is the largest size at which the italic
+               "Theming PayZapp" still holds one line, verified from 320px up. */
+            h1.hero-title { font-size: min(calc((100vw - 3.5rem) * 0.128), 40px); }
             div.hero-copy { padding-top: 0.9rem; padding-bottom: 1.25rem; }
             /* Meta facts become tinted cards: one per row so all three match in size */
             div.hero-meta {
@@ -539,8 +540,8 @@
                 background: hsl(var(--accent-h) 24% 93%);
                 border: 0; border-radius: 0.75rem; padding: 1rem 1.1rem;
             }
-            div.hero-meta > div > span:first-child { font-size: 11px; margin-bottom: 0.3rem; }
-            div.hero-meta > div > span:last-child { font-size: 16px; line-height: 1.45; }
+            div.hero-meta > div > span:first-child { font-size: 10px; margin-bottom: 0.3rem; }
+            div.hero-meta > div > span:last-child { font-size: 14px; line-height: 1.45; }
         }
 
         @keyframes hero-float {
