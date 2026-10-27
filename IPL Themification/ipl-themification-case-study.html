@@ -325,6 +325,19 @@
         .phone-status-bar.status-bar-promo time { color: hsl(219, 72%, 18%); font-weight: 700; }
         .phone-status-bar.status-bar-promo [fill="white"] { fill: hsl(219, 72%, 18%); }
         .phone-status-bar.status-bar-promo [stroke="white"] { stroke: hsl(219, 72%, 18%); }
+        /* Scanner screen: its header (back, title, help) is baked into the overlay art,
+           which is taller than the screen area and anchored to its bottom. The clip cut
+           the top off, leaving the title half under the solid status bar with a hard edge
+           between them. Here the art runs up behind a see-through status bar on the
+           art's own navy, so the header fades out softly and the title sits whole. */
+        .legacy-wallet-screen:has(#scan-qr-lottie) { background: #05255F; }
+        /* The art starts 12px down, so above it the phone's glass shine showed as a lighter
+           strip. The status bar carries the art's navy instead, fading out above the title. */
+        .legacy-wallet-screen:has(#scan-qr-lottie) .phone-status-bar {
+            position: relative; z-index: 20; padding-top: 0.2rem;   /* clock 4px higher: room above the title */
+            background: linear-gradient(#05255F 50%, rgba(5, 37, 95, 0) 80%);
+        }
+        .legacy-wallet-screen:has(#scan-qr-lottie) .phone-screen-content { overflow: visible; }
         /* Festive scanner embeds: same 360 × 774 proportions as the screenshots they replace */
         .scanner-embed { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 360 / 774; border: 0; display: block;
             z-index: 1; pointer-events: none; background: #080808; }
@@ -883,8 +896,8 @@
                                     <div class="status-icons"><svg width="13" height="9" viewBox="0 0 13 9" fill="white"><rect x="0" y="6" width="2.5" height="3" rx="0.4"/><rect x="3.5" y="4" width="2.5" height="5" rx="0.4"/><rect x="7" y="2" width="2.5" height="7" rx="0.4"/><rect x="10.5" y="0" width="2.5" height="9" rx="0.4"/></svg><svg width="12" height="9" viewBox="0 0 12 9" fill="none"><circle cx="6" cy="8.5" r="0.7" fill="white"/><path d="M3.5 6.2Q6 3.8 8.5 6.2" stroke="white" stroke-width="1.1" stroke-linecap="round"/><path d="M1.2 3.8Q6-.2 10.8 3.8" stroke="white" stroke-width="1.1" stroke-linecap="round"/></svg><svg width="20" height="10" viewBox="0 0 20 10" fill="none"><rect x="0.5" y="1" width="16" height="8" rx="2" stroke="white" stroke-width="1"/><rect x="2" y="2.5" width="12" height="5" rx="1" fill="white"/><path d="M17.5 3.5v3" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
                                 </div>
                                 <div class="phone-screen-content">
-                                    <video src="case study assets/promo video.mp4" autoplay loop muted playsinline class="critical-asset" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1;"></video>
-                                    <div style="position: absolute; top: -0.7rem; left: -0.6rem; right: -0.6rem; height: 1.5rem; z-index: 3; pointer-events: none; background: #BCD3FE; filter: blur(5px);"></div>
+                                    <video src="case study assets/promo video.mp4" autoplay loop muted playsinline class="critical-asset" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; z-index: 1;"></video>
+                                    <div style="position: absolute; top: -0.7rem; left: -0.6rem; right: -0.6rem; height: 1.1rem; z-index: 3; pointer-events: none; background: #BCD3FE; filter: blur(5px);"></div>
                                     <div class="placeholder-default">
                                         <div class="legacy-wallet-bar"></div>
                                         <div class="legacy-wallet-card"><div class="mono text-[9px] text-muted mb-2">Promo</div><div class="font-display text-sm font-medium text-ink">Season Explainer</div><div class="text-[11px] text-muted mt-1">Promotional video</div></div>
