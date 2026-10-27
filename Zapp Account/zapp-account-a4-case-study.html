@@ -4841,6 +4841,37 @@
             .cs-nav { padding-top: 72px; }
         }
         .cs-thanks::before, .cs-thanks::after { content: ""; flex: 1; height: 1px; }
+        .cs-talk { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.6rem 0.75rem; color: #9e9e9e; font-size: 15px; text-align: center; }
+        .cs-talk-mail {
+            display: inline-flex; align-items: center; gap: 0.45rem; white-space: nowrap;
+            padding: 0.25rem 0.8rem; border-radius: 999px; text-decoration: none; line-height: 1.4;
+            color: var(--color-deep); background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(71, 71, 71, 0.14);
+            transition: border-color .25s ease, background-color .25s ease, color .25s ease;
+        }
+        .cs-talk-mail svg { width: 15px; height: 15px; flex: none; color: #9e9e9e; transition: color .25s ease; }
+        .cs-talk-mail:hover { color: #1F2833; background: #fff; border-color: rgba(71, 71, 71, 0.28); }
+        .cs-talk-mail:hover svg { color: #1F2833; }
+        .cs-talk-links { display: inline-flex; gap: 0.5rem; }
+        /* email, call and WhatsApp as icon-only circles */
+        .cs-talk-links .cs-talk-mail { justify-content: center; width: 36px; height: 36px; padding: 0; }
+        .cs-talk-links .cs-talk-mail svg { width: 16px; height: 16px; color: var(--color-deep); }
+        /* the solid WhatsApp mark reads bigger than the line icons, so it is drawn a touch smaller */
+        .cs-talk-links .cs-talk-wa svg { width: 15px; height: 15px; }
+        .cs-talk-br { display: none; }
+        /* Phones: the contact links become icon buttons (email, call, WhatsApp) under the line */
+        @media (max-width: 767px) {
+            .cs-talk { flex-direction: column; }
+            .cs-talk-br { display: inline; }
+            .cs-thanks { justify-content: center; }
+            .cs-thanks::before, .cs-thanks::after { display: none; }
+            .cs-talk { flex: 1; }
+            /* the separator lines move down to sit either side of the buttons */
+            .cs-talk-links { align-self: stretch; align-items: center; gap: 0.5rem; }
+            .cs-talk-links::before, .cs-talk-links::after { content: ""; flex: 1; height: 1px; margin: 0 0.5rem; }
+            .cs-talk-links::before { background: linear-gradient(to left, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
+            .cs-talk-links::after  { background: linear-gradient(to right, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
+            .cs-talk-links .cs-talk-mail { width: 38px; height: 38px; }
+        }
         /* lines fade out towards their outer ends */
         .cs-thanks::before { background: linear-gradient(to left, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
         .cs-thanks::after  { background: linear-gradient(to right, rgba(44, 38, 33, 0.14), rgba(44, 38, 33, 0)); }
@@ -6389,10 +6420,20 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
 
         <!-- Closing separator, above the previous / next case studies -->
         <div class="cs-thanks">
-            <div class="inline-flex items-center gap-1.5 font-medium" style="color: #9e9e9e; font-size: 15px;">
-                <span data-text-key="cta-line" spellcheck="false">Thank you for reading</span>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="#c2a09b" aria-hidden="true" class="flex-none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
-            </div>
+            <p class="cs-talk font-medium">
+                <span>Thanks for reading.<br class="cs-talk-br"> Questions or thoughts?</span>
+                <span class="cs-talk-links">
+                    <a href="mailto:ishantperiwal@gmail.com" class="cs-talk-mail" aria-label="Email ishantperiwal@gmail.com">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.8"/><path d="M2.5 4.5L8 8.75l5.5-4.25"/></svg>
+                    </a>
+                    <a href="tel:+919034401875" class="cs-talk-mail" aria-label="Call">
+                        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5.6 2.5H3.9a1.4 1.4 0 0 0-1.4 1.5 11 11 0 0 0 9.5 9.5 1.4 1.4 0 0 0 1.5-1.4v-1.7a1 1 0 0 0-.7-.9l-2-.6a1 1 0 0 0-1 .3l-.7.8a8 8 0 0 1-3.4-3.4l.8-.7a1 1 0 0 0 .3-1l-.6-2a1 1 0 0 0-.9-.7z"/></svg>
+                    </a>
+                    <a href="https://wa.me/919034401875" class="cs-talk-mail cs-talk-wa" aria-label="WhatsApp" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                    </a>
+                </span>
+            </p>
         </div>
 
         <!-- Previous / next case study -->
