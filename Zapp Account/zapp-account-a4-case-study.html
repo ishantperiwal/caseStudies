@@ -4860,7 +4860,7 @@
         .cs-talk-br { display: none; }
         /* Phones: the contact links become icon buttons (email, call, WhatsApp) under the line */
         @media (max-width: 767px) {
-            .cs-talk { flex-direction: column; }
+            .cs-talk { flex-direction: column; row-gap: 1rem; }
             .cs-talk-br { display: inline; }
             .cs-thanks { justify-content: center; }
             .cs-thanks::before, .cs-thanks::after { display: none; }
@@ -4993,7 +4993,7 @@
         /* Phones: one card per row inside the 16px gutter, preview on top, text below, left-aligned */
         @media (max-width: 767px) {
             .cs-nav { grid-template-columns: minmax(0, 1fr); gap: 0.85rem; padding: 2.5rem 16px 3.5rem; }
-            .cs-thanks { padding: 0 16px; }   /* the last section's own bottom padding (~48px) is the gap above */
+            .cs-thanks { padding: 20px 16px; }   /* 20px more air above and below the closing line on top of the last section's own bottom padding */
             .cs-nav-card, .cs-nav-card.is-next {
                 flex-direction: column; align-items: stretch; gap: 0.85rem;
                 padding: 0.75rem 0.75rem 1rem; text-align: left; min-width: 0;
@@ -6186,12 +6186,12 @@ Selection Screen" data-highlight-active="true" data-highlight-rw="39" data-highl
                                 <div class="bento-cell b-p2p">
                                     <span class="results-mom-badge">month on month</span>
                                     <div class="bento-num" data-countup="" data-to="25" data-prefix="+" data-suffix="%" data-counted="true">+25%</div>
-                                    <div class="bento-cap">Peer-to-peer via UPI</div>
+                                    <div class="bento-cap">Peer-to-peer<br class="md:hidden"> via UPI</div>
                                 </div>
                                 <div class="bento-cell b-p2m">
                                     <span class="results-mom-badge">month on month</span>
                                     <div class="bento-num" data-countup="" data-to="22" data-prefix="+" data-suffix="%" data-counted="true">+22%</div>
-                                    <div class="bento-cap">Peer-to-merchant via UPI</div>
+                                    <div class="bento-cap">Peer-to-merchant<br class="md:hidden"> via UPI</div>
                                 </div>
                                 <div class="bento-cell b-autoload">
                                      <div class="flex flex-col items-start w-full">
