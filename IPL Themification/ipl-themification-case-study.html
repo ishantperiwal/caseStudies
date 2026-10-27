@@ -767,6 +767,8 @@
         .cs-nav-media img { transition: transform .6s cubic-bezier(.22,1,.36,1); }
         .cs-nav-media video { opacity: 0; transition: opacity .45s ease; }
         .cs-nav-media.is-playing video { opacity: 1; }
+        /* once the video has faded in, the thumbnail underneath is hidden so no sliver of it shows at the edges; it comes back at once when the video stops */
+        .cs-nav-media.is-playing img { opacity: 0; transition: transform .6s cubic-bezier(.22,1,.36,1), opacity 0s linear .45s; }
         .cs-nav-card:hover .cs-nav-media img { transform: scale(1.04); }
         .cs-nav-card::after { left: 1rem; right: 1rem; }
         @media (max-width: 1023px) and (min-width: 768px) {
